@@ -32,11 +32,38 @@ dependencies {
     // Use the Kotlin JDK 8 standard library.
     implementation(group = "org.jetbrains.kotlin", name = "kotlin-stdlib-jdk8")
 
+    // Kotlin coroutines
+    implementation(group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version = "1.4.3-native-mt")
+
+    // jline (console)
+    implementation(group = "org.jline", name = "jline", version = "3.20.0")
+    implementation(group = "net.minecrell", name = "terminalconsoleappender", version = "1.2.0")
+
+    // Jackson
+    implementation(group = "com.fasterxml.jackson.dataformat", name = "jackson-dataformat-yaml", version = "2.12.3")
+    implementation(group = "com.fasterxml.jackson.dataformat", name = "jackson-dataformat-properties", version = "2.12.3")
+
+    // Apache commons IO
+    implementation(group = "commons-io", name = "commons-io", version = "2.8.0")
+
+    // jna
+    implementation(group = "net.java.dev.jna", name = "jna", version = "5.8.0")
+
+    // Logger
+    implementation(group = "org.slf4j", name = "slf4j-api", version = "1.7.30")
+    implementation(group = "ch.qos.logback", name = "logback-classic", version = "1.2.3")
+    implementation(group = "org.fusesource.jansi", name = "jansi", version = "2.3.2")
+
     // netty
     implementation(group = "io.netty", name = "netty-all", version = "4.1.63.Final")
 
     // bedrock-network
     implementation(group = "org.powernukkit.bedrock.network", name = "raknet", version = "1.6.25-PN")
+
+    // koloboke
+    implementation(group = "com.koloboke", name = "koloboke-impl-common-jdk8", version = "1.0.0")
+    implementation(group = "com.koloboke", name = "koloboke-impl-jdk8", version = "1.0.0")
+    implementation(group = "com.koloboke", name = "koloboke-api-jdk8", version = "1.0.0")
 
     // Use the Kotlin test library.
     testImplementation(group = "org.jetbrains.kotlin", name = "kotlin-test")
