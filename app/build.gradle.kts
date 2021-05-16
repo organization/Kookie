@@ -10,7 +10,7 @@ plugins {
 
 group = "be.zvz"
 version = "0.0.1-SNAPSHOT"
-java.sourceCompatibility = JavaVersion.VERSION_11
+java.sourceCompatibility = JavaVersion.VERSION_1_8
 
 repositories {
     // Use Maven Central for resolving dependencies.
@@ -47,7 +47,7 @@ dependencies {
 
 tasks.withType<KotlinCompile> {
     kotlinOptions {
-        jvmTarget = "11"
+        jvmTarget = java.sourceCompatibility.toString()
     }
 }
 
