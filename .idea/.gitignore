@@ -1,0 +1,8 @@
+# 디폴트 무시된 파일
+/shelf/
+/workspace.xml
+# 데이터 소스의 로컬 스토리지가 파일을 무시했습니다
+/dataSources/
+/dataSources.local.xml
+# 에디터 기반 HTTP 클라이언트 요청
+/httpRequests/
