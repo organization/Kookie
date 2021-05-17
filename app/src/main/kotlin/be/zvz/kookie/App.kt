@@ -12,6 +12,7 @@ package be.zvz.kookie
 
 import be.zvz.kookie.constant.CorePaths
 import be.zvz.kookie.constant.FilePermission
+import be.zvz.kookie.wizard.SetupWizard
 import org.slf4j.LoggerFactory
 import kotlin.io.path.*
 import kotlin.system.exitProcess
@@ -46,10 +47,12 @@ class App {
 
         var exitCode = 0
         if (!cwd.resolve(SERVER_PROPERTIES_NAME).exists()) {
-            exitCode = -1
+            val wizard = SetupWizard(cwd, dataPath, pluginPath)
+            wizard.run()
+        } else {
+            Server(cwd, dataPath, pluginPath)
         }
 
-        Server(cwd, dataPath, pluginPath)
 
         logger.info("Stopping Kookie")
 
