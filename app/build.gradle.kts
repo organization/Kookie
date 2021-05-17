@@ -80,6 +80,8 @@ dependencies {
 tasks.withType<KotlinCompile> {
     kotlinOptions {
         jvmTarget = java.sourceCompatibility.toString()
+        apiVersion = "1.5"
+        languageVersion = "1.5"
     }
 }
 
