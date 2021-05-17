@@ -63,7 +63,11 @@ class App {
                 }
             }
 
-            Server(cwd, dataPath, pluginPath)
+            try {
+                Server(cwd, dataPath, pluginPath)
+            } catch (e: Throwable) {
+                logger.error("Critical Error", e)
+            }
         }
 
         logger.info("Stopping Kookie")

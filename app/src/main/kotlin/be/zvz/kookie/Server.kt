@@ -19,10 +19,12 @@ package be.zvz.kookie
 
 import be.zvz.kookie.console.KookieConsole
 import be.zvz.kookie.constant.FilePermission
+import be.zvz.kookie.lang.Language
 import be.zvz.kookie.level.Level
 import be.zvz.kookie.snooze.SleeperHandler
 import be.zvz.kookie.utils.Config
 import be.zvz.kookie.utils.PropertiesBrowser
+import ch.qos.logback.classic.Logger
 import org.apache.commons.io.IOUtils
 import org.slf4j.LoggerFactory
 import java.io.BufferedOutputStream
@@ -32,6 +34,7 @@ import kotlin.concurrent.thread
 import kotlin.io.path.createDirectories
 import kotlin.io.path.exists
 import kotlin.io.path.setPosixFilePermissions
+import ch.qos.logback.classic.Level as LoggerLevel
 
 class Server(cwd: Path, dataPath: Path, pluginPath: Path) {
     private var tickSleeper = SleeperHandler()
@@ -50,6 +53,12 @@ class Server(cwd: Path, dataPath: Path, pluginPath: Path) {
     private var doTitleTick = true
     private val logger = LoggerFactory.getLogger(Server::class.java)
     private val console = KookieConsole()
+    private var maxPlayers: Int = 20
+    private var onlineMode = true
+    private var networkCompressionAsync = true
+    var language: Language
+        private set
+    private var forceLanguage = false
     private val configGroup: ServerConfigGroup
 
     init {
@@ -110,6 +119,70 @@ class Server(cwd: Path, dataPath: Path, pluginPath: Path) {
         )
 
         val debugLogLevel = configGroup.getProperty("debug.level").asLong(1)
+        if (debugLogLevel > 1) {
+            (LoggerFactory.getLogger(org.slf4j.Logger.ROOT_LOGGER_NAME) as Logger).level = LoggerLevel.DEBUG
+        }
+
+        forceLanguage = configGroup.getProperty("settings.force-language").asBoolean(false)
+        val selectedLang = configGroup.getConfigString(
+            "language",
+            configGroup.getProperty("settings.language").text() ?: Language.FALLBACK_LANGUAGE
+        )
+        language = try {
+            Language(selectedLang)
+        } catch (e: Language.LanguageNotFoundException) {
+            logger.error(e.message)
+            try {
+                Language(Language.FALLBACK_LANGUAGE)
+            } catch (e: Language.LanguageNotFoundException) {
+                logger.error("Fallback language ${Language.FALLBACK_LANGUAGE} not found", e)
+                throw e
+            }
+        }
+
+        logger.info(
+            language.translateString(
+                "language.selected",
+                listOf(
+                    language.name,
+                    language.lang
+                )
+            )
+        )
+
+        if (VersionInfo.IS_DEVELOPMENT_BUILD) {
+            if (configGroup.getProperty("settings.enable-dev-builds").asBoolean(false)) {
+                logger.error(
+                    language.translateString(
+                        "pocketmine.server.devBuild.error1",
+                        listOf(
+                            VersionInfo.NAME
+                        )
+                    )
+                )
+                logger.error(language.translateString("pocketmine.server.devBuild.error2"))
+                logger.error(language.translateString("pocketmine.server.devBuild.error3"))
+                logger.error(
+                    language.translateString(
+                        "pocketmine.server.devBuild.error4",
+                        listOf(
+                            "settings.enable-dev-builds"
+                        )
+                    )
+                )
+                logger.error(
+                    language.translateString(
+                        "pocketmine.server.devBuild.error5",
+                        listOf(
+                            "https://github.com/organization/Kookie/releases"
+                        )
+                    )
+                )
+                throw RuntimeException("settings.enable-dev-builds")
+            }
+        }
+
+        logger.info("pocketmine.server.start") // TODO: ProtocolInfo.MINECRAFT_VERSION
 
         thread(isDaemon = true, name = "${VersionInfo.NAME}-console") {
             console.start()
