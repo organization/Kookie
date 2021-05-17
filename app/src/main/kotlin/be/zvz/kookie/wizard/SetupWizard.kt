@@ -206,7 +206,7 @@ class SetupWizard(private val dataPath: Path) {
   (at your option) any later version.
             """.trimIndent()
         )
-        return if (getInput("accept_license", "n", "y/N") !== "y") {
+        return if (getInput("accept_license", "n", "y/N") != "y") {
             logger.error(lang.translateString("you_have_to_accept_the_license", listOf(VersionInfo.NAME)))
             Thread.sleep(5000)
 
