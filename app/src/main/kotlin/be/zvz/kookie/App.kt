@@ -10,9 +10,9 @@
  */
 package be.zvz.kookie
 
+import be.zvz.kookie.constant.CorePaths
+import be.zvz.kookie.constant.FilePermission
 import org.slf4j.LoggerFactory
-import java.nio.file.Paths
-import java.nio.file.attribute.PosixFilePermission
 import kotlin.io.path.*
 import kotlin.system.exitProcess
 
@@ -20,28 +20,17 @@ class App {
     private val logger = LoggerFactory.getLogger(App::class.java)
 
     fun start() {
-        val cwd = Paths.get("").toAbsolutePath()
-        val permission777 = setOf(
-            PosixFilePermission.GROUP_EXECUTE,
-            PosixFilePermission.GROUP_READ,
-            PosixFilePermission.GROUP_WRITE,
-            PosixFilePermission.OTHERS_EXECUTE,
-            PosixFilePermission.OTHERS_READ,
-            PosixFilePermission.OTHERS_WRITE,
-            PosixFilePermission.OWNER_EXECUTE,
-            PosixFilePermission.OWNER_WRITE,
-            PosixFilePermission.OWNER_READ
-        )
+        val cwd = CorePaths.PATH
         val dataPath = cwd.resolve("data").apply {
             if (!exists()) {
                 createDirectories()
-                setPosixFilePermissions(permission777)
+                setPosixFilePermissions(FilePermission.perm777)
             }
         }
         val pluginPath = cwd.resolve("plugins").apply {
             if (!exists()) {
                 createDirectories()
-                setPosixFilePermissions(permission777)
+                setPosixFilePermissions(FilePermission.perm777)
             }
         }
         val lockFilePath = cwd.resolve("server.lock").apply {
@@ -55,9 +44,18 @@ class App {
             }
         }
 
+        var exitCode = 0
         if (!cwd.resolve(SERVER_PROPERTIES_NAME).exists()) {
+            exitCode = -1
         }
+
         Server(cwd, dataPath, pluginPath)
+
+        logger.info("Stopping Kookie")
+
+        lockFilePath.deleteIfExists()
+
+        exitProcess(exitCode)
     }
 
     companion object {
@@ -66,4 +64,5 @@ class App {
 }
 
 fun main() {
+    App().start()
 }

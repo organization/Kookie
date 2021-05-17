@@ -46,6 +46,9 @@ dependencies {
     // Apache commons IO
     implementation(group = "commons-io", name = "commons-io", version = "2.8.0")
 
+    // ini4j
+    implementation(group = "org.ini4j", name = "ini4j", version = "0.5.4")
+
     // jna
     implementation(group = "net.java.dev.jna", name = "jna", version = "5.8.0")
 

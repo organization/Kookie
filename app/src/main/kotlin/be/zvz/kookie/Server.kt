@@ -1,6 +1,7 @@
 package be.zvz.kookie
 
 import be.zvz.kookie.console.KookieConsole
+import be.zvz.kookie.constant.FilePermission
 import be.zvz.kookie.snooze.SleeperHandler
 import org.slf4j.LoggerFactory
 import java.nio.file.Path
@@ -8,6 +9,7 @@ import java.util.*
 import kotlin.concurrent.thread
 import kotlin.io.path.createDirectories
 import kotlin.io.path.exists
+import kotlin.io.path.setPosixFilePermissions
 
 class Server(cwd: Path, dataPath: Path, pluginPath: Path) {
     private var tickSleeper = SleeperHandler()
@@ -34,10 +36,16 @@ class Server(cwd: Path, dataPath: Path, pluginPath: Path) {
         val worldsPath = dataPath.resolve("worlds")
         if (!worldsPath.exists()) {
             worldsPath.createDirectories()
+            worldsPath.setPosixFilePermissions(FilePermission.perm777)
         }
         val playersPath = dataPath.resolve("players")
         if (!playersPath.exists()) {
             playersPath.createDirectories()
+            playersPath.setPosixFilePermissions(FilePermission.perm777)
+        }
+        if (pluginPath.exists()) {
+            pluginPath.createDirectories()
+            pluginPath.setPosixFilePermissions(FilePermission.perm777)
         }
 
         thread(isDaemon = true, name = "Kookie-console") {
