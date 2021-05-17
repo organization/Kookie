@@ -11,7 +11,7 @@ import java.nio.file.Paths
 import kotlin.io.path.exists
 import kotlin.io.path.inputStream
 
-class Config(private val file: String, private var type: Type = Type.DETECT, default: ConfigBrowser) {
+class Config(private val file: String, private var type: Type = Type.DETECT, default: ConfigBrowser = ConfigBrowser.NULL_BROWSER) {
     val path: Path = Paths.get(file)
 
     enum class Type {
@@ -70,6 +70,11 @@ class Config(private val file: String, private var type: Type = Type.DETECT, def
         }
     }
 
+    fun set(key: String, value: Any) {
+        config.put(key, value)
+        changed = true
+    }
+
     fun set(key: String, value: ConfigBrowser) {
         config.put(key, value)
         changed = true
@@ -90,7 +95,7 @@ class Config(private val file: String, private var type: Type = Type.DETECT, def
 
     fun remove(key: String): Boolean = config.remove(key)
 
-    private fun save() {
+    fun save() {
         val content = when (type) {
             Type.PROPERTIES -> config.safeText()
             Type.JSON -> config.safeText()

@@ -33,23 +33,46 @@ class Language(langStr: String, path: String? = null, fallback: String = FALLBAC
     val lang: String
         get() = langName
 
+    private fun getBaseText(str: String, onlyPrefix: String? = null): String = get(str).apply {
+        parseTranslation(
+            if (onlyPrefix !== null && str.indexOf(onlyPrefix) == 0) {
+                this
+            } else {
+                str
+            },
+            onlyPrefix
+        )
+    }
+
+    @JvmOverloads
     fun translateString(
         str: String,
-        params: List<String> = listOf(),
+        onlyPrefix: String? = null
+    ): String = getBaseText(str, onlyPrefix)
+
+    @JvmOverloads
+    fun translateString(
+        str: String,
+        params: List<String>,
         onlyPrefix: String? = null
     ): String {
-        var baseText = get(str).apply {
-            parseTranslation(
-                if (onlyPrefix !== null && str.indexOf(onlyPrefix) == 0) {
-                    this
-                } else {
-                    str
-                },
-                onlyPrefix
-            )
-        }
+        var baseText = getBaseText(str, onlyPrefix)
         params.forEachIndexed { index, value ->
             baseText = baseText.replace("{%$index}", parseTranslation(value))
+        }
+
+        return baseText
+    }
+
+    @JvmOverloads
+    fun translateString(
+        str: String,
+        params: Map<String, String>,
+        onlyPrefix: String? = null
+    ): String {
+        var baseText = getBaseText(str, onlyPrefix)
+        params.forEach { (key, value) ->
+            baseText = baseText.replace("{%$key}", parseTranslation(value))
         }
 
         return baseText
