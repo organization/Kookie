@@ -46,13 +46,18 @@ class App {
         }
 
         var exitCode = 0
-        if (!cwd.resolve(SERVER_PROPERTIES_NAME).exists()) {
-            val wizard = SetupWizard(cwd, dataPath, pluginPath)
-            wizard.run()
-        } else {
+        run {
+            if (!cwd.resolve(SERVER_PROPERTIES_NAME).exists()) {
+                val wizard = SetupWizard(cwd)
+
+                if (!wizard.run()) {
+                    exitCode = -1
+                    return@run
+                }
+            }
+
             Server(cwd, dataPath, pluginPath)
         }
-
 
         logger.info("Stopping Kookie")
 

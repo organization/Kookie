@@ -1,7 +1,6 @@
 package be.zvz.kookie.wizard
 
 import be.zvz.kookie.App
-import be.zvz.kookie.Server
 import be.zvz.kookie.VersionInfo
 import be.zvz.kookie.lang.Language
 import be.zvz.kookie.utils.Config
@@ -11,7 +10,7 @@ import java.net.InetAddress
 import java.net.UnknownHostException
 import java.nio.file.Path
 
-class SetupWizard(private val cwd: Path, private val dataPath: Path, private val pluginPath: Path) {
+class SetupWizard(private val dataPath: Path) {
     private val logger = LoggerFactory.getLogger(SetupWizard::class.java)
     private lateinit var lang: Language
 
@@ -81,8 +80,6 @@ class SetupWizard(private val cwd: Path, private val dataPath: Path, private val
         println()
 
         Thread.sleep(4000)
-
-        Server(cwd, dataPath, pluginPath)
     }
 
     private fun networkFunctions() {
