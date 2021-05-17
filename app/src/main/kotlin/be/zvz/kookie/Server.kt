@@ -59,7 +59,7 @@ class Server(cwd: Path, dataPath: Path, pluginPath: Path) {
     var language: Language
         private set
     private var forceLanguage = false
-    private val configGroup: ServerConfigGroup
+    val configGroup: ServerConfigGroup
 
     init {
         instance = this
