@@ -44,6 +44,11 @@ abstract class ConfigBrowser protected constructor(private val node: JsonNode?) 
         return create(mapper.createObjectNode())
     }
 
+    @Throws(IllegalArgumentException::class)
+    fun <K, V> toMap(): Map<K, V> {
+        return mapper.convertValue(node, object : TypeReference<Map<K, V>>() {})
+    }
+
     /**
      * @return True if the value represents a list.
      */
@@ -99,16 +104,36 @@ abstract class ConfigBrowser protected constructor(private val node: JsonNode?) 
         }
     }
 
+    fun exists(key: String): Boolean {
+        if (node is ObjectNode) {
+            return node.findValue(key) !== null
+        } else {
+            throw IllegalStateException("Exists only works on a map")
+        }
+    }
+
+    fun remove(key: String): Boolean {
+        if (node is ObjectNode) {
+            return node.remove(key) !== null
+        } else {
+            throw IllegalStateException("Remove only works on a map")
+        }
+    }
+
     /**
      * Returns a list of all the values in this element
      * @return The list of values as JsonBrowser elements
      */
-    fun values(): List<ConfigBrowser> {
-        val values = mutableListOf<ConfigBrowser>()
-        node?.elements()?.forEach { child ->
-            values.add(create(child))
+    fun values(): List<ConfigBrowser> = mutableListOf<ConfigBrowser>().apply {
+        node?.elements()?.forEachRemaining { child ->
+            add(create(child))
         }
-        return values
+    }
+
+    fun keys(): List<String> = mutableListOf<String>().apply {
+        node?.fieldNames()?.forEachRemaining {
+            add(it)
+        }
     }
 
     /**
