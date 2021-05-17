@@ -1,12 +1,16 @@
 package be.zvz.kookie
 
 import be.zvz.kookie.console.KookieConsole
+import be.zvz.kookie.snooze.SleeperHandler
 import org.slf4j.LoggerFactory
 import java.nio.file.Path
 import java.util.*
 import kotlin.concurrent.thread
+import kotlin.io.path.createDirectories
+import kotlin.io.path.exists
 
 class Server(cwd: Path, dataPath: Path, pluginPath: Path) {
+    private var tickSleeper = SleeperHandler()
     /**
      * Counts the ticks since the server start
      *
@@ -26,6 +30,11 @@ class Server(cwd: Path, dataPath: Path, pluginPath: Path) {
     init {
         instance = this
         startTime = Date()
+
+        val worldsPath = dataPath.resolve("worlds")
+        if (!worldsPath.exists()) {
+            worldsPath.createDirectories()
+        }
 
         thread(isDaemon = true, name = "Kookie-console") {
             console.start()

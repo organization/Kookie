@@ -33,7 +33,7 @@ dependencies {
     implementation(group = "org.jetbrains.kotlin", name = "kotlin-stdlib-jdk8")
 
     // Kotlin coroutines
-    implementation(group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version = "1.4.3-native-mt")
+    implementation(group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version = "1.5.0-native-mt")
 
     // jline (console)
     implementation(group = "org.jline", name = "jline", version = "3.20.0")
