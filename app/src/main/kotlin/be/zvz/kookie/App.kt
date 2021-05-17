@@ -1,5 +1,12 @@
 /**
- * Kookie
+ *
+ * _  __           _    _
+ * | |/ /___   ___ | | _(_) ___
+ * | ' // _ \ / _ \| |/ / |/ _ \
+ * | . \ (_) | (_) |   <| |  __/
+ * |_|\_\___/ \___/|_|\_\_|\___|
+ *
+ * A server software for Minecraft: Bedrock Edition
  *
  * Copyright (C) 2021 organization Team
  *
