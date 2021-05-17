@@ -5,7 +5,7 @@ import be.zvz.kookie.utils.ConfigBrowser
 import com.koloboke.collect.map.hash.HashObjObjMaps
 
 class ServerConfigGroup(
-    private val pocketmineYml: Config,
+    private val kookieYml: Config,
     private val serverProperties: Config
 ) {
 
@@ -17,7 +17,7 @@ class ServerConfigGroup(
         defaultValue: ConfigBrowser = ConfigBrowser.NULL_BROWSER
     ): ConfigBrowser {
         if (!propertyCache.containsKey(variable)) {
-            propertyCache[variable] = pocketmineYml.get(variable)
+            propertyCache[variable] = kookieYml.get(variable)
         }
 
         return propertyCache[variable] ?: defaultValue
@@ -50,8 +50,8 @@ class ServerConfigGroup(
         if (serverProperties.hasChanged()) {
             serverProperties.save()
         }
-        if (pocketmineYml.hasChanged()) {
-            pocketmineYml.save()
+        if (kookieYml.hasChanged()) {
+            kookieYml.save()
         }
     }
 }
