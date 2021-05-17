@@ -35,6 +35,10 @@ class Server(cwd: Path, dataPath: Path, pluginPath: Path) {
         if (!worldsPath.exists()) {
             worldsPath.createDirectories()
         }
+        val playersPath = dataPath.resolve("players")
+        if (!playersPath.exists()) {
+            playersPath.createDirectories()
+        }
 
         thread(isDaemon = true, name = "Kookie-console") {
             console.start()
