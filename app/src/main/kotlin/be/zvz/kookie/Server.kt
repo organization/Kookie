@@ -56,6 +56,8 @@ class Server(cwd: Path, dataPath: Path, pluginPath: Path) {
     private var maxPlayers: Int = 20
     private var onlineMode = true
     private var networkCompressionAsync = true
+    val memoryManager: MemoryManager
+
     var language: Language
         private set
     private var forceLanguage = false
@@ -181,6 +183,8 @@ class Server(cwd: Path, dataPath: Path, pluginPath: Path) {
                 throw RuntimeException("settings.enable-dev-builds")
             }
         }
+
+        memoryManager = MemoryManager(this)
 
         logger.info("pocketmine.server.start") // TODO: ProtocolInfo.MINECRAFT_VERSION
 

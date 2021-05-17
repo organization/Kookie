@@ -36,13 +36,17 @@ class MemoryManager(private val server: Server) {
 
     fun canUseChunkCache(): Boolean = !lowMemory || !lowMemDisableChunkCache
 
-    fun getViewDistance(distance: Int): Int {}
+    fun getViewDistance(distance: Int): Int {
+        return 0
+    }
 
     fun trigger(memory: Int, limit: Int, global: Boolean = false, triggerCount: Int = 0) {}
 
     fun check() {}
 
-    fun triggerGarbageCollector(): Int {}
+    fun triggerGarbageCollector(): Int {
+        return 0
+    }
 
     fun dumpServerMemory(outputFolder: String, maxNesting: Int, maxStringSize: Int) {}
 
@@ -53,7 +57,6 @@ class MemoryManager(private val server: Server) {
             maxNesting: Int,
             maxStringSize: Int
         ) {}
-
 
         private fun continueDump(
             from: Any,
