@@ -66,7 +66,7 @@ class Config(private val file: String, private var type: Type = Type.DETECT, def
         return if (value !== ConfigBrowser.NULL_BROWSER) {
             value
         } else {
-            ConfigBrowser.NULL_BROWSER
+            default
         }
     }
 
