@@ -107,7 +107,7 @@ abstract class ConfigBrowser protected constructor(private val node: JsonNode?) 
      * @param key The map entry key
      * @param item The map entry value
      */
-    fun put(key: String?, item: Any?) {
+    open fun put(key: String?, item: Any?) {
         if (node is ObjectNode) {
             if (item is ConfigBrowser) {
                 node.set(key, item.node)
@@ -206,10 +206,9 @@ abstract class ConfigBrowser protected constructor(private val node: JsonNode?) 
             if (node.isBoolean) {
                 return node.booleanValue()
             } else if (node.isTextual) {
-                if ("true" == node.textValue()) {
-                    return true
-                } else if ("false" == node.textValue()) {
-                    return false
+                return when (node.textValue().lowercase()) {
+                    "true", "on", "1", "yes" -> true
+                    else -> false
                 }
             }
         }
@@ -251,6 +250,6 @@ abstract class ConfigBrowser protected constructor(private val node: JsonNode?) 
         get() = node == null || node.isNull
 
     companion object {
-        val NULL_BROWSER = JsonBrowser()
+        val NULL_BROWSER = NullBrowser.NULL_BROWSER
     }
 }

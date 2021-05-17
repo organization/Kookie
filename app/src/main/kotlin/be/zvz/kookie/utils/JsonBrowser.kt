@@ -23,16 +23,20 @@ import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.ObjectMapper
 
 class JsonBrowser private constructor(node: JsonNode?) : ConfigBrowser(node) {
-    internal constructor() : this(null)
+    internal constructor() : this(staticMapper.createObjectNode())
 
-    override val mapper = ObjectMapper(
-        JsonFactory().apply {
-            enable(JsonParser.Feature.ALLOW_COMMENTS)
-            enable(JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES)
-        }
-    )
+    override val mapper = staticMapper
 
     override fun create(node: JsonNode?): ConfigBrowser {
         return JsonBrowser(node)
+    }
+
+    companion object {
+        private val staticMapper = ObjectMapper(
+            JsonFactory().apply {
+                enable(JsonParser.Feature.ALLOW_COMMENTS)
+                enable(JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES)
+            }
+        )
     }
 }

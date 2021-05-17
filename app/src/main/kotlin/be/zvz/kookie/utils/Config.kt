@@ -28,8 +28,17 @@ import java.nio.file.Paths
 import kotlin.io.path.exists
 import kotlin.io.path.inputStream
 
-class Config(private val file: String, private var type: Type = Type.DETECT, default: ConfigBrowser = ConfigBrowser.NULL_BROWSER) {
-    val path: Path = Paths.get(file)
+class Config @JvmOverloads constructor(
+    private val path: Path,
+    private var type: Type = Type.DETECT,
+    default: ConfigBrowser = ConfigBrowser.NULL_BROWSER
+) {
+    @JvmOverloads
+    constructor(
+        file: String,
+        type: Type = Type.DETECT,
+        default: ConfigBrowser = ConfigBrowser.NULL_BROWSER
+    ) : this(Paths.get(file), type, default)
 
     enum class Type {
         DETECT,
@@ -46,18 +55,30 @@ class Config(private val file: String, private var type: Type = Type.DETECT, def
         load(default)
     }
 
+    fun hasChanged(): Boolean = changed
+
     private fun load(default: ConfigBrowser) {
         if (type === Type.DETECT) {
-            val extension = FilenameUtils.getExtension(file)
+            val extension = FilenameUtils.getExtension(path.fileName.toString())
             val format = getFormat(extension)
             if (format !== Type.ERROR) {
                 type = format
             } else {
-                throw IllegalArgumentException("Cannot detect config type of $file")
+                throw IllegalArgumentException("Cannot detect config type of ${path.fileName}")
             }
         }
         if (!path.exists()) {
-            config = default
+            config = if (default !== ConfigBrowser.NULL_BROWSER) {
+                default
+            } else {
+                when (type) {
+                    Type.PROPERTIES -> PropertiesBrowser()
+                    Type.JSON -> JsonBrowser()
+                    Type.YAML -> YAMLBrowser()
+                    Type.ENUM -> PropertiesBrowser() // TODO: EnumBrowser
+                    Type.DETECT, Type.ERROR -> throw IllegalArgumentException("Cannot detect config type of ${path.fileName}")
+                }
+            }
             save()
         } else {
             config = path.inputStream().use { inputStream ->
@@ -139,7 +160,7 @@ class Config(private val file: String, private var type: Type = Type.DETECT, def
         return changed
     }
 
-    private fun parseList(inputStream: InputStream): ConfigBrowser = JsonBrowser().apply {
+    private fun parseList(inputStream: InputStream): ConfigBrowser = PropertiesBrowser().apply {
         inputStream.bufferedReader().use(BufferedReader::readText)
             .replace("\r\n", "\n").trim().split('\n')
             .forEach {

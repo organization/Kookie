@@ -22,13 +22,17 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.dataformat.javaprop.JavaPropsFactory
 
 class PropertiesBrowser private constructor(node: JsonNode?) : ConfigBrowser(node) {
-    internal constructor() : this(null)
+    internal constructor() : this(staticMapper.createObjectNode())
 
-    override val mapper = ObjectMapper(
-        JavaPropsFactory()
-    )
+    override val mapper = staticMapper
 
     override fun create(node: JsonNode?): ConfigBrowser {
         return PropertiesBrowser(node)
+    }
+
+    companion object {
+        private val staticMapper = ObjectMapper(
+            JavaPropsFactory()
+        )
     }
 }

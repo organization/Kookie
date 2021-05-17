@@ -64,7 +64,7 @@ class SetupWizard(private val dataPath: Path) {
         }
 
         val config = Config(
-            dataPath.resolve(App.SERVER_PROPERTIES_NAME).toAbsolutePath().toString(),
+            dataPath.resolve(App.SERVER_PROPERTIES_NAME),
             Config.Type.PROPERTIES
         )
         config.set("language", langStr)
@@ -101,7 +101,7 @@ class SetupWizard(private val dataPath: Path) {
 
     private fun networkFunctions() {
         val config = Config(
-            dataPath.resolve(App.SERVER_PROPERTIES_NAME).toAbsolutePath().toString(),
+            dataPath.resolve(App.SERVER_PROPERTIES_NAME),
             Config.Type.PROPERTIES
         )
         logger.warn(lang.get("query_warning1"))
@@ -120,14 +120,14 @@ class SetupWizard(private val dataPath: Path) {
         if (op.isEmpty()) {
             logger.warn(lang.get("op_warning"))
         } else {
-            val ops = Config(dataPath.resolve("ops.txt").toAbsolutePath().toString(), Config.Type.ENUM)
+            val ops = Config(dataPath.resolve("ops.txt"), Config.Type.ENUM)
             ops.set(op, true)
             ops.save()
         }
         logger.info(lang.get("whitelist_info"))
 
         val config = Config(
-            dataPath.resolve(App.SERVER_PROPERTIES_NAME).toAbsolutePath().toString(),
+            dataPath.resolve(App.SERVER_PROPERTIES_NAME),
             Config.Type.PROPERTIES
         )
         if (getInput(lang.get("whitelist_enable"), "n", "y/N").equals("y", true)) {
@@ -141,7 +141,7 @@ class SetupWizard(private val dataPath: Path) {
 
     private fun generateBaseConfig() {
         val config = Config(
-            dataPath.resolve(App.SERVER_PROPERTIES_NAME).toAbsolutePath().toString(),
+            dataPath.resolve(App.SERVER_PROPERTIES_NAME),
             Config.Type.PROPERTIES
         )
         val serverName = getInput(lang.get("name_your_server"), DEFAULT_NAME)
