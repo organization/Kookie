@@ -1,4 +1,6 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import org.jmailen.gradle.kotlinter.tasks.FormatTask
+import org.jmailen.gradle.kotlinter.tasks.LintTask
 
 plugins {
     // Apply the org.jetbrains.kotlin.jvm Plugin to add support for Kotlin.
@@ -8,6 +10,8 @@ plugins {
     application
 
     id("com.gorylenko.gradle-git-properties") version "2.3.1"
+
+    id("org.jmailen.kotlinter") version "3.4.4"
 }
 
 group = "be.zvz"
@@ -75,6 +79,24 @@ dependencies {
 
     // Use the Kotlin JUnit integration.
     testImplementation(group = "org.jetbrains.kotlin", name = "kotlin-test-junit")
+}
+
+tasks.check {
+    dependsOn("installKotlinterPrePushHook")
+}
+
+kotlinter {
+    experimentalRules = true
+}
+
+tasks.create<LintTask>("ktLint") {
+    group = "verification"
+    source(files("src"))
+}
+
+tasks.create<FormatTask>("ktFormat") {
+    group = "formatting"
+    source(files("src"))
 }
 
 tasks.withType<KotlinCompile> {
