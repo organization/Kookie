@@ -15,20 +15,19 @@ class BlockBreakInfo(
     fun isToolCompatible(tool: Item): Boolean = when {
         hardness < 0 -> false
         else ->
-            toolType == BlockToolType.NONE ||
-                toolHarvestLevel == 0 ||
+            toolType == BlockToolType.NONE || toolHarvestLevel == 0 ||
                 (
-                    toolType.state and tool.toolType.state != 0 &&
-                        tool.toolHarvestLevel >= toolHarvestLevel
+                    toolType.state and tool.blockToolType.state != BlockToolType.NONE.state &&
+                        tool.blockToolHarvestLevel >= toolHarvestLevel
                     )
     }
 
     fun getBreakTime(item: Item): Float {
         var base: Float = if (isToolCompatible(item)) hardness * 1.5f else hardness * 5f
 
-        val efficiency: Float = item.getMiningEfficiency(toolType and item.toolType != 0)
+        val efficiency: Float = item.getMiningEfficiency(toolType.state and item.blockToolType.state != 0)
         if (efficiency <= 0) {
-            throw IllegalArgumentException(item::class.name + " has invalid mining efficiency: expected >= 0, got $efficiency")
+            throw IllegalArgumentException("${item::class.simpleName} has invalid mining efficiency: expected >= 0, got $efficiency")
         }
 
         base /= efficiency
