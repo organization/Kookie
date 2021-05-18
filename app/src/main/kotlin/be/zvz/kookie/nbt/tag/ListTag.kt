@@ -20,38 +20,32 @@ package be.zvz.kookie.nbt.tag
 import be.zvz.kookie.nbt.NBT
 import be.zvz.kookie.nbt.NBTException
 
-class ListTag(private var tags: ArrayList<Tag> = ArrayList()) : Tag() {
+class ListTag<T>(override val value: MutableList<Tag<T>> = mutableListOf()) : Tag<List<Tag<T>>>() {
 
-    private var tagType: NBT.TagType? = null
+    private var tagType: NBT.TagType = NBT.TagType.NOTHING
 
     override fun getTagType(): NBT.TagType {
         return NBT.TagType.LIST
     }
 
     init {
-        for (tag in tags) {
-            if (tagType == null) {
+        for (tag in value) {
+            if (tagType === NBT.TagType.NOTHING) {
                 tagType = tag.getTagType()
             } else {
                 if (tagType != tag.getTagType()) {
-                    throw NBTException("Expected TagType " + tagType!!.name + ", got " + tag.getTagType().name)
+                    throw NBTException("Expected TagType ${tagType.name}, got ${tag.getTagType().name}")
                 }
             }
         }
     }
 
-    fun push(tag: Tag) {
-        if (tag.getTagType() != tagType) {
-            throw NBTException("Expected TagType " + tagType!!.name + ", got " + tag.getTagType().name)
+    fun push(tag: Tag<T>) {
+        if (tag.getTagType() !== tagType) {
+            throw NBTException("Expected TagType ${tagType.name}, got ${tag.getTagType().name}")
         }
-        tags.add(tag)
+        value.add(tag)
     }
 
-    fun get(index: Int): Tag? {
-        return tags.getOrNull(index)
-    }
-
-    override fun getValue(): ArrayList<Tag> {
-        return tags
-    }
+    fun get(index: Int): Tag<T>? = value.getOrNull(index)
 }

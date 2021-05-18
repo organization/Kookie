@@ -19,13 +19,9 @@ package be.zvz.kookie.nbt.tag
 
 import be.zvz.kookie.nbt.NBT
 
-class ByteArrayTag(private val value: String) : Tag() {
+class ByteArrayTag(override val value: String) : Tag<String>() {
 
     override fun getTagType(): NBT.TagType {
         return NBT.TagType.BYTEARRAY
-    }
-
-    override fun getValue(): String {
-        return value
     }
 }

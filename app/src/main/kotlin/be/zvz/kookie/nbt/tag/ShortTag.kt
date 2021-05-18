@@ -19,13 +19,9 @@ package be.zvz.kookie.nbt.tag
 
 import be.zvz.kookie.nbt.NBT
 
-class ShortTag(private val value: Short) : Tag() {
+class ShortTag(override val value: Short) : Tag<Short>() {
 
     override fun getTagType(): NBT.TagType {
         return NBT.TagType.SHORT
-    }
-
-    override fun getValue(): Short {
-        return value
     }
 }

@@ -20,7 +20,7 @@ package be.zvz.kookie.nbt.tag
 import be.zvz.kookie.nbt.NBT
 import be.zvz.kookie.nbt.NBTException
 
-class StringTag(private val value: String) : Tag() {
+class StringTag(override val value: String) : Tag<String>() {
 
     init {
         if (value.length > 32767) {
@@ -30,9 +30,5 @@ class StringTag(private val value: String) : Tag() {
 
     override fun getTagType(): NBT.TagType {
         return NBT.TagType.STRING
-    }
-
-    override fun getValue(): String {
-        return value
     }
 }

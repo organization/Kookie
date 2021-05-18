@@ -19,13 +19,9 @@ package be.zvz.kookie.nbt.tag
 
 import be.zvz.kookie.nbt.NBT
 
-class FloatTag(private val value: Float) : Tag() {
+class FloatTag(override val value: Float) : Tag<Float>() {
 
     override fun getTagType(): NBT.TagType {
         return NBT.TagType.FLOAT
-    }
-
-    override fun getValue(): Float {
-        return value
     }
 }

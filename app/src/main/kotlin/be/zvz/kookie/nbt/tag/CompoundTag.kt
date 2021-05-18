@@ -20,24 +20,25 @@ package be.zvz.kookie.nbt.tag
 import be.zvz.kookie.nbt.NBT
 import be.zvz.kookie.nbt.NBTException
 
-class CompoundTag : Tag() {
+class CompoundTag : Tag<Any>() {
+    override val value: Any = Any()
 
-    private val values = HashMap<String, Tag>()
+    private val values = HashMap<String, Tag<*>>()
 
     override fun getTagType(): NBT.TagType {
         return NBT.TagType.COMPOUND
     }
 
-    fun setTag(name: String, tag: Tag) {
+    fun setTag(name: String, tag: Tag<*>) {
         values[name] = tag
     }
 
-    fun getTag(name: String, default: Tag? = null): Tag? {
-        return values[name] ?: return default
+    fun getTag(name: String, default: Tag<*>? = null): Tag<*>? {
+        return values[name] ?: default
     }
 
     fun getTagValue(name: String, default: Any? = null): Any? {
-        return values[name]?.getValue() ?: default
+        return values[name]?.value ?: default
     }
 
     fun setString(name: String, value: String) {
@@ -77,7 +78,7 @@ class CompoundTag : Tag() {
         if (tag !is StringTag) {
             throw NBTException("Found tag $name but tag is not StringTag")
         }
-        return tag.getValue()
+        return tag.value
     }
 
     fun getByte(name: String): Byte {
@@ -85,7 +86,7 @@ class CompoundTag : Tag() {
         if (tag !is ByteTag) {
             throw NBTException("Found tag $name but tag is not ByteTag")
         }
-        return tag.getValue()
+        return tag.value
     }
 
     fun getFloat(name: String): Float {
@@ -93,7 +94,7 @@ class CompoundTag : Tag() {
         if (tag !is FloatTag) {
             throw NBTException("Found tag $name but tag is not FloatTag")
         }
-        return tag.getValue()
+        return tag.value
     }
 
     fun getDouble(name: String): Double {
@@ -101,7 +102,7 @@ class CompoundTag : Tag() {
         if (tag !is DoubleTag) {
             throw NBTException("Found tag $name but tag is not DoubleTag")
         }
-        return tag.getValue()
+        return tag.value
     }
 
     fun getInt(name: String): Int {
@@ -109,7 +110,7 @@ class CompoundTag : Tag() {
         if (tag !is IntTag) {
             throw NBTException("Found tag $name but tag is not IntTag")
         }
-        return tag.getValue()
+        return tag.value
     }
 
     fun getLong(name: String): Long {
@@ -117,7 +118,7 @@ class CompoundTag : Tag() {
         if (tag !is LongTag) {
             throw NBTException("Found tag $name but tag is not LongTag")
         }
-        return tag.getValue()
+        return tag.value
     }
 
     fun getShort(name: String): Short {
@@ -125,7 +126,7 @@ class CompoundTag : Tag() {
         if (tag !is ShortTag) {
             throw NBTException("Found tag $name but tag is not ShortTag")
         }
-        return tag.getValue()
+        return tag.value
     }
 
     fun getCompoundTag(name: String): CompoundTag {
@@ -136,9 +137,9 @@ class CompoundTag : Tag() {
         return tag
     }
 
-    fun getListTag(name: String): ListTag {
+    fun getListTag(name: String): ListTag<*> {
         val tag = getTag(name)
-        if (tag !is ListTag) {
+        if (tag !is ListTag<*>) {
             throw NBTException("Found tag $name but tag is not ListTag")
         }
         return tag

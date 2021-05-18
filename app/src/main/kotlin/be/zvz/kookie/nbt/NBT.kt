@@ -30,6 +30,7 @@ class NBT {
         SHORT,
         DOUBLE,
         STRING,
-        INTARRAY
+        INTARRAY,
+        NOTHING
     }
 }

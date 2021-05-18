@@ -19,16 +19,17 @@ package be.zvz.kookie.nbt.tag
 
 import be.zvz.kookie.nbt.NBT
 
-abstract class Tag {
+abstract class Tag<T> {
+    abstract val value: T
 
     abstract fun getTagType(): NBT.TagType
 
-    open fun getValue(): Any? {
-        return null
-    }
-
-    fun equals(tag: Tag): Boolean {
+    override fun equals(other: Any?): Boolean {
         // TODO: implement equals
         return true
+    }
+
+    override fun hashCode(): Int {
+        return value?.hashCode() ?: 0
     }
 }
