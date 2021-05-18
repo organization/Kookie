@@ -23,6 +23,7 @@ import java.net.URL
 object Internet {
     var ip = ""
     var online = true
+
     @JvmOverloads
     fun getIP(force: Boolean = false): String {
         if (!online) {

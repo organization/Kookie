@@ -38,6 +38,7 @@ import ch.qos.logback.classic.Level as LoggerLevel
 
 class Server(cwd: Path, dataPath: Path, pluginPath: Path) {
     private var tickSleeper = SleeperHandler()
+
     /**
      * Counts the ticks since the server start
      *
