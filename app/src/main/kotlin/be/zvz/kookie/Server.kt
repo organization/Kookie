@@ -21,7 +21,6 @@ import be.zvz.kookie.console.KookieConsole
 import be.zvz.kookie.constant.CorePaths
 import be.zvz.kookie.constant.FilePermission
 import be.zvz.kookie.lang.Language
-import be.zvz.kookie.snooze.SleeperHandler
 import be.zvz.kookie.utils.Config
 import be.zvz.kookie.utils.PropertiesBrowser
 import be.zvz.kookie.world.World
@@ -38,7 +37,6 @@ import kotlin.io.path.setPosixFilePermissions
 import ch.qos.logback.classic.Level as LoggerLevel
 
 class Server(cwd: Path, dataPath: Path, pluginPath: Path) {
-    private var tickSleeper = SleeperHandler()
 
     /**
      * Counts the ticks since the server start
