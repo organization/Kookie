@@ -32,10 +32,12 @@ class CompoundTag : Tag<Map<String, Tag<*>>>() {
         value[name] = tag
     }
 
+    @JvmOverloads
     fun getTag(name: String, default: Tag<*>? = null): Tag<*>? {
         return value[name] ?: default
     }
 
+    @JvmOverloads
     fun getTagValue(name: String, default: Any? = null): Any? {
         return value[name]?.value ?: default
     }

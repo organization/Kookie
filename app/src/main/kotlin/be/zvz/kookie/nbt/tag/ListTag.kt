@@ -29,7 +29,7 @@ class ListTag<T>(override val value: MutableList<Tag<T>> = mutableListOf()) : Ta
     }
 
     init {
-        for (tag in value) {
+        value.forEach { tag ->
             if (tagType === NBT.TagType.NOTHING) {
                 tagType = tag.getTagType()
             } else {

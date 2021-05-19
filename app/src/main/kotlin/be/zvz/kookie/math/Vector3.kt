@@ -1,6 +1,6 @@
 package be.zvz.kookie.math
 
-class Vector3(var x: Float = 0F, var y: Float = 0F, var z: Float = 0F) {
+class Vector3 @JvmOverloads constructor(var x: Float = 0F, var y: Float = 0F, var z: Float = 0F) {
 
     override fun equals(other: Any?): Boolean = other is Vector3 && other.x == x && other.y == y && other.z == z
 
@@ -11,12 +11,14 @@ class Vector3(var x: Float = 0F, var y: Float = 0F, var z: Float = 0F) {
         return result
     }
 
+    @JvmOverloads
     fun add(x: Float, y: Float = 0F, z: Float = 0F): Vector3 = Vector3(this.x + x, this.y + y, this.z + z)
 
     fun add(x: Vector3): Vector3 = this + x
 
     operator fun plus(x: Vector3): Vector3 = Vector3(this.x + x.x, this.y + x.y, this.z + x.z)
 
+    @JvmOverloads
     fun subtract(x: Float, y: Float = 0F, z: Float = 0F): Vector3 = Vector3(this.x - x, this.y - y, this.z - z)
 
     fun subtract(x: Vector3): Vector3 = this - x
@@ -36,6 +38,7 @@ class Vector3(var x: Float = 0F, var y: Float = 0F, var z: Float = 0F) {
         return Vector3(x / len, y / len, z / len)
     }
 
+    @JvmOverloads
     fun getSide(side: Int, step: Int = 1): Vector3 = when (side) {
         Facing.DOWN -> Vector3(x, y - step, z)
         Facing.UP -> Vector3(x, y + step, z)
@@ -48,8 +51,8 @@ class Vector3(var x: Float = 0F, var y: Float = 0F, var z: Float = 0F) {
 
     @JvmOverloads
     suspend fun sides(step: Int = 1) = sequence {
-        for (i in Facing.ALL) {
-            yield(getSide(i, step))
+        Facing.ALL.forEach {
+            yield(getSide(it, step))
         }
     }
 }
