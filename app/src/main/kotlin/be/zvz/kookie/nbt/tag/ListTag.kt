@@ -48,4 +48,12 @@ class ListTag<T>(override val value: MutableList<Tag<T>> = mutableListOf()) : Ta
     }
 
     fun get(index: Int): Tag<T>? = value.getOrNull(index)
+
+    override fun makeCopy(): ListTag<T> = ListTag(
+        mutableListOf<Tag<T>>().apply {
+            value.forEach {
+                add(it)
+            }
+        }
+    )
 }

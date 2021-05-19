@@ -24,4 +24,6 @@ class ShortTag(override val value: Short) : Tag<Short>() {
     override fun getTagType(): NBT.TagType {
         return NBT.TagType.SHORT
     }
+
+    override fun makeCopy(): ShortTag = ShortTag(value)
 }

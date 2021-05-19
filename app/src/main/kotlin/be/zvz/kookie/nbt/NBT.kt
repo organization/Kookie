@@ -26,11 +26,12 @@ class NBT {
         FLOAT,
         LONG,
         BYTE,
-        BYTEARRAY,
         SHORT,
         DOUBLE,
         STRING,
-        INTARRAY,
+        BYTE_ARRAY,
+        INT_ARRAY,
+        LONG_ARRAY,
         NOTHING
     }
 }

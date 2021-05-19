@@ -24,4 +24,6 @@ class FloatTag(override val value: Float) : Tag<Float>() {
     override fun getTagType(): NBT.TagType {
         return NBT.TagType.FLOAT
     }
+
+    override fun makeCopy(): FloatTag = FloatTag(value)
 }

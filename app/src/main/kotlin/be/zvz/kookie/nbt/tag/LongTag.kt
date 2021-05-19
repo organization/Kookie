@@ -24,4 +24,6 @@ class LongTag(override val value: Long) : Tag<Long>() {
     override fun getTagType(): NBT.TagType {
         return NBT.TagType.LONG
     }
+
+    override fun makeCopy(): LongTag = LongTag(value)
 }

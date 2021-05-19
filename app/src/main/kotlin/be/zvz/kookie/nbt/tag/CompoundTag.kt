@@ -19,26 +19,25 @@ package be.zvz.kookie.nbt.tag
 
 import be.zvz.kookie.nbt.NBT
 import be.zvz.kookie.nbt.NBTException
+import com.koloboke.collect.map.hash.HashObjObjMaps
 
-class CompoundTag : Tag<Any>() {
-    override val value: Any = Any()
-
-    private val values = HashMap<String, Tag<*>>()
+class CompoundTag : Tag<Map<String, Tag<*>>>() {
+    override val value = HashObjObjMaps.newMutableMap<String, Tag<*>>()
 
     override fun getTagType(): NBT.TagType {
         return NBT.TagType.COMPOUND
     }
 
     fun setTag(name: String, tag: Tag<*>) {
-        values[name] = tag
+        value[name] = tag
     }
 
     fun getTag(name: String, default: Tag<*>? = null): Tag<*>? {
-        return values[name] ?: default
+        return value[name] ?: default
     }
 
     fun getTagValue(name: String, default: Any? = null): Any? {
-        return values[name]?.value ?: default
+        return value[name]?.value ?: default
     }
 
     fun setString(name: String, value: String) {
@@ -149,5 +148,12 @@ class CompoundTag : Tag<Any>() {
         fun create(): CompoundTag {
             return CompoundTag()
         }
+    }
+
+    override fun makeCopy(): CompoundTag = CompoundTag().let {
+        it.value.forEach { (name, tag) ->
+            value[name] = tag
+        }
+        it
     }
 }

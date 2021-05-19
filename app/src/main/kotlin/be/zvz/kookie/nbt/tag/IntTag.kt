@@ -24,4 +24,6 @@ class IntTag(override val value: Int) : Tag<Int>() {
     override fun getTagType(): NBT.TagType {
         return NBT.TagType.INT
     }
+
+    override fun makeCopy(): IntTag = IntTag(value)
 }

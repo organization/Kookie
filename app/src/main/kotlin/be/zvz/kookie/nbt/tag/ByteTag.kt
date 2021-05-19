@@ -24,4 +24,6 @@ class ByteTag(override val value: Byte) : Tag<Byte>() {
     override fun getTagType(): NBT.TagType {
         return NBT.TagType.BYTE
     }
+
+    override fun makeCopy(): ByteTag = ByteTag(value)
 }

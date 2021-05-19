@@ -31,4 +31,6 @@ class StringTag(override val value: String) : Tag<String>() {
     override fun getTagType(): NBT.TagType {
         return NBT.TagType.STRING
     }
+
+    override fun makeCopy(): StringTag = StringTag(value)
 }

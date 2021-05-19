@@ -19,9 +19,11 @@ package be.zvz.kookie.nbt.tag
 
 import be.zvz.kookie.nbt.NBT
 
-class ByteArrayTag(override val value: String) : Tag<String>() {
+class ByteArrayTag(override val value: ByteArray) : Tag<ByteArray>() {
 
     override fun getTagType(): NBT.TagType {
-        return NBT.TagType.BYTEARRAY
+        return NBT.TagType.BYTE_ARRAY
     }
+
+    override fun makeCopy(): ByteArrayTag = ByteArrayTag(value)
 }

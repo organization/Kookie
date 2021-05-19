@@ -19,9 +19,11 @@ package be.zvz.kookie.nbt.tag
 
 import be.zvz.kookie.nbt.NBT
 
-class IntArrayTag(override val value: List<Int>) : Tag<List<Int>>() {
+class IntArrayTag(override val value: IntArray) : Tag<IntArray>() {
 
     override fun getTagType(): NBT.TagType {
-        return NBT.TagType.INTARRAY
+        return NBT.TagType.INT_ARRAY
     }
+
+    override fun makeCopy(): IntArrayTag = IntArrayTag(value)
 }

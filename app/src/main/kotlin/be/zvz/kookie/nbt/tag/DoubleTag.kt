@@ -24,4 +24,6 @@ class DoubleTag(override val value: Double) : Tag<Double>() {
     override fun getTagType(): NBT.TagType {
         return NBT.TagType.DOUBLE
     }
+
+    override fun makeCopy(): DoubleTag = DoubleTag(value)
 }
