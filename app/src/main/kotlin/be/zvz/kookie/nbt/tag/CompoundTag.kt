@@ -147,6 +147,7 @@ class CompoundTag : Tag<Map<String, Tag<*>>>() {
     }
 
     companion object {
+        @JvmStatic
         fun create(): CompoundTag {
             return CompoundTag()
         }

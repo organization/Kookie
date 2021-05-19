@@ -143,6 +143,7 @@ class Language(langStr: String, path: String? = null, fallback: String = FALLBAC
     companion object {
         const val FALLBACK_LANGUAGE = "eng"
 
+        @JvmStatic
         fun getLanguageList(pathStr: String = ""): Map<String, String> {
             val path = if (pathStr.isEmpty()) {
                 CorePaths.RESOURCE_PATH

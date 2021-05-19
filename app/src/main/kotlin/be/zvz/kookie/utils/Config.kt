@@ -173,6 +173,7 @@ class Config @JvmOverloads constructor(
     }
 
     companion object {
+        @JvmStatic
         fun getFormat(type: String) = when (type) {
             "properties", "cnf", "conf", "config" -> Type.PROPERTIES
             "json", "js" -> Type.JSON

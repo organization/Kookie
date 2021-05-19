@@ -51,6 +51,7 @@ class MemoryManager(private val server: Server) {
     fun dumpServerMemory(outputFolder: String, maxNesting: Int, maxStringSize: Int) {}
 
     companion object {
+        @JvmStatic
         fun dumpMemory(
             startingObject: Any,
             outputFolder: String,
@@ -58,6 +59,7 @@ class MemoryManager(private val server: Server) {
             maxStringSize: Int
         ) {}
 
+        @JvmStatic
         private fun continueDump(
             from: Any,
             objects: List<Any>,

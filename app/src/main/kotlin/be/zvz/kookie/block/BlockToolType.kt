@@ -10,6 +10,7 @@ enum class BlockToolType(val state: Int) {
     HOE(1 shl 5);
 
     companion object {
+        @JvmStatic
         fun fromInt(state: Int) = BlockToolType.values().first { it.state == state }
     }
 }
