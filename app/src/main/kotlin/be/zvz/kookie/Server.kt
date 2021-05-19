@@ -18,6 +18,7 @@
 package be.zvz.kookie
 
 import be.zvz.kookie.console.KookieConsole
+import be.zvz.kookie.constant.CorePaths
 import be.zvz.kookie.constant.FilePermission
 import be.zvz.kookie.lang.Language
 import be.zvz.kookie.snooze.SleeperHandler
@@ -193,6 +194,8 @@ class Server(cwd: Path, dataPath: Path, pluginPath: Path) {
             console.start()
         }
     }
+
+    fun getDataPath(): Path = CorePaths.PATH
 
     companion object {
         @JvmStatic

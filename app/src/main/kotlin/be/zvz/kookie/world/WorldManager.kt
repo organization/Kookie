@@ -19,6 +19,7 @@ package be.zvz.kookie.world
 
 import be.zvz.kookie.Server
 import com.koloboke.collect.map.hash.HashIntObjMaps
+import java.nio.file.Path
 
 class WorldManager(private val server: Server) {
     val worlds: MutableMap<Int, World> = HashIntObjMaps.newMutableMap()
@@ -39,4 +40,6 @@ class WorldManager(private val server: Server) {
         }
         return null
     }
+
+    private fun getWorldPath(): Path = server.getDataPath().resolve("worlds")
 }
