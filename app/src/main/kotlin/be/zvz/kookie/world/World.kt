@@ -1,6 +1,8 @@
 package be.zvz.kookie.world
 
-class World {
+import be.zvz.kookie.Server
+
+class World(val server: Server, val folderName: String) {
     companion object {
         const val DIFFICULTY_PEACEFUL = 0
         const val DIFFICULTY_EASY = 1

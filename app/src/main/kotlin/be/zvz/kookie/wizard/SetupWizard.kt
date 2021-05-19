@@ -46,7 +46,7 @@ class SetupWizard(private val dataPath: Path) {
             println("[*] $native => $short")
         }
 
-        var langStr: String? = null
+        var langStr: String?
         do {
             langStr = getInput("Language", "eng").lowercase()
             if (langs.containsKey(langStr)) {
@@ -257,7 +257,7 @@ class SetupWizard(private val dataPath: Path) {
     }
 
     companion object {
-        val DEFAULT_NAME = "${VersionInfo.NAME} Server"
+        const val DEFAULT_NAME = "${VersionInfo.NAME} Server"
         const val DEFAULT_PORT = 19132
         const val DEFAULT_PLAYERS = 20
     }
