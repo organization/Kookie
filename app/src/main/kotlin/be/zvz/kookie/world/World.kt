@@ -1,6 +1,6 @@
-package be.zvz.kookie.level
+package be.zvz.kookie.world
 
-class Level {
+class World {
     companion object {
         const val DIFFICULTY_PEACEFUL = 0
         const val DIFFICULTY_EASY = 1

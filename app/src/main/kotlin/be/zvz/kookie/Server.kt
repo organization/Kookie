@@ -20,10 +20,10 @@ package be.zvz.kookie
 import be.zvz.kookie.console.KookieConsole
 import be.zvz.kookie.constant.FilePermission
 import be.zvz.kookie.lang.Language
-import be.zvz.kookie.level.Level
 import be.zvz.kookie.snooze.SleeperHandler
 import be.zvz.kookie.utils.Config
 import be.zvz.kookie.utils.PropertiesBrowser
+import be.zvz.kookie.world.World
 import ch.qos.logback.classic.Logger
 import org.apache.commons.io.IOUtils
 import org.slf4j.LoggerFactory
@@ -107,7 +107,7 @@ class Server(cwd: Path, dataPath: Path, pluginPath: Path) {
                     put("force-gamemode", false)
                     put("hardcore", false)
                     put("pvp", true)
-                    put("difficulty", Level.DIFFICULTY_NORMAL)
+                    put("difficulty", World.DIFFICULTY_NORMAL)
                     put("generator-settings", "")
                     put("level-name", "world")
                     put("level-seed", "")
