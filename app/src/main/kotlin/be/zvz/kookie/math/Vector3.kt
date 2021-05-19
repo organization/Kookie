@@ -56,14 +56,14 @@ class Vector3 @JvmOverloads constructor(var x: Float = 0F, var y: Float = 0F, va
     }
 
     @JvmOverloads
-    fun getSide(side: Int, step: Int = 1): Vector3 = when (side) {
+    fun getSide(side: Facing, step: Int = 1): Vector3 = when (side) {
         Facing.DOWN -> Vector3(x, y - step, z)
         Facing.UP -> Vector3(x, y + step, z)
         Facing.NORTH -> Vector3(x, y, z - step)
         Facing.SOUTH -> Vector3(x, y, z + step)
         Facing.WEST -> Vector3(x - step, y, z)
         Facing.EAST -> Vector3(x + step, y, z)
-        else -> this
+        Facing.CENTER -> this
     }
 
     @JvmOverloads

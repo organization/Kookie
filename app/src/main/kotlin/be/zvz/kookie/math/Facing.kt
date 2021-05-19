@@ -24,7 +24,8 @@ enum class Facing(val value: Int) {
     NORTH(Axis.Z.value shl 1),
     SOUTH(Axis.Z.value shl 1 or Facing.FLAG_AXIS_POSITIVE),
     WEST(Axis.X.value shl 1),
-    EAST(Axis.X.value shl 1 or Facing.FLAG_AXIS_POSITIVE);
+    EAST(Axis.X.value shl 1 or Facing.FLAG_AXIS_POSITIVE),
+    CENTER(-1);
 
     companion object {
         private const val FLAG_AXIS_POSITIVE = 1
