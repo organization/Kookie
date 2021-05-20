@@ -2,6 +2,7 @@ package be.zvz.kookie.network.mcpe.protocol
 
 import be.zvz.kookie.network.mcpe.serializer.PacketSerializer
 
+@ProtocolIdentify(id = -1)
 abstract class DataPacket : Packet {
 
     var senderSubId = 0
