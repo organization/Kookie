@@ -1,7 +1,8 @@
 [discord-invite]: https://discord.gg/FSyZYx79Ye
 [discord-shield]: https://discord.com/api/guilds/844596677528780842/widget.png
+[java-workflow-shield]: https://github.com/organization/Kookie/actions/workflows/gradle.yml/badge.svg
 
-# ![image](https://user-images.githubusercontent.com/16558115/118443050-666d2000-b726-11eb-9853-feaf2c6bec6f.png)<br>Kookie [ ![discord-shield][] ][discord-invite]
+# ![image](https://user-images.githubusercontent.com/16558115/118443050-666d2000-b726-11eb-9853-feaf2c6bec6f.png)<br>Kookie [ ![discord-shield][] ][discord-invite]![java-workflow-shield][]
 
 A server software for Minecraft: Bedrock Edition written in Kotlin
 
