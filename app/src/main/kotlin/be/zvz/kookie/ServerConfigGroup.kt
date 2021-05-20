@@ -1,7 +1,7 @@
 package be.zvz.kookie
 
 import be.zvz.kookie.utils.Config
-import be.zvz.kookie.utils.ConfigBrowser
+import be.zvz.kookie.utils.config.ConfigBrowser
 import com.koloboke.collect.map.hash.HashObjObjMaps
 
 class ServerConfigGroup(
@@ -40,10 +40,10 @@ class ServerConfigGroup(
         serverProperties.set(variable, value)
 
     @JvmOverloads
-    fun getConfigBool(variable: String, defaultValue: Boolean = false): Boolean =
+    fun getConfigBoolean(variable: String, defaultValue: Boolean = false): Boolean =
         serverProperties.get(variable).asBoolean(defaultValue)
 
-    fun setConfigBool(variable: String, value: Boolean) =
+    fun setConfigBoolean(variable: String, value: Boolean) =
         serverProperties.set(variable, value)
 
     fun save() {

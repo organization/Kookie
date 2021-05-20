@@ -22,7 +22,7 @@ import be.zvz.kookie.constant.CorePaths
 import be.zvz.kookie.constant.FilePermission
 import be.zvz.kookie.lang.Language
 import be.zvz.kookie.utils.Config
-import be.zvz.kookie.utils.PropertiesBrowser
+import be.zvz.kookie.utils.config.PropertiesBrowser
 import be.zvz.kookie.world.World
 import ch.qos.logback.classic.Logger
 import org.apache.commons.io.IOUtils

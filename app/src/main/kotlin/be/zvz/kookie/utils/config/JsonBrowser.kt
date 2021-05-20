@@ -15,25 +15,25 @@
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  */
-package be.zvz.kookie.utils
+package be.zvz.kookie.utils.config
 
+import com.fasterxml.jackson.core.JsonFactory
 import com.fasterxml.jackson.core.JsonParser
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.dataformat.yaml.YAMLFactory
 
-class YAMLBrowser private constructor(node: JsonNode?) : ConfigBrowser(node) {
+class JsonBrowser private constructor(node: JsonNode?) : ConfigBrowser(node) {
     internal constructor() : this(staticMapper.createObjectNode())
 
     override val mapper = staticMapper
 
     override fun create(node: JsonNode?): ConfigBrowser {
-        return YAMLBrowser(node)
+        return JsonBrowser(node)
     }
 
     companion object {
         private val staticMapper = ObjectMapper(
-            YAMLFactory().apply {
+            JsonFactory().apply {
                 enable(JsonParser.Feature.ALLOW_COMMENTS)
                 enable(JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES)
             }
