@@ -28,4 +28,4 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: Kookie-${{ matrix.java }}
-        path: build/libs/shadow-*.jar
+        path: app/build/libs/shadow-*.jar
