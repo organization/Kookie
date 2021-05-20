@@ -5,11 +5,11 @@
 
 A server software for Minecraft: Bedrock Edition written in Kotlin
 
-# Requirements
+## Requirements
 
 - Java 1.8+
 
-## For development
+### For development
 
 - Kotlin 1.5+
 - Java 1.8+
