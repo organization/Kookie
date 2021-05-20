@@ -1,523 +1,520 @@
 package be.zvz.kookie.block
 
-class BlockLegacyIds {
+enum class BlockLegacyIds(id: Int) {
 
-    companion object {
-
-        const val AIR = 0
-        const val STONE = 1
-        const val GRASS = 2
-        const val DIRT = 3
-        const val COBBLESTONE = 4
-        const val PLANKS = 5
-        const val WOODEN_PLANKS = 5
-        const val SAPLING = 6
-        const val BEDROCK = 7
-        const val FLOWING_WATER = 8
-        const val STILL_WATER = 9
-        const val WATER = 9
-        const val FLOWING_LAVA = 10
-        const val LAVA = 11
-        const val STILL_LAVA = 11
-        const val SAND = 12
-        const val GRAVEL = 13
-        const val GOLD_ORE = 14
-        const val IRON_ORE = 15
-        const val COAL_ORE = 16
-        const val LOG = 17
-        const val LEAVES = 18
-        const val SPONGE = 19
-        const val GLASS = 20
-        const val LAPIS_ORE = 21
-        const val LAPIS_BLOCK = 22
-        const val DISPENSER = 23
-        const val SANDSTONE = 24
-        const val NOTEBLOCK = 25
-        const val NOTE_BLOCK = 25
-        const val BED_BLOCK = 26
-        const val GOLDEN_RAIL = 27
-        const val POWERED_RAIL = 27
-        const val DETECTOR_RAIL = 28
-        const val STICKY_PISTON = 29
-        const val COBWEB = 30
-        const val WEB = 30
-        const val TALLGRASS = 31
-        const val TALL_GRASS = 31
-        const val DEADBUSH = 32
-        const val DEAD_BUSH = 32
-        const val PISTON = 33
-        const val PISTONARMCOLLISION = 34
-        const val PISTON_ARM_COLLISION = 34
-        const val WOOL = 35
-        const val ELEMENT_0 = 36
-        const val DANDELION = 37
-        const val YELLOW_FLOWER = 37
-        const val POPPY = 38
-        const val RED_FLOWER = 38
-        const val BROWN_MUSHROOM = 39
-        const val RED_MUSHROOM = 40
-        const val GOLD_BLOCK = 41
-        const val IRON_BLOCK = 42
-        const val DOUBLE_STONE_SLAB = 43
-        const val STONE_SLAB = 44
-        const val BRICK_BLOCK = 45
-        const val TNT = 46
-        const val BOOKSHELF = 47
-        const val MOSSY_COBBLESTONE = 48
-        const val MOSS_STONE = 48
-        const val OBSIDIAN = 49
-        const val TORCH = 50
-        const val FIRE = 51
-        const val MOB_SPAWNER = 52
-        const val MONSTER_SPAWNER = 52
-        const val OAK_STAIRS = 53
-        const val WOODEN_STAIRS = 53
-        const val CHEST = 54
-        const val REDSTONE_WIRE = 55
-        const val DIAMOND_ORE = 56
-        const val DIAMOND_BLOCK = 57
-        const val CRAFTING_TABLE = 58
-        const val WORKBENCH = 58
-        const val WHEAT_BLOCK = 59
-        const val FARMLAND = 60
-        const val FURNACE = 61
-        const val BURNING_FURNACE = 62
-        const val LIT_FURNACE = 62
-        const val SIGN_POST = 63
-        const val STANDING_SIGN = 63
-        const val OAK_DOOR_BLOCK = 64
-        const val WOODEN_DOOR_BLOCK = 64
-        const val LADDER = 65
-        const val RAIL = 66
-        const val COBBLESTONE_STAIRS = 67
-        const val STONE_STAIRS = 67
-        const val WALL_SIGN = 68
-        const val LEVER = 69
-        const val STONE_PRESSURE_PLATE = 70
-        const val IRON_DOOR_BLOCK = 71
-        const val WOODEN_PRESSURE_PLATE = 72
-        const val REDSTONE_ORE = 73
-        const val GLOWING_REDSTONE_ORE = 74
-        const val LIT_REDSTONE_ORE = 74
-        const val UNLIT_REDSTONE_TORCH = 75
-        const val LIT_REDSTONE_TORCH = 76
-        const val REDSTONE_TORCH = 76
-        const val STONE_BUTTON = 77
-        const val SNOW_LAYER = 78
-        const val ICE = 79
-        const val SNOW = 80
-        const val SNOW_BLOCK = 80
-        const val CACTUS = 81
-        const val CLAY_BLOCK = 82
-        const val REEDS_BLOCK = 83
-        const val SUGARCANE_BLOCK = 83
-        const val JUKEBOX = 84
-        const val FENCE = 85
-        const val PUMPKIN = 86
-        const val NETHERRACK = 87
-        const val SOUL_SAND = 88
-        const val GLOWSTONE = 89
-        const val PORTAL = 90
-        const val JACK_O_LANTERN = 91
-        const val LIT_PUMPKIN = 91
-        const val CAKE_BLOCK = 92
-        const val REPEATER_BLOCK = 93
-        const val UNPOWERED_REPEATER = 93
-        const val POWERED_REPEATER = 94
-        const val INVISIBLEBEDROCK = 95
-        const val INVISIBLE_BEDROCK = 95
-        const val TRAPDOOR = 96
-        const val WOODEN_TRAPDOOR = 96
-        const val MONSTER_EGG = 97
-        const val STONEBRICK = 98
-        const val STONE_BRICK = 98
-        const val STONE_BRICKS = 98
-        const val BROWN_MUSHROOM_BLOCK = 99
-        const val RED_MUSHROOM_BLOCK = 100
-        const val IRON_BARS = 101
-        const val GLASS_PANE = 102
-        const val MELON_BLOCK = 103
-        const val PUMPKIN_STEM = 104
-        const val MELON_STEM = 105
-        const val VINE = 106
-        const val VINES = 106
-        const val FENCE_GATE = 107
-        const val OAK_FENCE_GATE = 107
-        const val BRICK_STAIRS = 108
-        const val STONE_BRICK_STAIRS = 109
-        const val MYCELIUM = 110
-        const val LILY_PAD = 111
-        const val WATERLILY = 111
-        const val WATER_LILY = 111
-        const val NETHER_BRICK_BLOCK = 112
-        const val NETHER_BRICK_FENCE = 113
-        const val NETHER_BRICK_STAIRS = 114
-        const val NETHER_WART_PLANT = 115
-        const val ENCHANTING_TABLE = 116
-        const val ENCHANTMENT_TABLE = 116
-        const val BREWING_STAND_BLOCK = 117
-        const val CAULDRON_BLOCK = 118
-        const val END_PORTAL = 119
-        const val END_PORTAL_FRAME = 120
-        const val END_STONE = 121
-        const val DRAGON_EGG = 122
-        const val REDSTONE_LAMP = 123
-        const val LIT_REDSTONE_LAMP = 124
-        const val DROPPER = 125
-        const val ACTIVATOR_RAIL = 126
-        const val COCOA = 127
-        const val COCOA_BLOCK = 127
-        const val SANDSTONE_STAIRS = 128
-        const val EMERALD_ORE = 129
-        const val ENDER_CHEST = 130
-        const val TRIPWIRE_HOOK = 131
-        const val TRIPWIRE = 132
-        const val TRIP_WIRE = 132
-        const val EMERALD_BLOCK = 133
-        const val SPRUCE_STAIRS = 134
-        const val BIRCH_STAIRS = 135
-        const val JUNGLE_STAIRS = 136
-        const val COMMAND_BLOCK = 137
-        const val BEACON = 138
-        const val COBBLESTONE_WALL = 139
-        const val STONE_WALL = 139
-        const val FLOWER_POT_BLOCK = 140
-        const val CARROTS = 141
-        const val CARROT_BLOCK = 141
-        const val POTATOES = 142
-        const val POTATO_BLOCK = 142
-        const val WOODEN_BUTTON = 143
-        const val MOB_HEAD_BLOCK = 144
-        const val SKULL_BLOCK = 144
-        const val ANVIL = 145
-        const val TRAPPED_CHEST = 146
-        const val LIGHT_WEIGHTED_PRESSURE_PLATE = 147
-        const val HEAVY_WEIGHTED_PRESSURE_PLATE = 148
-        const val COMPARATOR_BLOCK = 149
-        const val UNPOWERED_COMPARATOR = 149
-        const val POWERED_COMPARATOR = 150
-        const val DAYLIGHT_DETECTOR = 151
-        const val DAYLIGHT_SENSOR = 151
-        const val REDSTONE_BLOCK = 152
-        const val NETHER_QUARTZ_ORE = 153
-        const val QUARTZ_ORE = 153
-        const val HOPPER_BLOCK = 154
-        const val QUARTZ_BLOCK = 155
-        const val QUARTZ_STAIRS = 156
-        const val DOUBLE_WOODEN_SLAB = 157
-        const val WOODEN_SLAB = 158
-        const val STAINED_CLAY = 159
-        const val STAINED_HARDENED_CLAY = 159
-        const val TERRACOTTA = 159
-        const val STAINED_GLASS_PANE = 160
-        const val LEAVES2 = 161
-        const val LOG2 = 162
-        const val ACACIA_STAIRS = 163
-        const val DARK_OAK_STAIRS = 164
-        const val SLIME = 165
-        const val SLIME_BLOCK = 165
-        const val GLOW_STICK = 166
-        const val IRON_TRAPDOOR = 167
-        const val PRISMARINE = 168
-        const val SEALANTERN = 169
-        const val SEA_LANTERN = 169
-        const val HAY_BALE = 170
-        const val HAY_BLOCK = 170
-        const val CARPET = 171
-        const val HARDENED_CLAY = 172
-        const val COAL_BLOCK = 173
-        const val PACKED_ICE = 174
-        const val DOUBLE_PLANT = 175
-        const val STANDING_BANNER = 176
-        const val WALL_BANNER = 177
-        const val DAYLIGHT_DETECTOR_INVERTED = 178
-        const val DAYLIGHT_SENSOR_INVERTED = 178
-        const val RED_SANDSTONE = 179
-        const val RED_SANDSTONE_STAIRS = 180
-        const val DOUBLE_STONE_SLAB2 = 181
-        const val STONE_SLAB2 = 182
-        const val SPRUCE_FENCE_GATE = 183
-        const val BIRCH_FENCE_GATE = 184
-        const val JUNGLE_FENCE_GATE = 185
-        const val DARK_OAK_FENCE_GATE = 186
-        const val ACACIA_FENCE_GATE = 187
-        const val REPEATING_COMMAND_BLOCK = 188
-        const val CHAIN_COMMAND_BLOCK = 189
-        const val HARD_GLASS_PANE = 190
-        const val HARD_STAINED_GLASS_PANE = 191
-        const val CHEMICAL_HEAT = 192
-        const val SPRUCE_DOOR_BLOCK = 193
-        const val BIRCH_DOOR_BLOCK = 194
-        const val JUNGLE_DOOR_BLOCK = 195
-        const val ACACIA_DOOR_BLOCK = 196
-        const val DARK_OAK_DOOR_BLOCK = 197
-        const val GRASS_PATH = 198
-        const val FRAME_BLOCK = 199
-        const val ITEM_FRAME_BLOCK = 199
-        const val CHORUS_FLOWER = 200
-        const val PURPUR_BLOCK = 201
-        const val COLORED_TORCH_RG = 202
-        const val PURPUR_STAIRS = 203
-        const val COLORED_TORCH_BP = 204
-        const val UNDYED_SHULKER_BOX = 205
-        const val END_BRICKS = 206
-        const val FROSTED_ICE = 207
-        const val END_ROD = 208
-        const val END_GATEWAY = 209
-        const val MAGMA = 213
-        const val NETHER_WART_BLOCK = 214
-        const val RED_NETHER_BRICK = 215
-        const val BONE_BLOCK = 216
-        const val SHULKER_BOX = 218
-        const val PURPLE_GLAZED_TERRACOTTA = 219
-        const val WHITE_GLAZED_TERRACOTTA = 220
-        const val ORANGE_GLAZED_TERRACOTTA = 221
-        const val MAGENTA_GLAZED_TERRACOTTA = 222
-        const val LIGHT_BLUE_GLAZED_TERRACOTTA = 223
-        const val YELLOW_GLAZED_TERRACOTTA = 224
-        const val LIME_GLAZED_TERRACOTTA = 225
-        const val PINK_GLAZED_TERRACOTTA = 226
-        const val GRAY_GLAZED_TERRACOTTA = 227
-        const val SILVER_GLAZED_TERRACOTTA = 228
-        const val CYAN_GLAZED_TERRACOTTA = 229
-        const val BLUE_GLAZED_TERRACOTTA = 231
-        const val BROWN_GLAZED_TERRACOTTA = 232
-        const val GREEN_GLAZED_TERRACOTTA = 233
-        const val RED_GLAZED_TERRACOTTA = 234
-        const val BLACK_GLAZED_TERRACOTTA = 235
-        const val CONCRETE = 236
-        const val CONCRETEPOWDER = 237
-        const val CONCRETE_POWDER = 237
-        const val CHEMISTRY_TABLE = 238
-        const val UNDERWATER_TORCH = 239
-        const val CHORUS_PLANT = 240
-        const val STAINED_GLASS = 241
-        const val PODZOL = 243
-        const val BEETROOT_BLOCK = 244
-        const val STONECUTTER = 245
-        const val GLOWINGOBSIDIAN = 246
-        const val GLOWING_OBSIDIAN = 246
-        const val NETHERREACTOR = 247
-        const val NETHER_REACTOR = 247
-        const val INFO_UPDATE = 248
-        const val INFO_UPDATE2 = 249
-        const val MOVINGBLOCK = 250
-        const val MOVING_BLOCK = 250
-        const val OBSERVER = 251
-        const val STRUCTURE_BLOCK = 252
-        const val HARD_GLASS = 253
-        const val HARD_STAINED_GLASS = 254
-        const val RESERVED6 = 255
-        const val PRISMARINE_STAIRS = 257
-        const val DARK_PRISMARINE_STAIRS = 258
-        const val PRISMARINE_BRICKS_STAIRS = 259
-        const val STRIPPED_SPRUCE_LOG = 260
-        const val STRIPPED_BIRCH_LOG = 261
-        const val STRIPPED_JUNGLE_LOG = 262
-        const val STRIPPED_ACACIA_LOG = 263
-        const val STRIPPED_DARK_OAK_LOG = 264
-        const val STRIPPED_OAK_LOG = 265
-        const val BLUE_ICE = 266
-        const val ELEMENT_1 = 267
-        const val ELEMENT_2 = 268
-        const val ELEMENT_3 = 269
-        const val ELEMENT_4 = 270
-        const val ELEMENT_5 = 271
-        const val ELEMENT_6 = 272
-        const val ELEMENT_7 = 273
-        const val ELEMENT_8 = 274
-        const val ELEMENT_9 = 275
-        const val ELEMENT_10 = 276
-        const val ELEMENT_11 = 277
-        const val ELEMENT_12 = 278
-        const val ELEMENT_13 = 279
-        const val ELEMENT_14 = 280
-        const val ELEMENT_15 = 281
-        const val ELEMENT_16 = 282
-        const val ELEMENT_17 = 283
-        const val ELEMENT_18 = 284
-        const val ELEMENT_19 = 285
-        const val ELEMENT_20 = 286
-        const val ELEMENT_21 = 287
-        const val ELEMENT_22 = 288
-        const val ELEMENT_23 = 289
-        const val ELEMENT_24 = 290
-        const val ELEMENT_25 = 291
-        const val ELEMENT_26 = 292
-        const val ELEMENT_27 = 293
-        const val ELEMENT_28 = 294
-        const val ELEMENT_29 = 295
-        const val ELEMENT_30 = 296
-        const val ELEMENT_31 = 297
-        const val ELEMENT_32 = 298
-        const val ELEMENT_33 = 299
-        const val ELEMENT_34 = 300
-        const val ELEMENT_35 = 301
-        const val ELEMENT_36 = 302
-        const val ELEMENT_37 = 303
-        const val ELEMENT_38 = 304
-        const val ELEMENT_39 = 305
-        const val ELEMENT_40 = 306
-        const val ELEMENT_41 = 307
-        const val ELEMENT_42 = 308
-        const val ELEMENT_43 = 309
-        const val ELEMENT_44 = 310
-        const val ELEMENT_45 = 311
-        const val ELEMENT_46 = 312
-        const val ELEMENT_47 = 313
-        const val ELEMENT_48 = 314
-        const val ELEMENT_49 = 315
-        const val ELEMENT_50 = 316
-        const val ELEMENT_51 = 317
-        const val ELEMENT_52 = 318
-        const val ELEMENT_53 = 319
-        const val ELEMENT_54 = 320
-        const val ELEMENT_55 = 321
-        const val ELEMENT_56 = 322
-        const val ELEMENT_57 = 323
-        const val ELEMENT_58 = 324
-        const val ELEMENT_59 = 325
-        const val ELEMENT_60 = 326
-        const val ELEMENT_61 = 327
-        const val ELEMENT_62 = 328
-        const val ELEMENT_63 = 329
-        const val ELEMENT_64 = 330
-        const val ELEMENT_65 = 331
-        const val ELEMENT_66 = 332
-        const val ELEMENT_67 = 333
-        const val ELEMENT_68 = 334
-        const val ELEMENT_69 = 335
-        const val ELEMENT_70 = 336
-        const val ELEMENT_71 = 337
-        const val ELEMENT_72 = 338
-        const val ELEMENT_73 = 339
-        const val ELEMENT_74 = 340
-        const val ELEMENT_75 = 341
-        const val ELEMENT_76 = 342
-        const val ELEMENT_77 = 343
-        const val ELEMENT_78 = 344
-        const val ELEMENT_79 = 345
-        const val ELEMENT_80 = 346
-        const val ELEMENT_81 = 347
-        const val ELEMENT_82 = 348
-        const val ELEMENT_83 = 349
-        const val ELEMENT_84 = 350
-        const val ELEMENT_85 = 351
-        const val ELEMENT_86 = 352
-        const val ELEMENT_87 = 353
-        const val ELEMENT_88 = 354
-        const val ELEMENT_89 = 355
-        const val ELEMENT_90 = 356
-        const val ELEMENT_91 = 357
-        const val ELEMENT_92 = 358
-        const val ELEMENT_93 = 359
-        const val ELEMENT_94 = 360
-        const val ELEMENT_95 = 361
-        const val ELEMENT_96 = 362
-        const val ELEMENT_97 = 363
-        const val ELEMENT_98 = 364
-        const val ELEMENT_99 = 365
-        const val ELEMENT_100 = 366
-        const val ELEMENT_101 = 367
-        const val ELEMENT_102 = 368
-        const val ELEMENT_103 = 369
-        const val ELEMENT_104 = 370
-        const val ELEMENT_105 = 371
-        const val ELEMENT_106 = 372
-        const val ELEMENT_107 = 373
-        const val ELEMENT_108 = 374
-        const val ELEMENT_109 = 375
-        const val ELEMENT_110 = 376
-        const val ELEMENT_111 = 377
-        const val ELEMENT_112 = 378
-        const val ELEMENT_113 = 379
-        const val ELEMENT_114 = 380
-        const val ELEMENT_115 = 381
-        const val ELEMENT_116 = 382
-        const val ELEMENT_117 = 383
-        const val ELEMENT_118 = 384
-        const val SEAGRASS = 385
-        const val CORAL = 386
-        const val CORAL_BLOCK = 387
-        const val CORAL_FAN = 388
-        const val CORAL_FAN_DEAD = 389
-        const val CORAL_FAN_HANG = 390
-        const val CORAL_FAN_HANG2 = 391
-        const val CORAL_FAN_HANG3 = 392
-        const val KELP = 393
-        const val DRIED_KELP_BLOCK = 394
-        const val ACACIA_BUTTON = 395
-        const val BIRCH_BUTTON = 396
-        const val DARK_OAK_BUTTON = 397
-        const val JUNGLE_BUTTON = 398
-        const val SPRUCE_BUTTON = 399
-        const val ACACIA_TRAPDOOR = 400
-        const val BIRCH_TRAPDOOR = 401
-        const val DARK_OAK_TRAPDOOR = 402
-        const val JUNGLE_TRAPDOOR = 403
-        const val SPRUCE_TRAPDOOR = 404
-        const val ACACIA_PRESSURE_PLATE = 405
-        const val BIRCH_PRESSURE_PLATE = 406
-        const val DARK_OAK_PRESSURE_PLATE = 407
-        const val JUNGLE_PRESSURE_PLATE = 408
-        const val SPRUCE_PRESSURE_PLATE = 409
-        const val CARVED_PUMPKIN = 410
-        const val SEA_PICKLE = 411
-        const val CONDUIT = 412
-        const val TURTLE_EGG = 414
-        const val BUBBLE_COLUMN = 415
-        const val BARRIER = 416
-        const val STONE_SLAB3 = 417
-        const val BAMBOO = 418
-        const val BAMBOO_SAPLING = 419
-        const val SCAFFOLDING = 420
-        const val STONE_SLAB4 = 421
-        const val DOUBLE_STONE_SLAB3 = 422
-        const val DOUBLE_STONE_SLAB4 = 423
-        const val GRANITE_STAIRS = 424
-        const val DIORITE_STAIRS = 425
-        const val ANDESITE_STAIRS = 426
-        const val POLISHED_GRANITE_STAIRS = 427
-        const val POLISHED_DIORITE_STAIRS = 428
-        const val POLISHED_ANDESITE_STAIRS = 429
-        const val MOSSY_STONE_BRICK_STAIRS = 430
-        const val SMOOTH_RED_SANDSTONE_STAIRS = 431
-        const val SMOOTH_SANDSTONE_STAIRS = 432
-        const val END_BRICK_STAIRS = 433
-        const val MOSSY_COBBLESTONE_STAIRS = 434
-        const val NORMAL_STONE_STAIRS = 435
-        const val SPRUCE_STANDING_SIGN = 436
-        const val SPRUCE_WALL_SIGN = 437
-        const val SMOOTH_STONE = 438
-        const val RED_NETHER_BRICK_STAIRS = 439
-        const val SMOOTH_QUARTZ_STAIRS = 440
-        const val BIRCH_STANDING_SIGN = 441
-        const val BIRCH_WALL_SIGN = 442
-        const val JUNGLE_STANDING_SIGN = 443
-        const val JUNGLE_WALL_SIGN = 444
-        const val ACACIA_STANDING_SIGN = 445
-        const val ACACIA_WALL_SIGN = 446
-        const val DARKOAK_STANDING_SIGN = 447
-        const val DARKOAK_WALL_SIGN = 448
-        const val LECTERN = 449
-        const val GRINDSTONE = 450
-        const val BLAST_FURNACE = 451
-        const val STONECUTTER_BLOCK = 452
-        const val SMOKER = 453
-        const val LIT_SMOKER = 454
-        const val CARTOGRAPHY_TABLE = 455
-        const val FLETCHING_TABLE = 456
-        const val SMITHING_TABLE = 457
-        const val BARREL = 458
-        const val LOOM = 459
-        const val BELL = 461
-        const val SWEET_BERRY_BUSH = 462
-        const val LANTERN = 463
-        const val CAMPFIRE = 464
-        const val LAVA_CAULDRON = 465
-        const val JIGSAW = 466
-        const val WOOD = 467
-        const val COMPOSTER = 468
-        const val LIT_BLAST_FURNACE = 469
-    }
+    AIR(0),
+    STONE(1),
+    GRASS(2),
+    DIRT(3),
+    COBBLESTONE(4),
+    PLANKS(5),
+    WOODEN_PLANKS(5),
+    SAPLING(6),
+    BEDROCK(7),
+    FLOWING_WATER(8),
+    STILL_WATER(9),
+    WATER(9),
+    FLOWING_LAVA(10),
+    LAVA(11),
+    STILL_LAVA(11),
+    SAND(12),
+    GRAVEL(13),
+    GOLD_ORE(14),
+    IRON_ORE(15),
+    COAL_ORE(16),
+    LOG(17),
+    LEAVES(18),
+    SPONGE(19),
+    GLASS(20),
+    LAPIS_ORE(21),
+    LAPIS_BLOCK(22),
+    DISPENSER(23),
+    SANDSTONE(24),
+    NOTEBLOCK(25),
+    NOTE_BLOCK(25),
+    BED_BLOCK(26),
+    GOLDEN_RAIL(27),
+    POWERED_RAIL(27),
+    DETECTOR_RAIL(28),
+    STICKY_PISTON(29),
+    COBWEB(30),
+    WEB(30),
+    TALLGRASS(31),
+    TALL_GRASS(31),
+    DEADBUSH(32),
+    DEAD_BUSH(32),
+    PISTON(33),
+    PISTONARMCOLLISION(34),
+    PISTON_ARM_COLLISION(34),
+    WOOL(35),
+    ELEMENT_0(36),
+    DANDELION(37),
+    YELLOW_FLOWER(37),
+    POPPY(38),
+    RED_FLOWER(38),
+    BROWN_MUSHROOM(39),
+    RED_MUSHROOM(40),
+    GOLD_BLOCK(41),
+    IRON_BLOCK(42),
+    DOUBLE_STONE_SLAB(43),
+    STONE_SLAB(44),
+    BRICK_BLOCK(45),
+    TNT(46),
+    BOOKSHELF(47),
+    MOSSY_COBBLESTONE(48),
+    MOSS_STONE(48),
+    OBSIDIAN(49),
+    TORCH(50),
+    FIRE(51),
+    MOB_SPAWNER(52),
+    MONSTER_SPAWNER(52),
+    OAK_STAIRS(53),
+    WOODEN_STAIRS(53),
+    CHEST(54),
+    REDSTONE_WIRE(55),
+    DIAMOND_ORE(56),
+    DIAMOND_BLOCK(57),
+    CRAFTING_TABLE(58),
+    WORKBENCH(58),
+    WHEAT_BLOCK(59),
+    FARMLAND(60),
+    FURNACE(61),
+    BURNING_FURNACE(62),
+    LIT_FURNACE(62),
+    SIGN_POST(63),
+    STANDING_SIGN(63),
+    OAK_DOOR_BLOCK(64),
+    WOODEN_DOOR_BLOCK(64),
+    LADDER(65),
+    RAIL(66),
+    COBBLESTONE_STAIRS(67),
+    STONE_STAIRS(67),
+    WALL_SIGN(68),
+    LEVER(69),
+    STONE_PRESSURE_PLATE(70),
+    IRON_DOOR_BLOCK(71),
+    WOODEN_PRESSURE_PLATE(72),
+    REDSTONE_ORE(73),
+    GLOWING_REDSTONE_ORE(74),
+    LIT_REDSTONE_ORE(74),
+    UNLIT_REDSTONE_TORCH(75),
+    LIT_REDSTONE_TORCH(76),
+    REDSTONE_TORCH(76),
+    STONE_BUTTON(77),
+    SNOW_LAYER(78),
+    ICE(79),
+    SNOW(80),
+    SNOW_BLOCK(80),
+    CACTUS(81),
+    CLAY_BLOCK(82),
+    REEDS_BLOCK(83),
+    SUGARCANE_BLOCK(83),
+    JUKEBOX(84),
+    FENCE(85),
+    PUMPKIN(86),
+    NETHERRACK(87),
+    SOUL_SAND(88),
+    GLOWSTONE(89),
+    PORTAL(90),
+    JACK_O_LANTERN(91),
+    LIT_PUMPKIN(91),
+    CAKE_BLOCK(92),
+    REPEATER_BLOCK(93),
+    UNPOWERED_REPEATER(93),
+    POWERED_REPEATER(94),
+    INVISIBLEBEDROCK(95),
+    INVISIBLE_BEDROCK(95),
+    TRAPDOOR(96),
+    WOODEN_TRAPDOOR(96),
+    MONSTER_EGG(97),
+    STONEBRICK(98),
+    STONE_BRICK(98),
+    STONE_BRICKS(98),
+    BROWN_MUSHROOM_BLOCK(99),
+    RED_MUSHROOM_BLOCK(100),
+    IRON_BARS(101),
+    GLASS_PANE(102),
+    MELON_BLOCK(103),
+    PUMPKIN_STEM(104),
+    MELON_STEM(105),
+    VINE(106),
+    VINES(106),
+    FENCE_GATE(107),
+    OAK_FENCE_GATE(107),
+    BRICK_STAIRS(108),
+    STONE_BRICK_STAIRS(109),
+    MYCELIUM(110),
+    LILY_PAD(111),
+    WATERLILY(111),
+    WATER_LILY(111),
+    NETHER_BRICK_BLOCK(112),
+    NETHER_BRICK_FENCE(113),
+    NETHER_BRICK_STAIRS(114),
+    NETHER_WART_PLANT(115),
+    ENCHANTING_TABLE(116),
+    ENCHANTMENT_TABLE(116),
+    BREWING_STAND_BLOCK(117),
+    CAULDRON_BLOCK(118),
+    END_PORTAL(119),
+    END_PORTAL_FRAME(120),
+    END_STONE(121),
+    DRAGON_EGG(122),
+    REDSTONE_LAMP(123),
+    LIT_REDSTONE_LAMP(124),
+    DROPPER(125),
+    ACTIVATOR_RAIL(126),
+    COCOA(127),
+    COCOA_BLOCK(127),
+    SANDSTONE_STAIRS(128),
+    EMERALD_ORE(129),
+    ENDER_CHEST(130),
+    TRIPWIRE_HOOK(131),
+    TRIPWIRE(132),
+    TRIP_WIRE(132),
+    EMERALD_BLOCK(133),
+    SPRUCE_STAIRS(134),
+    BIRCH_STAIRS(135),
+    JUNGLE_STAIRS(136),
+    COMMAND_BLOCK(137),
+    BEACON(138),
+    COBBLESTONE_WALL(139),
+    STONE_WALL(139),
+    FLOWER_POT_BLOCK(140),
+    CARROTS(141),
+    CARROT_BLOCK(141),
+    POTATOES(142),
+    POTATO_BLOCK(142),
+    WOODEN_BUTTON(143),
+    MOB_HEAD_BLOCK(144),
+    SKULL_BLOCK(144),
+    ANVIL(145),
+    TRAPPED_CHEST(146),
+    LIGHT_WEIGHTED_PRESSURE_PLATE(147),
+    HEAVY_WEIGHTED_PRESSURE_PLATE(148),
+    COMPARATOR_BLOCK(149),
+    UNPOWERED_COMPARATOR(149),
+    POWERED_COMPARATOR(150),
+    DAYLIGHT_DETECTOR(151),
+    DAYLIGHT_SENSOR(151),
+    REDSTONE_BLOCK(152),
+    NETHER_QUARTZ_ORE(153),
+    QUARTZ_ORE(153),
+    HOPPER_BLOCK(154),
+    QUARTZ_BLOCK(155),
+    QUARTZ_STAIRS(156),
+    DOUBLE_WOODEN_SLAB(157),
+    WOODEN_SLAB(158),
+    STAINED_CLAY(159),
+    STAINED_HARDENED_CLAY(159),
+    TERRACOTTA(159),
+    STAINED_GLASS_PANE(160),
+    LEAVES2(161),
+    LOG2(162),
+    ACACIA_STAIRS(163),
+    DARK_OAK_STAIRS(164),
+    SLIME(165),
+    SLIME_BLOCK(165),
+    GLOW_STICK(166),
+    IRON_TRAPDOOR(167),
+    PRISMARINE(168),
+    SEALANTERN(169),
+    SEA_LANTERN(169),
+    HAY_BALE(170),
+    HAY_BLOCK(170),
+    CARPET(171),
+    HARDENED_CLAY(172),
+    COAL_BLOCK(173),
+    PACKED_ICE(174),
+    DOUBLE_PLANT(175),
+    STANDING_BANNER(176),
+    WALL_BANNER(177),
+    DAYLIGHT_DETECTOR_INVERTED(178),
+    DAYLIGHT_SENSOR_INVERTED(178),
+    RED_SANDSTONE(179),
+    RED_SANDSTONE_STAIRS(180),
+    DOUBLE_STONE_SLAB2(181),
+    STONE_SLAB2(182),
+    SPRUCE_FENCE_GATE(183),
+    BIRCH_FENCE_GATE(184),
+    JUNGLE_FENCE_GATE(185),
+    DARK_OAK_FENCE_GATE(186),
+    ACACIA_FENCE_GATE(187),
+    REPEATING_COMMAND_BLOCK(188),
+    CHAIN_COMMAND_BLOCK(189),
+    HARD_GLASS_PANE(190),
+    HARD_STAINED_GLASS_PANE(191),
+    CHEMICAL_HEAT(192),
+    SPRUCE_DOOR_BLOCK(193),
+    BIRCH_DOOR_BLOCK(194),
+    JUNGLE_DOOR_BLOCK(195),
+    ACACIA_DOOR_BLOCK(196),
+    DARK_OAK_DOOR_BLOCK(197),
+    GRASS_PATH(198),
+    FRAME_BLOCK(199),
+    ITEM_FRAME_BLOCK(199),
+    CHORUS_FLOWER(200),
+    PURPUR_BLOCK(201),
+    COLORED_TORCH_RG(202),
+    PURPUR_STAIRS(203),
+    COLORED_TORCH_BP(204),
+    UNDYED_SHULKER_BOX(205),
+    END_BRICKS(206),
+    FROSTED_ICE(207),
+    END_ROD(208),
+    END_GATEWAY(209),
+    MAGMA(213),
+    NETHER_WART_BLOCK(214),
+    RED_NETHER_BRICK(215),
+    BONE_BLOCK(216),
+    SHULKER_BOX(218),
+    PURPLE_GLAZED_TERRACOTTA(219),
+    WHITE_GLAZED_TERRACOTTA(220),
+    ORANGE_GLAZED_TERRACOTTA(221),
+    MAGENTA_GLAZED_TERRACOTTA(222),
+    LIGHT_BLUE_GLAZED_TERRACOTTA(223),
+    YELLOW_GLAZED_TERRACOTTA(224),
+    LIME_GLAZED_TERRACOTTA(225),
+    PINK_GLAZED_TERRACOTTA(226),
+    GRAY_GLAZED_TERRACOTTA(227),
+    SILVER_GLAZED_TERRACOTTA(228),
+    CYAN_GLAZED_TERRACOTTA(229),
+    BLUE_GLAZED_TERRACOTTA(231),
+    BROWN_GLAZED_TERRACOTTA(232),
+    GREEN_GLAZED_TERRACOTTA(233),
+    RED_GLAZED_TERRACOTTA(234),
+    BLACK_GLAZED_TERRACOTTA(235),
+    CONCRETE(236),
+    CONCRETEPOWDER(237),
+    CONCRETE_POWDER(237),
+    CHEMISTRY_TABLE(238),
+    UNDERWATER_TORCH(239),
+    CHORUS_PLANT(240),
+    STAINED_GLASS(241),
+    PODZOL(243),
+    BEETROOT_BLOCK(244),
+    STONECUTTER(245),
+    GLOWINGOBSIDIAN(246),
+    GLOWING_OBSIDIAN(246),
+    NETHERREACTOR(247),
+    NETHER_REACTOR(247),
+    INFO_UPDATE(248),
+    INFO_UPDATE2(249),
+    MOVINGBLOCK(250),
+    MOVING_BLOCK(250),
+    OBSERVER(251),
+    STRUCTURE_BLOCK(252),
+    HARD_GLASS(253),
+    HARD_STAINED_GLASS(254),
+    RESERVED6(255),
+    PRISMARINE_STAIRS(257),
+    DARK_PRISMARINE_STAIRS(258),
+    PRISMARINE_BRICKS_STAIRS(259),
+    STRIPPED_SPRUCE_LOG(260),
+    STRIPPED_BIRCH_LOG(261),
+    STRIPPED_JUNGLE_LOG(262),
+    STRIPPED_ACACIA_LOG(263),
+    STRIPPED_DARK_OAK_LOG(264),
+    STRIPPED_OAK_LOG(265),
+    BLUE_ICE(266),
+    ELEMENT_1(267),
+    ELEMENT_2(268),
+    ELEMENT_3(269),
+    ELEMENT_4(270),
+    ELEMENT_5(271),
+    ELEMENT_6(272),
+    ELEMENT_7(273),
+    ELEMENT_8(274),
+    ELEMENT_9(275),
+    ELEMENT_10(276),
+    ELEMENT_11(277),
+    ELEMENT_12(278),
+    ELEMENT_13(279),
+    ELEMENT_14(280),
+    ELEMENT_15(281),
+    ELEMENT_16(282),
+    ELEMENT_17(283),
+    ELEMENT_18(284),
+    ELEMENT_19(285),
+    ELEMENT_20(286),
+    ELEMENT_21(287),
+    ELEMENT_22(288),
+    ELEMENT_23(289),
+    ELEMENT_24(290),
+    ELEMENT_25(291),
+    ELEMENT_26(292),
+    ELEMENT_27(293),
+    ELEMENT_28(294),
+    ELEMENT_29(295),
+    ELEMENT_30(296),
+    ELEMENT_31(297),
+    ELEMENT_32(298),
+    ELEMENT_33(299),
+    ELEMENT_34(300),
+    ELEMENT_35(301),
+    ELEMENT_36(302),
+    ELEMENT_37(303),
+    ELEMENT_38(304),
+    ELEMENT_39(305),
+    ELEMENT_40(306),
+    ELEMENT_41(307),
+    ELEMENT_42(308),
+    ELEMENT_43(309),
+    ELEMENT_44(310),
+    ELEMENT_45(311),
+    ELEMENT_46(312),
+    ELEMENT_47(313),
+    ELEMENT_48(314),
+    ELEMENT_49(315),
+    ELEMENT_50(316),
+    ELEMENT_51(317),
+    ELEMENT_52(318),
+    ELEMENT_53(319),
+    ELEMENT_54(320),
+    ELEMENT_55(321),
+    ELEMENT_56(322),
+    ELEMENT_57(323),
+    ELEMENT_58(324),
+    ELEMENT_59(325),
+    ELEMENT_60(326),
+    ELEMENT_61(327),
+    ELEMENT_62(328),
+    ELEMENT_63(329),
+    ELEMENT_64(330),
+    ELEMENT_65(331),
+    ELEMENT_66(332),
+    ELEMENT_67(333),
+    ELEMENT_68(334),
+    ELEMENT_69(335),
+    ELEMENT_70(336),
+    ELEMENT_71(337),
+    ELEMENT_72(338),
+    ELEMENT_73(339),
+    ELEMENT_74(340),
+    ELEMENT_75(341),
+    ELEMENT_76(342),
+    ELEMENT_77(343),
+    ELEMENT_78(344),
+    ELEMENT_79(345),
+    ELEMENT_80(346),
+    ELEMENT_81(347),
+    ELEMENT_82(348),
+    ELEMENT_83(349),
+    ELEMENT_84(350),
+    ELEMENT_85(351),
+    ELEMENT_86(352),
+    ELEMENT_87(353),
+    ELEMENT_88(354),
+    ELEMENT_89(355),
+    ELEMENT_90(356),
+    ELEMENT_91(357),
+    ELEMENT_92(358),
+    ELEMENT_93(359),
+    ELEMENT_94(360),
+    ELEMENT_95(361),
+    ELEMENT_96(362),
+    ELEMENT_97(363),
+    ELEMENT_98(364),
+    ELEMENT_99(365),
+    ELEMENT_100(366),
+    ELEMENT_101(367),
+    ELEMENT_102(368),
+    ELEMENT_103(369),
+    ELEMENT_104(370),
+    ELEMENT_105(371),
+    ELEMENT_106(372),
+    ELEMENT_107(373),
+    ELEMENT_108(374),
+    ELEMENT_109(375),
+    ELEMENT_110(376),
+    ELEMENT_111(377),
+    ELEMENT_112(378),
+    ELEMENT_113(379),
+    ELEMENT_114(380),
+    ELEMENT_115(381),
+    ELEMENT_116(382),
+    ELEMENT_117(383),
+    ELEMENT_118(384),
+    SEAGRASS(385),
+    CORAL(386),
+    CORAL_BLOCK(387),
+    CORAL_FAN(388),
+    CORAL_FAN_DEAD(389),
+    CORAL_FAN_HANG(390),
+    CORAL_FAN_HANG2(391),
+    CORAL_FAN_HANG3(392),
+    KELP(393),
+    DRIED_KELP_BLOCK(394),
+    ACACIA_BUTTON(395),
+    BIRCH_BUTTON(396),
+    DARK_OAK_BUTTON(397),
+    JUNGLE_BUTTON(398),
+    SPRUCE_BUTTON(399),
+    ACACIA_TRAPDOOR(400),
+    BIRCH_TRAPDOOR(401),
+    DARK_OAK_TRAPDOOR(402),
+    JUNGLE_TRAPDOOR(403),
+    SPRUCE_TRAPDOOR(404),
+    ACACIA_PRESSURE_PLATE(405),
+    BIRCH_PRESSURE_PLATE(406),
+    DARK_OAK_PRESSURE_PLATE(407),
+    JUNGLE_PRESSURE_PLATE(408),
+    SPRUCE_PRESSURE_PLATE(409),
+    CARVED_PUMPKIN(410),
+    SEA_PICKLE(411),
+    CONDUIT(412),
+    TURTLE_EGG(414),
+    BUBBLE_COLUMN(415),
+    BARRIER(416),
+    STONE_SLAB3(417),
+    BAMBOO(418),
+    BAMBOO_SAPLING(419),
+    SCAFFOLDING(420),
+    STONE_SLAB4(421),
+    DOUBLE_STONE_SLAB3(422),
+    DOUBLE_STONE_SLAB4(423),
+    GRANITE_STAIRS(424),
+    DIORITE_STAIRS(425),
+    ANDESITE_STAIRS(426),
+    POLISHED_GRANITE_STAIRS(427),
+    POLISHED_DIORITE_STAIRS(428),
+    POLISHED_ANDESITE_STAIRS(429),
+    MOSSY_STONE_BRICK_STAIRS(430),
+    SMOOTH_RED_SANDSTONE_STAIRS(431),
+    SMOOTH_SANDSTONE_STAIRS(432),
+    END_BRICK_STAIRS(433),
+    MOSSY_COBBLESTONE_STAIRS(434),
+    NORMAL_STONE_STAIRS(435),
+    SPRUCE_STANDING_SIGN(436),
+    SPRUCE_WALL_SIGN(437),
+    SMOOTH_STONE(438),
+    RED_NETHER_BRICK_STAIRS(439),
+    SMOOTH_QUARTZ_STAIRS(440),
+    BIRCH_STANDING_SIGN(441),
+    BIRCH_WALL_SIGN(442),
+    JUNGLE_STANDING_SIGN(443),
+    JUNGLE_WALL_SIGN(444),
+    ACACIA_STANDING_SIGN(445),
+    ACACIA_WALL_SIGN(446),
+    DARKOAK_STANDING_SIGN(447),
+    DARKOAK_WALL_SIGN(448),
+    LECTERN(449),
+    GRINDSTONE(450),
+    BLAST_FURNACE(451),
+    STONECUTTER_BLOCK(452),
+    SMOKER(453),
+    LIT_SMOKER(454),
+    CARTOGRAPHY_TABLE(455),
+    FLETCHING_TABLE(456),
+    SMITHING_TABLE(457),
+    BARREL(458),
+    LOOM(459),
+    BELL(461),
+    SWEET_BERRY_BUSH(462),
+    LANTERN(463),
+    CAMPFIRE(464),
+    LAVA_CAULDRON(465),
+    JIGSAW(466),
+    WOOD(467),
+    COMPOSTER(468),
+    LIT_BLAST_FURNACE(469)
 }
