@@ -3,7 +3,7 @@ package be.zvz.kookie.network
 import io.netty.buffer.ByteBuf
 import java.net.InetSocketAddress
 
-interface AdvancedNetworkInterface {
+interface AdvancedNetworkInterface : NetworkInterface {
 
     /**
      * Prevents packets received from the IP address getting processed for the given timeout.
