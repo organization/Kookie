@@ -1,3 +1,4 @@
+import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.jmailen.gradle.kotlinter.tasks.FormatTask
 import org.jmailen.gradle.kotlinter.tasks.LintTask
@@ -12,6 +13,7 @@ plugins {
     id("com.gorylenko.gradle-git-properties") version "2.3.1"
 
     id("org.jmailen.kotlinter") version "3.4.4"
+    id("com.github.johnrengelman.shadow") version "7.0.0"
 }
 
 group = "be.zvz"
@@ -84,14 +86,6 @@ dependencies {
     testImplementation(group = "org.jetbrains.kotlin", name = "kotlin-test-junit")
 }
 
-tasks.check {
-    dependsOn("installKotlinterPrePushHook")
-}
-
-kotlinter {
-    experimentalRules = true
-}
-
 tasks.create<LintTask>("ktLint") {
     group = "verification"
     source(files("src"))
@@ -113,4 +107,18 @@ tasks.withType<KotlinCompile> {
 application {
     // Define the main class for the application.
     mainClass.set("be.zvz.kookie.AppKt")
+}
+
+tasks.named<ShadowJar>("shadowJar") {
+    archiveBaseName.set("shadow")
+    mergeServiceFiles()
+    manifest {
+        attributes(mapOf("Main-Class" to application.mainClass.get()))
+    }
+}
+
+tasks {
+    build {
+        dependsOn(shadowJar)
+    }
 }
