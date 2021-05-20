@@ -53,7 +53,7 @@ class Server(cwd: Path, dataPath: Path, pluginPath: Path) {
 
     private var doTitleTick = true
     private val logger = LoggerFactory.getLogger(Server::class.java)
-    private val console = KookieConsole()
+    private val console = KookieConsole(this)
     private var maxPlayers: Int = 20
     private var onlineMode = true
     private var networkCompressionAsync = true
