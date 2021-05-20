@@ -21,6 +21,7 @@ import be.zvz.kookie.console.KookieConsole
 import be.zvz.kookie.constant.CorePaths
 import be.zvz.kookie.constant.FilePermission
 import be.zvz.kookie.lang.Language
+import be.zvz.kookie.network.query.QueryInfo
 import be.zvz.kookie.utils.Config
 import be.zvz.kookie.utils.config.PropertiesBrowser
 import be.zvz.kookie.world.World
@@ -62,6 +63,8 @@ class Server(cwd: Path, dataPath: Path, pluginPath: Path) {
         private set
     private var forceLanguage = false
     val configGroup: ServerConfigGroup
+
+    val queryInfo = QueryInfo()
 
     init {
         instance = this
