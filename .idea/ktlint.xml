@@ -4,7 +4,6 @@
     <disabledRules>
       <list>
         <option value="no-wildcard-imports" />
-        <option value="final-newline" />
       </list>
     </disabledRules>
   </component>
