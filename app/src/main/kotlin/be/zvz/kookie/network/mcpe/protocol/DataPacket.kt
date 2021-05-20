@@ -2,7 +2,7 @@ package be.zvz.kookie.network.mcpe.protocol
 
 import be.zvz.kookie.network.mcpe.serializer.PacketSerializer
 
-@ProtocolIdentify(id = -1)
+@ProtocolIdentify(networkId = -1)
 abstract class DataPacket : Packet {
 
     var senderSubId = 0
@@ -22,7 +22,11 @@ abstract class DataPacket : Packet {
 
     fun decodeHeader(input: PacketSerializer) {
         val header = input.getUnsignedVarInt()
-        val pid = header and DataPacket.PID_MASK
+        val pid = header and PID_MASK
+        val networkId = this::class.java.getAnnotation(ProtocolIdentify::class.java)?.networkId
+        if (pid != networkId) {
+            throw IllegalStateException("Expected $networkId for packet ID, got $pid")
+        }
         senderSubId = (header shr SENDER_SUBCLIENT_ID_SHIFT) and SUBCLIENT_ID_MASK
         recipientSubId = (header shr RECIPIENT_SUBCLIENT_ID_SHIFT) and SUBCLIENT_ID_MASK
     }
@@ -35,8 +39,8 @@ abstract class DataPacket : Packet {
     }
 
     fun encodeHeader(output: PacketSerializer) {
-        val pid = pid()
-        val v = (pid.id or (senderSubId shl SENDER_SUBCLIENT_ID_SHIFT)) or
+        val networkId = this::class.java.getAnnotation(ProtocolIdentify::class.java)?.networkId!!
+        val v = (networkId or (senderSubId shl SENDER_SUBCLIENT_ID_SHIFT)) or
             (recipientSubId shl RECIPIENT_SUBCLIENT_ID_SHIFT)
         output.putUnsignedVarInt(v)
     }
