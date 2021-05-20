@@ -19,7 +19,6 @@ class NetworkSession(private val server: Server, address: InetSocketAddress) {
     private var connectedTime: Date = Date()
 
     init {
-
     }
 
     fun tick(): Boolean {
