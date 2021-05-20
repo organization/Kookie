@@ -1,6 +1,7 @@
 package be.zvz.kookie.network.mcpe.protocol
 
 import be.zvz.kookie.network.mcpe.serializer.PacketSerializer
+import be.zvz.kookie.utils.BinaryDataException
 
 @ProtocolIdentify(networkId = -1)
 abstract class DataPacket : Packet {
@@ -13,14 +14,19 @@ abstract class DataPacket : Packet {
         return false
     }
 
-    override fun decode(input: PacketSerializer) {
+    final override fun decode(input: PacketSerializer) {
         try {
             decodeHeader(input)
-        } catch (ignore: Exception) {
+        } catch (e: RuntimeException) {
+            when (e) {
+                is BinaryDataException,
+                is PacketDecodeException -> throw PacketDecodeException.wrap(e, getName())
+                else -> throw e
+            }
         }
     }
 
-    fun decodeHeader(input: PacketSerializer) {
+    protected fun decodeHeader(input: PacketSerializer) {
         val header = input.getUnsignedVarInt()
         val pid = header and PID_MASK
         val networkId = this::class.java.getAnnotation(ProtocolIdentify::class.java)?.networkId
@@ -31,14 +37,14 @@ abstract class DataPacket : Packet {
         recipientSubId = (header shr RECIPIENT_SUBCLIENT_ID_SHIFT) and SUBCLIENT_ID_MASK
     }
 
-    abstract fun decodePayload(input: PacketSerializer)
+    protected abstract fun decodePayload(input: PacketSerializer)
 
-    override fun encode(output: PacketSerializer) {
+    final override fun encode(output: PacketSerializer) {
         encodeHeader(output)
         encodePayload(output)
     }
 
-    fun encodeHeader(output: PacketSerializer) {
+    protected fun encodeHeader(output: PacketSerializer) {
         val networkId = this::class.java.getAnnotation(ProtocolIdentify::class.java)?.networkId!!
         val v = (networkId or (senderSubId shl SENDER_SUBCLIENT_ID_SHIFT)) or
             (recipientSubId shl RECIPIENT_SUBCLIENT_ID_SHIFT)
