@@ -17,9 +17,10 @@
  */
 package be.zvz.kookie.console
 
+import be.zvz.kookie.Server
 import net.minecrell.terminalconsole.SimpleTerminalConsole
 
-class KookieConsole : SimpleTerminalConsole() {
+class KookieConsole(private val server: Server) : SimpleTerminalConsole() {
     override fun isRunning(): Boolean {
         return true
     }

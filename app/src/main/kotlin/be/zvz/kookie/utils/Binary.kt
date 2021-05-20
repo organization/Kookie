@@ -7,69 +7,30 @@ import java.io.DataInputStream
 import java.io.DataOutputStream
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
+import java.util.concurrent.atomic.AtomicInteger
 import kotlin.math.round
 
 object Binary {
-    fun signByte(value: Int): Int {
-        return value shl 56 shr 56
-    }
+    fun signByte(value: Int): Int = value shl 56 shr 56
+    fun unsignByte(value: Int): Int = value and 0xff
+    fun signShort(value: Int): Int = value shl 48 shr 48
+    fun unsignShort(value: Int): Int = value and 0xffff
+    fun signInt(value: Int): Int = value shl 32 shr 32
+    fun unsignInt(value: Int): Int = value and -1
 
-    fun unsignByte(value: Int): Int {
-        return value and 0xff
-    }
+    fun flipShortEndianness(value: Int): Int = readLShort(writeShort(value))
+    fun flipIntEndianness(value: Int): Int = readLInt(writeInt(value))
+    fun flipLongEndianness(value: Long): Long = readLLong(writeLong(value))
 
-    fun signShort(value: Int): Int {
-        return value shl 48 shr 48
+    fun readBoolean(b: String): Boolean = b != "\u0000"
+    fun writeBoolean(b: Boolean): String = if (b) {
+        "\u0001"
+    } else {
+        "\u0000"
     }
-
-    fun unsignShort(value: Int): Int {
-        return value and 0xffff
-    }
-
-    fun signInt(value: Int): Int {
-        return value shl 32 shr 32
-    }
-
-    fun unsignInt(value: Int): Int {
-        return value and -1
-    }
-
-    fun flipShortEndianness(value: Int): Int {
-        return readLShort(writeShort(value))
-    }
-
-    fun flipIntEndianness(value: Int): Int {
-        return readLInt(writeInt(value))
-    }
-
-    fun flipLongEndianness(value: Long): Long {
-        return readLLong(writeLong(value))
-    }
-
-    fun readBoolean(b: String): Boolean {
-        return b != "\u0000"
-    }
-
-    fun writeBoolean(b: Boolean): String {
-        return if (b) {
-            "\u0001"
-        } else {
-            "\u0000"
-        }
-    }
-
-    fun readByte(c: String): Int {
-        return c[0].code
-    }
-
-    fun readSignedByte(c: String): Int {
-        return signByte(c[0].code)
-    }
-
-    fun writeByte(c: Int): String {
-        return c.toChar().toString()
-    }
-
+    fun readByte(c: String): Int = c[0].code
+    fun readSignedByte(c: String): Int = signByte(c[0].code)
+    fun writeByte(c: Int): String = c.toChar().toString()
     fun readShort(str: String): Int {
         str.byteInputStream().use { bais ->
             DataInputStream(bais).use {
@@ -77,11 +38,7 @@ object Binary {
             }
         }
     }
-
-    fun readSignedShort(str: String): Int {
-        return signShort(readShort(str))
-    }
-
+    fun readSignedShort(str: String): Int = signShort(readShort(str))
     fun writeShort(value: Int): String {
         ByteArrayOutputStream().use { baos ->
             DataOutputStream(baos).use {
@@ -90,7 +47,6 @@ object Binary {
             return baos.toString()
         }
     }
-
     fun readLShort(str: String): Int {
         str.byteInputStream().use { bais ->
             LittleEndianDataInputStream(bais).use {
@@ -98,11 +54,7 @@ object Binary {
             }
         }
     }
-
-    fun readSignedLShort(str: String): Int {
-        return signShort(readLShort(str))
-    }
-
+    fun readSignedLShort(str: String): Int = signShort(readLShort(str))
     fun writeLShort(value: Int): String {
         ByteArrayOutputStream().use { baos ->
             LittleEndianDataOutputStream(baos).use {
@@ -120,12 +72,9 @@ object Binary {
         }
     }.toByteArray()
 
-    private fun packN(value: Int): String {
-        val bytes = toPositiveByteArray(
-            ByteBuffer.allocate(4).putInt(value).array()
-        )
-        return bytes.toString()
-    }
+    private fun packN(value: Int): String = toPositiveByteArray(
+        ByteBuffer.allocate(4).putInt(value).array()
+    ).toString()
 
     private fun unpackN(value: String, index: Int): Int {
         val bytes = value.toByteArray()
@@ -155,38 +104,14 @@ object Binary {
         return buf.getInt(index)
     }
 
-    fun readTriad(str: String): Int {
-        return unpackN("\u0000" + str, 1)
-    }
-
-    fun writeTriad(value: Int): String {
-        return packN(value).substring(1)
-    }
-
-    fun readLTriad(str: String): Int {
-        return unpackV(str + "\u0000", 1)
-    }
-
-    fun writeLTriad(value: Int): String {
-        return packV(value).dropLast(1)
-    }
-
-    fun readInt(str: String): Int {
-        return signInt(unpackN(str, 1))
-    }
-
-    fun writeInt(value: Int): String {
-        return packN(value)
-    }
-
-    fun readLInt(str: String): Int {
-        return unpackV(str, 1)
-    }
-
-    fun writeLInt(value: Int): String {
-        return packV(value)
-    }
-
+    fun readTriad(str: String): Int = unpackN("\u0000" + str, 1)
+    fun writeTriad(value: Int): String = packN(value).substring(1)
+    fun readLTriad(str: String): Int = unpackV(str + "\u0000", 1)
+    fun writeLTriad(value: Int): String = packV(value).dropLast(1)
+    fun readInt(str: String): Int = signInt(unpackN(str, 1))
+    fun writeInt(value: Int): String = packN(value)
+    fun readLInt(str: String): Int = unpackV(str, 1)
+    fun writeLInt(value: Int): String = packV(value)
     fun readFloat(str: String): Float {
         str.byteInputStream().use { bais ->
             DataInputStream(bais).use {
@@ -195,9 +120,7 @@ object Binary {
         }
     }
 
-    fun readRoundedFloat(str: String): Float {
-        return round(readFloat(str))
-    }
+    fun readRoundedFloat(str: String): Float = round(readFloat(str))
 
     fun writeFloat(value: Float): String {
         ByteArrayOutputStream().use { baos ->
@@ -216,9 +139,7 @@ object Binary {
         }
     }
 
-    fun readRoundedLFloat(str: String): Float {
-        return round(readLFloat(str))
-    }
+    fun readRoundedLFloat(str: String): Float = round(readLFloat(str))
 
     fun writeLFloat(value: Float): String {
         ByteArrayOutputStream().use { baos ->
@@ -297,21 +218,20 @@ object Binary {
         }
     }
 
-    fun readVarInt(buffer: String, offset: Int): Int {
+    fun readVarInt(buffer: String, offset: AtomicInteger): Int {
         val raw = readUnsignedVarInt(buffer, offset)
         val temp = raw shl 63 shr 63 xor raw shr 1
         return temp xor (raw and (1 shl 63))
     }
 
-    fun readUnsignedVarInt(buffer: String, offset: Int): Int {
+    fun readUnsignedVarInt(buffer: String, offset: AtomicInteger): Int {
         var value = 0
         var i = 0
         while (i <= 28) {
-            if (buffer.getOrNull(offset) === null) {
+            if (buffer.getOrNull(offset.get()) === null) {
                 throw BinaryDataException("No bytes left in buffer")
             }
-            val b = buffer[offset].code
-            offset.inc()
+            val b = buffer[offset.getAndIncrement()].code
             value = value or (b and 0x7f shl i)
 
             if (b and 0x80 == 0) {

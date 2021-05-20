@@ -4,6 +4,8 @@ import be.zvz.kookie.Server
 import be.zvz.kookie.VersionInfo
 import be.zvz.kookie.network.AdvancedNetworkInterface
 import be.zvz.kookie.network.Network
+import be.zvz.kookie.network.mcpe.NetworkSession
+import be.zvz.kookie.network.mcpe.NetworkSessionManager
 import be.zvz.kookie.network.mcpe.protocol.ProtocolInfo
 import com.koloboke.collect.map.hash.HashObjLongMaps
 import com.nukkitx.network.raknet.RakNetServer
@@ -12,22 +14,43 @@ import com.nukkitx.network.raknet.RakNetServerSession
 import io.netty.buffer.ByteBuf
 import io.netty.channel.ChannelHandlerContext
 import io.netty.channel.socket.DatagramPacket
+import org.slf4j.LoggerFactory
 import java.net.InetSocketAddress
-import java.nio.charset.StandardCharsets
 import java.util.*
 
-class RakLibInterface(private val server: Server, private val address: InetSocketAddress) :
+class RakLibInterface(private val server: Server, private val sessionManager: NetworkSessionManager, private val address: InetSocketAddress) :
     RakNetServerListener,
     AdvancedNetworkInterface {
+    private val logger = LoggerFactory.getLogger(RakLibInterface::class.java)
 
     private val blockAddresses: MutableMap<InetSocketAddress, Long> = HashObjLongMaps.newMutableMap()
 
     private lateinit var network: Network
 
-    private lateinit var raklib: RakNetServer
+    private val raklib: RakNetServer = RakNetServer(address)
+
+    override fun start() {
+        logger.debug("Waiting for RakLib to start")
+        raklib.bind()
+        logger.debug("RakLib booted successfully")
+    }
+
+    override fun setName(name: String) {
+        network.setName(name)
+    }
+
+    override fun tick() {
+        if (!raklib.isRunning) {
+            throw RuntimeException("RakLib thread crashed")
+        }
+    }
+
+    override fun shutdown() {
+        raklib.close()
+    }
 
     override fun blockAddress(address: InetSocketAddress, timeout: Long) {
-        blockAddresses.put(address, timeout)
+        blockAddresses[address] = timeout
     }
 
     override fun unblockAddress(address: InetSocketAddress) {
@@ -49,12 +72,12 @@ class RakLibInterface(private val server: Server, private val address: InetSocke
     }
 
     override fun onConnectionRequest(address: InetSocketAddress): Boolean {
-        TODO("Not yet implemented")
+        return true
     }
 
     override fun onQuery(address: InetSocketAddress): ByteArray {
         val info = server.queryInfo
-        val joiner = StringJoiner(";")
+        return StringJoiner(";")
             .add("MCPE")
             .add(server.configGroup.getConfigString("motd", "${VersionInfo.NAME} Server"))
             .add(Integer.toString(ProtocolInfo.CURRENT_PROTOCOL))
@@ -65,14 +88,14 @@ class RakLibInterface(private val server: Server, private val address: InetSocke
             .add("Powered by Kookie")
             .add("Survival")
             .add("1")
-        return joiner.toString().toByteArray(StandardCharsets.UTF_8)
+            .toString().toByteArray()
     }
 
     override fun onSessionCreation(session: RakNetServerSession) {
-        TODO("Not yet implemented")
+        val networkSession = NetworkSession(server, session)
+        sessionManager.add(networkSession)
     }
 
     override fun onUnhandledDatagram(ctx: ChannelHandlerContext, packet: DatagramPacket) {
-        TODO("Not yet implemented")
     }
 }
