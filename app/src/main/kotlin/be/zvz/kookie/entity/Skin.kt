@@ -1,11 +1,11 @@
 package be.zvz.kookie.entity
 
 class Skin(
-    private val skinId: String,
-    private val skinData: String,
-    private val capeData: String = "",
-    private val geometryName: String = "",
-    private val geometryData: String = ""
+    val skinId: String,
+    val skinData: String,
+    val capeData: String = "",
+    val geometryName: String = "",
+    val geometryData: String = ""
 ) {
 
     init {
@@ -19,16 +19,6 @@ class Skin(
             throw SkinException("Invalid cape data size ${capeData.length} (must be exactly 8192 bytes)")
         }
     }
-
-    fun getSkinId(): String = skinId
-
-    fun getSkinData(): String = skinData
-
-    fun getCapeData(): String = capeData
-
-    fun getGeometryName(): String = geometryName
-
-    fun getGeometryData(): String = geometryData
 
     companion object {
         val ACCEPTED_SKIN_SIZE = listOf(

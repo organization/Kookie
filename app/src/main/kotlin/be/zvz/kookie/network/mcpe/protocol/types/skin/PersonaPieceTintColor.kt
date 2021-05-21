@@ -1,8 +1,8 @@
 package be.zvz.kookie.network.mcpe.protocol.types.skin
 
-class PersonaPieceTintColor(private val pieceType: Int, private val colors: MutableList<String>) {
+class PersonaPieceTintColor(private val pieceType: String, private val colors: MutableList<String>) {
 
-    fun getPieceType(): Int = pieceType
+    fun getPieceType(): String = pieceType
 
     fun getColors(): MutableList<String> = colors
 
