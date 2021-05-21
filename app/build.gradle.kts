@@ -1,3 +1,20 @@
+/**
+ *
+ * _  __           _    _
+ * | |/ /___   ___ | | _(_) ___
+ * | ' // _ \ / _ \| |/ / |/ _ \
+ * | . \ (_) | (_) |   <| |  __/
+ * |_|\_\___/ \___/|_|\_\_|\___|
+ *
+ * A server software for Minecraft: Bedrock Edition
+ *
+ * Copyright (C) 2021 organization Team
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ */
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.jmailen.gradle.kotlinter.tasks.FormatTask
@@ -48,6 +65,8 @@ dependencies {
     implementation(group = "net.minecrell", name = "terminalconsoleappender", version = "1.2.0")
 
     // Jackson
+    implementation(group = "com.fasterxml.jackson.module", name = "jackson-module-kotlin", version = "2.12.3")
+    implementation(group = "com.fasterxml.jackson.module", name = "jackson-module-afterburner", version = "2.12.3")
     implementation(group = "com.fasterxml.jackson.dataformat", name = "jackson-dataformat-yaml", version = "2.12.3")
     implementation(group = "com.fasterxml.jackson.dataformat", name = "jackson-dataformat-properties", version = "2.12.3")
 

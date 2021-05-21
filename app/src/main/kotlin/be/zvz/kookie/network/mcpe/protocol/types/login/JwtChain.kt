@@ -15,19 +15,8 @@
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  */
-package be.zvz.kookie.nbt
+package be.zvz.kookie.network.mcpe.protocol.types.login
 
-interface NbtStreamReader {
-    fun readByte(): Byte
-    fun readSignedByte(): Int
-    fun readShort(): Int
-    fun readSignedShort(): Int
-    fun readInt(): Int
-    fun readLong(): Long
-    fun readFloat(): Float
-    fun readDouble(): Float
-    fun readString(): String
-    fun readByteArray(): ByteArray
-    fun readIntArray(): IntArray
-    fun readLongArray(): LongArray
-}
+data class JwtChain(
+    val chain: MutableList<String>
+)
