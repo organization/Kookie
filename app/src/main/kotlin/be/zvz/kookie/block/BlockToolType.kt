@@ -28,6 +28,6 @@ enum class BlockToolType(val state: Int) {
 
     companion object {
         @JvmStatic
-        fun fromInt(state: Int) = BlockToolType.values().first { it.state == state }
+        fun fromInt(state: Int) = values().first { it.state == state }
     }
 }
