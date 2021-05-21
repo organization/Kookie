@@ -19,6 +19,8 @@ package be.zvz.kookie.console
 
 import be.zvz.kookie.Server
 import net.minecrell.terminalconsole.SimpleTerminalConsole
+import org.jline.reader.LineReader
+import org.jline.reader.LineReaderBuilder
 
 class KookieConsole(private val server: Server) : SimpleTerminalConsole() {
     override fun isRunning(): Boolean {
@@ -29,5 +31,9 @@ class KookieConsole(private val server: Server) : SimpleTerminalConsole() {
     }
 
     override fun shutdown() {
+    }
+
+    override fun buildReader(builder: LineReaderBuilder): LineReader {
+        return super.buildReader(builder.appName("Kookie"))
     }
 }
