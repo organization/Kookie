@@ -26,14 +26,24 @@ open class Item(
 ) {
     private var nbt: CompoundTag = CompoundTag()
     protected var count: Int = 1
-    protected var customName: String = ""
-    protected val lore = mutableListOf<String>()
-    protected val blockEntityTag: CompoundTag? = null
-    protected val canPlaceOn = mutableListOf<String>()
-    protected val canDestroy = mutableListOf<String>()
+    var customName: String = ""
+        set(v) {
+            if (v != "") {
+                field = v
+            }
+        }
+    protected var lore = mutableListOf<String>()
+    protected var blockEntityTag: CompoundTag? = null
+    protected var canPlaceOn = mutableListOf<String>()
+    protected var canDestroy = mutableListOf<String>()
     open val blockToolType = BlockToolType.NONE
     open val blockToolHarvestLevel = 0
 
+    fun hasCustomBlockData(): Boolean = this.blockEntityTag != null
+    fun clearCustomBlockData(): Item = this.apply {
+        blockEntityTag = null
+    }
+    fun getCustomBlockData(): CompoundTag? = this.blockEntityTag
     fun getMiningEfficiency(isCorrectTool: Boolean): Float = 1F
 
     companion object {

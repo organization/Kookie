@@ -48,6 +48,10 @@ repositories {
         name = "powernukkit-snapshots"
         url = uri("https://oss.sonatype.org/content/repositories/snapshots")
     }
+    maven {
+        name = "jitpack"
+        url = uri("https://jitpack.io")
+    }
 }
 
 dependencies {
@@ -97,6 +101,12 @@ dependencies {
     implementation(group = "com.koloboke", name = "koloboke-impl-common-jdk8", version = "1.0.0")
     implementation(group = "com.koloboke", name = "koloboke-impl-jdk8", version = "1.0.0")
     implementation(group = "com.koloboke", name = "koloboke-api-jdk8", version = "1.0.0")
+
+    // JWT
+    implementation(group = "io.jsonwebtoken", name = "jjwt-api", version = "0.11.2")
+    runtimeOnly(group = "io.jsonwebtoken", name = "jjwt-impl", version = "0.11.2")
+    runtimeOnly(group = "io.jsonwebtoken", name = "jjwt-jackson", version = "0.11.2")
+    implementation(group = "org.whispersystems", name = "curve25519-java", version = "0.5.0")
 
     // Use the Kotlin test library.
     testImplementation(group = "org.jetbrains.kotlin", name = "kotlin-test")
