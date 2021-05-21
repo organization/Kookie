@@ -19,11 +19,12 @@ object EncryptionUtils {
         Integer.toUnsignedString(java.lang.Byte.toUnsignedInt(it), 16).padStart(2, '0')
     }
 
-    fun generateKey(secret: PrivateKey, salt: String): String {
+    fun generateKey(secret: PrivateKey, salt: String): ByteArray {
         val md = MessageDigest.getInstance("SHA-256")
-        return md
-            .digest(("$salt${secret.encoded.toHexString().padStart(96, '0').toInt(16).toString(2)}").toByteArray())
-            .toString()
+        return md.digest(
+            (salt + secret.encoded.toHexString().padStart(96, '0').toInt(16).toString(2))
+                .toByteArray()
+        )
     }
 
     fun generateServerHandshakeJwt(keyPair: KeyPair, salt: String): String {
