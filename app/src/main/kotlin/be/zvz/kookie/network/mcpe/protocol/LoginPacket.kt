@@ -25,7 +25,7 @@ import com.fasterxml.jackson.core.JsonProcessingException
 import com.fasterxml.jackson.module.kotlin.readValue
 
 @ProtocolIdentify(ProtocolInfo.IDS.LOGIN_PACKET)
-class LoginPacket : DataPacket(), ClientboundPacket {
+class LoginPacket : DataPacket(), ServerboundPacket {
 
     lateinit var clientDataJwt: String
     lateinit var chainDataJwt: JwtChain
