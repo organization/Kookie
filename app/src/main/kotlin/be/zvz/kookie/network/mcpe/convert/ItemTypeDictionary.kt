@@ -5,21 +5,23 @@ import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.afterburner.AfterburnerModule
 import com.fasterxml.jackson.module.kotlin.jacksonMapperBuilder
+import com.koloboke.collect.map.hash.HashIntObjMaps
+import com.koloboke.collect.map.hash.HashObjObjMaps
 import java.lang.NumberFormatException
 
 class ItemTypeDictionary private constructor(val itemTypes: List<ItemTypeEntry>) {
-    private val stringToIntMap: MutableMap<String, Int> = mutableMapOf()
-    private val intToStringIdMap: MutableMap<Int, String> = mutableMapOf()
+    private val stringToIntMap: MutableMap<String, Int> = HashObjObjMaps.newMutableMap()
+    private val intToStringIdMap: MutableMap<Int, String> = HashIntObjMaps.newMutableMap()
     companion object {
         private val jsonMapper: ObjectMapper = jacksonMapperBuilder()
             .addModule(AfterburnerModule())
             .build()
-        private lateinit var instance: ItemTypeDictionary
+        private val instance: ItemTypeDictionary = make()
         fun getInstance(): ItemTypeDictionary {
             return instance
         }
 
-        fun make() {
+        private fun make(): ItemTypeDictionary {
             val data = jsonMapper.readValue(
                 this::class.java.getResourceAsStream("vanilla/required_item_list.json"),
                 object : TypeReference<Map<String, Map<String, String>>>() {}
@@ -27,23 +29,20 @@ class ItemTypeDictionary private constructor(val itemTypes: List<ItemTypeEntry>)
 
             val itemTypes: MutableList<ItemTypeEntry> = mutableListOf()
             data.forEach { (name, entry) ->
-                if (!entry.containsKey("component_based") || !entry.containsKey("runtime_id")) {
-                    // error
-                    return
-                }
-
                 val runtimeId: Int
                 val componentBased: Boolean
                 try {
                     runtimeId = entry.getValue("runtime_id").toInt()
                     componentBased = entry.getValue("component_based").toBoolean()
                 } catch (ignored: NumberFormatException) {
-                    return
+                    return@forEach
+                } catch (ignored: NoSuchElementException) {
+                    return@forEach
                 }
 
                 itemTypes.add(ItemTypeEntry(name, runtimeId, componentBased))
             }
-            instance = ItemTypeDictionary(itemTypes)
+            return ItemTypeDictionary(itemTypes)
         }
     }
     init {
