@@ -15,14 +15,15 @@
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  */
-package be.zvz.kookie.inventory
+package be.zvz.kookie.item.enchantment
 
-import be.zvz.kookie.item.Item
+enum class Rarity(val rarity: Int) {
+    COMMON(10),
+    UNCOMMON(5),
+    RARE(2),
+    MYTHIC(1);
 
-interface InventoryHelpers<T : Item> {
-    fun getMaxStackSize(): Int
-    fun getSize(): Int
-    fun getItem(index: Int): T
-    fun setItem(index: Int, item: T)
-    fun getContents(includeEmpty: Boolean): MutableList<T>
+    companion object {
+        fun from(findValue: Int): Rarity = Rarity.values().first { it.rarity == findValue }
+    }
 }

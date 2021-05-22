@@ -15,14 +15,11 @@
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  */
-package be.zvz.kookie.inventory
+package be.zvz.kookie.item.enchantment
 
-import be.zvz.kookie.item.Item
-
-interface InventoryHelpers<T : Item> {
-    fun getMaxStackSize(): Int
-    fun getSize(): Int
-    fun getItem(index: Int): T
-    fun setItem(index: Int, item: T)
-    fun getContents(includeEmpty: Boolean): MutableList<T>
+class EnchantmentInstance(
+    val enchantment: Enchantment,
+    val level: Int = 1,
+) {
+    fun getRuntimeId(): Int = enchantment.internalRuntimeId
 }
