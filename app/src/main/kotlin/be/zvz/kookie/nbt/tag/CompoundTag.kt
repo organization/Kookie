@@ -28,8 +28,16 @@ class CompoundTag : Tag<Map<String, Tag<*>>>() {
         return NBT.TagType.COMPOUND
     }
 
+    fun count() : Int = value.size;
+
     fun setTag(name: String, tag: Tag<*>) {
         value[name] = tag
+    }
+
+    fun removeTag(vararg names: String) {
+        names.forEach {
+            value.remove(it)
+        }
     }
 
     @JvmOverloads

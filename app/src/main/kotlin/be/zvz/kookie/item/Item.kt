@@ -19,6 +19,8 @@ package be.zvz.kookie.item
 
 import be.zvz.kookie.block.BlockToolType
 import be.zvz.kookie.nbt.tag.CompoundTag
+import be.zvz.kookie.nbt.tag.ListTag
+import be.zvz.kookie.nbt.tag.StringTag
 
 open class Item(
     private val identifier: ItemIdentifier,
@@ -32,7 +34,7 @@ open class Item(
                 field = v
             }
         }
-    protected var lore = mutableListOf<String>()
+    var lore = mutableListOf<String>()
     protected var blockEntityTag: CompoundTag? = null
     protected var canPlaceOn = mutableListOf<String>()
     protected var canDestroy = mutableListOf<String>()
@@ -44,7 +46,66 @@ open class Item(
         blockEntityTag = null
     }
     fun getCustomBlockData(): CompoundTag? = this.blockEntityTag
+    fun hasNamedTag(): Boolean = getNamedTag().count() > 0
+    fun getNamedTag(): CompoundTag = serializeCompoundTag(nbt)
     fun getMiningEfficiency(isCorrectTool: Boolean): Float = 1F
+
+    protected fun serializeCompoundTag(tag: CompoundTag): CompoundTag {
+        val display = tag.getCompoundTag(TAG_DISPLAY) ?: CompoundTag()
+
+        if (customName.isEmpty()) {
+            display.removeTag(TAG_DISPLAY_NAME)
+        } else {
+            display.setString(TAG_DISPLAY_NAME, customName)
+        }
+
+        if (lore.isNotEmpty()) {
+            val loreTag = ListTag<String>()
+            lore.forEach {
+                loreTag.push(StringTag(it))
+            }
+            display.setTag(TAG_DISPLAY_LORE, loreTag)
+        } else {
+            display.removeTag(TAG_DISPLAY_LORE)
+        }
+
+        if (display.count() > 0) {
+            tag.setTag(TAG_DISPLAY, display)
+        } else {
+            tag.removeTag(TAG_DISPLAY)
+        }
+
+        //TODO: enchantment
+
+        getCustomBlockData().let {
+            if (it == null) {
+                tag.removeTag(TAG_BLOCK_ENTITY_TAG)
+            } else {
+                tag.setTag(TAG_BLOCK_ENTITY_TAG, it.clone())
+            }
+        }
+
+        if (this.canPlaceOn.isNotEmpty()) {
+            val canPlaceOnTag = ListTag<String>()
+            canPlaceOn.forEach {
+                canPlaceOnTag.push(StringTag(it))
+            }
+            tag.setTag("CanPlaceOn", canPlaceOnTag)
+        } else {
+            tag.removeTag("CanPlaceOn")
+        }
+        if (this.canDestroy.isNotEmpty()) {
+            val canDestroyTag = ListTag<String>()
+            canDestroy.forEach {
+                canDestroyTag.push(StringTag(it))
+            }
+            tag.setTag("canDestroy", canDestroyTag)
+        } else {
+            tag.removeTag("canDestroy")
+        }
+
+        return tag
+    }
 
     companion object {
         const val TAG_ENCH = "ench"
