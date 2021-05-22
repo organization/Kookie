@@ -55,6 +55,6 @@ class AsyncPool(private var size: Int) {
             throw IllegalArgumentException("Cannot submit the same AsyncTask instance more than once")
         }
         task.setSubmitted()
-        //taskQueues[worker]
+        // taskQueues[worker]
     }
 }

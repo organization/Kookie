@@ -71,7 +71,7 @@ class CompoundTag : Tag<Map<String, Tag<*>>>() {
             throw NBTException("Expected a tag of type $expectedClass, got " + tag.javaClass.name)
         }
         if (default == null) {
-            throw NBTException("Tag \"$name\" does not exist");
+            throw NBTException("Tag \"$name\" does not exist")
         }
         return default
     }
