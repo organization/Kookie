@@ -38,6 +38,7 @@ class LoginPacket : DataPacket(), ServerboundPacket {
 
     override fun decodePayload(input: PacketSerializer) {
         protocol = input.getInt()
+        decodeConnectionRequest(input.getString())
     }
 
     protected fun decodeConnectionRequest(binary: String) {
