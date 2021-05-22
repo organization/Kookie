@@ -20,8 +20,10 @@ package be.zvz.kookie.network.mcpe
 import be.zvz.kookie.Server
 import be.zvz.kookie.entity.Attribute
 import be.zvz.kookie.entity.Living
+import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
 import be.zvz.kookie.network.mcpe.protocol.ClientboundPacket
 import be.zvz.kookie.network.mcpe.protocol.DataPacket
+import be.zvz.kookie.network.mcpe.protocol.Packet
 import be.zvz.kookie.network.mcpe.serializer.PacketSerializer
 import be.zvz.kookie.player.Player
 import be.zvz.kookie.player.PlayerInfo
@@ -32,7 +34,11 @@ import io.netty.buffer.Unpooled
 import org.slf4j.LoggerFactory
 import java.util.*
 
-class NetworkSession(private val server: Server, private val session: RakNetSession) {
+class NetworkSession(
+    private val server: Server,
+    private val sessionManager: NetworkSessionManager,
+    private val session: RakNetSession,
+) {
 
     val logger = LoggerFactory.getLogger(NetworkSession::class.java)
     private var ping: Int? = null
@@ -40,9 +46,16 @@ class NetworkSession(private val server: Server, private val session: RakNetSess
     private var info: PlayerInfo? = null
     private var connected = false
     private var connectedTime = Date()
-    private val sendBuffer = mutableListOf<ByteBuf>()
+    private val sendBuffer = mutableListOf<Packet>()
+
+    private var handler: PacketHandlerInterface? = null
 
     init {
+        // TODO: setHandler(LoginPacketHandler) here
+    }
+
+    fun setHandler(handler: PacketHandlerInterface? = null) {
+        this.handler = handler
     }
 
     fun tick(): Boolean {
@@ -67,7 +80,7 @@ class NetworkSession(private val server: Server, private val session: RakNetSess
         return true
     }
 
-    fun sendDataPacket(packet: DataPacket) {
+    fun sendDataPacket(packet: DataPacket, immediate: Boolean = false) {
         // TODO: call DataPacketSendEvent on here
         if (packet !is ClientboundPacket) {
             throw InvalidPacketException("Cannot send non-clientbound packet to player")
@@ -78,14 +91,27 @@ class NetworkSession(private val server: Server, private val session: RakNetSess
             }
         }
 
-        val serializer = PacketSerializer()
-        packet.encode(serializer)
-        val buffer = serializer.buffer
-        putBuffer(Unpooled.copiedBuffer(buffer.toString().toByteArray()))
+        sendBuffer.add(packet)
+        sessionManager.scheduleUpdate(this)
     }
 
-    fun putBuffer(buffer: ByteBuf) {
-        sendBuffer.add(buffer)
+    fun handleDataPacket(packet: Packet, buffer: ByteBuf) {
+        val serializer = PacketSerializer(buffer.toString())
+        packet.decode(serializer)
+        if (!serializer.feof()) {
+            val remains = serializer.buffer.substring(serializer.offset.get())
+            logger.debug("Still ${remains.length} bytes unread in ${packet.getName()}")
+        }
+        handler.let {
+            if (it != null) {
+                if (!packet.handle(it)) {
+                    logger.debug("Unhandled ${packet.getName()}")
+                }
+            }
+        }
+    }
+
+    fun handleBuffer(buffer: ByteBuf) {
     }
 
     fun syncAttributes(entity: Living, attributes: Map<String, Attribute>) {
@@ -96,9 +122,15 @@ class NetworkSession(private val server: Server, private val session: RakNetSess
 
     private fun flushSendBuffer(immediate: Boolean = false) {
         if (sendBuffer.size > 0) {
-            sendBuffer.forEach {
-                session.send(it)
+            if (immediate) {
+                sendBuffer.forEach {
+                    val serializer = PacketSerializer()
+                    it.encode(serializer)
+                    session.send(Unpooled.copiedBuffer(serializer.buffer.toString().toByteArray()))
+                }
+                return
             }
+            // TODO: immediate buffer
             sendBuffer.clear()
         }
     }

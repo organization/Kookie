@@ -109,7 +109,7 @@ class RakLibInterface(private val server: Server, private val sessionManager: Ne
     }
 
     override fun onSessionCreation(session: RakNetServerSession) {
-        val networkSession = NetworkSession(server, session)
+        val networkSession = NetworkSession(server, sessionManager, session)
         sessionManager.add(networkSession)
     }
 

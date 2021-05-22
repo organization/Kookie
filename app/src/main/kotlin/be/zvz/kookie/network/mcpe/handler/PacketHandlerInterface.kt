@@ -17,4 +17,21 @@
  */
 package be.zvz.kookie.network.mcpe.handler
 
-interface PacketHandlerInterface
+import be.zvz.kookie.network.mcpe.protocol.*
+
+interface PacketHandlerInterface {
+
+    fun handleUnknown(packet: UnknownPacket): Boolean
+
+    fun handleLogin(packet: LoginPacket): Boolean
+
+    fun handlePlayStatus(packet: PlayStatusPacket): Boolean
+
+    fun handleServerToClientHandshake(packet: ServerToClientHandshakePacket): Boolean
+
+    fun handleClientToServerHandshake(packet: ClientToServerHandshakePacket): Boolean
+
+    fun handleDisconnect(packet: DisconnectPacket): Boolean
+
+    fun handleResourcePacksInfo(packet: ResourcePacksInfoPacket): Boolean
+}
