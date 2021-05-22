@@ -18,14 +18,21 @@
 package be.zvz.kookie.network.mcpe.serializer
 
 import be.zvz.kookie.math.Vector3
+import be.zvz.kookie.nbt.LittleEndianNbtSerializer
+import be.zvz.kookie.nbt.NbtDataException
+import be.zvz.kookie.nbt.TreeRoot
+import be.zvz.kookie.nbt.tag.CompoundTag
+import be.zvz.kookie.network.mcpe.convert.ItemTypeDictionary
+import be.zvz.kookie.network.mcpe.protocol.PacketDecodeException
+import be.zvz.kookie.network.mcpe.protocol.types.inventory.ItemStack
 import be.zvz.kookie.network.mcpe.protocol.types.skin.*
 import be.zvz.kookie.utils.BinaryStream
 import java.util.*
 import java.util.concurrent.atomic.AtomicInteger
 
-class PacketSerializer(buffer: String = "", offset: Int = 0) : BinaryStream(buffer, offset) {
+class PacketSerializer(buffer: String = "", offset: AtomicInteger = AtomicInteger(0)) : BinaryStream(buffer, offset) {
 
-    var shieldRuntimeId: Int = 0
+    private val shieldItemRuntimeId: Int = ItemTypeDictionary.getInstance().fromStringId("minecraft:shield")
 
     fun getString(): String = get(getUnsignedVarInt())
 
@@ -188,7 +195,122 @@ class PacketSerializer(buffer: String = "", offset: Int = 0) : BinaryStream(buff
         putString(skinImage.getData())
     }
 
-    // TODO: ItemStack
+    fun getItemStackWithoutStackId(): ItemStack {
+        return getItemStack {}
+    }
+
+    fun putItemStackWithoutStackId(item: ItemStack) {
+        putItemStack(item) {}
+    }
+
+    fun putItemStack(item: ItemStack, writeExtraCrapInTheMiddle: (PacketSerializer) -> Unit) {
+        if (item.id == 0) {
+            putVarInt(0)
+            return
+        }
+
+        putVarInt(item.id)
+        putLShort(item.count)
+        putUnsignedVarInt(item.meta)
+
+        writeExtraCrapInTheMiddle(this)
+
+        putVarInt(item.blockRuntimeId)
+        val shieldItemRuntimeId = this.shieldItemRuntimeId
+        putString(
+            run {
+                val extraData = PacketSerializer()
+                val nbt = item.nbt
+                if (nbt !== null) {
+                    extraData.putLShort(0xffff)
+                    extraData.putByte(1)
+                    extraData.put(LittleEndianNbtSerializer().write(TreeRoot(nbt)))
+                } else {
+                    extraData.putLShort(0)
+                }
+
+                extraData.putLInt(item.canPlaceOn.size)
+                item.canPlaceOn.forEach { entry ->
+                    extraData.putLShort(entry.length)
+                    extraData.put(entry)
+                }
+                extraData.putLInt(item.canDestroy.size)
+                item.canPlaceOn.forEach { entry ->
+                    extraData.putLShort(entry.length)
+                    extraData.put(entry)
+                }
+
+                val blockingTick = item.shieldBlockingTick
+                if (item.id == shieldItemRuntimeId) {
+                    extraData.putLLong(blockingTick ?: 0)
+                }
+                return@run extraData.buffer.toString()
+            }
+        )
+    }
+
+    fun getItemStack(readExtraCrapInTheMiddle: (PacketSerializer) -> Unit): ItemStack {
+        val id = getVarInt()
+        if (id == 0) {
+            return ItemStack.empty()
+        }
+        val count = getLShort()
+        val meta = getUnsignedVarInt()
+
+        readExtraCrapInTheMiddle(this)
+
+        val blockRuntimeId = getVarInt()
+        val extraData = PacketSerializer(getString())
+        val shieldItemRuntimeId = this.shieldItemRuntimeId
+        return run {
+            val nbtLen = extraData.getLShort()
+            var compound: CompoundTag? = null
+            if (nbtLen == 0xffff) {
+                val nbtDataVersion = extraData.getByte()
+                if (nbtDataVersion != 1) {
+                    throw PacketDecodeException("Unexpected NBT data version $nbtDataVersion")
+                }
+                val offset = extraData.offset
+                try {
+                    compound = LittleEndianNbtSerializer().read(extraData.buffer.toString(), offset, 512).mustGetCompoundTag()
+                } catch (e: NbtDataException) {
+                    throw PacketDecodeException.wrap(e, "Failed decoding NBT root")
+                } finally {
+                    extraData.offset.set(offset.get())
+                }
+            } else if (nbtLen != 0) {
+                throw PacketDecodeException("Unexpected fake NBT length $nbtLen")
+            }
+            val canPlaceOn = mutableListOf<String>()
+            for (i in 0..extraData.getLInt()) {
+                canPlaceOn.add(extraData.get(extraData.getLShort()))
+            }
+
+            val canDestroy = mutableListOf<String>()
+            for (i in 0..extraData.getLInt()) {
+                canDestroy.add(extraData.get(extraData.getLShort()))
+            }
+
+            val shieldBlockingTick: Long? = if (id == shieldItemRuntimeId) {
+                extraData.getLLong()
+            } else {
+                null
+            }
+            if (!extraData.feof()) {
+                throw PacketDecodeException("Unexpected trailing extradata for network item $id")
+            }
+            return@run ItemStack(
+                id,
+                meta,
+                count,
+                blockRuntimeId,
+                compound,
+                canPlaceOn,
+                canDestroy,
+                shieldBlockingTick
+            )
+        }
+    }
 
     fun getEntityUniqueId(): Long {
         return getVarLong()
@@ -224,5 +346,13 @@ class PacketSerializer(buffer: String = "", offset: Int = 0) : BinaryStream(buff
         putLFloat(vector.x)
         putLFloat(vector.y)
         putLFloat(vector.z)
+    }
+
+    fun readGenericTypeNetworkId(): Int {
+        return getVarInt()
+    }
+
+    fun writeGenericTypeNetworkId(id: Int) {
+        putVarInt(id)
     }
 }

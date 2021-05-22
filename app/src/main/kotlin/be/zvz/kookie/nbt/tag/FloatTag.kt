@@ -18,6 +18,8 @@
 package be.zvz.kookie.nbt.tag
 
 import be.zvz.kookie.nbt.NBT
+import be.zvz.kookie.nbt.NbtStreamReader
+import be.zvz.kookie.nbt.NbtStreamWriter
 
 class FloatTag(override val value: Float) : Tag<Float>() {
 
@@ -26,4 +28,12 @@ class FloatTag(override val value: Float) : Tag<Float>() {
     }
 
     override fun makeCopy(): FloatTag = FloatTag(value)
+
+    override fun write(writer: NbtStreamWriter) {
+        writer.writeFloat(value)
+    }
+
+    companion object {
+        fun read(reader: NbtStreamReader): FloatTag = FloatTag(reader.readFloat())
+    }
 }

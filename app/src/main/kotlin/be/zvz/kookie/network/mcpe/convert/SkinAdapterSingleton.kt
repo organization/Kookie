@@ -23,9 +23,9 @@ class SkinAdapterSingleton {
         var adapter: SkinAdapter? = null
             get() {
                 if (field == null) {
-                    adapter = LegacySkinAdapter()
+                    field = LegacySkinAdapter()
                 }
-                return adapter
+                return field
             }
             set(value: SkinAdapter?) {
                 field = value

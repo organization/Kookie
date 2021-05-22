@@ -17,21 +17,26 @@
  */
 package be.zvz.kookie.item
 
+import be.zvz.kookie.block.Block
 import be.zvz.kookie.block.BlockToolType
+import be.zvz.kookie.entity.Entity
+import be.zvz.kookie.item.enchantment.EnchantmentInstance
 import be.zvz.kookie.nbt.NBT
 import be.zvz.kookie.nbt.tag.CompoundTag
 import be.zvz.kookie.nbt.tag.ListTag
 import be.zvz.kookie.nbt.tag.StringTag
+import be.zvz.kookie.nbt.tag.Tag
 
 open class Item(
     private val identifier: ItemIdentifier,
     protected val name: String = "Unknown",
-) {
+) : Cloneable, ItemEnchantmentHandling {
+    override val enchantments: MutableMap<Int, EnchantmentInstance> = mutableMapOf()
     private var nbt: CompoundTag = CompoundTag()
-    protected var count: Int = 1
+    var count: Int = 1
     var customName: String = ""
         set(v) {
-            if (v != "") {
+            if (v.isNotEmpty()) {
                 field = v
             }
         }
@@ -63,8 +68,6 @@ open class Item(
         deserializeCompoundTag(nbt)
     }
 
-    fun getMiningEfficiency(isCorrectTool: Boolean): Float = 1F
-
     protected fun deserializeCompoundTag(tag: CompoundTag) {
         customName = ""
         lore.clear()
@@ -80,7 +83,19 @@ open class Item(
             }
         }
 
-        // TODO: enchantment
+        removeEnchantments()
+        val enchantmentsTag = tag.getListTag(TAG_ENCH)
+        if (enchantmentsTag != null && enchantmentsTag.getTagType() == NBT.TagType.COMPOUND) {
+            enchantmentsTag.value.forEach {
+                it as CompoundTag
+                val magicNumber = it.getShort("id", -1)
+                val level = it.getShort("lvl", 0)
+                if (level <= 0) {
+                    return
+                }
+                TODO("Not yet implemented")
+            }
+        }
 
         blockEntityTag = tag.getCompoundTag(TAG_BLOCK_ENTITY_TAG)
 
@@ -119,7 +134,16 @@ open class Item(
             tag.removeTag(TAG_DISPLAY)
         }
 
-        // TODO: enchantment
+        if (hasEnchantments()) {
+            val ench = ListTag<Map<String, Tag<*>>>()
+            enchantments.forEach {
+                ench.push(CompoundTag.create().setShort("lvl", it.value.level))
+                TODO("Not yet implemented, setShort(id)")
+            }
+            tag.setTag(TAG_ENCH, ench)
+        } else {
+            tag.removeTag(TAG_ENCH)
+        }
 
         getCustomBlockData().let {
             if (it == null) {
@@ -149,6 +173,78 @@ open class Item(
         }
 
         return tag
+    }
+
+    fun pop(count: Int = 1): Item {
+        if (count > this.count) {
+            throw Exception("Cannot pop $count items from a stack of ${this.count}")
+        }
+        val item = clone()
+        item.count -= count
+        this.count -= count
+        return item
+    }
+
+    fun isNull(): Boolean = count <= 0 || getId() == 0
+    fun getVanillaName(): String = name
+
+    // TODO: canBePlaced(), getBlock()
+    fun getId(): Int = identifier.id
+    fun getMeta(): Int = identifier.meta
+    fun hasAnyDamageValue(): Boolean = identifier.meta == -1
+    fun getMaxStackSize(): Int = 64
+    fun getFuelTime(): Int = 0
+
+    fun getFuelResidue(): Item {
+        val item = clone()
+        item.pop()
+        return item
+    }
+
+    fun getAttackPoints(): Int = 1
+    fun getDefensePoints(): Int = 1
+    fun getMiningEfficiency(isCorrectTool: Boolean): Float = 1F
+
+    // TODO: onInteractBlock, onInteractBlock, onReleaseUsing
+
+    fun onDestroyBlock(block: Block): Boolean = false
+    fun onAttackEntity(victim: Entity): Boolean = false
+
+    fun equals(item: Item, checkDamage: Boolean = true, checkCompound: Boolean = true) =
+        getId() == item.getId() &&
+            (!checkDamage || getMeta() == item.getMeta()) &&
+            (!checkCompound || getNamedTag() == item.getNamedTag())
+
+    fun equalsExact(other: Item): Boolean = equals(other) && count == other.count
+
+    // TODO: NamedTag to string
+    override fun toString(): String =
+        "Item $name (${getId()}:" + (if (hasAnyDamageValue()) "?" else getMeta()) + ")x$count"
+
+    // TODO: json/nbt (de)serialize
+
+    fun nbtSerialize(slot: Int = -1): CompoundTag {
+        val result = CompoundTag.create()
+            .setShort("id", getId())
+            .setByte("Count", count)
+            .setShort("Damage", getMeta())
+
+        if (hasNamedTag()) {
+            result.setTag("tag", getNamedTag())
+        }
+
+        if (slot != -1) {
+            result.setByte("Slot", slot)
+        }
+
+        return result
+    }
+
+    public override fun clone(): Item {
+        val clonedItem = super.clone() as Item
+        clonedItem.nbt = nbt.clone() as CompoundTag
+        blockEntityTag = blockEntityTag?.clone() as CompoundTag?
+        return clonedItem
     }
 
     companion object {

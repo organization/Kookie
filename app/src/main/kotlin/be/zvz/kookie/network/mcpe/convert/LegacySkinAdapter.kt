@@ -22,6 +22,7 @@ import be.zvz.kookie.network.mcpe.protocol.types.skin.SkinData
 import be.zvz.kookie.network.mcpe.protocol.types.skin.SkinGeometry
 import be.zvz.kookie.network.mcpe.protocol.types.skin.SkinImage
 import com.fasterxml.jackson.core.JsonProcessingException
+import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.afterburner.AfterburnerModule
 import com.fasterxml.jackson.module.kotlin.jacksonMapperBuilder
 import com.fasterxml.jackson.module.kotlin.readValue
@@ -78,7 +79,7 @@ class LegacySkinAdapter : SkinAdapter {
     class SkinAdapterException(message: String) : RuntimeException(message)
 
     companion object {
-        val jsonMapper = jacksonMapperBuilder()
+        val jsonMapper: ObjectMapper = jacksonMapperBuilder()
             .addModule(AfterburnerModule())
             .build()
     }

@@ -18,6 +18,7 @@
 package be.zvz.kookie.nbt.tag
 
 import be.zvz.kookie.nbt.NBT
+import be.zvz.kookie.nbt.NbtStreamWriter
 
 abstract class Tag<T> {
     var cloning = false
@@ -25,6 +26,8 @@ abstract class Tag<T> {
     abstract val value: T
 
     abstract fun getTagType(): NBT.TagType
+
+    abstract fun write(writer: NbtStreamWriter)
 
     override fun equals(other: Any?): Boolean =
         other is Tag<*> && this.value == other.value

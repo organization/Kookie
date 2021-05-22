@@ -17,7 +17,10 @@
  */
 package be.zvz.kookie.network.mcpe.protocol
 
-class PacketDecodeException internal constructor(msg: String, cause: Throwable) : RuntimeException(msg, cause) {
+class PacketDecodeException internal constructor(
+    msg: String,
+    cause: Throwable? = null
+) : RuntimeException(msg, cause) {
     companion object {
         @JvmStatic
         fun wrap(previous: Throwable, prefix: String? = null): PacketDecodeException {

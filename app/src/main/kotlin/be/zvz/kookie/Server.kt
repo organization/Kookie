@@ -21,6 +21,9 @@ import be.zvz.kookie.console.KookieConsole
 import be.zvz.kookie.constant.CorePaths
 import be.zvz.kookie.constant.FilePermission
 import be.zvz.kookie.lang.Language
+import be.zvz.kookie.network.Network
+import be.zvz.kookie.network.mcpe.protocol.ProtocolInfo
+import be.zvz.kookie.network.mcpe.raklib.RakLibInterface
 import be.zvz.kookie.network.query.QueryInfo
 import be.zvz.kookie.utils.Config
 import be.zvz.kookie.utils.config.PropertiesBrowser
@@ -29,6 +32,7 @@ import ch.qos.logback.classic.Logger
 import org.apache.commons.io.IOUtils
 import org.slf4j.LoggerFactory
 import java.io.BufferedOutputStream
+import java.net.InetSocketAddress
 import java.nio.file.Path
 import java.util.*
 import kotlin.concurrent.thread
@@ -58,6 +62,8 @@ class Server(cwd: Path, dataPath: Path, pluginPath: Path) {
     private var onlineMode = true
     private var networkCompressionAsync = true
     val memoryManager: MemoryManager
+
+    private val network = Network(this, logger)
 
     var language: Language
         private set
@@ -189,7 +195,9 @@ class Server(cwd: Path, dataPath: Path, pluginPath: Path) {
 
         memoryManager = MemoryManager(this)
 
-        logger.info("pocketmine.server.start") // TODO: ProtocolInfo.MINECRAFT_VERSION
+        network.addInterface(RakLibInterface(this, network.getSessionManager(), InetSocketAddress("0.0.0.0", configGroup.getConfigLong("server-port").toInt())))
+
+        logger.info("pocketmine.server.start", listOf(ProtocolInfo.MINECRAFT_VERSION_NETWORK))
 
         thread(isDaemon = true, name = "${VersionInfo.NAME}-console") {
             console.start()

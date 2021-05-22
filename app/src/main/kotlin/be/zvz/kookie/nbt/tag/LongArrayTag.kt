@@ -18,12 +18,22 @@
 package be.zvz.kookie.nbt.tag
 
 import be.zvz.kookie.nbt.NBT
+import be.zvz.kookie.nbt.NbtStreamReader
+import be.zvz.kookie.nbt.NbtStreamWriter
 
 class LongArrayTag(override val value: LongArray) : Tag<LongArray>() {
 
     override fun getTagType(): NBT.TagType {
-        return NBT.TagType.BYTE_ARRAY
+        return NBT.TagType.LONG_ARRAY
     }
 
     override fun makeCopy(): Tag<LongArray> = LongArrayTag(value)
+
+    override fun write(writer: NbtStreamWriter) {
+        writer.writeLongArray(value)
+    }
+
+    companion object {
+        fun read(reader: NbtStreamReader): LongArrayTag = LongArrayTag(reader.readLongArray())
+    }
 }

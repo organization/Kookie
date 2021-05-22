@@ -18,14 +18,14 @@
 package be.zvz.kookie.nbt
 
 interface NbtStreamReader {
-    fun readByte(): Byte
+    fun readByte(): Int
     fun readSignedByte(): Int
     fun readShort(): Int
     fun readSignedShort(): Int
     fun readInt(): Int
     fun readLong(): Long
     fun readFloat(): Float
-    fun readDouble(): Float
+    fun readDouble(): Double
     fun readString(): String
     fun readByteArray(): ByteArray
     fun readIntArray(): IntArray

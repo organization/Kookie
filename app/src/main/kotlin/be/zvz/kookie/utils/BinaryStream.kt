@@ -19,8 +19,7 @@ package be.zvz.kookie.utils
 
 import java.util.concurrent.atomic.AtomicInteger
 
-open class BinaryStream(buffer: String = "", offset: Int = 0) {
-    val offset = AtomicInteger(offset)
+open class BinaryStream(buffer: String = "", val offset: AtomicInteger = AtomicInteger(0)) {
     val buffer = StringBuilder(buffer)
 
     fun rewind() {
@@ -60,6 +59,10 @@ open class BinaryStream(buffer: String = "", offset: Int = 0) {
 
     fun put(str: String) {
         buffer.append(str)
+    }
+
+    fun put(byteArray: ByteArray) {
+        buffer.append(byteArray)
     }
 
     fun getBoolean(): Boolean = get(1) == "\u0000"

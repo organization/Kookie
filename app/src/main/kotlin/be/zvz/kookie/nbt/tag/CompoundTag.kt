@@ -17,8 +17,7 @@
  */
 package be.zvz.kookie.nbt.tag
 
-import be.zvz.kookie.nbt.NBT
-import be.zvz.kookie.nbt.NBTException
+import be.zvz.kookie.nbt.*
 import com.koloboke.collect.map.hash.HashObjObjMaps
 
 class CompoundTag : Tag<Map<String, Tag<*>>>() {
@@ -38,7 +37,7 @@ class CompoundTag : Tag<Map<String, Tag<*>>>() {
     fun getCompoundTag(name: String): CompoundTag? {
         val tag = getTag(name) ?: return null
         if (tag !is CompoundTag) {
-            throw NBTException("Found tag $name but tag is not CompoundTag")
+            throw NbtException("Found tag $name but tag is not CompoundTag")
         }
         return tag
     }
@@ -46,7 +45,7 @@ class CompoundTag : Tag<Map<String, Tag<*>>>() {
     fun getListTag(name: String): ListTag<*>? {
         val tag = getTag(name) ?: return null
         if (tag !is ListTag<*>) {
-            throw NBTException("Found tag $name but tag is not ListTag")
+            throw NbtException("Found tag $name but tag is not ListTag")
         }
         return tag
     }
@@ -68,47 +67,47 @@ class CompoundTag : Tag<Map<String, Tag<*>>>() {
             return tag.value!!
         }
         if (tag != null) {
-            throw NBTException("Expected a tag of type $expectedClass, got " + tag.javaClass.name)
+            throw NbtException("Expected a tag of type $expectedClass, got " + tag.javaClass.name)
         }
         if (default == null) {
-            throw NBTException("Tag \"$name\" does not exist")
+            throw NbtException("Tag \"$name\" does not exist")
         }
         return default
     }
 
-    fun getByte(name: String, default: String?): Byte = getTagValue(name, ByteTag::javaClass.name, default) as Byte
-    fun getShort(name: String, default: String?): Short = getTagValue(name, ShortTag::javaClass.name, default) as Short
-    fun getInt(name: String, default: String?): Int = getTagValue(name, IntTag::javaClass.name, default) as Int
-    fun getLong(name: String, default: String?): Long = getTagValue(name, LongTag::javaClass.name, default) as Long
-    fun getFloat(name: String, default: String?): Float = getTagValue(name, FloatTag::javaClass.name, default) as Float
-    fun getDouble(name: String, default: String?): Double = getTagValue(name, DoubleTag::javaClass.name, default) as Double
+    fun getByte(name: String, default: Int?): Int = getTagValue(name, ByteTag::javaClass.name, default) as Int
+    fun getShort(name: String, default: Int?): Int = getTagValue(name, ShortTag::javaClass.name, default) as Int
+    fun getInt(name: String, default: Int?): Int = getTagValue(name, IntTag::javaClass.name, default) as Int
+    fun getLong(name: String, default: Long?): Long = getTagValue(name, LongTag::javaClass.name, default) as Long
+    fun getFloat(name: String, default: Float?): Float = getTagValue(name, FloatTag::javaClass.name, default) as Float
+    fun getDouble(name: String, default: Double?): Double = getTagValue(name, DoubleTag::javaClass.name, default) as Double
     fun getString(name: String, default: String?): String = getTagValue(name, StringTag::javaClass.name, default) as String
 
-    fun setString(name: String, value: String) {
+    fun setString(name: String, value: String): CompoundTag = this.apply {
         setTag(name, StringTag(value))
     }
 
-    fun setByte(name: String, value: Byte) {
+    fun setByte(name: String, value: Int): CompoundTag = this.apply {
         setTag(name, ByteTag(value))
     }
 
-    fun setShort(name: String, value: Short) {
+    fun setShort(name: String, value: Int): CompoundTag = this.apply {
         setTag(name, ShortTag(value))
     }
 
-    fun setInt(name: String, value: Int) {
+    fun setInt(name: String, value: Int): CompoundTag = this.apply {
         setTag(name, IntTag(value))
     }
 
-    fun setLong(name: String, value: Long) {
+    fun setLong(name: String, value: Long): CompoundTag = this.apply {
         setTag(name, LongTag(value))
     }
 
-    fun setFloat(name: String, value: Float) {
+    fun setFloat(name: String, value: Float): CompoundTag = this.apply {
         setTag(name, FloatTag(value))
     }
 
-    fun setDouble(name: String, value: Double) {
+    fun setDouble(name: String, value: Double): CompoundTag = this.apply {
         setTag(name, DoubleTag(value))
     }
 
@@ -117,6 +116,32 @@ class CompoundTag : Tag<Map<String, Tag<*>>>() {
         fun create(): CompoundTag {
             return CompoundTag()
         }
+
+        fun read(reader: NbtStreamReader, tracker: ReaderTracker): CompoundTag {
+            val result = CompoundTag()
+            tracker.protectDepth {
+                var type = reader.readByte()
+                while (type != NBT.TagType.NOTHING.value) {
+                    val name = reader.readString()
+                    val tag = NBT.createTag(NBT.TagType.getByValue(type), reader, tracker)
+                    if (result.getTag(name) !== null) {
+                        throw NbtDataException("Duplicate key \"$name\"")
+                    }
+                    result.setTag(name, tag)
+                    type = reader.readByte()
+                }
+            }
+            return result
+        }
+    }
+
+    override fun write(writer: NbtStreamWriter) {
+        value.forEach { (name, tag) ->
+            writer.writeByte(tag.getTagType().value)
+            writer.writeString(name)
+            tag.write(writer)
+        }
+        writer.writeByte(NBT.TagType.NOTHING.value)
     }
 
     override fun makeCopy(): CompoundTag = CompoundTag().let {

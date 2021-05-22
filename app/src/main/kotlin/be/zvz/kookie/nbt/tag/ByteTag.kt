@@ -18,12 +18,22 @@
 package be.zvz.kookie.nbt.tag
 
 import be.zvz.kookie.nbt.NBT
+import be.zvz.kookie.nbt.NbtStreamReader
+import be.zvz.kookie.nbt.NbtStreamWriter
 
-class ByteTag(override val value: Byte) : Tag<Byte>() {
+class ByteTag(override val value: Int) : Tag<Int>() {
 
     override fun getTagType(): NBT.TagType {
         return NBT.TagType.BYTE
     }
 
     override fun makeCopy(): ByteTag = ByteTag(value)
+
+    override fun write(writer: NbtStreamWriter) {
+        writer.writeByte(value)
+    }
+
+    companion object {
+        fun read(reader: NbtStreamReader): ByteTag = ByteTag(reader.readSignedByte())
+    }
 }

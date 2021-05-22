@@ -17,9 +17,11 @@
  */
 package be.zvz.kookie.network.mcpe.protocol
 
+import com.koloboke.collect.map.hash.HashIntObjMaps
+
 class PacketPool {
 
-    protected val pool: MutableMap<Int, Packet> = mutableMapOf()
+    protected val pool: MutableMap<Int, Packet> = HashIntObjMaps.newMutableMap()
 
     init {
         registerPacket(UnknownPacket())

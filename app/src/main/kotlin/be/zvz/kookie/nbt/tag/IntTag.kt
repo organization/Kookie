@@ -18,6 +18,8 @@
 package be.zvz.kookie.nbt.tag
 
 import be.zvz.kookie.nbt.NBT
+import be.zvz.kookie.nbt.NbtStreamReader
+import be.zvz.kookie.nbt.NbtStreamWriter
 
 class IntTag(override val value: Int) : Tag<Int>() {
 
@@ -26,4 +28,12 @@ class IntTag(override val value: Int) : Tag<Int>() {
     }
 
     override fun makeCopy(): IntTag = IntTag(value)
+
+    override fun write(writer: NbtStreamWriter) {
+        writer.writeInt(value)
+    }
+
+    companion object {
+        fun read(reader: NbtStreamReader): IntTag = IntTag(reader.readInt())
+    }
 }

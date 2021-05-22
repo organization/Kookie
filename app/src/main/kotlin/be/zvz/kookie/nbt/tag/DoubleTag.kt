@@ -18,6 +18,8 @@
 package be.zvz.kookie.nbt.tag
 
 import be.zvz.kookie.nbt.NBT
+import be.zvz.kookie.nbt.NbtStreamReader
+import be.zvz.kookie.nbt.NbtStreamWriter
 
 class DoubleTag(override val value: Double) : Tag<Double>() {
 
@@ -26,4 +28,12 @@ class DoubleTag(override val value: Double) : Tag<Double>() {
     }
 
     override fun makeCopy(): DoubleTag = DoubleTag(value)
+
+    override fun write(writer: NbtStreamWriter) {
+        writer.writeDouble(value)
+    }
+
+    companion object {
+        fun read(reader: NbtStreamReader): DoubleTag = DoubleTag(reader.readDouble())
+    }
 }

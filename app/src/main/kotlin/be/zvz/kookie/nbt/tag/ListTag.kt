@@ -18,11 +18,14 @@
 package be.zvz.kookie.nbt.tag
 
 import be.zvz.kookie.nbt.NBT
-import be.zvz.kookie.nbt.NBTException
+import be.zvz.kookie.nbt.NbtException
+import be.zvz.kookie.nbt.NbtStreamReader
+import be.zvz.kookie.nbt.NbtStreamWriter
 
-class ListTag<T>(override val value: MutableList<Tag<T>> = mutableListOf()) : Tag<List<Tag<T>>>() {
-
+class ListTag<T>(
+    override val value: MutableList<Tag<T>> = mutableListOf(),
     private var tagType: NBT.TagType = NBT.TagType.NOTHING
+) : Tag<List<Tag<T>>>() {
 
     override fun getTagType(): NBT.TagType {
         return NBT.TagType.LIST
@@ -34,7 +37,7 @@ class ListTag<T>(override val value: MutableList<Tag<T>> = mutableListOf()) : Ta
                 tagType = tag.getTagType()
             } else {
                 if (tagType != tag.getTagType()) {
-                    throw NBTException("Expected TagType ${tagType.name}, got ${tag.getTagType().name}")
+                    throw NbtException("Expected TagType ${tagType.name}, got ${tag.getTagType().name}")
                 }
             }
         }
@@ -42,7 +45,7 @@ class ListTag<T>(override val value: MutableList<Tag<T>> = mutableListOf()) : Ta
 
     fun push(tag: Tag<T>) {
         if (tag.getTagType() !== tagType) {
-            throw NBTException("Expected TagType ${tagType.name}, got ${tag.getTagType().name}")
+            throw NbtException("Expected TagType ${tagType.name}, got ${tag.getTagType().name}")
         }
         value.add(tag)
     }
@@ -56,4 +59,34 @@ class ListTag<T>(override val value: MutableList<Tag<T>> = mutableListOf()) : Ta
             }
         }
     )
+
+    override fun write(writer: NbtStreamWriter) {
+        writer.writeByte(tagType.value)
+        writer.writeInt(value.size)
+        value.forEach { tag ->
+            tag.write(writer)
+        }
+    }
+
+    companion object {
+        fun read(reader: NbtStreamReader, tracker: ReaderTracker): ListTag<*> {
+            var tagType = NBT.TagType.getByValue(reader.readByte())
+            val value = mutableListOf<Tag<Any>>()
+            val size = reader.readInt()
+
+            if (size > 0) {
+                if (tagType == NBT.TagType.NOTHING) {
+                    throw IllegalArgumentException("Unexpected non-empty list of TagType.NOTHING")
+                }
+                tracker.protectDepth {
+                    for (i in 0..size) {
+                        value.add(NBT.createTag(tagType, reader, tracker) as Tag<Any>)
+                    }
+                }
+            } else {
+                tagType = NBT.TagType.NOTHING
+            }
+            return ListTag(value, tagType)
+        }
+    }
 }

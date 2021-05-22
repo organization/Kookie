@@ -81,7 +81,7 @@ object Binary {
         }
     }
 
-    private fun toPositiveByteArray(bytes: ByteArray): ByteArray = bytes.map {
+    fun toPositiveByteArray(bytes: ByteArray): ByteArray = bytes.map {
         if (it < 0) {
             (256 + it).toByte()
         } else {
@@ -90,12 +90,12 @@ object Binary {
     }.toByteArray()
 
     private fun packN(value: Int): String = toPositiveByteArray(
-        ByteBuffer.allocate(4).putInt(value).array()
+        ByteBuffer.allocate(Int.SIZE_BYTES).putInt(value).array()
     ).toString()
 
     private fun unpackN(value: String, index: Int): Int {
         val bytes = value.toByteArray()
-        val buf = ByteBuffer.allocate(4)
+        val buf = ByteBuffer.allocate(Int.SIZE_BYTES)
         buf.order(ByteOrder.BIG_ENDIAN)
         buf.put(bytes)
         buf.flip()
@@ -104,7 +104,7 @@ object Binary {
 
     private fun packV(value: Int): String {
         val bytes = toPositiveByteArray(
-            ByteBuffer.allocate(4).apply {
+            ByteBuffer.allocate(Int.SIZE_BYTES).apply {
                 order(ByteOrder.LITTLE_ENDIAN)
                 putInt(value)
             }.array()
@@ -114,7 +114,7 @@ object Binary {
 
     private fun unpackV(value: String, index: Int): Int {
         val bytes = value.toByteArray()
-        val buf = ByteBuffer.allocate(4)
+        val buf = ByteBuffer.allocate(Int.SIZE_BYTES)
         buf.order(ByteOrder.LITTLE_ENDIAN)
         buf.put(bytes)
         buf.flip()

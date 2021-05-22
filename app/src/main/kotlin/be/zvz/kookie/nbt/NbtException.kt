@@ -17,4 +17,7 @@
  */
 package be.zvz.kookie.nbt
 
-class NBTException(message: String) : RuntimeException(message)
+open class NbtException(
+    message: String?,
+    cause: Throwable? = null
+) : RuntimeException(message, cause)

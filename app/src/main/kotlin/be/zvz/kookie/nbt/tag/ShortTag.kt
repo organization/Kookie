@@ -18,12 +18,22 @@
 package be.zvz.kookie.nbt.tag
 
 import be.zvz.kookie.nbt.NBT
+import be.zvz.kookie.nbt.NbtStreamReader
+import be.zvz.kookie.nbt.NbtStreamWriter
 
-class ShortTag(override val value: Short) : Tag<Short>() {
+class ShortTag(override val value: Int) : Tag<Int>() {
 
     override fun getTagType(): NBT.TagType {
         return NBT.TagType.SHORT
     }
 
     override fun makeCopy(): ShortTag = ShortTag(value)
+
+    override fun write(writer: NbtStreamWriter) {
+        writer.writeShort(value)
+    }
+
+    companion object {
+        fun read(reader: NbtStreamReader): ShortTag = ShortTag(reader.readSignedShort())
+    }
 }

@@ -18,6 +18,8 @@
 package be.zvz.kookie.nbt.tag
 
 import be.zvz.kookie.nbt.NBT
+import be.zvz.kookie.nbt.NbtStreamReader
+import be.zvz.kookie.nbt.NbtStreamWriter
 
 class LongTag(override val value: Long) : Tag<Long>() {
 
@@ -26,4 +28,12 @@ class LongTag(override val value: Long) : Tag<Long>() {
     }
 
     override fun makeCopy(): LongTag = LongTag(value)
+
+    override fun write(writer: NbtStreamWriter) {
+        writer.writeLong(value)
+    }
+
+    companion object {
+        fun read(reader: NbtStreamReader): LongTag = LongTag(reader.readLong())
+    }
 }

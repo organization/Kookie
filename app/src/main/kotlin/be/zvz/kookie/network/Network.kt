@@ -19,18 +19,19 @@ package be.zvz.kookie.network
 
 import be.zvz.kookie.Server
 import be.zvz.kookie.VersionInfo
+import be.zvz.kookie.network.mcpe.NetworkSessionManager
 import org.slf4j.Logger
 import java.net.InetSocketAddress
 
 class Network(private val server: Server, private val logger: Logger) {
 
-    private val interfaces = mutableListOf<Any>() // TODO: change this *Any* type when Network interfaces are implemented
+    private val interfaces = mutableListOf<NetworkInterface>()
 
     private val bannedIps = HashMap<InetSocketAddress, Int>()
 
     private var name = ""
 
-    private val sessionManager = null // TODO: change this when SessionManager is implemented
+    private val sessionManager = NetworkSessionManager()
 
     init {
         setName(server.configGroup.getConfigString("motd", VersionInfo.NAME + " Server"))
@@ -41,4 +42,23 @@ class Network(private val server: Server, private val logger: Logger) {
     }
 
     fun getName(): String = name
+
+    fun addInterface(networkInterface: NetworkInterface) {
+        interfaces.add(networkInterface)
+        if (networkInterface is AdvancedNetworkInterface) {
+            networkInterface.start()
+        }
+    }
+
+    fun removeInterface(networkInterface: NetworkInterface) {
+        if (!interfaces.contains(networkInterface)) {
+            return
+        }
+        interfaces.remove(networkInterface)
+        if (networkInterface is AdvancedNetworkInterface) {
+            networkInterface.shutdown()
+        }
+    }
+
+    fun getSessionManager(): NetworkSessionManager = sessionManager
 }
