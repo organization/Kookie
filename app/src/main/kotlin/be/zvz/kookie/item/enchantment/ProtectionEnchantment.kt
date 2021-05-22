@@ -7,6 +7,8 @@ class ProtectionEnchantment(
     primaryItemFlags: Int,
     secondaryItemFlags: Int,
     maxLevel: Int,
-    typeModifier: Float,
-    applicableDamageTypes: MutableList<Int>?,
-) : Enchantment(internalRuntimeId, name, rarity, primaryItemFlags, secondaryItemFlags, maxLevel)
+    val typeModifier: Float,
+    val applicableDamageTypes: MutableList<Int>?,
+) : Enchantment(internalRuntimeId, name, rarity, primaryItemFlags, secondaryItemFlags, maxLevel) {
+    fun getProtectionFactor(level: Int): Int = ((6 + level * level) * typeModifier / 3).toInt()
+}

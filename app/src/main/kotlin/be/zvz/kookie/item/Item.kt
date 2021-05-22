@@ -45,10 +45,27 @@ open class Item(
     fun clearCustomBlockData(): Item = this.apply {
         blockEntityTag = null
     }
+
     fun getCustomBlockData(): CompoundTag? = this.blockEntityTag
     fun hasNamedTag(): Boolean = getNamedTag().count() > 0
     fun getNamedTag(): CompoundTag = serializeCompoundTag(nbt)
+    fun setNamedTag(tag: CompoundTag): Item = this.apply {
+        if (tag.count() == 0) clearNamedTag()
+        else {
+            nbt = tag.clone()
+
+        }
+    }
+
+    fun clearNamedTag(): Item = this.apply {
+        nbt = CompoundTag()
+        deserializeCompoundTag(nbt)
+    }
+
     fun getMiningEfficiency(isCorrectTool: Boolean): Float = 1F
+
+    protected fun deserializeCompoundTag(tag: CompoundTag) {
+    }
 
     protected fun serializeCompoundTag(tag: CompoundTag): CompoundTag {
         val display = tag.getCompoundTag(TAG_DISPLAY) ?: CompoundTag()
