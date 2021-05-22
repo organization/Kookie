@@ -28,7 +28,7 @@ class CompoundTag : Tag<Map<String, Tag<*>>>() {
         return NBT.TagType.COMPOUND
     }
 
-    fun count() : Int = value.size;
+    fun count(): Int = value.size
 
     fun setTag(name: String, tag: Tag<*>) {
         value[name] = tag

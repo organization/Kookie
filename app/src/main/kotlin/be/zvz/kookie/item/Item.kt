@@ -75,7 +75,7 @@ open class Item(
             tag.removeTag(TAG_DISPLAY)
         }
 
-        //TODO: enchantment
+        // TODO: enchantment
 
         getCustomBlockData().let {
             if (it == null) {
