@@ -18,6 +18,7 @@
 package be.zvz.kookie.item
 
 import be.zvz.kookie.block.BlockToolType
+import be.zvz.kookie.nbt.NBT
 import be.zvz.kookie.nbt.tag.CompoundTag
 import be.zvz.kookie.nbt.tag.ListTag
 import be.zvz.kookie.nbt.tag.StringTag
@@ -52,8 +53,8 @@ open class Item(
     fun setNamedTag(tag: CompoundTag): Item = this.apply {
         if (tag.count() == 0) clearNamedTag()
         else {
-            nbt = tag.clone()
-
+            nbt = tag.clone() as CompoundTag
+            deserializeCompoundTag(nbt)
         }
     }
 
@@ -65,6 +66,32 @@ open class Item(
     fun getMiningEfficiency(isCorrectTool: Boolean): Float = 1F
 
     protected fun deserializeCompoundTag(tag: CompoundTag) {
+        customName = ""
+        lore.clear()
+
+        val display = tag.getCompoundTag(TAG_DISPLAY)
+        if (display != null) {
+            customName = display.getString(TAG_DISPLAY_NAME, customName)
+            val loreTag = display.getListTag(TAG_DISPLAY_LORE)
+            if (loreTag != null && loreTag.getTagType() == NBT.TagType.STRING) {
+                loreTag.value.forEach {
+                    lore.add(it.value.toString())
+                }
+            }
+        }
+
+        // TODO: enchantment
+
+        blockEntityTag = tag.getCompoundTag(TAG_BLOCK_ENTITY_TAG)
+
+        canPlaceOn.clear()
+        tag.getListTag("CanPlaceOn")?.value?.forEach {
+            canPlaceOn.add(it.value.toString())
+        }
+        canDestroy.clear()
+        tag.getListTag("canDestroy")?.value?.forEach {
+            canDestroy.add(it.value.toString())
+        }
     }
 
     protected fun serializeCompoundTag(tag: CompoundTag): CompoundTag {

@@ -30,6 +30,27 @@ class CompoundTag : Tag<Map<String, Tag<*>>>() {
 
     fun count(): Int = value.size
 
+    @JvmOverloads
+    fun getTag(name: String, default: Tag<*>? = null): Tag<*>? {
+        return value[name] ?: default
+    }
+
+    fun getCompoundTag(name: String): CompoundTag? {
+        val tag = getTag(name) ?: return null
+        if (tag !is CompoundTag) {
+            throw NBTException("Found tag $name but tag is not CompoundTag")
+        }
+        return tag
+    }
+
+    fun getListTag(name: String): ListTag<*>? {
+        val tag = getTag(name) ?: return null
+        if (tag !is ListTag<*>) {
+            throw NBTException("Found tag $name but tag is not ListTag")
+        }
+        return tag
+    }
+
     fun setTag(name: String, tag: Tag<*>) {
         value[name] = tag
     }
@@ -41,14 +62,27 @@ class CompoundTag : Tag<Map<String, Tag<*>>>() {
     }
 
     @JvmOverloads
-    fun getTag(name: String, default: Tag<*>? = null): Tag<*>? {
-        return value[name] ?: default
+    fun getTagValue(name: String, expectedClass: String, default: Any? = null): Any {
+        val tag = getTag(name)
+        if (tag?.javaClass?.name == expectedClass) {
+            return tag.value!!
+        }
+        if (tag != null) {
+            throw NBTException("Expected a tag of type $expectedClass, got " + tag.javaClass.name)
+        }
+        if (default == null) {
+            throw NBTException("Tag \"$name\" does not exist");
+        }
+        return default
     }
 
-    @JvmOverloads
-    fun getTagValue(name: String, default: Any? = null): Any? {
-        return value[name]?.value ?: default
-    }
+    fun getByte(name: String, default: String?): Byte = getTagValue(name, ByteTag::javaClass.name, default) as Byte
+    fun getShort(name: String, default: String?): Short = getTagValue(name, ShortTag::javaClass.name, default) as Short
+    fun getInt(name: String, default: String?): Int = getTagValue(name, IntTag::javaClass.name, default) as Int
+    fun getLong(name: String, default: String?): Long = getTagValue(name, LongTag::javaClass.name, default) as Long
+    fun getFloat(name: String, default: String?): Float = getTagValue(name, FloatTag::javaClass.name, default) as Float
+    fun getDouble(name: String, default: String?): Double = getTagValue(name, DoubleTag::javaClass.name, default) as Double
+    fun getString(name: String, default: String?): String = getTagValue(name, StringTag::javaClass.name, default) as String
 
     fun setString(name: String, value: String) {
         setTag(name, StringTag(value))
@@ -58,12 +92,8 @@ class CompoundTag : Tag<Map<String, Tag<*>>>() {
         setTag(name, ByteTag(value))
     }
 
-    fun setFloat(name: String, value: Float) {
-        setTag(name, FloatTag(value))
-    }
-
-    fun setDouble(name: String, value: Double) {
-        setTag(name, DoubleTag(value))
+    fun setShort(name: String, value: Short) {
+        setTag(name, ShortTag(value))
     }
 
     fun setInt(name: String, value: Int) {
@@ -74,84 +104,12 @@ class CompoundTag : Tag<Map<String, Tag<*>>>() {
         setTag(name, LongTag(value))
     }
 
-    fun setShort(name: String, value: Short) {
-        setTag(name, ShortTag(value))
+    fun setFloat(name: String, value: Float) {
+        setTag(name, FloatTag(value))
     }
 
-    fun setCompound(name: String, value: CompoundTag) {
-        setTag(name, value)
-    }
-
-    fun getString(name: String): String {
-        val tag = getTag(name)
-        if (tag !is StringTag) {
-            throw NBTException("Found tag $name but tag is not StringTag")
-        }
-        return tag.value
-    }
-
-    fun getByte(name: String): Byte {
-        val tag = getTag(name)
-        if (tag !is ByteTag) {
-            throw NBTException("Found tag $name but tag is not ByteTag")
-        }
-        return tag.value
-    }
-
-    fun getFloat(name: String): Float {
-        val tag = getTag(name)
-        if (tag !is FloatTag) {
-            throw NBTException("Found tag $name but tag is not FloatTag")
-        }
-        return tag.value
-    }
-
-    fun getDouble(name: String): Double {
-        val tag = getTag(name)
-        if (tag !is DoubleTag) {
-            throw NBTException("Found tag $name but tag is not DoubleTag")
-        }
-        return tag.value
-    }
-
-    fun getInt(name: String): Int {
-        val tag = getTag(name)
-        if (tag !is IntTag) {
-            throw NBTException("Found tag $name but tag is not IntTag")
-        }
-        return tag.value
-    }
-
-    fun getLong(name: String): Long {
-        val tag = getTag(name)
-        if (tag !is LongTag) {
-            throw NBTException("Found tag $name but tag is not LongTag")
-        }
-        return tag.value
-    }
-
-    fun getShort(name: String): Short {
-        val tag = getTag(name)
-        if (tag !is ShortTag) {
-            throw NBTException("Found tag $name but tag is not ShortTag")
-        }
-        return tag.value
-    }
-
-    fun getCompoundTag(name: String): CompoundTag {
-        val tag = getTag(name)
-        if (tag !is CompoundTag) {
-            throw NBTException("Found tag $name but tag is not CompoundTag")
-        }
-        return tag
-    }
-
-    fun getListTag(name: String): ListTag<*> {
-        val tag = getTag(name)
-        if (tag !is ListTag<*>) {
-            throw NBTException("Found tag $name but tag is not ListTag")
-        }
-        return tag
+    fun setDouble(name: String, value: Double) {
+        setTag(name, DoubleTag(value))
     }
 
     companion object {
