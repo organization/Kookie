@@ -1,3 +1,20 @@
+/**
+ *
+ * _  __           _    _
+ * | |/ /___   ___ | | _(_) ___
+ * | ' // _ \ / _ \| |/ / |/ _ \
+ * | . \ (_) | (_) |   <| |  __/
+ * |_|\_\___/ \___/|_|\_\_|\___|
+ *
+ * A server software for Minecraft: Bedrock Edition
+ *
+ * Copyright (C) 2021 organization Team
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ */
 package be.zvz.kookie.network.mcpe.convert
 
 import be.zvz.kookie.entity.Skin
@@ -7,6 +24,7 @@ import be.zvz.kookie.network.mcpe.protocol.types.skin.SkinImage
 import com.fasterxml.jackson.core.JsonProcessingException
 import com.fasterxml.jackson.module.afterburner.AfterburnerModule
 import com.fasterxml.jackson.module.kotlin.jacksonMapperBuilder
+import com.fasterxml.jackson.module.kotlin.readValue
 import java.util.*
 
 class LegacySkinAdapter : SkinAdapter {
@@ -48,14 +66,13 @@ class LegacySkinAdapter : SkinAdapter {
         }
 
         try {
-            val geometry = jsonMapper.readValue(data.resourcePatch, SkinGeometry::class.java)
-            val geometryName = geometry.geometry["geometry"]?.get("default")
-                ?: throw SkinAdapterException("Missing geometry name field")
+            val geometry: SkinGeometry = jsonMapper.readValue(data.resourcePatch)
+            val geometryName = geometry.geometry.getValue("default")
 
             return Skin(data.skinId, data.skinImage.getData(), capeData, geometryName, data.geometryData)
         } catch (ignored: JsonProcessingException) {
+            throw SkinAdapterException("Missing geometry name field")
         }
-        throw SkinAdapterException("Failed to parse SkinData")
     }
 
     class SkinAdapterException(message: String) : RuntimeException(message)
