@@ -19,4 +19,7 @@ package be.zvz.kookie.network.mcpe.protocol
 
 @Retention(AnnotationRetention.RUNTIME)
 @Target(AnnotationTarget.CLASS)
-annotation class ProtocolIdentify(val networkId: ProtocolInfo.IDS)
+annotation class ProtocolIdentify(
+    val networkId: ProtocolInfo.IDS = ProtocolInfo.IDS.UNKNOWN,
+    val customId: Int = -1
+)

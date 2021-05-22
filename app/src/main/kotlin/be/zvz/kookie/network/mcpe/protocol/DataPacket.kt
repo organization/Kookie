@@ -50,8 +50,13 @@ abstract class DataPacket : Packet {
     protected fun decodeHeader(input: PacketSerializer) {
         val header = input.getUnsignedVarInt()
         val pid = header and PID_MASK
-        val networkId = this::class.java.getAnnotation(ProtocolIdentify::class.java)?.networkId
-        if (pid != networkId?.id) {
+        val protocolIdentify = this::class.java.getAnnotation(ProtocolIdentify::class.java)!!
+        val networkId = if (protocolIdentify.networkId == ProtocolInfo.IDS.UNKNOWN && protocolIdentify.customId != -1) {
+            protocolIdentify.customId
+        } else {
+            protocolIdentify.networkId.id
+        }
+        if (pid != networkId) {
             throw IllegalStateException("Expected $networkId for packet ID, got $pid")
         }
         senderSubId = (header shr SENDER_SUBCLIENT_ID_SHIFT) and SUBCLIENT_ID_MASK
@@ -66,8 +71,13 @@ abstract class DataPacket : Packet {
     }
 
     protected fun encodeHeader(output: PacketSerializer) {
-        val networkId = this::class.java.getAnnotation(ProtocolIdentify::class.java)?.networkId!!
-        val v = (networkId.id or (senderSubId shl SENDER_SUBCLIENT_ID_SHIFT)) or
+        val protocolIdentify = this::class.java.getAnnotation(ProtocolIdentify::class.java)!!
+        val networkId = if (protocolIdentify.networkId == ProtocolInfo.IDS.UNKNOWN && protocolIdentify.customId != -1) {
+            protocolIdentify.customId
+        } else {
+            protocolIdentify.networkId.id
+        }
+        val v = (networkId or (senderSubId shl SENDER_SUBCLIENT_ID_SHIFT)) or
             (recipientSubId shl RECIPIENT_SUBCLIENT_ID_SHIFT)
         output.putUnsignedVarInt(v)
     }

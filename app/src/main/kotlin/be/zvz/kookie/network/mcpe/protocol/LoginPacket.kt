@@ -76,6 +76,7 @@ class LoginPacket : DataPacket(), ServerboundPacket {
         return connectionReqWriter.buffer.toString()
     }
 
-    override fun handle(handler: PacketHandlerInterface) {
+    override fun handle(handler: PacketHandlerInterface): Boolean {
+        return handler.handleLogin(this)
     }
 }
