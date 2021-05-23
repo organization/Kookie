@@ -22,6 +22,4 @@ abstract class Command(
     val description: String = "",
     val usageMessage: String = "/$name",
     val aliases: MutableList<String> = mutableListOf(),
-) {
-
-}
+)
