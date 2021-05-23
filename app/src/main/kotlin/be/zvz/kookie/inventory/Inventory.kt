@@ -4,10 +4,8 @@ import be.zvz.kookie.item.Item
 import be.zvz.kookie.player.Player
 
 interface Inventory {
-
-    fun getSize(): Int
-    fun getMaxStackSize(): Int
-    fun setMaxStackSize(size: Int)
+    val maxStackSize: Int
+    val size: Int
     fun getItem(index: Int): Item
     fun setItem(index: Int, item: Item)
     fun addItem(vararg slots: Item): MutableList<Item>
@@ -24,11 +22,11 @@ interface Inventory {
     fun clear(index: Int)
     fun clearAll()
     fun swap(slot1: Int, slot2: Int)
-    fun getViewers(): MutableList<Player>
     fun onOpen(who: Player)
     fun onClose(who: Player)
     fun slotExists(slot: Int): Boolean
-    // TODO: getListeners()
+    val listeners: MutableList<InventoryListener>
+    val viewers: MutableList<Player>
 
     companion object {
         val MAX_STACK: Int = 64

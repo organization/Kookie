@@ -17,6 +17,8 @@
  */
 package be.zvz.kookie.network.mcpe.convert
 
+import be.zvz.kookie.item.Item
+import be.zvz.kookie.network.mcpe.protocol.types.recipe.RecipeIngredient
 import be.zvz.kookie.player.GameMode
 import be.zvz.kookie.network.mcpe.protocol.types.GameMode as ProtocolGameMode
 
@@ -28,14 +30,34 @@ object TypeConverter {
 
     private val shieldRuntimeId: Int = ItemTypeDictionary.getInstance().fromStringId("minecraft:shield")
 
-    fun coreGameModeToProtocol(gameMode: GameMode): Int {
-        return when (gameMode.id()) {
-            0 -> ProtocolGameMode.SURVIVAL
-            1 -> ProtocolGameMode.CREATIVE
-            2 -> ProtocolGameMode.ADVENTURE
-            3 -> ProtocolGameMode.SURVIVAL_VIEWER
-            4 -> ProtocolGameMode.CREATIVE_VIEWER
-            else -> ProtocolGameMode.DEFAULT
+    fun coreGameModeToProtocol(gameMode: GameMode): Int = when (gameMode) {
+        GameMode.SURVIVAL -> ProtocolGameMode.SURVIVAL
+        GameMode.CREATIVE, GameMode.SPECTATOR -> ProtocolGameMode.CREATIVE
+        GameMode.ADVENTURE -> ProtocolGameMode.ADVENTURE
+    }
+
+    fun protocolGameModeName(gameMode: GameMode): String = when (gameMode) {
+        GameMode.SURVIVAL -> "Survival"
+        GameMode.ADVENTURE -> "Adventure"
+        else -> "Creative"
+    }
+
+    fun protocolGameModeToCore(gameMode: Int): GameMode? = when (gameMode) {
+        ProtocolGameMode.SURVIVAL -> GameMode.SURVIVAL
+        ProtocolGameMode.CREATIVE -> GameMode.CREATIVE
+        ProtocolGameMode.ADVENTURE -> GameMode.ADVENTURE
+        ProtocolGameMode.SURVIVAL_VIEWER, ProtocolGameMode.CREATIVE_VIEWER -> GameMode.SPECTATOR
+        else -> null
+    }
+
+    fun coreItemStackToRecipeIngredient(itemStack: Item): RecipeIngredient {
+        if (itemStack.isNull())
+            return RecipeIngredient(0, 0, 0)
+        val id: Int
+        val meta: Int
+        if (itemStack.hasAnyDamageValue()) {
+            TODO()
         }
+        return RecipeIngredient(0, 0, 0)
     }
 }

@@ -8,8 +8,10 @@ import com.koloboke.collect.map.hash.HashObjObjMaps
 import java.lang.NumberFormatException
 
 class ItemTypeDictionary private constructor(val itemTypes: List<ItemTypeEntry>) {
+
     private val stringToIntMap: MutableMap<String, Int> = HashObjObjMaps.newMutableMap()
     private val intToStringIdMap: MutableMap<Int, String> = HashIntObjMaps.newMutableMap()
+
     companion object {
         private val instance: ItemTypeDictionary = make()
         fun getInstance(): ItemTypeDictionary {
@@ -40,17 +42,17 @@ class ItemTypeDictionary private constructor(val itemTypes: List<ItemTypeEntry>)
             return ItemTypeDictionary(itemTypes)
         }
     }
+
     init {
         itemTypes.forEach { type ->
             stringToIntMap[type.stringId] = type.numericId
             intToStringIdMap[type.numericId] = type.stringId
         }
     }
+
     fun getEntires(): List<ItemTypeEntry> = itemTypes
-    fun fromStringId(id: String): Int {
-        return stringToIntMap.getValue(id)
-    }
-    fun fromIntId(id: Int): String {
-        return intToStringIdMap.getValue(id)
-    }
+
+    fun fromStringId(id: String): Int = stringToIntMap.getValue(id)
+
+    fun fromIntId(id: Int): String = intToStringIdMap.getValue(id)
 }

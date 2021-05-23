@@ -15,14 +15,13 @@
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  */
-package be.zvz.kookie.inventory
+package be.zvz.kookie.command
 
-import be.zvz.kookie.item.Item
+abstract class Command(
+    val name: String,
+    val description: String = "",
+    val usageMessage: String = "/$name",
+    val aliases: MutableList<String> = mutableListOf(),
+) {
 
-interface InventoryHelpers<T : Item> {
-    val maxStackSize: Int
-    val size: Int
-    fun getItem(index: Int): T
-    fun setItem(index: Int, item: T)
-    fun getContents(includeEmpty: Boolean): MutableList<T>
 }
