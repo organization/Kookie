@@ -56,7 +56,10 @@ open class Item(
 
     fun getCustomBlockData(): CompoundTag? = this.blockEntityTag
     fun hasNamedTag(): Boolean = getNamedTag().count() > 0
-    fun getNamedTag(): CompoundTag = serializeCompoundTag(nbt)
+    fun getNamedTag(): CompoundTag {
+        serializeCompoundTag(nbt)
+        return nbt
+    }
     fun setNamedTag(tag: CompoundTag): Item = this.apply {
         if (tag.count() == 0) clearNamedTag()
         else {
@@ -70,7 +73,7 @@ open class Item(
         deserializeCompoundTag(nbt)
     }
 
-    protected fun deserializeCompoundTag(tag: CompoundTag) {
+    protected open fun deserializeCompoundTag(tag: CompoundTag) {
         customName = ""
         lore.clear()
 
@@ -111,7 +114,7 @@ open class Item(
         }
     }
 
-    protected fun serializeCompoundTag(tag: CompoundTag): CompoundTag {
+    protected open fun serializeCompoundTag(tag: CompoundTag) {
         val display = tag.getCompoundTag(TAG_DISPLAY) ?: CompoundTag()
 
         if (customName.isEmpty()) {
@@ -173,8 +176,6 @@ open class Item(
         } else {
             tag.removeTag("canDestroy")
         }
-
-        return tag
     }
 
     fun pop(count: Int = 1): Item {
