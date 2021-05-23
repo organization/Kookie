@@ -38,7 +38,7 @@ class NBT {
 
         companion object {
             private val VALUES = values()
-            fun getByValue(value: Int) = VALUES.firstOrNull { it.value == value } ?: NOTHING
+            fun from(value: Int) = VALUES.firstOrNull { it.value == value } ?: NOTHING
         }
     }
 

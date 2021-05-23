@@ -10,7 +10,7 @@ abstract class BaseNbtSerializer : NbtStreamReader, NbtStreamWriter {
     protected var buffer: BinaryStream = BinaryStream()
 
     private fun readRoot(maxDepth: Int): TreeRoot {
-        val type = NBT.TagType.getByValue(readByte())
+        val type = NBT.TagType.from(readByte())
         if (type === NBT.TagType.NOTHING) {
             throw NbtDataException("Found TAG_End at the start of buffer")
         }

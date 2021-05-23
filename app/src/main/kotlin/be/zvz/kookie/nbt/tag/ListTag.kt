@@ -70,7 +70,7 @@ class ListTag<T>(
 
     companion object {
         fun read(reader: NbtStreamReader, tracker: ReaderTracker): ListTag<*> {
-            var tagType = NBT.TagType.getByValue(reader.readByte())
+            var tagType = NBT.TagType.from(reader.readByte())
             val value = mutableListOf<Tag<Any>>()
             val size = reader.readInt()
 

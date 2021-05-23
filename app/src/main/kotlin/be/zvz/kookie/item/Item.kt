@@ -21,11 +21,12 @@ import be.zvz.kookie.block.Block
 import be.zvz.kookie.block.BlockToolType
 import be.zvz.kookie.entity.Entity
 import be.zvz.kookie.item.enchantment.EnchantmentInstance
+import be.zvz.kookie.nbt.LittleEndianNbtSerializer
 import be.zvz.kookie.nbt.NBT
-import be.zvz.kookie.nbt.tag.CompoundTag
-import be.zvz.kookie.nbt.tag.ListTag
-import be.zvz.kookie.nbt.tag.StringTag
-import be.zvz.kookie.nbt.tag.Tag
+import be.zvz.kookie.nbt.TreeRoot
+import be.zvz.kookie.nbt.tag.*
+import be.zvz.kookie.utils.Binary
+import java.util.*
 
 open class Item(
     private val identifier: ItemIdentifier,
@@ -44,6 +45,7 @@ open class Item(
     protected var blockEntityTag: CompoundTag? = null
     protected var canPlaceOn = mutableListOf<String>()
     protected var canDestroy = mutableListOf<String>()
+    open var damage: Int = 0
     open val blockToolType = BlockToolType.NONE
     open val blockToolHarvestLevel = 0
 
@@ -190,7 +192,7 @@ open class Item(
 
     // TODO: canBePlaced(), getBlock()
     fun getId(): Int = identifier.id
-    fun getMeta(): Int = identifier.meta
+    open fun getMeta(): Int = identifier.meta
     fun hasAnyDamageValue(): Boolean = identifier.meta == -1
     fun getMaxStackSize(): Int = 64
     fun getFuelTime(): Int = 0
@@ -217,9 +219,14 @@ open class Item(
 
     fun equalsExact(other: Item): Boolean = equals(other) && count == other.count
 
-    // TODO: NamedTag to string
     override fun toString(): String =
-        "Item $name (${getId()}:" + (if (hasAnyDamageValue()) "?" else getMeta()) + ")x$count"
+        "Item $name (${getId()}:" + (if (hasAnyDamageValue()) "?" else getMeta()) + ")x$count tags:0x" + (
+            if (hasNamedTag()) Base64.getEncoder().encodeToString(
+                LittleEndianNbtSerializer().write(
+                    TreeRoot(getNamedTag())
+                ).toByteArray()
+            ) else ""
+            )
 
     // TODO: json/nbt (de)serialize
 
@@ -238,6 +245,36 @@ open class Item(
         }
 
         return result
+    }
+
+    fun nbtDeserialize(tag: CompoundTag): Item {
+        val idTag = tag.getTag("id")
+        if (idTag == null || tag.getTag("Count") == null) {
+            return ItemFactory.list[0]
+        }
+
+        val count = Binary.unsignByte(tag.getByte("Count"))
+        val meta = tag.getShort("Damage", 0)
+
+        val item: Item = when (idTag) {
+            is ShortTag -> ItemFactory.get(idTag.value, meta, count)
+            is StringTag -> {
+                val id = LegacyStringToItemParser.parseId(idTag.value)
+
+                if (id == null) {
+                    ItemFactory.air()
+                } else {
+                    ItemFactory.get(id, meta, count)
+                }
+            }
+            else -> throw IllegalArgumentException("Item CompoundTag ID must be an instance of StringTag or ShortTag, ${idTag::class.java.simpleName} given")
+        }
+
+        tag.getCompoundTag("tag")?.let {
+            item.setNamedTag(it)
+        }
+
+        return item
     }
 
     public override fun clone(): Item {

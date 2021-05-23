@@ -55,4 +55,10 @@ class BlockBreakInfo(
 
         return base
     }
+
+    companion object {
+        fun instant(toolType: BlockToolType = BlockToolType.NONE, toolHarvestLevel: Int = 0): BlockBreakInfo {
+            return BlockBreakInfo(0f, toolType, toolHarvestLevel, 0f)
+        }
+    }
 }

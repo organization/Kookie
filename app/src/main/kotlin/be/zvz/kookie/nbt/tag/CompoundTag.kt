@@ -75,13 +75,20 @@ class CompoundTag : Tag<Map<String, Tag<*>>>() {
         return default
     }
 
-    fun getByte(name: String, default: Int?): Int = getTagValue(name, ByteTag::javaClass.name, default) as Int
-    fun getShort(name: String, default: Int?): Int = getTagValue(name, ShortTag::javaClass.name, default) as Int
-    fun getInt(name: String, default: Int?): Int = getTagValue(name, IntTag::javaClass.name, default) as Int
-    fun getLong(name: String, default: Long?): Long = getTagValue(name, LongTag::javaClass.name, default) as Long
-    fun getFloat(name: String, default: Float?): Float = getTagValue(name, FloatTag::javaClass.name, default) as Float
-    fun getDouble(name: String, default: Double?): Double = getTagValue(name, DoubleTag::javaClass.name, default) as Double
-    fun getString(name: String, default: String?): String = getTagValue(name, StringTag::javaClass.name, default) as String
+    @JvmOverloads
+    fun getByte(name: String, default: Int? = null): Int = getTagValue(name, ByteTag::javaClass.name, default) as Int
+    @JvmOverloads
+    fun getShort(name: String, default: Int? = null): Int = getTagValue(name, ShortTag::javaClass.name, default) as Int
+    @JvmOverloads
+    fun getInt(name: String, default: Int? = null): Int = getTagValue(name, IntTag::javaClass.name, default) as Int
+    @JvmOverloads
+    fun getLong(name: String, default: Long? = null): Long = getTagValue(name, LongTag::javaClass.name, default) as Long
+    @JvmOverloads
+    fun getFloat(name: String, default: Float? = null): Float = getTagValue(name, FloatTag::javaClass.name, default) as Float
+    @JvmOverloads
+    fun getDouble(name: String, default: Double? = null): Double = getTagValue(name, DoubleTag::javaClass.name, default) as Double
+    @JvmOverloads
+    fun getString(name: String, default: String? = null): String = getTagValue(name, StringTag::javaClass.name, default) as String
 
     fun setString(name: String, value: String): CompoundTag = this.apply {
         setTag(name, StringTag(value))
@@ -123,7 +130,7 @@ class CompoundTag : Tag<Map<String, Tag<*>>>() {
                 var type = reader.readByte()
                 while (type != NBT.TagType.NOTHING.value) {
                     val name = reader.readString()
-                    val tag = NBT.createTag(NBT.TagType.getByValue(type), reader, tracker)
+                    val tag = NBT.createTag(NBT.TagType.from(type), reader, tracker)
                     if (result.getTag(name) !== null) {
                         throw NbtDataException("Duplicate key \"$name\"")
                     }

@@ -20,7 +20,7 @@ package be.zvz.kookie.math
 import kotlinx.coroutines.runBlocking
 import kotlin.math.*
 
-class Vector3 @JvmOverloads constructor(var x: Float = 0F, var y: Float = 0F, var z: Float = 0F) : Vector {
+open class Vector3 @JvmOverloads constructor(var x: Float = 0F, var y: Float = 0F, var z: Float = 0F) : Vector {
 
     override fun equals(other: Any?): Boolean = other is Vector3 && other.x == x && other.y == y && other.z == z
 
@@ -67,7 +67,7 @@ class Vector3 @JvmOverloads constructor(var x: Float = 0F, var y: Float = 0F, va
     fun abs(): Vector3 = Vector3(abs(x), abs(y), abs(z))
 
     @JvmOverloads
-    fun getSide(side: Facing, step: Int = 1): Vector3 = when (side) {
+    open fun getSide(side: Facing, step: Int = 1): Vector3 = when (side) {
         Facing.DOWN -> Vector3(x, y - step, z)
         Facing.UP -> Vector3(x, y + step, z)
         Facing.NORTH -> Vector3(x, y, z - step)
