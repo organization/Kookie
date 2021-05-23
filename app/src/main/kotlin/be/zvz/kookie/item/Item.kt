@@ -21,11 +21,14 @@ import be.zvz.kookie.block.Block
 import be.zvz.kookie.block.BlockToolType
 import be.zvz.kookie.entity.Entity
 import be.zvz.kookie.item.enchantment.EnchantmentInstance
+import be.zvz.kookie.nbt.LittleEndianNbtSerializer
 import be.zvz.kookie.nbt.NBT
+import be.zvz.kookie.nbt.TreeRoot
 import be.zvz.kookie.nbt.tag.CompoundTag
 import be.zvz.kookie.nbt.tag.ListTag
 import be.zvz.kookie.nbt.tag.StringTag
 import be.zvz.kookie.nbt.tag.Tag
+import java.util.*
 
 open class Item(
     private val identifier: ItemIdentifier,
@@ -217,9 +220,14 @@ open class Item(
 
     fun equalsExact(other: Item): Boolean = equals(other) && count == other.count
 
-    // TODO: NamedTag to string
     override fun toString(): String =
-        "Item $name (${getId()}:" + (if (hasAnyDamageValue()) "?" else getMeta()) + ")x$count"
+        "Item $name (${getId()}:" + (if (hasAnyDamageValue()) "?" else getMeta()) + ")x$count tags:0x" + (
+            if (hasNamedTag()) Base64.getEncoder().encodeToString(
+                LittleEndianNbtSerializer().write(
+                    TreeRoot(getNamedTag())
+                ).toByteArray()
+            ) else ""
+            )
 
     // TODO: json/nbt (de)serialize
 
