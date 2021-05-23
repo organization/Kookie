@@ -19,8 +19,6 @@ package be.zvz.kookie.network.mcpe.protocol
 
 import be.zvz.kookie.network.mcpe.serializer.PacketSerializer
 import be.zvz.kookie.utils.BinaryDataException
-import com.fasterxml.jackson.module.afterburner.AfterburnerModule
-import com.fasterxml.jackson.module.kotlin.jacksonMapperBuilder
 
 @ProtocolIdentify(networkId = ProtocolInfo.IDS.UNKNOWN)
 abstract class DataPacket : Packet {
@@ -85,9 +83,6 @@ abstract class DataPacket : Packet {
     abstract fun encodePayload(output: PacketSerializer)
 
     companion object {
-        internal val jsonMapper = jacksonMapperBuilder()
-            .addModule(AfterburnerModule())
-            .build()
         const val PID_MASK = 0x3ff
         const val SUBCLIENT_ID_MASK = 0x03
         const val SENDER_SUBCLIENT_ID_SHIFT = 10

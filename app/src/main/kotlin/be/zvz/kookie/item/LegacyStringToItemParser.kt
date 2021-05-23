@@ -1,24 +1,16 @@
 package be.zvz.kookie.item
 
-import com.koloboke.collect.map.hash.HashObjIntMaps
+import be.zvz.kookie.utils.Json
+import com.fasterxml.jackson.core.type.TypeReference
+import java.lang.NumberFormatException
 
 object LegacyStringToItemParser {
+
+    private val map: MutableMap<String, Int>
     init {
-        /*
-        $mappingsRaw = @file_get_contents(\pocketmine\RESOURCE_PATH . '/item_from_string_bc_map.json');
-        if($mappingsRaw === false) throw new AssumptionFailedError("Missing required resource file");
-
-        $mappings = json_decode($mappingsRaw, true);
-        if(!is_array($mappings)) throw new AssumptionFailedError("Invalid mappings format, expected array");
-
-        foreach($mappings as $name => $id){
-            if(!is_string($name) or !is_int($id)) throw new AssumptionFailedError("Invalid mappings format, expected string keys and int values");
-            $result->addMapping($name, $id);
-        }
-         */
+        val mappingRaw = this::class.java.getResourceAsStream("item_from_string_bc_map.json")
+        map = Json.jsonMapper.readValue(mappingRaw, object : TypeReference<MutableMap<String, Int>>() {})
     }
-
-    private val map: MutableMap<String, Int> = HashObjIntMaps.newMutableMap()
 
     fun addMapping(alias: String, id: Int) {
         map[alias] = id
@@ -30,14 +22,14 @@ object LegacyStringToItemParser {
         val key = reprocess(input)
         val b = key.split(":")
 
-        val meta: Int? = if (b.size < 0) {
+        val meta: Int = if (b.size < 0) {
             0
         } else {
-            b[1].toIntOrNull()
-        }
-
-        if (meta == null) {
-            throw IllegalArgumentException("Unable to parse \"${b[1]}\" from \"$input\" as a valid meta value")
+            try {
+                b[1].toInt()
+            } catch (e: NumberFormatException) {
+                throw IllegalArgumentException("Unable to parse \"${b[1]}\" from \"$input\" as a valid meta value", e)
+            }
         }
 
         b[0].toIntOrNull()?.let {

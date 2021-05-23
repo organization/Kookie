@@ -1,10 +1,8 @@
 package be.zvz.kookie.network.mcpe.convert
 
 import be.zvz.kookie.network.mcpe.protocol.ItemTypeEntry
+import be.zvz.kookie.utils.Json
 import com.fasterxml.jackson.core.type.TypeReference
-import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.module.afterburner.AfterburnerModule
-import com.fasterxml.jackson.module.kotlin.jacksonMapperBuilder
 import com.koloboke.collect.map.hash.HashIntObjMaps
 import com.koloboke.collect.map.hash.HashObjObjMaps
 import java.lang.NumberFormatException
@@ -13,16 +11,13 @@ class ItemTypeDictionary private constructor(val itemTypes: List<ItemTypeEntry>)
     private val stringToIntMap: MutableMap<String, Int> = HashObjObjMaps.newMutableMap()
     private val intToStringIdMap: MutableMap<Int, String> = HashIntObjMaps.newMutableMap()
     companion object {
-        private val jsonMapper: ObjectMapper = jacksonMapperBuilder()
-            .addModule(AfterburnerModule())
-            .build()
         private val instance: ItemTypeDictionary = make()
         fun getInstance(): ItemTypeDictionary {
             return instance
         }
 
         private fun make(): ItemTypeDictionary {
-            val data = jsonMapper.readValue(
+            val data = Json.jsonMapper.readValue(
                 this::class.java.getResourceAsStream("vanilla/required_item_list.json"),
                 object : TypeReference<Map<String, Map<String, String>>>() {}
             )

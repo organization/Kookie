@@ -21,10 +21,8 @@ import be.zvz.kookie.entity.Skin
 import be.zvz.kookie.network.mcpe.protocol.types.skin.SkinData
 import be.zvz.kookie.network.mcpe.protocol.types.skin.SkinGeometry
 import be.zvz.kookie.network.mcpe.protocol.types.skin.SkinImage
+import be.zvz.kookie.utils.Json
 import com.fasterxml.jackson.core.JsonProcessingException
-import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.module.afterburner.AfterburnerModule
-import com.fasterxml.jackson.module.kotlin.jacksonMapperBuilder
 import com.fasterxml.jackson.module.kotlin.readValue
 import java.util.*
 
@@ -41,7 +39,7 @@ class LegacySkinAdapter : SkinAdapter {
             geometryName = "geometry.humanoid.custom"
         }
         val data = mapOf("geometry" to mapOf("default" to geometryName))
-        val resourcePatch = jsonMapper.writeValueAsString(data)
+        val resourcePatch = Json.jsonMapper.writeValueAsString(data)
         return SkinData(
             skin.skinId,
             "", // TODO: find out what is playFabId
@@ -67,7 +65,7 @@ class LegacySkinAdapter : SkinAdapter {
         }
 
         try {
-            val geometry: SkinGeometry = jsonMapper.readValue(data.resourcePatch)
+            val geometry: SkinGeometry = Json.jsonMapper.readValue(data.resourcePatch)
             val geometryName = geometry.geometry.getValue("default")
 
             return Skin(data.skinId, data.skinImage.getData(), capeData, geometryName, data.geometryData)
@@ -77,10 +75,4 @@ class LegacySkinAdapter : SkinAdapter {
     }
 
     class SkinAdapterException(message: String) : RuntimeException(message)
-
-    companion object {
-        val jsonMapper: ObjectMapper = jacksonMapperBuilder()
-            .addModule(AfterburnerModule())
-            .build()
-    }
 }

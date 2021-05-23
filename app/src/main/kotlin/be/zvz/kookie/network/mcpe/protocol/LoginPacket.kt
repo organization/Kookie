@@ -21,6 +21,7 @@ import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
 import be.zvz.kookie.network.mcpe.protocol.types.login.JwtChain
 import be.zvz.kookie.network.mcpe.serializer.PacketSerializer
 import be.zvz.kookie.utils.BinaryStream
+import be.zvz.kookie.utils.Json
 import com.fasterxml.jackson.core.JsonProcessingException
 import com.fasterxml.jackson.module.kotlin.readValue
 
@@ -46,7 +47,7 @@ class LoginPacket : DataPacket(), ServerboundPacket {
 
         val chainData: JwtChain
         try {
-            chainData = jsonMapper.readValue(connectionReqReader.get(connectionReqReader.getLInt()))
+            chainData = Json.jsonMapper.readValue(connectionReqReader.get(connectionReqReader.getLInt()))
         } catch (e: JsonProcessingException) {
             throw PacketDecodeException("Failed decoding chain data JSON", e)
         }
@@ -64,7 +65,7 @@ class LoginPacket : DataPacket(), ServerboundPacket {
         val connectionReqWriter = BinaryStream()
         val chainDataJson: String
         try {
-            chainDataJson = jsonMapper.writeValueAsString(chainDataJwt)
+            chainDataJson = Json.jsonMapper.writeValueAsString(chainDataJwt)
         } catch (e: JsonProcessingException) {
             throw PacketDecodeException("Failed encoding chain data JSON", e)
         }
