@@ -1,8 +1,6 @@
 package be.zvz.kookie.network.mcpe.convert
 
-import be.zvz.kookie.utils.Json
 import be.zvz.kookie.utils.config.JsonBrowser
-import com.fasterxml.jackson.core.type.TypeReference
 import com.koloboke.collect.map.hash.HashIntIntMaps
 import com.koloboke.collect.map.hash.HashIntObjMaps
 import com.koloboke.collect.map.hash.HashObjIntMaps
@@ -46,14 +44,14 @@ class ItemTranslator(dictionary: ItemTypeDictionary, simpleMappings: Map<String,
 
         private fun make(): ItemTranslator {
             val data = JsonBrowser().parse(this::class.java.getResourceAsStream("vanilla/r16_to_current_item_map.json"))
-            val legacyStringToIntMap = JsonBrowser().parse(this::class.java.getResourceAsStream("vanilla/item_id_map.json"))
+            val legacyStringToIntMap = JsonBrowser().parse(this::class.java.getResourceAsStream("vanilla/item_id_map.json")).toMap<String, Int>()
 
             val simpleMappings: MutableMap<String, Int> = HashObjIntMaps.newMutableMap()
             data["simple"].toMap<String, String>().forEach { (oldId, newId) ->
                 simpleMappings[newId] = legacyStringToIntMap.getValue(oldId).toInt()
             }
-            legacyStringToIntMap.toMap<String, Int>.forEach { (stringId, intId) ->
-                simpleMappings[stringId] = intId.toInt()
+            legacyStringToIntMap.forEach { (stringId, intId) ->
+                simpleMappings[stringId] = intId
             }
             val complexMappings: MutableMap<String, Pair<Int, Int>> = HashObjObjMaps.newMutableMap()
             data["complex"].toMap<String, Map<Int, String>>().forEach { (oldId, map) ->
