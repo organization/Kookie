@@ -20,7 +20,7 @@ package be.zvz.kookie.item.enchantment
 class ProtectionEnchantment(
     internalRuntimeId: Int,
     name: String,
-    rarity: Int,
+    rarity: Rarity,
     primaryItemFlags: Int,
     secondaryItemFlags: Int,
     maxLevel: Int,

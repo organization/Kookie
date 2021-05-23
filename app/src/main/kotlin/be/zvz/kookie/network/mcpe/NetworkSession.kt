@@ -102,11 +102,9 @@ class NetworkSession(
             val remains = serializer.buffer.substring(serializer.offset.get())
             logger.debug("Still ${remains.length} bytes unread in ${packet.getName()}")
         }
-        handler.let {
-            if (it != null) {
-                if (!packet.handle(it)) {
-                    logger.debug("Unhandled ${packet.getName()}")
-                }
+        handler?.let {
+            if (!packet.handle(it)) {
+                logger.debug("Unhandled ${packet.getName()}")
             }
         }
     }

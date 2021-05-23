@@ -17,4 +17,28 @@
  */
 package be.zvz.kookie.block
 
-class Block
+import be.zvz.kookie.world.Position
+
+open class Block(val idInfo: BlockIdentifier, val name: String, val breakInfo: BlockBreakInfo) {
+    val pos: Position = Position()
+
+    init {
+        // TODO: Variant collides with state bitmask
+    }
+
+    fun clone(): Block {
+        return Block(idInfo, name, breakInfo)
+    }
+
+    fun getId(): Int = idInfo.blockId
+
+    fun getMeta(): Int {
+        val stateMeta = writeStateToMeta()
+        // assert(($stateMeta & ~$this->getStateBitmask()) === 0);
+        return idInfo.variant or stateMeta
+    }
+
+    fun getFullId(): Int = (getId() shl 4) or getMeta()
+
+    private fun writeStateToMeta(): Int = 0
+}

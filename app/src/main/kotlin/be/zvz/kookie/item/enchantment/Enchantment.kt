@@ -20,7 +20,7 @@ package be.zvz.kookie.item.enchantment
 open class Enchantment(
     val internalRuntimeId: Int,
     val name: String,
-    val rarity: Int,
+    val rarity: Rarity,
     val primaryItemFlags: Int,
     val secondaryItemFlags: Int,
     val maxLevel: Int,
