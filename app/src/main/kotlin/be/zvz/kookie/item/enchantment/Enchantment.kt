@@ -21,10 +21,24 @@ open class Enchantment(
     val internalRuntimeId: Int,
     val name: String,
     val rarity: Rarity,
-    val primaryItemFlags: Int,
-    val secondaryItemFlags: Int,
+    primaryItemFlags: Array<ItemFlags>,
+    secondaryItemFlags: Array<ItemFlags>,
     val maxLevel: Int,
 ) {
+    val primaryItemFlags = let { enchantment ->
+        var result: Int = primaryItemFlags.first().flags
+        primaryItemFlags.drop(1).forEach {
+            result = result or it.flags
+        }
+        return@let result
+    }
+    val secondaryItemFlags = let { enchantment ->
+        var result: Int = secondaryItemFlags.first().flags
+        secondaryItemFlags.drop(1).forEach {
+            result = result or it.flags
+        }
+        return@let result
+    }
     fun hasPrimaryItemType(flag: Int): Boolean = (primaryItemFlags and flag) != 0
     fun hasSecondaryItemType(flag: Int): Boolean = (secondaryItemFlags and flag) != 0
 }

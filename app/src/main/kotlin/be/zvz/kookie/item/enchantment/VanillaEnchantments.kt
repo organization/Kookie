@@ -23,8 +23,8 @@ enum class VanillaEnchantments(val enchantment: Enchantment) {
             0,
             "%enchantment.protect.all",
             Rarity.COMMON,
-            ItemFlags.ARMOR.flags,
-            ItemFlags.NONE.flags,
+            arrayOf(ItemFlags.ARMOR),
+            arrayOf(ItemFlags.NONE),
             4,
             0.75F,
             null
@@ -35,8 +35,8 @@ enum class VanillaEnchantments(val enchantment: Enchantment) {
             1,
             "%enchantment.protect.fire",
             Rarity.UNCOMMON,
-            ItemFlags.ARMOR.flags,
-            ItemFlags.NONE.flags,
+            arrayOf(ItemFlags.ARMOR),
+            arrayOf(ItemFlags.NONE),
             4,
             1.25F,
             null // TODO: EntityDamageEvent enum
@@ -47,8 +47,8 @@ enum class VanillaEnchantments(val enchantment: Enchantment) {
             2,
             "%enchantment.protect.fall",
             Rarity.UNCOMMON,
-            ItemFlags.FEET.flags,
-            ItemFlags.NONE.flags,
+            arrayOf(ItemFlags.FEET),
+            arrayOf(ItemFlags.NONE),
             4,
             2.5F,
             null // TODO: EntityDamageEvent enum
@@ -59,8 +59,8 @@ enum class VanillaEnchantments(val enchantment: Enchantment) {
             3,
             "%enchantment.protect.explosion",
             Rarity.RARE,
-            ItemFlags.ARMOR.flags,
-            ItemFlags.NONE.flags,
+            arrayOf(ItemFlags.ARMOR),
+            arrayOf(ItemFlags.NONE),
             4,
             1.5F,
             null // TODO: EntityDamageEvent enum
@@ -71,8 +71,8 @@ enum class VanillaEnchantments(val enchantment: Enchantment) {
             4,
             "%enchantment.protect.projectile",
             Rarity.UNCOMMON,
-            ItemFlags.ARMOR.flags,
-            ItemFlags.NONE.flags,
+            arrayOf(ItemFlags.ARMOR),
+            arrayOf(ItemFlags.NONE),
             4,
             1.5F,
             null // TODO: EntityDamageEvent enum
@@ -83,8 +83,8 @@ enum class VanillaEnchantments(val enchantment: Enchantment) {
             5,
             "%enchantment.thorns",
             Rarity.MYTHIC,
-            ItemFlags.TORSO.flags,
-            ItemFlags.HEAD.flags or ItemFlags.LEGS.flags or ItemFlags.FEET.flags,
+            arrayOf(ItemFlags.TORSO),
+            arrayOf(ItemFlags.HEAD, ItemFlags.LEGS, ItemFlags.FEET),
             3
         )
     ),
@@ -93,9 +93,60 @@ enum class VanillaEnchantments(val enchantment: Enchantment) {
             6,
             "%enchantment.oxygen",
             Rarity.RARE,
-            ItemFlags.HEAD.flags,
-            ItemFlags.NONE.flags,
+            arrayOf(ItemFlags.HEAD),
+            arrayOf(ItemFlags.NONE),
             3
+        )
+    ),
+    SHARPNESS(
+        SharpnessEnchantment(
+            7,
+            "%enchantment.damage.all",
+            Rarity.COMMON,
+            arrayOf(ItemFlags.SWORD),
+            arrayOf(ItemFlags.AXE),
+            5
+        )
+    ),
+    // TODO: smite, bane of arthropods (these don't make sense now because their applicable mobs don't exist yet)
+    KNOCKBACK(
+        KnockbackEnchantment(
+            8,
+            "%enchantment.knockback",
+            Rarity.UNCOMMON,
+            arrayOf(ItemFlags.SWORD),
+            arrayOf(ItemFlags.NONE),
+            2
+        )
+    ),
+    FIRE_ASPECT(
+        FireAspectEnchantment(
+            9,
+            "%enchantment.fire",
+            Rarity.RARE,
+            arrayOf(ItemFlags.SWORD),
+            arrayOf(ItemFlags.NONE),
+            2
+        )
+    ),
+    EFFICIENCY(
+        Enchantment(
+            10,
+            "%enchantment.digging",
+            Rarity.COMMON,
+            arrayOf(ItemFlags.DIG),
+            arrayOf(ItemFlags.SHEARS),
+            5
+        )
+    ),
+    SILK_TOUCH(
+        Enchantment(
+            11,
+            "%enchantment.untouching",
+            Rarity.MYTHIC,
+            arrayOf(ItemFlags.DIG),
+            arrayOf(ItemFlags.SHEARS),
+            1
         )
     ),
     UNBREAKING(
@@ -103,14 +154,75 @@ enum class VanillaEnchantments(val enchantment: Enchantment) {
             12,
             "%enchantment.durability",
             Rarity.UNCOMMON,
-            ItemFlags.DIG.flags or ItemFlags.ARMOR.flags or ItemFlags.FISHING_ROD.flags or ItemFlags.BOW.flags,
-            ItemFlags.TOOL.flags or ItemFlags.CARROT_STICK.flags or ItemFlags.ELYTRA.flags,
+            arrayOf(ItemFlags.DIG, ItemFlags.ARMOR, ItemFlags.FISHING_ROD, ItemFlags.BOW),
+            arrayOf(ItemFlags.TOOL, ItemFlags.CARROT_STICK, ItemFlags.ELYTRA),
             3
+        )
+    ),
+    POWER(
+        Enchantment(
+            13,
+            "%enchantment.arrowDamage",
+            Rarity.COMMON,
+            arrayOf(ItemFlags.BOW),
+            arrayOf(ItemFlags.NONE),
+            5
+        )
+    ),
+    PUNCH(
+        Enchantment(
+            14,
+            "%enchantment.arrowKnockback",
+            Rarity.RARE,
+            arrayOf(ItemFlags.BOW),
+            arrayOf(ItemFlags.NONE),
+            5
+        )
+    ),
+    FLAME(
+        Enchantment(
+            15,
+            "%enchantment.arrowFire",
+            Rarity.RARE,
+            arrayOf(ItemFlags.BOW),
+            arrayOf(ItemFlags.NONE),
+            1
+        )
+    ),
+    INFINITY(
+        Enchantment(
+            16,
+            "%enchantment.arrowInfinite",
+            Rarity.MYTHIC,
+            arrayOf(ItemFlags.BOW),
+            arrayOf(ItemFlags.NONE),
+            1
+        )
+    ),
+    MENDING(
+        Enchantment(
+            17,
+            "%enchantment.mending",
+            Rarity.RARE,
+            arrayOf(ItemFlags.NONE),
+            arrayOf(ItemFlags.ALL),
+            1
+        )
+    ),
+    VANISHING(
+        Enchantment(
+            18,
+            "%enchantment.curse.vanishing",
+            Rarity.MYTHIC,
+            arrayOf(ItemFlags.NONE),
+            arrayOf(ItemFlags.ALL),
+            1
         )
     );
 
     companion object {
         private val VALUES = values()
         fun from(value: String) = VALUES.firstOrNull { it.enchantment.toString().equals(value, true) }
+        fun getAll(): Array<VanillaEnchantments> = VALUES
     }
 }

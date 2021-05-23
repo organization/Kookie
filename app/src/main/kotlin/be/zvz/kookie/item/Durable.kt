@@ -47,12 +47,12 @@ abstract class Durable(identifier: ItemIdentifier) : Item(identifier) {
         return damage >= getMaxDurability()
     }
 
-    protected override fun deserializeCompoundTag(tag: CompoundTag) {
+    override fun deserializeCompoundTag(tag: CompoundTag) {
         super.deserializeCompoundTag(tag)
         unbreakable = tag.getByte("Unbreakable", 0) != 0
     }
 
-    protected override fun serializeCompoundTag(tag: CompoundTag) {
+    override fun serializeCompoundTag(tag: CompoundTag) {
         super.serializeCompoundTag(tag)
         if (unbreakable) {
             tag.setByte("Unbreakable", 1)
