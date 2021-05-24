@@ -5,6 +5,6 @@ class CommandData(
     var description: String,
     var flags: Int,
     var permission: Int,
-    alias: CommandEnum?,
-    overloads: MutableMap<Int, MutableMap<Int, CommandParameter>>
+    var aliases: CommandEnum?,
+    var overloads: MutableMap<Int, MutableMap<Int, CommandParameter>>
 )
