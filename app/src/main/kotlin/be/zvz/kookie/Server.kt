@@ -18,6 +18,7 @@
 package be.zvz.kookie
 
 import be.zvz.kookie.console.KookieConsole
+import be.zvz.kookie.console.brightCyan
 import be.zvz.kookie.constant.CorePaths
 import be.zvz.kookie.constant.FilePermission
 import be.zvz.kookie.lang.Language
@@ -197,7 +198,7 @@ class Server(cwd: Path, dataPath: Path, pluginPath: Path) {
 
         network.addInterface(RakLibInterface(this, network.getSessionManager(), InetSocketAddress("0.0.0.0", configGroup.getConfigLong("server-port").toInt())))
 
-        logger.info("pocketmine.server.start", listOf(ProtocolInfo.MINECRAFT_VERSION_NETWORK))
+        language.translateString("pocketmine.server.start", listOf(ProtocolInfo.MINECRAFT_VERSION_NETWORK.brightCyan()))
 
         thread(isDaemon = true, name = "${VersionInfo.NAME}-console") {
             console.start()
