@@ -121,7 +121,7 @@ abstract class Command(
 
     fun isRegistered(): Boolean = commandMap != null
 
-    abstract fun execute(sender: CommandSender, args: List<String>)
+    abstract fun execute(sender: CommandSender, commandLabel: String, args: List<String>): Boolean
 
     companion object {
         fun broadcastMessage(translationKey: String, params: MutableList<String>): Int {
