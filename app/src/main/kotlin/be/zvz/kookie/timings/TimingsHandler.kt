@@ -1,3 +1,3 @@
 package be.zvz.kookie.timings
 
-class TimingsHandler
+class TimingsHandler(str: String)
