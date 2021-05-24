@@ -17,11 +17,72 @@
  */
 package be.zvz.kookie.player
 
+import be.zvz.kookie.command.CommandSender
 import be.zvz.kookie.entity.Human
+import be.zvz.kookie.permission.Permission
+import be.zvz.kookie.permission.PermissionAttachment
+import be.zvz.kookie.permission.PermissionAttachmentInfo
+import be.zvz.kookie.plugin.Plugin
 
-class Player : Human() {
+class Player : Human(), CommandSender {
 
     fun doChunkRequest() {
+        TODO("Not yet implemented")
+    }
+
+    override fun sendMessage(message: String) {
+        TODO("Not yet implemented")
+    }
+
+    override fun setBasePermission(name: String, grant: Boolean) {
+        TODO("Not yet implemented")
+    }
+
+    override fun setBasePermission(permission: Permission, grant: Boolean) {
+        TODO("Not yet implemented")
+    }
+
+    override fun unsetBasePermission(name: String) {
+        TODO("Not yet implemented")
+    }
+
+    override fun unsetBasePermission(permission: Permission) {
+        TODO("Not yet implemented")
+    }
+
+    override fun isPermissionSet(name: String): Boolean {
+        TODO("Not yet implemented")
+    }
+
+    override fun isPermissionSet(permission: Permission): Boolean {
+        TODO("Not yet implemented")
+    }
+
+    override fun hasPermission(name: String): Boolean {
+        TODO("Not yet implemented")
+    }
+
+    override fun hasPermission(permission: Permission): Boolean {
+        TODO("Not yet implemented")
+    }
+
+    override fun addAttachment(plugin: Plugin, name: String?, value: Boolean?): PermissionAttachment {
+        TODO("Not yet implemented")
+    }
+
+    override fun removeAttachment(attachment: PermissionAttachment) {
+        TODO("Not yet implemented")
+    }
+
+    override fun recalculatePermissions(): Map<String, Boolean> {
+        TODO("Not yet implemented")
+    }
+
+    override fun getPermissionRecalculationCallbacks(): Set<(changedPermissionsOldValues: Map<String, Boolean>) -> Unit> {
+        TODO("Not yet implemented")
+    }
+
+    override fun getEffectivePermissions(): List<PermissionAttachmentInfo> {
         TODO("Not yet implemented")
     }
 }

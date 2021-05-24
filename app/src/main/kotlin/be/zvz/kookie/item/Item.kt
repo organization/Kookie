@@ -17,6 +17,7 @@
  */
 package be.zvz.kookie.item
 
+import be.zvz.kookie.Block.VanillaBlocks
 import be.zvz.kookie.block.Block
 import be.zvz.kookie.block.BlockToolType
 import be.zvz.kookie.entity.Entity
@@ -192,6 +193,14 @@ open class Item(
     fun getVanillaName(): String = name
 
     // TODO: canBePlaced(), getBlock()
+    fun canBePlaced(): Boolean {
+        return getBlock().canBePlaced()
+    }
+
+    fun getBlock(clickedFace: Int? = null): Block{
+        return VanillaBlocks.AIR.block
+    }
+
     fun getId(): Int = identifier.id
     open fun getMeta(): Int = identifier.meta
     fun hasAnyDamageValue(): Boolean = identifier.meta == -1

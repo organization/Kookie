@@ -17,13 +17,25 @@
  */
 package be.zvz.kookie.block
 
+import be.zvz.kookie.item.Item
+import be.zvz.kookie.item.ItemFactory
+import be.zvz.kookie.math.AxisAlignedBB
 import be.zvz.kookie.world.Position
+import java.lang.IllegalArgumentException
 
 open class Block(val idInfo: BlockIdentifier, val name: String, val breakInfo: BlockBreakInfo) {
-    val pos: Position = Position()
+    var pos: Position
+
+    protected var collisionBoxes: MutableList<AxisAlignedBB>? = null
+
+    fun dechex(ig: Int) = 0
 
     init {
         // TODO: Variant collides with state bitmask
+        if((idInfo.variant and getStateBitmask()) != 0){
+            throw IllegalArgumentException("Variant 0x" + dechex(idInfo.variant) + " collides with state bitmask 0x" + dechex(getStateBitmask()))
+        }
+        pos = Position(0f, 0f, 0f, null)
     }
 
     fun clone(): Block {
@@ -32,13 +44,32 @@ open class Block(val idInfo: BlockIdentifier, val name: String, val breakInfo: B
 
     fun getId(): Int = idInfo.blockId
 
+    fun getFullId(): Int = (getId() shl 4) or getMeta()
+
+    fun asItem(): Item = ItemFactory.get(
+        idInfo.itemId!!,
+        idInfo.variant or (writeStateToMeta() and getNonPersistentStateBitmask().inv())
+    )
+
     fun getMeta(): Int {
         val stateMeta = writeStateToMeta()
-        // assert(($stateMeta & ~$this->getStateBitmask()) === 0);
+        assert((stateMeta and getStateBitmask().inv()) == 0);
         return idInfo.variant or stateMeta
     }
 
-    fun getFullId(): Int = (getId() shl 4) or getMeta()
+    open fun getStateBitmask(): Int = 0
 
-    private fun writeStateToMeta(): Int = 0
+    open fun getNonPersistentStateBitmask(): Int = 0
+
+    protected fun writeStateToMeta(): Int = 0
+
+    open fun readStateFromData(id: Int, stateMeta: Int) {
+        // NOOP
+    }
+
+    open fun readStateFromWorld() {
+        collisionBoxes = null
+    }
+
+    open fun canBePlaced(): Boolean = true
 }

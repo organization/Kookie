@@ -19,4 +19,10 @@ package be.zvz.kookie.entity
 
 abstract class Entity {
     val attributeMap = AttributeMap()
+
+    private val entityRuntimeId: Int = -1
+
+    companion object {
+        var entityId: Long = 0
+    }
 }
