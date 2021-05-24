@@ -26,7 +26,7 @@ abstract class Command(
     val name: String,
     val description: String = "",
     val usageMessage: String = "/$name",
-    val aliases: MutableList<String> = mutableListOf(),
+    var aliases: MutableList<String> = mutableListOf(),
 ) {
     var permission: String = ""
         set(value) {
