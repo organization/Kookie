@@ -39,7 +39,7 @@ class NetworkInventoryAction {
             SOURCE_WORLD -> output.putUnsignedVarInt(sourceFlags)
             SOURCE_CREATIVE -> {}
             SOURCE_TODO -> output.putVarInt(windowId)
-            else -> throw IllegalArgumentException("Unknown inventory action source type this.sourceType")
+            else -> throw IllegalArgumentException("Unknown inventory action source type ${this.sourceType}")
         }
     }
 
