@@ -204,7 +204,7 @@ open class Item(
 
     fun canBePlaced(): Boolean = getBlock().canBePlaced()
 
-    fun getBlock(clickedFace: Int? = null): Block = VanillaBlocks.AIR.block
+    open fun getBlock(clickedFace: Int? = null): Block = VanillaBlocks.AIR.block
 
     fun getId(): Int = identifier.id
     open fun getMeta(): Int = identifier.meta

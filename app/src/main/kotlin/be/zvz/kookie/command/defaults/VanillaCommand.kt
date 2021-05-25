@@ -2,10 +2,6 @@ package be.zvz.kookie.command.defaults
 
 import be.zvz.kookie.command.Command
 import be.zvz.kookie.command.CommandSender
-import be.zvz.kookie.command.utils.InvalidCommandSyntaxException
-import be.zvz.kookie.lang.TranslationContainer
-import be.zvz.kookie.utils.TextFormat
-import be.zvz.kookie.utils.Union
 import kotlin.math.max
 import kotlin.math.min
 
@@ -48,5 +44,10 @@ abstract class VanillaCommand(
         maxNum: Double = MAX_COORD.toDouble()
     ): Double? = value.toDoubleOrNull()?.let {
         return min(max(it, maxNum), minNum)
+    }
+
+    companion object {
+        const val MAX_COORD = 30000000
+        const val MIN_COORD = -30000000
     }
 }

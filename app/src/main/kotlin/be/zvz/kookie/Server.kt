@@ -17,11 +17,13 @@
  */
 package be.zvz.kookie
 
+import be.zvz.kookie.command.CommandSender
 import be.zvz.kookie.console.KookieConsole
 import be.zvz.kookie.console.brightCyan
 import be.zvz.kookie.constant.CorePaths
 import be.zvz.kookie.constant.FilePermission
 import be.zvz.kookie.lang.Language
+import be.zvz.kookie.lang.TranslationContainer
 import be.zvz.kookie.network.Network
 import be.zvz.kookie.network.mcpe.protocol.ProtocolInfo
 import be.zvz.kookie.network.mcpe.raklib.RakLibInterface
@@ -206,6 +208,22 @@ class Server(cwd: Path, dataPath: Path, pluginPath: Path) {
     }
 
     fun getDataPath(): Path = CorePaths.PATH
+
+    fun broadcastMessage(message: String): Int {
+        TODO("Not yet implemented")
+    }
+
+    fun broadcastMessage(message: TranslationContainer): Int {
+        TODO("Not yet implemented")
+    }
+
+    fun broadcastMessage(message: String, recipients: List<CommandSender>): Int {
+        TODO("Not yet implemented")
+    }
+
+    fun broadcastMessage(message: TranslationContainer, recipients: List<CommandSender>): Int {
+        TODO("Not yet implemented")
+    }
 
     companion object {
         @JvmStatic

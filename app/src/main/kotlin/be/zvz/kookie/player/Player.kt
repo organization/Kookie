@@ -22,6 +22,7 @@ import be.zvz.kookie.command.CommandSender
 import be.zvz.kookie.entity.Human
 import be.zvz.kookie.lang.Language
 import be.zvz.kookie.lang.TranslationContainer
+import be.zvz.kookie.nbt.tag.CompoundTag
 import be.zvz.kookie.network.mcpe.NetworkSession
 import be.zvz.kookie.network.mcpe.protocol.TextPacket
 import be.zvz.kookie.permission.Permission
@@ -30,11 +31,24 @@ import be.zvz.kookie.permission.PermissionAttachmentInfo
 import be.zvz.kookie.plugin.Plugin
 
 class Player(
-    val session: NetworkSession,
     override val server: Server,
-    override val language: Language,
-    override val name: String
+    val session: NetworkSession,
+    val playerInfo: PlayerInfo,
+    val authenticated: Boolean,
+    val spawnLocation: Any, // TODO: Location,
+    val namedTag: CompoundTag
 ) : Human(), CommandSender {
+    override val language: Language
+        get() = server.language
+    val username = playerInfo.getUsername()
+    var displayName = username
+        set(name) {
+            // TODO: PlayerDisplayNameChangeEvent
+            field = name
+        }
+    override val name: String
+        get() = username
+
     override val permissionRecalculationCallbacks: Set<(changedPermissionsOldValues: Map<String, Boolean>) -> Unit>
         get() = TODO("Not yet implemented")
 
