@@ -29,6 +29,11 @@ class PacketPool {
         registerPacket(PlayStatusPacket())
         registerPacket(ResourcePacksInfoPacket())
         registerPacket(ResourcePackStackPacket())
+        registerPacket(ResourcePacksInfoPacket())
+        registerPacket(AvailableCommandsPacket())
+        registerPacket(TextPacket())
+        registerPacket(SetTimePacket())
+        registerPacket(AddPlayerPacket())
     }
 
     fun registerPacket(packet: Packet) {
