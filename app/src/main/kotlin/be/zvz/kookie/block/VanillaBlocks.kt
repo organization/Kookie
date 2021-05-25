@@ -17,10 +17,6 @@
  */
 package be.zvz.kookie.block
 
-import be.zvz.kookie.block.Block
-import be.zvz.kookie.block.BlockFactory
-import be.zvz.kookie.block.BlockIdentifier
-
 enum class VanillaBlocks(val block: Block) {
     ACACIA_BUTTON(BlockFactory.get(395, 0)),
     ACACIA_DOOR(BlockFactory.get(196, 0)),

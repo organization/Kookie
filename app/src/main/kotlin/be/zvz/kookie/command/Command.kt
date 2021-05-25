@@ -18,8 +18,8 @@
 package be.zvz.kookie.command
 
 import be.zvz.kookie.permission.PermissionManager
-import be.zvz.kookie.timings.TimingsHandler
 import be.zvz.kookie.timings.Timings
+import be.zvz.kookie.timings.TimingsHandler
 import be.zvz.kookie.utils.TextFormat
 
 abstract class Command(
@@ -50,12 +50,12 @@ abstract class Command(
     private var commandMap: CommandMap? = null
 
     fun testPermission(target: CommandSender): Boolean {
-        if(testPermissionSilent(target)) {
+        if (testPermissionSilent(target)) {
             return true
         }
 
         target.sendMessage(
-            when(permissionMessage) {
+            when (permissionMessage) {
                 "" -> target.language.translateString("${TextFormat.RED}%commands.generic.permission")
                 else -> permissionMessage.replace("<permission>", permission)
             }
@@ -101,7 +101,7 @@ abstract class Command(
     }
 
     fun unregister(newCommandMap: CommandMap): Boolean {
-        if (allowChangesFrom(newCommandMap)){
+        if (allowChangesFrom(newCommandMap)) {
             commandMap = null
 
             activeAliases.clear()

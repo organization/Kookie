@@ -32,7 +32,7 @@ open class Block(val idInfo: BlockIdentifier, val name: String, val breakInfo: B
 
     init {
         // TODO: Variant collides with state bitmask
-        if((idInfo.variant and getStateBitmask()) != 0){
+        if ((idInfo.variant and getStateBitmask()) != 0) {
             throw IllegalArgumentException("Variant 0x" + dechex(idInfo.variant) + " collides with state bitmask 0x" + dechex(getStateBitmask()))
         }
         pos = Position(0f, 0f, 0f, null)
@@ -53,7 +53,7 @@ open class Block(val idInfo: BlockIdentifier, val name: String, val breakInfo: B
 
     fun getMeta(): Int {
         val stateMeta = writeStateToMeta()
-        assert((stateMeta and getStateBitmask().inv()) == 0);
+        assert((stateMeta and getStateBitmask().inv()) == 0)
         return idInfo.variant or stateMeta
     }
 
