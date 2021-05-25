@@ -61,5 +61,9 @@ class TimingsHandler(val str: String, private val parent: TimingsHandler? = null
     companion object {
         var enabled: Boolean = false
         var timingStart: Long = 0
+
+        fun tick(measure: Boolean) {
+            TimingsRecord.tick(measure)
+        }
     }
 }
