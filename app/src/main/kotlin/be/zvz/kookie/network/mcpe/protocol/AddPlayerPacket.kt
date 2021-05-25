@@ -2,6 +2,8 @@ package be.zvz.kookie.network.mcpe.protocol
 
 import be.zvz.kookie.math.Vector3
 import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
+import be.zvz.kookie.network.mcpe.protocol.types.DeviceOS
+import be.zvz.kookie.network.mcpe.protocol.types.entity.EntityLink
 import be.zvz.kookie.network.mcpe.protocol.types.entity.MetadataProperty
 import be.zvz.kookie.network.mcpe.protocol.types.inventory.ItemStackWrapper
 import be.zvz.kookie.network.mcpe.serializer.PacketSerializer
@@ -17,12 +19,26 @@ class AddPlayerPacket : DataPacket(), ClientboundPacket {
     var entityRuntimeId: Long = -1
     var platformChatId: String = ""
     lateinit var position: Vector3
-    lateinit var motion: Vector3
+    var motion: Vector3 = Vector3(0F, 0F, 0F)
     var pitch: Float = 0F
     var yaw: Float = 0F
     var headYaw: Float? = null
     lateinit var item: ItemStackWrapper
-    var metadata: MutableMap<String, MetadataProperty> = HashObjObjMaps.newMutableMap()
+    var metadata: MutableMap<Int, MetadataProperty> = HashObjObjMaps.newMutableMap()
+
+    var uvarint1: Int = 0
+    var uvarint2: Int = 0
+    var uvarint3: Int = 0
+    var uvarint4: Int = 0
+    var uvarint5: Int = 0
+
+    var long1: Int = 0
+
+    var links: MutableList<EntityLink> = mutableListOf()
+
+    var deviceId: String = ""
+
+    var buildPlatform: Int = DeviceOS.UNKNOWN
 
     override fun decodePayload(input: PacketSerializer) {
         uuid = input.getUUID()
@@ -36,43 +52,52 @@ class AddPlayerPacket : DataPacket(), ClientboundPacket {
         yaw = input.getLFloat()
         headYaw = input.getLFloat()
         item = ItemStackWrapper.read(input)
-        /*
-        	$this->uuid = $in->getUUID();
-		$this->username = $in->getString();
-		$this->entityUniqueId = $in->getEntityUniqueId();
-		$this->entityRuntimeId = $in->getEntityRuntimeId();
-		$this->platformChatId = $in->getString();
-		$this->position = $in->getVector3();
-		$this->motion = $in->getVector3();
-		$this->pitch = $in->getLFloat();
-		$this->yaw = $in->getLFloat();
-		$this->headYaw = $in->getLFloat();
-		$this->item = ItemStackWrapper::read($in);
-		$this->metadata = $in->getEntityMetadata();
+        metadata = input.getEntityMetadataProperty()
 
-		$this->uvarint1 = $in->getUnsignedVarInt();
-		$this->uvarint2 = $in->getUnsignedVarInt();
-		$this->uvarint3 = $in->getUnsignedVarInt();
-		$this->uvarint4 = $in->getUnsignedVarInt();
-		$this->uvarint5 = $in->getUnsignedVarInt();
+        uvarint1 = input.getUnsignedVarInt()
+        uvarint2 = input.getUnsignedVarInt()
+        uvarint3 = input.getUnsignedVarInt()
+        uvarint4 = input.getUnsignedVarInt()
+        uvarint5 = input.getUnsignedVarInt()
 
-		$this->long1 = $in->getLLong();
+        long1 = input.getLong().toInt()
 
-		$linkCount = $in->getUnsignedVarInt();
-		for($i = 0; $i < $linkCount; ++$i){
-			$this->links[$i] = $in->getEntityLink();
-		}
-
-		$this->deviceId = $in->getString();
-		$this->buildPlatform = $in->getLInt();
-         */
+        for (i in 0..input.getUnsignedVarInt()) {
+            links.add(input.getEntityLink())
+        }
+        deviceId = input.getString()
+        buildPlatform = input.getLInt()
     }
 
     override fun encodePayload(output: PacketSerializer) {
-        TODO("Not yet implemented")
+        output.putUUID(uuid)
+        output.putString(username)
+        output.putEntityUniqueId(entityUniqueId ?: entityRuntimeId)
+        output.putEntityRuntimeId(entityRuntimeId)
+        output.putString(platformChatId)
+        output.putVector3(position)
+        output.putVector3(motion)
+        output.putLFloat(pitch)
+        output.putLFloat(yaw)
+        output.putLFloat(headYaw ?: yaw)
+        output.putEntityMetadata(metadata)
+
+        output.putUnsignedVarInt(uvarint1)
+        output.putUnsignedVarInt(uvarint2)
+        output.putUnsignedVarInt(uvarint3)
+        output.putUnsignedVarInt(uvarint4)
+        output.putUnsignedVarInt(uvarint5)
+
+        output.putLong(long1.toLong())
+
+        links.forEach {
+            output.putEntityLink(it)
+        }
+        output.putString(deviceId)
+        output.putLInt(buildPlatform)
     }
 
     override fun handle(handler: PacketHandlerInterface): Boolean {
-        TODO("Not yet implemented")
+        return handler.handleAddPlayer(this)
     }
 }

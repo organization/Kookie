@@ -49,4 +49,10 @@ class ByteMetadataProperty(override var value: Int) : MetadataProperty(), Intege
 
         return true
     }
+
+    companion object {
+        fun read(input: PacketSerializer): ByteMetadataProperty {
+            return ByteMetadataProperty(input.getByte())
+        }
+    }
 }

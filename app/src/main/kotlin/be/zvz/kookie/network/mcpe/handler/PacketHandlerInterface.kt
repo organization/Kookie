@@ -40,4 +40,8 @@ interface PacketHandlerInterface {
     fun handleText(packet: TextPacket): Boolean
 
     fun handleSetTime(packet: SetTimePacket): Boolean
+
+    fun handleStartGame(packet: StartGamePacket): Boolean
+
+    fun handleAddPlayer(packet: AddPlayerPacket): Boolean
 }

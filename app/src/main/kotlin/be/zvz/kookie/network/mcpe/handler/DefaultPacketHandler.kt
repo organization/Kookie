@@ -52,4 +52,20 @@ open class DefaultPacketHandler : PacketHandlerInterface {
     override fun handleResourcePackClientResponse(packet: ResourcePackClientResponsePacket): Boolean {
         return false
     }
+
+    override fun handleText(packet: TextPacket): Boolean {
+        return false
+    }
+
+    override fun handleSetTime(packet: SetTimePacket): Boolean {
+        return false
+    }
+
+    override fun handleStartGame(packet: StartGamePacket): Boolean {
+        return false
+    }
+
+    override fun handleAddPlayer(packet: AddPlayerPacket): Boolean {
+        return false
+    }
 }

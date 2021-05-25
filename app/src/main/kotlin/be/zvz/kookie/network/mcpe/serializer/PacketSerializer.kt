@@ -25,6 +25,7 @@ import be.zvz.kookie.nbt.tag.CompoundTag
 import be.zvz.kookie.network.mcpe.convert.ItemTypeDictionary
 import be.zvz.kookie.network.mcpe.protocol.PacketDecodeException
 import be.zvz.kookie.network.mcpe.protocol.types.GameRule
+import be.zvz.kookie.network.mcpe.protocol.types.entity.*
 import be.zvz.kookie.network.mcpe.protocol.types.inventory.ItemStack
 import be.zvz.kookie.network.mcpe.protocol.types.skin.*
 import be.zvz.kookie.utils.BinaryStream
@@ -381,5 +382,57 @@ class PacketSerializer(buffer: String = "", offset: AtomicInteger = AtomicIntege
         } catch (ignored: NbtDataException) {
             throw PacketDecodeException.wrap(ignored, "Failed to decode NBT root")
         }
+    }
+
+    private fun readMetadataProperty(type: Int): MetadataProperty {
+        return when (type) {
+            EntityMetadataTypes.BYTE -> ByteMetadataProperty.read(this)
+            EntityMetadataTypes.SHORT -> ShortMetadataProperty.read(this)
+            EntityMetadataTypes.INT -> IntMetadataProperty.read(this)
+            EntityMetadataTypes.FLOAT -> FloatMetadataProperty.read(this)
+            EntityMetadataTypes.STRING -> StringMetadataProperty.read(this)
+            EntityMetadataTypes.COMPOUND_TAG -> CompoundMetadataProperty.read(this)
+            EntityMetadataTypes.POS -> BlockPosMetadataProperty.read(this)
+            EntityMetadataTypes.LONG -> LongMetadataProperty.read(this)
+            EntityMetadataTypes.VECTOR3F -> Vec3MetadataProperty.read(this)
+            else -> throw PacketDecodeException("Unknown entity metadata type $type")
+        }
+    }
+
+    fun getEntityMetadataProperty(): MutableMap<Int, MetadataProperty> {
+        val properties: MutableMap<Int, MetadataProperty> = mutableMapOf()
+        for (i in 0..getUnsignedVarInt()) {
+            val key = getUnsignedVarInt()
+            val type = getUnsignedVarInt()
+            properties[key] = readMetadataProperty(type)
+        }
+        return properties
+    }
+
+    fun putEntityMetadata(metadata: MutableMap<Int, MetadataProperty>) {
+        putUnsignedVarInt(metadata.size)
+        metadata.forEach { (key, metadata) ->
+            putUnsignedVarInt(key)
+            putUnsignedVarInt(metadata.id)
+            metadata.write(this)
+        }
+    }
+
+    fun getEntityLink(): EntityLink {
+        return EntityLink(
+            getEntityUniqueId(),
+            getEntityUniqueId(),
+            getByte(),
+            getBoolean(),
+            getBoolean()
+        )
+    }
+
+    fun putEntityLink(link: EntityLink) {
+        putEntityUniqueId(link.fromEntityId)
+        putEntityUniqueId(link.toEntityId)
+        putByte(link.type)
+        putBoolean(link.immediate)
+        putBoolean(link.causedByRider)
     }
 }
