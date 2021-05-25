@@ -5,30 +5,24 @@ import kotlin.math.roundToInt
 
 class TimingsRecord(val handler: TimingsHandler) {
 
-    private var count: Long = 0
-    private var curCount: Long = 0
-    private var start: Long = 0
-    private var totalTime: Long = 0
-    private var curTickTotal: Long = 0
-    private var violations: Int = 0
+    var count: Long = 0
+        private set
+    var curCount: Long = 0
+        private set
+    var start: Long = 0
+        private set
+    var totalTime: Long = 0
+        private set
+    var curTickTotal: Long = 0
+        private set
+    var violations: Int = 0
+        private set
 
     init {
         records.add(this)
     }
 
     fun getName(): String = handler.getName()
-
-    fun getCount(): Long = count
-
-    fun getCurCount(): Long = curCount
-
-    fun getStart(): Long = start
-
-    fun getTotalTime(): Long = totalTime
-
-    fun getCurTickTotal(): Long = curTickTotal
-
-    fun getViolations(): Int = violations
 
     fun startTiming(now: Long) {
         start = now

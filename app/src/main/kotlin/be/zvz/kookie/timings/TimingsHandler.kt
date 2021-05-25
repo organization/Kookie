@@ -5,7 +5,6 @@ import java.util.*
 class TimingsHandler(val str: String, private val parent: TimingsHandler? = null) {
 
     var record: TimingsRecord? = null
-
     var timingsDepth = 0
 
     fun getName(): String = str
@@ -18,13 +17,12 @@ class TimingsHandler(val str: String, private val parent: TimingsHandler? = null
 
     private fun internalStartTiming(now: Long) {
         if (++timingsDepth == 1) {
-            if (record == null) {
-                record = TimingsRecord(this)
+            record?.startTiming(now) ?: run {
+                record = TimingsRecord(this).apply {
+                    startTiming(now)
+                }
             }
-            record!!.startTiming(now)
-            if (parent != null) {
-                parent.internalStartTiming(now)
-            }
+            parent?.internalStartTiming(now)
         }
     }
 
