@@ -36,6 +36,10 @@ interface ItemEnchantmentHandling {
         }
     }
 
+    fun addEnchantment(enchantment: EnchantmentInstance): ItemEnchantmentHandling = apply {
+        enchantments[enchantment.getRuntimeId()] = enchantment
+    }
+
     fun removeEnchantments(): ItemEnchantmentHandling = apply {
         enchantments.clear()
     }

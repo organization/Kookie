@@ -17,15 +17,18 @@
  */
 package be.zvz.kookie.item
 
-import be.zvz.kookie.Block.VanillaBlocks
 import be.zvz.kookie.block.Block
 import be.zvz.kookie.block.BlockToolType
+import be.zvz.kookie.block.VanillaBlocks
 import be.zvz.kookie.entity.Entity
+import be.zvz.kookie.item.enchantment.EnchantmentIdMap
 import be.zvz.kookie.item.enchantment.EnchantmentInstance
+import be.zvz.kookie.math.Vector3
 import be.zvz.kookie.nbt.LittleEndianNbtSerializer
 import be.zvz.kookie.nbt.NBT
 import be.zvz.kookie.nbt.TreeRoot
 import be.zvz.kookie.nbt.tag.*
+import be.zvz.kookie.player.Player
 import be.zvz.kookie.utils.Binary
 import java.util.*
 
@@ -92,14 +95,18 @@ open class Item(
         removeEnchantments()
         val enchantmentsTag = tag.getListTag(TAG_ENCH)
         if (enchantmentsTag != null && enchantmentsTag.getTagType() == NBT.TagType.COMPOUND) {
-            enchantmentsTag.value.forEach {
+            enchantmentsTag.value.forEach { it ->
                 it as CompoundTag
                 val magicNumber = it.getShort("id", -1)
                 val level = it.getShort("lvl", 0)
                 if (level <= 0) {
                     return
                 }
-                TODO("Not yet implemented")
+                EnchantmentIdMap.fromId(magicNumber).let { type ->
+                    if (type != null) {
+                        addEnchantment(EnchantmentInstance(type, level))
+                    }
+                }
             }
         }
 
@@ -143,8 +150,10 @@ open class Item(
         if (hasEnchantments()) {
             val ench = ListTag<Map<String, Tag<*>>>()
             enchantments.forEach {
-                ench.push(CompoundTag.create().setShort("lvl", it.value.level))
-                TODO("Not yet implemented, setShort(id)")
+                ench.push(CompoundTag.create()
+                    .setShort("id", EnchantmentIdMap.toId(it.value.getType()))
+                    .setShort("lvl", it.value.level)
+                )
             }
             tag.setTag(TAG_ENCH, ench)
         } else {
@@ -192,14 +201,9 @@ open class Item(
     fun isNull(): Boolean = count <= 0 || getId() == 0
     fun getVanillaName(): String = name
 
-    // TODO: canBePlaced(), getBlock()
-    fun canBePlaced(): Boolean {
-        return getBlock().canBePlaced()
-    }
+    fun canBePlaced(): Boolean = getBlock().canBePlaced()
 
-    fun getBlock(clickedFace: Int? = null): Block{
-        return VanillaBlocks.AIR.block
-    }
+    fun getBlock(clickedFace: Int? = null): Block = VanillaBlocks.AIR.block
 
     fun getId(): Int = identifier.id
     open fun getMeta(): Int = identifier.meta
@@ -217,7 +221,9 @@ open class Item(
     fun getDefensePoints(): Int = 1
     fun getMiningEfficiency(isCorrectTool: Boolean): Float = 1F
 
-    // TODO: onInteractBlock, onInteractBlock, onReleaseUsing
+    fun onInteractBlock(player: Player, blockReplace: Block, blockClicked: Block, face: Int, clickVector: Vector3): ItemUseResult = ItemUseResult.NONE
+    fun onClickAir(player: Player, directionVector: Vector3): ItemUseResult = ItemUseResult.NONE
+    fun onReleaseUsing(player: Player): ItemUseResult = ItemUseResult.NONE
 
     fun onDestroyBlock(block: Block): Boolean = false
     fun onAttackEntity(victim: Entity): Boolean = false

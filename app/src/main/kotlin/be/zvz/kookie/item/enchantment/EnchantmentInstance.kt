@@ -21,5 +21,6 @@ class EnchantmentInstance(
     val enchantment: Enchantment,
     val level: Int = 1,
 ) {
+    fun getType(): Enchantment = enchantment
     fun getRuntimeId(): Int = enchantment.internalRuntimeId
 }
