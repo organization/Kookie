@@ -95,63 +95,55 @@ class AxisAlignedBB(var minX: Float, var minY: Float, var minZ: Float, var maxX:
         return clone().contract(x, y, z)
     }
 
-    fun extend(face: Int, distance: Float): AxisAlignedBB {
-        if (face == Facing.DOWN.value) {
-            minY -= distance
-        } else if (face == Facing.UP.value) {
-            maxY += distance
-        } else if (face == Facing.NORTH.value) {
-            minZ -= distance
-        } else if (face == Facing.SOUTH.value) {
-            maxZ += distance
-        } else if (face == Facing.WEST.value) {
-            minX -= distance
-        } else if (face == Facing.EAST.value) {
-            maxX += distance
-        } else {
-            throw IllegalArgumentException("Invalid face face")
+    fun extend(face: Facing, distance: Float): AxisAlignedBB = this.apply {
+        when(face) {
+            Facing.DOWN -> minY -= distance
+            Facing.UP -> minY += distance
+            Facing.NORTH -> minZ -= distance
+            Facing.SOUTH -> minZ += distance
+            Facing.WEST -> minX -= distance
+            Facing.EAST -> minX += distance
+            else -> throw IllegalArgumentException("Invalid face $face")
         }
-
-        return this
     }
 
-    fun extendedCopy(face: Int, distance: Float): AxisAlignedBB {
+    fun extendedCopy(face: Facing, distance: Float): AxisAlignedBB {
         return clone().extend(face, distance)
     }
 
-    fun trim(face: Int, distance: Float): AxisAlignedBB {
+    fun trim(face: Facing, distance: Float): AxisAlignedBB {
         return extend(face, -distance)
     }
 
-    fun trimmedCopy(face: Int, distance: Float): AxisAlignedBB {
+    fun trimmedCopy(face: Facing, distance: Float): AxisAlignedBB {
         return extendedCopy(face, distance)
     }
 
-    fun stretch(axis: Int, distance: Float): AxisAlignedBB {
-        if (axis == Axis.Y.value) {
+    fun stretch(axis: Axis, distance: Float): AxisAlignedBB {
+        if (axis == Axis.Y) {
             minY -= distance
             maxY += distance
-        } else if (axis == Axis.Z.value) {
+        } else if (axis == Axis.Z) {
             minZ -= distance
             maxZ += distance
-        } else if (axis == Axis.X.value) {
+        } else if (axis == Axis.X) {
             minX -= distance
             maxX += distance
         } else {
-            throw IllegalArgumentException("Invalid axis axis")
+            throw IllegalArgumentException("Invalid axis $axis")
         }
         return this
     }
 
-    fun stretchedCopy(axis: Int, distance: Float): AxisAlignedBB {
+    fun stretchedCopy(axis: Axis, distance: Float): AxisAlignedBB {
         return clone().stretch(axis, distance)
     }
 
-    fun squash(axis: Int, distance: Float): AxisAlignedBB {
+    fun squash(axis: Axis, distance: Float): AxisAlignedBB {
         return stretch(axis, -distance)
     }
 
-    fun squashedCopy(axis: Int, distance: Float): AxisAlignedBB {
+    fun squashedCopy(axis: Axis, distance: Float): AxisAlignedBB {
         return stretchedCopy(axis, -distance)
     }
 
@@ -289,27 +281,13 @@ class AxisAlignedBB(var minX: Float, var minY: Float, var minZ: Float, var maxX:
 
         return vector?.let {
             val f = when (it) {
-                v1 -> {
-                    Facing.WEST
-                }
-                v2 -> {
-                    Facing.EAST
-                }
-                v3 -> {
-                    Facing.DOWN
-                }
-                v4 -> {
-                    Facing.UP
-                }
-                v5 -> {
-                    Facing.NORTH
-                }
-                v6 -> {
-                    Facing.SOUTH
-                }
-                else -> {
-                    Facing.CENTER
-                }
+                v1 -> Facing.WEST
+                v2 -> Facing.EAST
+                v3 -> Facing.DOWN
+                v4 -> Facing.UP
+                v5 -> Facing.NORTH
+                v6 -> Facing.SOUTH
+                else ->  Facing.CENTER
             }
 
             RayTraceResult(this, f, it)
