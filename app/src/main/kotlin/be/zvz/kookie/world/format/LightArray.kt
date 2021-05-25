@@ -29,10 +29,6 @@ class LightArray {
 
     fun getData(): String = this.toString()
 
-    fun collectGarbage() {
-        // empty
-    }
-
     override fun toString(): String = String(
         CharArray(DATA_SIZE).apply {
             values.forEachIndexed { index, value ->
