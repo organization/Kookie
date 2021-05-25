@@ -95,6 +95,14 @@ class Language(langStr: String, path: String? = null, fallback: String = FALLBAC
         return baseText
     }
 
+    fun translate(c: TranslationContainer): String = (internalGet(c.text) ?: parseTranslation(c.text)).let {
+        var replacedStr = it
+        c.params.forEachIndexed { index, p ->
+            replacedStr = replacedStr.replace("{%$index}", parseTranslation(p))
+        }
+        replacedStr
+    }
+
     private fun internalGet(id: String): String? = languagePrefs.get(id, fallbackLang.get(id, null))
     fun get(id: String): String = internalGet(id) ?: id
 

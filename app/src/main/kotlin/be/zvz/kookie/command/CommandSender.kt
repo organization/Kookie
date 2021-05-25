@@ -5,7 +5,7 @@ import be.zvz.kookie.lang.Language
 import be.zvz.kookie.lang.TranslationContainer
 import be.zvz.kookie.permission.Permissible
 
-interface CommandSender : Permissible { // TODO: CommandSender should implement Permissible
+interface CommandSender : Permissible {
     val server: Server
     val language: Language
     val name: String

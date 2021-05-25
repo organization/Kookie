@@ -15,6 +15,21 @@
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  */
-package be.zvz.kookie.math
+package be.zvz.kookie.network.mcpe.protocol.types.entity
 
-data class RayTraceResult(var bb: AxisAlignedBB, var hitFace: Facing, var hitVector: Vector3)
+interface IntegerishMetadataProperty {
+    var value: Int
+
+    fun initialize(v: Int) {
+        if (v < min() || v > max()) {
+            throw AssertionError("Value is out of range " + min() + " - " + max())
+        }
+        value = v
+    }
+
+    fun min(): Int
+
+    fun max(): Int
+
+    fun buildFromFlags(flags: Map<Int, Boolean>): IntegerishMetadataProperty
+}

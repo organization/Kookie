@@ -17,9 +17,12 @@
  */
 package be.zvz.kookie.item.enchantment
 
+import com.koloboke.collect.map.hash.HashIntIntMaps
+import com.koloboke.collect.map.hash.HashIntObjMaps
+
 object EnchantmentIdMap {
-    private val idToEnch: MutableMap<Int, Enchantment> = mutableMapOf()
-    private val enchToId: MutableMap<Int, Int> = mutableMapOf()
+    private val idToEnch: MutableMap<Int, Enchantment> = HashIntObjMaps.newMutableMap()
+    private val enchToId: MutableMap<Int, Int> = HashIntIntMaps.newMutableMap()
 
     init {
         register(EnchantmentIds.PROTECTION.id, VanillaEnchantments.PROTECTION.enchantment)

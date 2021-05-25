@@ -24,11 +24,13 @@ import be.zvz.kookie.network.mcpe.protocol.types.command.CommandEnumConstraint
 import be.zvz.kookie.network.mcpe.protocol.types.command.CommandParameter
 import be.zvz.kookie.network.mcpe.serializer.PacketSerializer
 import com.koloboke.collect.map.hash.HashIntObjMaps
+import com.koloboke.collect.map.hash.HashObjIntMaps
+import com.koloboke.collect.map.hash.HashObjObjMaps
 
 @ProtocolIdentify(ProtocolInfo.IDS.AVAILABLE_COMMANDS_PACKET)
 class AvailableCommandsPacket : DataPacket(), ClientboundPacket {
 
-    val commandData = mutableMapOf<String, CommandData>()
+    val commandData: MutableMap<String, CommandData> = HashObjObjMaps.newMutableMap()
 
     val hardCodeEnums = mutableListOf<CommandEnum>()
 
@@ -57,7 +59,7 @@ class AvailableCommandsPacket : DataPacket(), ClientboundPacket {
         }
         for (i in 0..input.getUnsignedVarInt()) {
             val command = getCommandData(enums, postfixes, input)
-            commandData.put(command.name, command)
+            commandData[command.name] = command
         }
         for (i in 0..input.getUnsignedVarInt()) {
             softEnums.add(getSoftEnum(input))
@@ -68,19 +70,19 @@ class AvailableCommandsPacket : DataPacket(), ClientboundPacket {
     }
 
     override fun encodePayload(output: PacketSerializer) {
-        val enumIndexes = mutableMapOf<String, Int>()
-        val enumValueIndexes = mutableMapOf<String, Int>()
-        val postfixIndexes = mutableMapOf<String, Int>()
-        val enums = mutableMapOf<Int, CommandEnum>()
+        val enumIndexes: MutableMap<String, Int> = HashObjIntMaps.newMutableMap()
+        val enumValueIndexes: MutableMap<String, Int> = HashObjIntMaps.newMutableMap()
+        val postfixIndexes: MutableMap<String, Int> = HashObjIntMaps.newMutableMap()
+        val enums: MutableMap<Int, CommandEnum> = HashIntObjMaps.newMutableMap()
 
         fun addEnum(enum: CommandEnum) {
             if (!enumIndexes.containsKey(enum.getEnumName())) {
                 val size = enumIndexes.size
-                enumIndexes.put(enum.getEnumName(), size)
-                enums.put(size, enum)
+                enumIndexes[enum.getEnumName()] = size
+                enums[size] = enum
             }
             enum.getEnumValues().forEach {
-                enumValueIndexes.put(it, enumValueIndexes.getOrDefault(it, enumValueIndexes.size))
+                enumValueIndexes[it] = enumValueIndexes.getOrDefault(it, enumValueIndexes.size)
             }
         }
 
@@ -94,15 +96,13 @@ class AvailableCommandsPacket : DataPacket(), ClientboundPacket {
             }
             data.overloads.forEach { (_, map) ->
                 map.forEach { (_, commandParameter) ->
-                    if (commandParameter.enum != null) {
-                        addEnum(commandParameter.enum!!)
+                    commandParameter.enum?.let {
+                        addEnum(it)
                     }
 
-                    if (commandParameter.postfix != null) {
-                        postfixIndexes.put(
-                            commandParameter.postfix!!,
-                            postfixIndexes.getOrDefault(commandParameter.postfix, postfixIndexes.size)
-                        )
+                    commandParameter.postfix?.let {
+                        postfixIndexes[it] =
+                            postfixIndexes.getOrDefault(it, postfixIndexes.size)
                     }
                 }
             }

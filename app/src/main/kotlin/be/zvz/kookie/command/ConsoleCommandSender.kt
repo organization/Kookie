@@ -3,25 +3,30 @@ package be.zvz.kookie.command
 import be.zvz.kookie.Server
 import be.zvz.kookie.lang.Language
 import be.zvz.kookie.lang.TranslationContainer
+import be.zvz.kookie.permission.DefaultPermissions
+import be.zvz.kookie.permission.PermissibleBase
+import be.zvz.kookie.permission.PermissibleDelegate
+import org.slf4j.LoggerFactory
 
 open class ConsoleCommandSender(
     override val server: Server,
     override val language: Language,
-) : CommandSender {
+) : PermissibleDelegate, CommandSender {
+    private val logger = LoggerFactory.getLogger(this::class.java)
     override val name: String = "CONSOLE"
     protected var lineHeight: Int? = null
-    val perm: PermissibleBase(
+    override val perm = PermissibleBase(
         mapOf(
             DefaultPermissions.ROOT_CONSOLE to true
         )
     )
 
-    override fun sendMessage(translation: TranslationContainer) = sendRawMessage(language.translate(translation))
+    override fun sendMessage(message: TranslationContainer) = sendRawMessage(language.translate(message))
     override fun sendMessage(message: String) = sendRawMessage(language.translateString(message))
 
     private fun sendRawMessage(text: String) {
         text.split("\n").forEach {
-            server.logger.info(it)
+            logger.info(it)
         }
     }
 

@@ -30,13 +30,14 @@ import be.zvz.kookie.nbt.TreeRoot
 import be.zvz.kookie.nbt.tag.*
 import be.zvz.kookie.player.Player
 import be.zvz.kookie.utils.Binary
+import com.koloboke.collect.map.hash.HashIntObjMaps
 import java.util.*
 
 open class Item(
     private val identifier: ItemIdentifier,
     protected val name: String = "Unknown",
 ) : Cloneable, ItemEnchantmentHandling {
-    override val enchantments: MutableMap<Int, EnchantmentInstance> = mutableMapOf()
+    override val enchantments: MutableMap<Int, EnchantmentInstance> = HashIntObjMaps.newMutableMap()
     private var nbt: CompoundTag = CompoundTag()
     var count: Int = 1
     var customName: String = ""

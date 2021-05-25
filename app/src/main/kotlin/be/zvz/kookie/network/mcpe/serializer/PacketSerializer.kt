@@ -24,6 +24,7 @@ import be.zvz.kookie.nbt.TreeRoot
 import be.zvz.kookie.nbt.tag.CompoundTag
 import be.zvz.kookie.network.mcpe.convert.ItemTypeDictionary
 import be.zvz.kookie.network.mcpe.protocol.PacketDecodeException
+import be.zvz.kookie.network.mcpe.protocol.types.GameRule
 import be.zvz.kookie.network.mcpe.protocol.types.inventory.ItemStack
 import be.zvz.kookie.network.mcpe.protocol.types.skin.*
 import be.zvz.kookie.utils.BinaryStream
@@ -272,7 +273,8 @@ class PacketSerializer(buffer: String = "", offset: AtomicInteger = AtomicIntege
                 }
                 val offset = extraData.offset
                 try {
-                    compound = LittleEndianNbtSerializer().read(extraData.buffer.toString(), offset, 512).mustGetCompoundTag()
+                    compound =
+                        LittleEndianNbtSerializer().read(extraData.buffer.toString(), offset, 512).mustGetCompoundTag()
                 } catch (e: NbtDataException) {
                     throw PacketDecodeException.wrap(e, "Failed decoding NBT root")
                 } finally {
@@ -354,5 +356,30 @@ class PacketSerializer(buffer: String = "", offset: AtomicInteger = AtomicIntege
 
     fun writeGenericTypeNetworkId(id: Int) {
         putVarInt(id)
+    }
+
+    fun putGameRules(gameRules: MutableMap<String, GameRule>) {
+        putUnsignedVarInt(gameRules.size)
+        gameRules.forEach { (name, gameRule) ->
+            putString(name)
+            putUnsignedVarInt(gameRule.typeId)
+            gameRule.encode(this)
+        }
+    }
+
+    fun getNbtCompoundRoot(): CompoundTag {
+        try {
+            return getNbtRoot().mustGetCompoundTag()
+        } catch (ignored: NbtDataException) {
+            throw PacketDecodeException.wrap(ignored, "Expected Compound NBT root")
+        }
+    }
+
+    fun getNbtRoot(): TreeRoot {
+        try {
+            return (LittleEndianNbtSerializer()).read(buffer.toString(), offset, 512)
+        } catch (ignored: NbtDataException) {
+            throw PacketDecodeException.wrap(ignored, "Failed to decode NBT root")
+        }
     }
 }

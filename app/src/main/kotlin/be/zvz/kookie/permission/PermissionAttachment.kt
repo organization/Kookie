@@ -8,10 +8,10 @@ import com.koloboke.collect.map.hash.HashObjObjMaps
 class PermissionAttachment(val plugin: Plugin) {
     init {
         if (!plugin.enabled) {
-            PluginException("Plugin ${plugin.description.name} is disabled")
+            throw PluginException("Plugin ${plugin.description.name} is disabled")
         }
     }
-    private var removed: PermissionRemovedExecutor? = null
+    var removalCallback: PermissionRemovedExecutor? = null
 
     val permissions: MutableMap<String, Boolean> = HashObjObjMaps.newMutableMap()
 

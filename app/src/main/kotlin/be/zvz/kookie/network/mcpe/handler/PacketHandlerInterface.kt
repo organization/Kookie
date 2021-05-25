@@ -34,4 +34,10 @@ interface PacketHandlerInterface {
     fun handleDisconnect(packet: DisconnectPacket): Boolean
 
     fun handleResourcePacksInfo(packet: ResourcePacksInfoPacket): Boolean
+
+    fun handleResourcePackClientResponse(packet: ResourcePackClientResponsePacket): Boolean
+
+    fun handleText(packet: TextPacket): Boolean
+
+    fun handleSetTime(packet: SetTimePacket): Boolean
 }

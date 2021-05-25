@@ -21,9 +21,7 @@ import be.zvz.kookie.Server
 import be.zvz.kookie.entity.Attribute
 import be.zvz.kookie.entity.Living
 import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
-import be.zvz.kookie.network.mcpe.protocol.ClientboundPacket
-import be.zvz.kookie.network.mcpe.protocol.DataPacket
-import be.zvz.kookie.network.mcpe.protocol.Packet
+import be.zvz.kookie.network.mcpe.protocol.*
 import be.zvz.kookie.network.mcpe.serializer.PacketSerializer
 import be.zvz.kookie.player.Player
 import be.zvz.kookie.player.PlayerInfo
@@ -119,16 +117,19 @@ class NetworkSession(
     }
 
     private fun flushSendBuffer(immediate: Boolean = false) {
-        if (sendBuffer.size > 0) {
-            if (immediate) {
-                sendBuffer.forEach {
-                    val serializer = PacketSerializer()
-                    it.encode(serializer)
-                    session.send(Unpooled.copiedBuffer(serializer.buffer.toString().toByteArray()))
+        try {
+            if (sendBuffer.size > 0) {
+                if (immediate) {
+                    sendBuffer.forEach {
+                        val serializer = PacketSerializer()
+                        it.encode(serializer)
+                        session.send(Unpooled.copiedBuffer(serializer.buffer.toString().toByteArray()))
+                    }
+                    return
                 }
-                return
+                // TODO: non-immediate buffer, should compressed with zlib
             }
-            // TODO: immediate buffer
+        } finally {
             sendBuffer.clear()
         }
     }

@@ -19,7 +19,7 @@ package be.zvz.kookie.network.mcpe.handler
 
 import be.zvz.kookie.network.mcpe.protocol.*
 
-class DefaultPacketHandler : PacketHandlerInterface {
+open class DefaultPacketHandler : PacketHandlerInterface {
 
     override fun handleUnknown(packet: UnknownPacket): Boolean {
         return false
@@ -46,6 +46,10 @@ class DefaultPacketHandler : PacketHandlerInterface {
     }
 
     override fun handleResourcePacksInfo(packet: ResourcePacksInfoPacket): Boolean {
+        return false
+    }
+
+    override fun handleResourcePackClientResponse(packet: ResourcePackClientResponsePacket): Boolean {
         return false
     }
 }

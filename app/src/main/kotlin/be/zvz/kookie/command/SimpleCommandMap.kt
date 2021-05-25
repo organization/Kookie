@@ -1,10 +1,11 @@
 package be.zvz.kookie.command
 
 import be.zvz.kookie.command.defaults.VanillaCommand
+import com.koloboke.collect.map.hash.HashObjObjMaps
 
 class SimpleCommandMap : CommandMap {
 
-    val knownCommands: MutableMap<String, Command> = mutableMapOf()
+    val knownCommands: MutableMap<String, Command> = HashObjObjMaps.newMutableMap()
 
     override fun registerAll(fallbackPrefix: String, commands: List<Command>) {
         TODO("Not yet implemented")

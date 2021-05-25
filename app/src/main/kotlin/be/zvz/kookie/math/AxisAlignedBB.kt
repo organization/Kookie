@@ -197,7 +197,7 @@ class AxisAlignedBB(var minX: Float, var minY: Float, var minZ: Float, var maxX:
         }
         z < 0 && bb.minZ >= maxZ -> {
             val z2 = maxZ - bb.minZ
-            if(z2 > z) z2
+            if (z2 > z) z2
             else z
         }
         else -> z
@@ -238,82 +238,89 @@ class AxisAlignedBB(var minX: Float, var minY: Float, var minZ: Float, var maxX:
 
     fun isVectorInYZ(vector: Vector3): Boolean = vector.y in minY..maxY && vector.z >= minZ && vector.z <= maxZ
 
-    fun isVectorInXZ(vector: Vector3) : Boolean = vector.x >= minX && vector.x <= maxX && vector.z >= minZ && vector.z <= maxZ
+    fun isVectorInXZ(vector: Vector3): Boolean = vector.x in minX..maxX && vector.z >= minZ && vector.z <= maxZ
 
-    fun isVectorInXY(vector: Vector3): Boolean = vector.x >= minX && vector.x <= maxX && vector.y >= minY && vector.y <= maxY
+    fun isVectorInXY(vector: Vector3): Boolean = vector.x in minX..maxX && vector.y >= minY && vector.y <= maxY
 
-    fun calculateIntercept(pos1: Vector3, pos2: Vector3): RayTraceResult?{
-        var v1: Vector3? = pos1.getIntermediateWithXValue(pos2, minX)
-        var v2: Vector3? = pos1.getIntermediateWithXValue(pos2, maxX)
-        var v3: Vector3? = pos1.getIntermediateWithYValue(pos2, minY)
-        var v4: Vector3? = pos1.getIntermediateWithYValue(pos2, maxY)
-        var v5: Vector3? = pos1.getIntermediateWithZValue(pos2, minZ)
-        var v6: Vector3? = pos1.getIntermediateWithZValue(pos2, maxZ)
+    fun calculateIntercept(pos1: Vector3, pos2: Vector3): RayTraceResult? {
+        var v1 = pos1.getIntermediateWithXValue(pos2, minX)
+        var v2 = pos1.getIntermediateWithXValue(pos2, maxX)
+        var v3 = pos1.getIntermediateWithYValue(pos2, minY)
+        var v4 = pos1.getIntermediateWithYValue(pos2, maxY)
+        var v5 = pos1.getIntermediateWithZValue(pos2, minZ)
+        var v6 = pos1.getIntermediateWithZValue(pos2, maxZ)
 
-        if(v1 !== null && !isVectorInYZ(v1)){
+        if (v1 !== null && !isVectorInYZ(v1)) {
             v1 = null
         }
 
-        if(v2 !== null && !isVectorInYZ(v2)){
+        if (v2 !== null && !isVectorInYZ(v2)) {
             v2 = null
         }
 
-        if(v3 !== null && !isVectorInXZ(v3)){
+        if (v3 !== null && !isVectorInXZ(v3)) {
             v3 = null
         }
 
-        if(v4 !== null && !isVectorInXZ(v4)){
+        if (v4 !== null && !isVectorInXZ(v4)) {
             v4 = null
         }
 
-        if(v5 !== null && !isVectorInXY(v5)){
+        if (v5 !== null && !isVectorInXY(v5)) {
             v5 = null
         }
 
-        if(v6 !== null && !isVectorInXY(v6)){
+        if (v6 !== null && !isVectorInXY(v6)) {
             v6 = null
         }
 
-        val vector: Vector3? = null
-        val distance = Int.MAX_VALUE
+        var vector: Vector3? = null
+        var distance = Float.MAX_VALUE
 
-        listOf<Vector3?>(v1, v2, v3, v4, v5, v6).forEach { v ->
-            val d: Float
-            if(v !== null && (d = pos1.distanceSquared(v))){
-                vector = v;
-                distance = d;
+        arrayOf(v1, v2, v3, v4, v5, v6).forEach { v ->
+            v?.let {
+                val d: Float = pos1.distanceSquared(v)
+                if (d < distance) {
+                    vector = v
+                    distance = d
+                }
             }
         }
 
-        if(vector === null){
-            return null;
+        return vector?.let {
+            val f = when (it) {
+                v1 -> {
+                    Facing.WEST
+                }
+                v2 -> {
+                    Facing.EAST
+                }
+                v3 -> {
+                    Facing.DOWN
+                }
+                v4 -> {
+                    Facing.UP
+                }
+                v5 -> {
+                    Facing.NORTH
+                }
+                v6 -> {
+                    Facing.SOUTH
+                }
+                else -> {
+                    Facing.CENTER
+                }
+            }
+
+            RayTraceResult(this, f, it)
         }
-
-        f = -1;
-
-        if(vector === v1){
-            f = Facing::WEST;
-        }elseif(vector === v2){
-            f = Facing::EAST;
-        }elseif(vector === v3){
-            f = Facing::DOWN;
-        }elseif(vector === v4){
-            f = Facing::UP;
-        }elseif(vector === v5){
-            f = Facing::NORTH;
-        }elseif(vector === v6){
-            f = Facing::SOUTH;
-        }
-
-        return new RayTraceResult(this, f, vector);
     }
 
     override fun toString(): String {
-        return "AxisAlignedBB({$minX}, {$minY}, {$minZ}, {$maxX}, {$maxY}, {$maxZ})";
+        return "AxisAlignedBB({$minX}, {$minY}, {$minZ}, {$maxX}, {$maxY}, {$maxZ})"
     }
 
     companion object {
         fun one(): AxisAlignedBB = AxisAlignedBB(0f, 0f, 0f, 1f, 1f, 1f)
     }
-
 }

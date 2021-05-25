@@ -17,20 +17,44 @@
  */
 package be.zvz.kookie.player
 
+import be.zvz.kookie.Server
 import be.zvz.kookie.command.CommandSender
 import be.zvz.kookie.entity.Human
+import be.zvz.kookie.lang.Language
+import be.zvz.kookie.lang.TranslationContainer
+import be.zvz.kookie.network.mcpe.NetworkSession
+import be.zvz.kookie.network.mcpe.protocol.TextPacket
 import be.zvz.kookie.permission.Permission
 import be.zvz.kookie.permission.PermissionAttachment
 import be.zvz.kookie.permission.PermissionAttachmentInfo
 import be.zvz.kookie.plugin.Plugin
 
-class Player : Human(), CommandSender {
+class Player(
+    val session: NetworkSession,
+    override val server: Server,
+    override val language: Language,
+    override val name: String
+) : Human(), CommandSender {
+    override val permissionRecalculationCallbacks: Set<(changedPermissionsOldValues: Map<String, Boolean>) -> Unit>
+        get() = TODO("Not yet implemented")
 
     fun doChunkRequest() {
         TODO("Not yet implemented")
     }
 
     override fun sendMessage(message: String) {
+        session.sendDataPacket(TextPacket.raw(message))
+    }
+
+    override fun sendMessage(message: TranslationContainer) {
+        session.sendDataPacket(TextPacket.translation(message.text, message.params.toMutableList()))
+    }
+
+    override fun getScreenLineHeight(): Int {
+        TODO("Not yet implemented")
+    }
+
+    override fun setScreenLineHeight(height: Int?) {
         TODO("Not yet implemented")
     }
 
@@ -78,11 +102,7 @@ class Player : Human(), CommandSender {
         TODO("Not yet implemented")
     }
 
-    override fun getPermissionRecalculationCallbacks(): Set<(changedPermissionsOldValues: Map<String, Boolean>) -> Unit> {
-        TODO("Not yet implemented")
-    }
-
-    override fun getEffectivePermissions(): List<PermissionAttachmentInfo> {
+    override fun getEffectivePermissions(): Map<String, PermissionAttachmentInfo> {
         TODO("Not yet implemented")
     }
 }
