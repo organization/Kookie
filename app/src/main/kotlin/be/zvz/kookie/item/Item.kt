@@ -151,9 +151,10 @@ open class Item(
         if (hasEnchantments()) {
             val ench = ListTag<Map<String, Tag<*>>>()
             enchantments.forEach {
-                ench.push(CompoundTag.create()
-                    .setShort("id", EnchantmentIdMap.toId(it.value.getType()))
-                    .setShort("lvl", it.value.level)
+                ench.push(
+                    CompoundTag.create()
+                        .setShort("id", EnchantmentIdMap.toId(it.value.getType()))
+                        .setShort("lvl", it.value.level)
                 )
             }
             tag.setTag(TAG_ENCH, ench)

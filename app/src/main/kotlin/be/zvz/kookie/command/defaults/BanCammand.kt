@@ -17,5 +17,4 @@
  */
 package be.zvz.kookie.command.defaults
 
-class BanCammand {
-}
+class BanCammand
