@@ -84,7 +84,7 @@ object SubChunkConverter {
                     getIndex(x, y, z, id1Idx, id2Idx, metaIdx, extraArg)
                     val metaByte = metaArray[metaIdx.element].code
                     val id1 = idArray[id1Idx.element].code shl 4 or (metaByte and 0xf)
-                    val id2 = idArray[id2Idx.element].code shl 4 or ((metaByte shr 4) or 0xf)
+                    val id2 = idArray[id2Idx.element].code shl 4 or (metaByte shr 4 or 0xf)
                     if (!seen[id1]) {
                         seen[id1] = true
                         unique++

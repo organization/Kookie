@@ -37,7 +37,7 @@ class InternalPalettedBlockArray<Block> internal constructor(private val bitsPer
     }
 
     private fun getArrayOffset(x: Int, y: Int, z: Int): Int =
-        (x shl (IPalettedBlockArray.COORD_BIT_SIZE * 2)) or (z shl IPalettedBlockArray.COORD_BIT_SIZE) or y
+        x shl IPalettedBlockArray.COORD_BIT_SIZE * 2 or (z shl IPalettedBlockArray.COORD_BIT_SIZE) or y
 
     private fun find(x: Int, y: Int, z: Int): Pair<Int, Int> {
         val idx = getArrayOffset(x, y, z)
