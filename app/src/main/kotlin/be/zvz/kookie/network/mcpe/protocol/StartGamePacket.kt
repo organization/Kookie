@@ -152,9 +152,9 @@ class StartGamePacket : DataPacket(), ClientboundPacket {
         }
         output.putUnsignedVarInt(itemTable.size)
         itemTable.forEach {
-            output.putString(it.getStringId())
-            output.putLShort(it.getNumericId())
-            output.putBoolean(it.isComponentBased())
+            output.putString(it.stringId)
+            output.putLShort(it.numericId)
+            output.putBoolean(it.componentBased)
         }
         output.putString(multiplayerCorrelationId)
         output.putBoolean(enableNewInventorySystem)

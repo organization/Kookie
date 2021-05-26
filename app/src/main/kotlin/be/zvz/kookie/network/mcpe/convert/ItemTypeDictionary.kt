@@ -1,6 +1,6 @@
 package be.zvz.kookie.network.mcpe.convert
 
-import be.zvz.kookie.network.mcpe.protocol.ItemTypeEntry
+import be.zvz.kookie.network.mcpe.protocol.types.ItemTypeEntry
 import be.zvz.kookie.utils.Json
 import com.fasterxml.jackson.core.type.TypeReference
 import com.koloboke.collect.map.hash.HashIntObjMaps
