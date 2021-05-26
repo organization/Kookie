@@ -36,8 +36,8 @@ class MobEffectPacket : DataPacket(), ClientboundPacket {
     }
 
     companion object {
-        const val EVENT_ADD = 1;
-        const val EVENT_MODIFY = 2;
-        const val EVENT_REMOVE = 3;
+        const val EVENT_ADD = 1
+        const val EVENT_MODIFY = 2
+        const val EVENT_REMOVE = 3
     }
 }

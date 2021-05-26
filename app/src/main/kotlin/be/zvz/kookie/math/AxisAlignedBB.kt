@@ -96,7 +96,7 @@ class AxisAlignedBB(var minX: Float, var minY: Float, var minZ: Float, var maxX:
     }
 
     fun extend(face: Facing, distance: Float): AxisAlignedBB = this.apply {
-        when(face) {
+        when (face) {
             Facing.DOWN -> minY -= distance
             Facing.UP -> minY += distance
             Facing.NORTH -> minZ -= distance
@@ -287,7 +287,7 @@ class AxisAlignedBB(var minX: Float, var minY: Float, var minZ: Float, var maxX:
                 v4 -> Facing.UP
                 v5 -> Facing.NORTH
                 v6 -> Facing.SOUTH
-                else ->  Facing.CENTER
+                else -> Facing.CENTER
             }
 
             RayTraceResult(this, f, it)
