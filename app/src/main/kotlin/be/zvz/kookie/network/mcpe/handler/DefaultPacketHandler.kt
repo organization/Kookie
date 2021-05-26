@@ -124,4 +124,24 @@ open class DefaultPacketHandler : PacketHandlerInterface {
     override fun handleBlockEvent(packet: BlockEventPacket): Boolean {
         return false
     }
+
+    override fun handleActorEvent(packet: ActorEventPacket): Boolean {
+        return false
+    }
+
+    override fun handleMobEffect(packet: MobEffectPacket): Boolean {
+        return false
+    }
+
+    override fun handleUpdateAttributes(packet: UpdateAttributesPacket): Boolean {
+        return false
+    }
+
+    override fun handleInventoryTransaction(packet: InventoryTransactionPacket): Boolean {
+        return false
+    }
+
+    override fun handleMobEquipment(packet: MobEquipmentPacket): Boolean {
+        return false
+    }
 }
