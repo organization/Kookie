@@ -10,6 +10,6 @@ open class Location(x: Float = 0F, y: Float = 0F, z: Float = 0F, var yaw: Float 
     override fun toString(): String = "Location (world=${world?.folderName ?: "null"}, x=$x, y=$y, z=$z, yaw=$yaw, pitch=$pitch)"
 
     companion object {
-        fun fromObject(pos: Vector3, world: World?, yaw: Float = 0.0f, pitch: Float = 0.0f): Location = Location(pos.x, pos.y, pos.z, yaw, pitch, world ?: if( pos is Position ) pos.world else null)
+        fun fromObject(pos: Vector3, world: World?, yaw: Float = 0.0f, pitch: Float = 0.0f): Location = Location(pos.x, pos.y, pos.z, yaw, pitch, world ?: if (pos is Position) pos.world else null)
     }
 }
