@@ -1,6 +1,6 @@
 package be.zvz.kookie.world.format
 
-class PalettedBlockArray private constructor(private val blockArray: BlockArrayContainer<Long>) {
+class PalettedBlockArray internal constructor(private val blockArray: BlockArrayContainer<Long>) {
     constructor(fillEntry: Long) : this(BlockArrayContainer(fillEntry)) {
         checkPaletteEntrySize(fillEntry)
     }
