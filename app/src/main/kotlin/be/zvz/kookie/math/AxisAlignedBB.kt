@@ -17,9 +17,7 @@ class AxisAlignedBB(var minX: Float, var minY: Float, var minZ: Float, var maxX:
         }
     }
 
-    fun clone(): AxisAlignedBB {
-        return AxisAlignedBB(minX, minY, minZ, maxX, maxY, maxZ)
-    }
+    fun clone(): AxisAlignedBB = AxisAlignedBB(minX, minY, minZ, maxX, maxY, maxZ)
 
     fun addCoord(x: Float, y: Float, z: Float): AxisAlignedBB {
         var minX = minX
@@ -50,50 +48,38 @@ class AxisAlignedBB(var minX: Float, var minY: Float, var minZ: Float, var maxX:
         return AxisAlignedBB(minX, minY, minZ, maxX, maxY, maxZ)
     }
 
-    fun expand(x: Float, y: Float, z: Float): AxisAlignedBB {
+    fun expand(x: Float, y: Float, z: Float): AxisAlignedBB = this.apply {
         minX -= x
         minY -= y
         minZ -= z
         maxX += x
         maxY += y
         maxZ += z
-
-        return this
     }
 
-    fun expandedCopy(x: Float, y: Float, z: Float): AxisAlignedBB {
-        return clone().expand(x, y, z)
-    }
+    fun expandedCopy(x: Float, y: Float, z: Float): AxisAlignedBB = clone().expand(x, y, z)
 
-    fun offset(x: Float, y: Float, z: Float): AxisAlignedBB {
+    fun offset(x: Float, y: Float, z: Float): AxisAlignedBB = this.apply {
         minX += x
         minY += y
         minZ += z
         maxX += x
         maxY += y
         maxZ += z
-
-        return this
     }
 
-    fun offsetCopy(x: Float, y: Float, z: Float): AxisAlignedBB {
-        return clone().offset(x, y, z)
-    }
+    fun offsetCopy(x: Float, y: Float, z: Float): AxisAlignedBB = clone().offset(x, y, z)
 
-    fun contract(x: Float, y: Float, z: Float): AxisAlignedBB {
+    fun contract(x: Float, y: Float, z: Float): AxisAlignedBB = this.apply {
         minX -= x
         minY -= y
         minZ -= z
         maxX -= x
         maxY -= y
         maxZ -= z
-
-        return this
     }
 
-    fun contractCopy(x: Float, y: Float, z: Float): AxisAlignedBB {
-        return clone().contract(x, y, z)
-    }
+    fun contractCopy(x: Float, y: Float, z: Float): AxisAlignedBB = clone().contract(x, y, z)
 
     fun extend(face: Facing, distance: Float): AxisAlignedBB = this.apply {
         when (face) {
@@ -107,45 +93,34 @@ class AxisAlignedBB(var minX: Float, var minY: Float, var minZ: Float, var maxX:
         }
     }
 
-    fun extendedCopy(face: Facing, distance: Float): AxisAlignedBB {
-        return clone().extend(face, distance)
-    }
+    fun extendedCopy(face: Facing, distance: Float): AxisAlignedBB = clone().extend(face, distance)
 
-    fun trim(face: Facing, distance: Float): AxisAlignedBB {
-        return extend(face, -distance)
-    }
+    fun trim(face: Facing, distance: Float): AxisAlignedBB = extend(face, -distance)
 
-    fun trimmedCopy(face: Facing, distance: Float): AxisAlignedBB {
-        return extendedCopy(face, distance)
-    }
+    fun trimmedCopy(face: Facing, distance: Float): AxisAlignedBB = extendedCopy(face, distance)
 
-    fun stretch(axis: Axis, distance: Float): AxisAlignedBB {
-        if (axis == Axis.Y) {
-            minY -= distance
-            maxY += distance
-        } else if (axis == Axis.Z) {
-            minZ -= distance
-            maxZ += distance
-        } else if (axis == Axis.X) {
-            minX -= distance
-            maxX += distance
-        } else {
-            throw IllegalArgumentException("Invalid axis $axis")
+    fun stretch(axis: Axis, distance: Float): AxisAlignedBB = this.apply {
+        when (axis) {
+            Axis.Y -> {
+                minY -= distance
+                maxY += distance
+            }
+            Axis.Z -> {
+                minZ -= distance
+                maxZ += distance
+            }
+            Axis.X -> {
+                minX -= distance
+                maxX += distance
+            }
         }
-        return this
     }
 
-    fun stretchedCopy(axis: Axis, distance: Float): AxisAlignedBB {
-        return clone().stretch(axis, distance)
-    }
+    fun stretchedCopy(axis: Axis, distance: Float): AxisAlignedBB = clone().stretch(axis, distance)
 
-    fun squash(axis: Axis, distance: Float): AxisAlignedBB {
-        return stretch(axis, -distance)
-    }
+    fun squash(axis: Axis, distance: Float): AxisAlignedBB = stretch(axis, -distance)
 
-    fun squashedCopy(axis: Axis, distance: Float): AxisAlignedBB {
-        return stretchedCopy(axis, -distance)
-    }
+    fun squashedCopy(axis: Axis, distance: Float): AxisAlignedBB = stretchedCopy(axis, -distance)
 
     fun calculateXOffset(bb: AxisAlignedBB, x: Float): Float = when {
         bb.maxY <= minY || bb.minY >= maxY -> x

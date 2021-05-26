@@ -107,9 +107,9 @@ open class Vector3 @JvmOverloads constructor(var x: Float = 0F, var y: Float = 0
         return@runBlocking sides(step).toList()
     }
 
-    fun sidesAroundAxis(axis: Int, step: Int = 1) = sequence {
+    fun sidesAroundAxis(axis: Axis, step: Int = 1) = sequence {
         Facing.ALL.forEach {
-            if (Facing.axis(it.value) != axis) {
+            if (Facing.axis(it.value) != axis.value) {
                 yield(Pair(it, getSide(it, step)))
             }
         }
