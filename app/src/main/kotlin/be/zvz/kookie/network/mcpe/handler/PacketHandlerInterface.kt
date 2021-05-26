@@ -80,4 +80,6 @@ interface PacketHandlerInterface {
     fun handleUpdateAttributes(packet: UpdateAttributesPacket): Boolean
 
     fun handleInventoryTransaction(packet: InventoryTransactionPacket): Boolean
+
+    fun handleMobEquipment(packet: MobEquipmentPacket): Boolean
 }
