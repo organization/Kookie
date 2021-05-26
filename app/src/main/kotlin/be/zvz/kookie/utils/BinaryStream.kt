@@ -17,6 +17,7 @@
  */
 package be.zvz.kookie.utils
 
+import java.nio.charset.StandardCharsets
 import java.util.concurrent.atomic.AtomicInteger
 
 open class BinaryStream(buffer: String = "", val offset: AtomicInteger = AtomicInteger(0)) {
@@ -62,7 +63,7 @@ open class BinaryStream(buffer: String = "", val offset: AtomicInteger = AtomicI
     }
 
     fun put(byteArray: ByteArray) {
-        buffer.append(byteArray)
+        buffer.append(byteArray.toString(StandardCharsets.UTF_8))
     }
 
     fun getBoolean(): Boolean = get(1) == "\u0000"

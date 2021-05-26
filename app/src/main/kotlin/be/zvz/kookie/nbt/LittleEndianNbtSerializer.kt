@@ -3,6 +3,7 @@ package be.zvz.kookie.nbt
 import be.zvz.kookie.utils.Binary
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
+import java.nio.charset.StandardCharsets
 
 class LittleEndianNbtSerializer() : BaseNbtSerializer() {
     override fun readShort(): Int = buffer.getLShort()
@@ -27,7 +28,7 @@ class LittleEndianNbtSerializer() : BaseNbtSerializer() {
         value.forEach {
             byteBuffer.putInt(it)
         }
-        return Binary.toPositiveByteArray(byteBuffer.array()).toString()
+        return Binary.toPositiveByteArray(byteBuffer.array()).toString(StandardCharsets.UTF_8)
     }
     private fun packVStar(value: LongArray): String {
         val byteBuffer = ByteBuffer.allocate(Long.SIZE_BYTES).apply {
@@ -36,7 +37,7 @@ class LittleEndianNbtSerializer() : BaseNbtSerializer() {
         value.forEach {
             byteBuffer.putLong(it)
         }
-        return Binary.toPositiveByteArray(byteBuffer.array()).toString()
+        return Binary.toPositiveByteArray(byteBuffer.array()).toString(StandardCharsets.UTF_8)
     }
 
     override fun readIntArray(): IntArray {

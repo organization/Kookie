@@ -24,6 +24,7 @@ import java.io.DataInputStream
 import java.io.DataOutputStream
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
+import java.nio.charset.StandardCharsets
 import java.util.concurrent.atomic.AtomicInteger
 import kotlin.math.round
 
@@ -91,7 +92,7 @@ object Binary {
 
     private fun packN(value: Int): String = toPositiveByteArray(
         ByteBuffer.allocate(Int.SIZE_BYTES).putInt(value).array()
-    ).toString()
+    ).toString(StandardCharsets.UTF_8)
 
     private fun unpackN(value: String, index: Int): Int {
         val bytes = value.toByteArray()
@@ -109,7 +110,7 @@ object Binary {
                 putInt(value)
             }.array()
         )
-        return bytes.toString()
+        return bytes.toString(StandardCharsets.UTF_8)
     }
 
     private fun unpackV(value: String, index: Int): Int {
