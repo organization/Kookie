@@ -35,6 +35,8 @@ interface PacketHandlerInterface {
 
     fun handleResourcePacksInfo(packet: ResourcePacksInfoPacket): Boolean
 
+    fun handleResourcePackStack(packet: ResourcePackStackPacket): Boolean
+
     fun handleResourcePackClientResponse(packet: ResourcePackClientResponsePacket): Boolean
 
     fun handleText(packet: TextPacket): Boolean
@@ -46,4 +48,36 @@ interface PacketHandlerInterface {
     fun handleAddPlayer(packet: AddPlayerPacket): Boolean
 
     fun handleAddActor(packet: AddActorPacket): Boolean
+
+    fun handleRemoveActor(packet: RemoveActorPacket): Boolean
+
+    fun handleAddItemActor(packet: AddItemActorPacket): Boolean
+
+    fun handleTakeItemActor(packet: TakeItemActorPacket): Boolean
+
+    fun handleMoveActorAbsolute(packet: MoveActorAbsolutePacket): Boolean
+
+    fun handleMovePlayer(packet: MovePlayerPacket): Boolean
+
+    fun handleRiderJump(packet: RiderJumpPacket): Boolean
+
+    fun handleUpdateBlock(packet: UpdateBlockPacket): Boolean
+
+    fun handleAddPainting(packet: AddPaintingPacket): Boolean
+
+    fun handleTickSync(packet: TickSyncPacket): Boolean
+
+    fun handleLevelSoundEventPacketV1(packet: LevelSoundEventPacketV1): Boolean
+
+    fun handleLevelEvent(packet: LevelEventPacket): Boolean
+
+    fun handleBlockEvent(packet: BlockEventPacket): Boolean
+
+    fun handleActorEvent(packet: ActorEventPacket): Boolean
+
+    fun handleMobEffect(packet: MobEffectPacket): Boolean
+
+    fun handleUpdateAttributes(packet: UpdateAttributesPacket): Boolean
+
+    fun handleInventoryTransaction(packet: InventoryTransactionPacket): Boolean
 }

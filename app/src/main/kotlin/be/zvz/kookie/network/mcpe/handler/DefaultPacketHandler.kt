@@ -49,6 +49,10 @@ open class DefaultPacketHandler : PacketHandlerInterface {
         return false
     }
 
+    override fun handleResourcePackStack(packet: ResourcePackStackPacket): Boolean {
+        return false
+    }
+
     override fun handleResourcePackClientResponse(packet: ResourcePackClientResponsePacket): Boolean {
         return false
     }
@@ -70,6 +74,54 @@ open class DefaultPacketHandler : PacketHandlerInterface {
     }
 
     override fun handleAddActor(packet: AddActorPacket): Boolean {
+        return false
+    }
+
+    override fun handleRemoveActor(packet: RemoveActorPacket): Boolean {
+        return false
+    }
+
+    override fun handleAddItemActor(packet: AddItemActorPacket): Boolean {
+        return false
+    }
+
+    override fun handleTakeItemActor(packet: TakeItemActorPacket): Boolean {
+        return false
+    }
+
+    override fun handleMoveActorAbsolute(packet: MoveActorAbsolutePacket): Boolean {
+        return false
+    }
+
+    override fun handleMovePlayer(packet: MovePlayerPacket): Boolean {
+        return false
+    }
+
+    override fun handleRiderJump(packet: RiderJumpPacket): Boolean {
+        return false
+    }
+
+    override fun handleUpdateBlock(packet: UpdateBlockPacket): Boolean {
+        return false
+    }
+
+    override fun handleAddPainting(packet: AddPaintingPacket): Boolean {
+        return false
+    }
+
+    override fun handleTickSync(packet: TickSyncPacket): Boolean {
+        return false
+    }
+
+    override fun handleLevelSoundEventPacketV1(packet: LevelSoundEventPacketV1): Boolean {
+        return false
+    }
+
+    override fun handleLevelEvent(packet: LevelEventPacket): Boolean {
+        return false
+    }
+
+    override fun handleBlockEvent(packet: BlockEventPacket): Boolean {
         return false
     }
 }

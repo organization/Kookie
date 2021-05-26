@@ -46,7 +46,7 @@ class InventoryTransactionPacket : DataPacket(), ClientboundPacket, ServerboundP
     }
 
     override fun handle(handler: PacketHandlerInterface): Boolean {
-        return true
+        return handler.handleInventoryTransaction(this)
     }
 
     companion object {

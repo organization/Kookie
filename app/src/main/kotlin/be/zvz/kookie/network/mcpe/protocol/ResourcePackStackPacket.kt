@@ -42,7 +42,15 @@ class ResourcePackStackPacket : DataPacket(), ClientboundPacket {
     }
 
     override fun encodePayload(output: PacketSerializer) {
-        TODO("Not yet implemented")
+        output.putBoolean(mustAccept)
+        output.putUnsignedVarInt(behaviorStacks.size)
+        behaviorStacks.forEach {
+            it.write(output)
+        }
+        output.putUnsignedVarInt(resourcePackStacks.size)
+        resourcePackStacks.forEach {
+            it.write(output)
+        }
     }
 
     override fun handle(handler: PacketHandlerInterface): Boolean {

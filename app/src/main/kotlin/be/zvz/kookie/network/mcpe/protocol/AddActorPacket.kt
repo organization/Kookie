@@ -59,10 +59,10 @@ class AddActorPacket : DataPacket(), ClientboundPacket {
 
         output.putUnsignedVarInt(attributes.size)
         attributes.forEach {
-            output.putString(it.getId())
-            output.putLFloat(it.getMin())
-            output.putLFloat(it.getCurrent())
-            output.putLFloat(it.getMax())
+            output.putString(it.id)
+            output.putLFloat(it.min)
+            output.putLFloat(it.current)
+            output.putLFloat(it.max)
         }
         output.putEntityMetadata(metadata)
 
@@ -73,6 +73,6 @@ class AddActorPacket : DataPacket(), ClientboundPacket {
     }
 
     override fun handle(handler: PacketHandlerInterface): Boolean {
-        TODO("Not yet implemented")
+        return handler.handleAddActor(this)
     }
 }

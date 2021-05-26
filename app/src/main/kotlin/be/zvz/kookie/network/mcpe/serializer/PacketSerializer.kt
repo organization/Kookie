@@ -435,4 +435,42 @@ class PacketSerializer(buffer: String = "", offset: AtomicInteger = AtomicIntege
         putBoolean(link.immediate)
         putBoolean(link.causedByRider)
     }
+
+    fun getByteRotation(): Float = (getByte() * (360 / 256)).toFloat()
+
+    fun putByteRotation(rotation: Float) {
+        putByte((rotation / (360 / 256)).toInt())
+    }
+
+    fun putAttributeList(attributes: MutableList<NetworkAttribute>) {
+        putUnsignedVarInt(attributes.size)
+        attributes.forEach {
+            putLFloat(it.min)
+            putLFloat(it.max)
+            putLFloat(it.current)
+            putLFloat(it.default)
+            putString(it.id)
+        }
+    }
+
+    fun getAttributeList(): MutableList<NetworkAttribute> {
+        val list: MutableList<NetworkAttribute> = mutableListOf()
+        for (i in 0..getUnsignedVarInt()) {
+            val min = getLFloat()
+            val max = getLFloat()
+            val current = getLFloat()
+            val default = getLFloat()
+            val id = getString()
+            list.add(
+                NetworkAttribute(
+                    id,
+                    min,
+                    max,
+                    current,
+                    default
+                )
+            )
+        }
+        return list
+    }
 }
