@@ -1,5 +1,8 @@
 package be.zvz.kookie.world.format
 
+import be.zvz.kookie.world.format.internal.IPalettedBlockArray
+import be.zvz.kookie.world.format.internal.InternalPalettedBlockArray
+
 class BlockArrayContainer<Block> private constructor(var blockArray: IPalettedBlockArray<Block>) {
 
     constructor(block: Block) : this(InternalPalettedBlockArray(1, block))

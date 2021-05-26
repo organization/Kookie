@@ -1,9 +1,10 @@
-package be.zvz.kookie.world.format
+package be.zvz.kookie.world.format.internal
 
 import com.koloboke.collect.set.hash.HashObjSets
 import kotlin.collections.ArrayList
 
-class InternalPalettedBlockArray<Block> internal constructor(private val bitsPerBlock: Int) : IPalettedBlockArray<Block> {
+class InternalPalettedBlockArray<Block> internal constructor(private val bitsPerBlock: Int) :
+    IPalettedBlockArray<Block> {
     internal val blocksPerWord = Int.SIZE_BITS / bitsPerBlock
     internal val blockMask = (1 shl bitsPerBlock) - 1
     internal val wordCount = IPalettedBlockArray.ARRAY_CAPACITY / blocksPerWord + if (IPalettedBlockArray.ARRAY_CAPACITY % blocksPerWord > 0) 1 else 0
@@ -44,12 +45,12 @@ class InternalPalettedBlockArray<Block> internal constructor(private val bitsPer
         return Pair(idx / blocksPerWord, idx % blocksPerWord * bitsPerBlock)
     }
 
-    private fun _getPaletteOffset(x: Int, y: Int, z: Int): Int {
+    private fun internalGetPaletteOffset(x: Int, y: Int, z: Int): Int {
         val (wordIdx, shift) = find(x, y, z)
         return (words[wordIdx] shr shift) * bitsPerBlock
     }
 
-    private fun _setPaletteOffset(x: Int, y: Int, z: Int, offset: Int) {
+    private fun internalSetPaletteOffset(x: Int, y: Int, z: Int, offset: Int) {
         val (wordIdx, shift) = find(x, y, z)
         words[wordIdx] = words[wordIdx] and (blockMask shl shift).inv() or offset shl shift
     }
@@ -73,7 +74,7 @@ class InternalPalettedBlockArray<Block> internal constructor(private val bitsPer
         for (x in 0..IPalettedBlockArray.ARRAY_DIM) {
             for (z in 0..IPalettedBlockArray.ARRAY_DIM) {
                 for (y in 0..IPalettedBlockArray.ARRAY_DIM) {
-                    val inserted = hasFound.add(palette[_getPaletteOffset(x, y, z)])
+                    val inserted = hasFound.add(palette[internalGetPaletteOffset(x, y, z)])
                     if (inserted && hasFound.size == getPaletteSize()) {
                         break
                     }
@@ -85,7 +86,7 @@ class InternalPalettedBlockArray<Block> internal constructor(private val bitsPer
     }
 
     override fun get(x: Int, y: Int, z: Int): Block {
-        val offset = _getPaletteOffset(x, y, z)
+        val offset = internalGetPaletteOffset(x, y, z)
         return palette[offset]
     }
 
@@ -106,12 +107,12 @@ class InternalPalettedBlockArray<Block> internal constructor(private val bitsPer
             palette[offset] = v
         }
 
-        _setPaletteOffset(x, y, z, offset)
+        internalSetPaletteOffset(x, y, z, offset)
         return true
     }
 
     override fun getPaletteOffset(x: Int, y: Int, z: Int): Int {
-        return _getPaletteOffset(x, y, z)
+        return internalGetPaletteOffset(x, y, z)
     }
 
     override fun replace(offset: Int, value: Block) {

@@ -1,4 +1,4 @@
-package be.zvz.kookie.world.format
+package be.zvz.kookie.world.format.internal
 
 interface IPalettedBlockArray<Block> : Cloneable {
     fun getWordArray(): CharArray
