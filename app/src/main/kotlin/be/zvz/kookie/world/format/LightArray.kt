@@ -13,7 +13,7 @@ class LightArray {
     }
 
     private constructor(fillValue: Int) {
-        values.fill((fillValue shl 4) or fillValue)
+        values.fill(fillValue shl 4 or fillValue)
     }
 
     fun get(x: Int, y: Int, z: Int): Int {
@@ -40,7 +40,7 @@ class LightArray {
     companion object {
         private const val DATA_SIZE = 2048
         private fun index(x: Int, y: Int, z: Int): Pair<Int, Int> =
-            Pair(x shl 7 or (z shl 3) or (y shr 1), (y and 1 shl 2))
+            Pair(x shl 7 or (z shl 3) or (y shr 1), y and 1 shl 2)
 
         fun fill(level: Int): LightArray {
             if (level > LightLevel.MAX) {
