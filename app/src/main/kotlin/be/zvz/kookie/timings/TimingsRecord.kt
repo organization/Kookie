@@ -22,7 +22,7 @@ class TimingsRecord(val handler: TimingsHandler) {
         records.add(this)
     }
 
-    fun getName(): String = handler.getName()
+    fun getName(): String = handler.name
 
     fun startTiming(now: Long) {
         start = now
