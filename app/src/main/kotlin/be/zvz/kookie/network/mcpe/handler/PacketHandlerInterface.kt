@@ -82,4 +82,20 @@ interface PacketHandlerInterface {
     fun handleInventoryTransaction(packet: InventoryTransactionPacket): Boolean
 
     fun handleMobEquipment(packet: MobEquipmentPacket): Boolean
+
+    fun handleMobArmorEquipment(packet: MobArmorEquipmentPacket): Boolean
+
+    fun handleInteract(packet: InteractPacket): Boolean
+
+    fun handleBlockPickRequest(packet: BlockPickRequestPacket): Boolean
+
+    fun handleActorPickRequest(packet: ActorPickRequestPacket): Boolean
+
+    fun handlePlayerAction(packet: PlayerActionPacket): Boolean
+
+    fun handleHurtArmor(packet: HurtArmorPacket): Boolean
+
+    fun handleSetActorData(packet: SetActorDataPacket): Boolean
+
+    fun handleSetActorMotion(packet: SetActorMotionPacket): Boolean
 }
