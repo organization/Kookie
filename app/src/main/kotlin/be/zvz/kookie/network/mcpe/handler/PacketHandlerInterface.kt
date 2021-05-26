@@ -44,4 +44,6 @@ interface PacketHandlerInterface {
     fun handleStartGame(packet: StartGamePacket): Boolean
 
     fun handleAddPlayer(packet: AddPlayerPacket): Boolean
+
+    fun handleAddActor(packet: AddActorPacket): Boolean
 }

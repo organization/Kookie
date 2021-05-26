@@ -68,4 +68,8 @@ open class DefaultPacketHandler : PacketHandlerInterface {
     override fun handleAddPlayer(packet: AddPlayerPacket): Boolean {
         return false
     }
+
+    override fun handleAddActor(packet: AddActorPacket): Boolean {
+        return false
+    }
 }
