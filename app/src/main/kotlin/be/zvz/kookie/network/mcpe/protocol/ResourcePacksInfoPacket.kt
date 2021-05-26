@@ -55,6 +55,7 @@ class ResourcePacksInfoPacket : DataPacket(), ClientboundPacket {
         behaviorPackEntries.forEach {
             it.write(output)
         }
+        output.putLShort(resourcePackEntries.size)
         resourcePackEntries.forEach {
             it.write(output)
         }

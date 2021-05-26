@@ -90,6 +90,7 @@ class AddPlayerPacket : DataPacket(), ClientboundPacket {
 
         output.putLong(long1.toLong())
 
+        output.putUnsignedVarInt(links.size)
         links.forEach {
             output.putEntityLink(it)
         }
