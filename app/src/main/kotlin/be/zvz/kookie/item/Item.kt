@@ -55,12 +55,19 @@ open class Item(
     open val blockToolHarvestLevel = 0
 
     fun hasCustomBlockData(): Boolean = this.blockEntityTag != null
+
     fun clearCustomBlockData(): Item = this.apply {
         blockEntityTag = null
     }
 
+    fun setCustomBlockData(nbt: CompoundTag): Item = this.apply {
+        blockEntityTag = nbt.clone() as CompoundTag
+    }
+
     fun getCustomBlockData(): CompoundTag? = this.blockEntityTag
+
     fun hasNamedTag(): Boolean = getNamedTag().count() > 0
+
     fun getNamedTag(): CompoundTag {
         serializeCompoundTag(nbt)
         return nbt
