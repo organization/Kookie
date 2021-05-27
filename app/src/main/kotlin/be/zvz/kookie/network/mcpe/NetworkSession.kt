@@ -21,10 +21,13 @@ import be.zvz.kookie.Server
 import be.zvz.kookie.entity.Attribute
 import be.zvz.kookie.entity.Living
 import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
-import be.zvz.kookie.network.mcpe.protocol.*
+import be.zvz.kookie.network.mcpe.protocol.ClientboundPacket
+import be.zvz.kookie.network.mcpe.protocol.DataPacket
+import be.zvz.kookie.network.mcpe.protocol.Packet
 import be.zvz.kookie.network.mcpe.serializer.PacketSerializer
 import be.zvz.kookie.player.Player
 import be.zvz.kookie.player.PlayerInfo
+import be.zvz.kookie.timings.Timings
 import com.nukkitx.network.raknet.RakNetSession
 import com.nukkitx.network.util.DisconnectReason
 import io.netty.buffer.ByteBuf
@@ -80,30 +83,42 @@ class NetworkSession(
 
     fun sendDataPacket(packet: DataPacket, immediate: Boolean = false) {
         // TODO: call DataPacketSendEvent on here
-        if (packet !is ClientboundPacket) {
-            throw InvalidPacketException("Cannot send non-clientbound packet to player")
-        }
-        if (info == null) {
-            if (!packet.canBeSentBeforeLogin()) {
-                throw InvalidPacketException("Cannot send ${packet.getName()} before login")
+        val timings = Timings.getPacketSendTimings(packet)
+        timings.startTiming()
+        try {
+            if (packet !is ClientboundPacket) {
+                throw InvalidPacketException("Cannot send non-clientbound packet to player")
             }
-        }
+            if (info == null) {
+                if (!packet.canBeSentBeforeLogin()) {
+                    throw InvalidPacketException("Cannot send ${packet.getName()} before login")
+                }
+            }
 
-        sendBuffer.add(packet)
-        sessionManager.scheduleUpdate(this)
+            sendBuffer.add(packet)
+            sessionManager.scheduleUpdate(this)
+        } finally {
+            timings.stopTiming()
+        }
     }
 
-    fun handleDataPacket(packet: Packet, buffer: ByteBuf) {
-        val serializer = PacketSerializer(buffer.toString())
-        packet.decode(serializer)
-        if (!serializer.feof()) {
-            val remains = serializer.buffer.substring(serializer.offset.get())
-            logger.debug("Still ${remains.length} bytes unread in ${packet.getName()}")
-        }
-        handler?.let {
-            if (!packet.handle(it)) {
-                logger.debug("Unhandled ${packet.getName()}")
+    fun handleDataPacket(packet: DataPacket, buffer: ByteBuf) {
+        val timings = Timings.getPacketDecodeTimings(packet)
+        timings.startTiming()
+        try {
+            val serializer = PacketSerializer(buffer.toString())
+            packet.decode(serializer)
+            if (!serializer.feof()) {
+                val remains = serializer.buffer.substring(serializer.offset.get())
+                logger.debug("Still ${remains.length} bytes unread in ${packet.getName()}")
             }
+            handler?.let {
+                if (!packet.handle(it)) {
+                    logger.debug("Unhandled ${packet.getName()}")
+                }
+            }
+        } finally {
+            timings.stopTiming()
         }
     }
 
