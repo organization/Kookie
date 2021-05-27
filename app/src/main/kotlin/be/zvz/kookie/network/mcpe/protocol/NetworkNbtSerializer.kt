@@ -27,12 +27,10 @@ class NetworkNbtSerializer : BaseNbtSerializer() {
     }
 
     override fun readString(): String {
-        // TODO
         return buffer.get(checkReadStringLength(buffer.getUnsignedVarInt()))
     }
 
     override fun writeString(v: String) {
-        // TODO
         buffer.putUnsignedVarInt(checkWriteStringLength(v.length))
         buffer.put(v)
     }

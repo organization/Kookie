@@ -28,7 +28,6 @@ import be.zvz.kookie.player.Player
 import be.zvz.kookie.world.BlockTransaction
 import be.zvz.kookie.world.Position
 import be.zvz.kookie.world.World
-import java.lang.IllegalArgumentException
 
 open class Block(val idInfo: BlockIdentifier, val name: String, val breakInfo: BlockBreakInfo) {
     var pos: Position
@@ -92,16 +91,15 @@ open class Block(val idInfo: BlockIdentifier, val name: String, val breakInfo: B
     open fun writeStateToWorld() {
         pos.world?.getOrLoadChunkAtPosition(pos)?.setFullBlock(pos.x.toInt() and 0xf, pos.y.toInt(), pos.z.toInt() and 0xf, getFullId())
 
-        var tileType: Class<out Tile>? = null
+        var tileType: Class<*>? = null
         // TODO: Completion of getTile method in World
         var oldTile = pos.world?.getTile(pos)
         if (oldTile !== null) {
             try {
-                // TODO: Class<out Tile> casting
                 tileType = Class.forName(idInfo.tileClass)
             } catch (ignored: ClassNotFoundException) { }
 
-            if (tileType === null || oldTile::class.java == tileType) {
+            if (tileType === null || !tileType.isAssignableFrom(oldTile::class.java)) {
                 oldTile.close()
                 oldTile = null
             } else if (oldTile is Spawnable) {
@@ -109,7 +107,7 @@ open class Block(val idInfo: BlockIdentifier, val name: String, val breakInfo: B
             }
         }
         if (oldTile === null && tileType !== null) {
-            val tile = tileType.getConstructor(World::class.java, Vector3::class.java).newInstance(pos.world, pos.asVector3())
+            val tile = tileType.getConstructor(World::class.java, Vector3::class.java).newInstance(pos.world, pos.asVector3()) as Tile
             pos.world?.addTile(tile)
         }
     }
@@ -275,7 +273,9 @@ open class Block(val idInfo: BlockIdentifier, val name: String, val breakInfo: B
      */
     fun getAllSides() = sequence {
         pos.sides().forEach {
-            yield(pos.world!!.getBlock(it))
+            pos.world?.let { world ->
+                yield(world.getBlock(it))
+            }
         }
     }
 
