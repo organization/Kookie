@@ -76,7 +76,7 @@ dependencies {
     implementation(group = "com.fasterxml.jackson.dataformat", name = "jackson-dataformat-properties", version = "2.12.3")
 
     // Apache commons IO
-    implementation(group = "commons-io", name = "commons-io", version = "2.8.0")
+    implementation(group = "commons-io", name = "commons-io", version = "2.9.0")
 
     // ini4j
     implementation(group = "org.ini4j", name = "ini4j", version = "0.5.4")
