@@ -31,7 +31,7 @@ class BlockTransaction(val world: ChunkManager) {
     fun apply(): Boolean {
         getBlocks().forEach { data ->
             validators.forEach { callback ->
-                if(!callback.invoke(world, data.first.x.toInt(), data.first.y.toInt(), data.first.z.toInt()))
+                if (!callback.invoke(world, data.first.x.toInt(), data.first.y.toInt(), data.first.z.toInt()))
                     return false
             }
         }
