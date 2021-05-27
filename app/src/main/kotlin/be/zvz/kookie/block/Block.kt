@@ -28,7 +28,6 @@ import be.zvz.kookie.player.Player
 import be.zvz.kookie.world.BlockTransaction
 import be.zvz.kookie.world.Position
 import be.zvz.kookie.world.World
-import kotlinx.coroutines.yield
 import java.lang.IllegalArgumentException
 
 open class Block(val idInfo: BlockIdentifier, val name: String, val breakInfo: BlockBreakInfo) {
