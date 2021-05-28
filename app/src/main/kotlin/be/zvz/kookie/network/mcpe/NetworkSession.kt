@@ -89,11 +89,11 @@ class NetworkSession(
         timings.startTiming()
         try {
             if (packet !is ClientboundPacket) {
-                throw InvalidPacketException("Cannot send non-clientbound packet to player")
+                throw InvalidPacketException("Cannot send non-clientbound packet to ${getDisplayName()}")
             }
             if (info == null) {
                 if (!packet.canBeSentBeforeLogin()) {
-                    throw InvalidPacketException("Cannot send ${packet.getName()} before login")
+                    throw InvalidPacketException("Cannot send ${packet.getName()} to ${getDisplayName()} before login")
                 }
             }
 
