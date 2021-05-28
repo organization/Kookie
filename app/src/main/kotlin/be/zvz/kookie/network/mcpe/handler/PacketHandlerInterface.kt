@@ -98,4 +98,32 @@ interface PacketHandlerInterface {
     fun handleSetActorData(packet: SetActorDataPacket): Boolean
 
     fun handleSetActorMotion(packet: SetActorMotionPacket): Boolean
+
+    fun handleAddBehaviorTree(packet: AddBehaviorTreePacket): Boolean
+
+    fun handleAddEntity(packet: AddEntityPacket): Boolean
+
+    fun handleAdventureSettings(packet: AdventureSettingsPacket): Boolean
+
+    fun handleAnimateEntity(packet: AnimateEntityPacket): Boolean
+
+    fun handleAnimate(packet: AnimatePacket): Boolean
+
+    fun handleAnvilDamage(packet: AnvilDamagePacket): Boolean
+
+    fun handleAutomationClientConnect(packet: AutomationClientConnectPacket): Boolean
+
+    fun handleBookEdit(packet: BookEditPacket): Boolean
+
+    fun handleBossEvent(packet: BossEventPacket): Boolean
+
+    fun handleCamera(packet: CameraPacket): Boolean
+
+    fun handleCameraShake(packet: CameraShakePacket): Boolean
+
+    fun handleChangeDimension(packet: ChangeDimensionPacket): Boolean
+
+    fun handleChunkRadiusUpdated(packet: ChunkRadiusUpdatedPacket): Boolean
+
+    fun handleClientboundDebugRenderer(packet: ClientboundDebugRendererPacket): Boolean
 }
