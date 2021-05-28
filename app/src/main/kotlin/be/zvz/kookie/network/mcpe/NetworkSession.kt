@@ -24,6 +24,8 @@ import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
 import be.zvz.kookie.network.mcpe.protocol.ClientboundPacket
 import be.zvz.kookie.network.mcpe.protocol.DataPacket
 import be.zvz.kookie.network.mcpe.protocol.Packet
+import be.zvz.kookie.network.mcpe.protocol.UpdateAttributesPacket
+import be.zvz.kookie.network.mcpe.protocol.types.entity.NetworkAttribute
 import be.zvz.kookie.network.mcpe.serializer.PacketSerializer
 import be.zvz.kookie.player.Player
 import be.zvz.kookie.player.PlayerInfo
@@ -127,7 +129,16 @@ class NetworkSession(
 
     fun syncAttributes(entity: Living, attributes: Map<String, Attribute>) {
         if (attributes.isNotEmpty()) {
-            TODO("sendDataPacket")
+            val networkAttributes: MutableList<NetworkAttribute> = mutableListOf()
+                attributes.forEach { (id, attribute) ->
+                networkAttributes.add(
+                    NetworkAttribute(id, attribute.minValue, attribute.maxValue, attribute.currentValue, attribute.defaultValue)
+                )
+            }
+            val pk = UpdateAttributesPacket()
+            pk.entityRuntimeId = 0L// TODO: Entity runtime id
+            pk.entries = networkAttributes
+            sendDataPacket(pk)
         }
     }
 
@@ -138,6 +149,7 @@ class NetworkSession(
                     sendBuffer.forEach {
                         val serializer = PacketSerializer()
                         it.encode(serializer)
+                        // TODO: packet encryption here
                         session.send(Unpooled.copiedBuffer(serializer.buffer.toString().toByteArray()))
                     }
                     return
