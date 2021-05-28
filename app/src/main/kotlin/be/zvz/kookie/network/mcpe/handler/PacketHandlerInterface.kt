@@ -126,4 +126,6 @@ interface PacketHandlerInterface {
     fun handleChunkRadiusUpdated(packet: ChunkRadiusUpdatedPacket): Boolean
 
     fun handleClientboundDebugRenderer(packet: ClientboundDebugRendererPacket): Boolean
+
+    fun handleClientCacheBlobStatus(packet: ClientCacheBlobStatusPacket): Boolean
 }

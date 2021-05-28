@@ -1,5 +1,3 @@
-package be.zvz.kookie.network.mcpe.protocol
-
 /**
  *
  * _  __           _    _
@@ -17,68 +15,44 @@ package be.zvz.kookie.network.mcpe.protocol
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  */
-use fun count
+package be.zvz.kookie.network.mcpe.protocol
 
-class ClientCacheBlobStatusPacket : DataPacket(), ServerboundPacket{
+import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
+import be.zvz.kookie.network.mcpe.serializer.PacketSerializer
+
 @ProtocolIdentify(ProtocolInfo.IDS.CLIENT_CACHE_BLOB_STATUS_PACKET)
+class ClientCacheBlobStatusPacket : DataPacket(), ServerboundPacket {
 
-	/** @var Int[] xxHash64 subchunk data hashes */
-	 hitHashes = []
-	/** @var Int[] xxHash64 subchunk data hashes */
-	 missHashes = []
+    lateinit var hitHashes: MutableList<Long>
+    lateinit var missHashes: MutableList<Long>
 
-	/**
-	 * @param Int[] hitHashes
-	 * @param Int[] missHashes
-	 */
-	 static fun create(hitHashes: array, missHashes: array) : self{
-		//type checks
-		(static fun(Int ...hashes) {})(...hitHashes)
-		(static fun(Int ...hashes) {})(...missHashes)
+    companion object {
+        fun create(hitHashes: List<Long>, missHashes: List<Long>): ClientCacheBlobStatusPacket =
+            ClientCacheBlobStatusPacket().apply {
+                this.hitHashes = hitHashes.toMutableList()
+                this.missHashes = missHashes.toMutableList()
+            }
+    }
 
-		result = new self
-		result.hitHashes = hitHashes
-		result.missHashes = missHashes
-		return result
-	}
+    override fun decodePayload(input: PacketSerializer) {
+        val missCount = input.getUnsignedVarInt()
+        val hitCount = input.getUnsignedVarInt()
+        for (i in 0..missCount) {
+            missHashes.add(input.getLLong())
+        }
+        for (i in 0..hitCount) {
+            hitHashes.add(input.getLLong())
+        }
+    }
 
-	/**
-	 * @return Int[]
-	 */
-	 fun getHitHashes() : array{
-		return hitHashes
-	}
+    override fun encodePayload(output: PacketSerializer) {
+        output.putUnsignedVarInt(missHashes.size)
+        output.putUnsignedVarInt(hitHashes.size)
+        missHashes.forEach { output.putLLong(it) }
+        hitHashes.forEach { output.putLLong(it) }
+    }
 
-	/**
-	 * @return Int[]
-	 */
-	 fun getMissHashes() : array{
-		return missHashes
-	}
-
-	override fun decodePayload(input: PacketSerializer) {
-		missCount = input.getUnsignedVarInt()
-		hitCount = input.getUnsignedVarInt()
-		for(i = 0 i < missCount ++i){
-			missHashes[] = input.getLLong()
-		}
-		for(i = 0 i < hitCount ++i){
-			hitHashes[] = input.getLLong()
-		}
-	}
-
-	override fun encodePayload(output: PacketSerializer) {
-		output.putUnsignedVarInt(count(missHashes))
-		output.putUnsignedVarInt(count(hitHashes))
-		foreach(missHashes hash: as){
-			output.putLLong(hash)
-		}
-		foreach(hitHashes hash: as){
-			output.putLLong(hash)
-		}
-	}
-
-	 override fun handle(handler: PacketHandlerInterface) : Boolean{
-		return handler.handleClientCacheBlobStatus(this)
-	}
+    override fun handle(handler: PacketHandlerInterface): Boolean {
+        return handler.handleClientCacheBlobStatus(this)
+    }
 }
