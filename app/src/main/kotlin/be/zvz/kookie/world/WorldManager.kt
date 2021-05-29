@@ -24,6 +24,14 @@ import java.nio.file.Path
 
 class WorldManager(private val server: Server, val dataPath: String, val providerManager: WorldProviderManager) {
     val worlds: MutableMap<Int, World> = HashIntObjMaps.newMutableMap()
+    lateinit var defaultWorld: World
+    var autoSave: Boolean = true
+        set(value) {
+            field = value
+            worlds.forEach { (_, world) ->
+                world.autoSave = true
+            }
+        }
 
     fun loadWorld(world: String) {
     }

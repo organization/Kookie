@@ -20,18 +20,31 @@ package be.zvz.kookie.world
 import be.zvz.kookie.Server
 import be.zvz.kookie.block.Block
 import be.zvz.kookie.block.tile.Tile
+import be.zvz.kookie.entity.Entity
 import be.zvz.kookie.math.Vector3
+import be.zvz.kookie.player.Player
 import be.zvz.kookie.world.format.Chunk
+import com.koloboke.collect.map.hash.HashIntObjMaps
 
 class World(val server: Server, val folderName: String) {
+
+    val players: MutableList<Player> = mutableListOf()
+    val entities: MutableList<Entity> = mutableListOf()
+    private val entityLastKnownPositions: MutableMap<Int, Vector3> = HashIntObjMaps.newMutableMap()
+    private val updateEntities: MutableList<Entity> = mutableListOf()
+    private var blockCache: MutableMap<Int, MutableMap<Int, Block>> = HashIntObjMaps.newMutableMap()
+    private var sendTimeTicker: Int = 0
+    val worldId: Int
+    var autoSave: Boolean = true
+
+    init {
+        worldId = worldIdCounter++
+    }
+
     var closed: Boolean = false
         private set
 
     companion object {
-        const val DIFFICULTY_PEACEFUL = 0
-        const val DIFFICULTY_EASY = 1
-        const val DIFFICULTY_NORMAL = 2
-        const val DIFFICULTY_HARD = 3
 
         const val Y_MAX = 256
         const val Y_MIN = 0
@@ -43,7 +56,16 @@ class World(val server: Server, val folderName: String) {
         const val TIME_MIDNIGHT = 18000
         const val TIME_SUNRISE = 23000
 
-        private var worldIdCounter = 0
+        const val TIME_FULL = 24000
+
+        const val DIFFICULTY_PEACEFUL = 0
+        const val DIFFICULTY_EASY = 1
+        const val DIFFICULTY_NORMAL = 2
+        const val DIFFICULTY_HARD = 3
+
+        const val DEFAULT_TICKED_BLOCKS_PER_SUBCHUNK_PER_TICK = 3
+
+        private var worldIdCounter = 1
     }
 
     fun getOrLoadChunkAtPosition(pos: Vector3): Chunk? {
