@@ -89,6 +89,7 @@ abstract class BaseNbtSerializer : NbtStreamReader, NbtStreamWriter {
     }
 
     companion object {
+        @JvmStatic
         protected fun checkReadStringLength(len: Int): Int {
             if (len > 32767) {
                 throw NbtDataException("NBT string length too large ($len > 32767)")
@@ -96,6 +97,7 @@ abstract class BaseNbtSerializer : NbtStreamReader, NbtStreamWriter {
             return len
         }
 
+        @JvmStatic
         protected fun checkWriteStringLength(len: Int): Int {
             if (len > 32767) {
                 throw IllegalArgumentException("NBT string length too large ($len > 32767)")

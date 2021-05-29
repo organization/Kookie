@@ -18,8 +18,15 @@
 package be.zvz.kookie.world
 
 import be.zvz.kookie.Server
+import be.zvz.kookie.block.Block
+import be.zvz.kookie.block.tile.Tile
+import be.zvz.kookie.math.Vector3
+import be.zvz.kookie.world.format.Chunk
 
 class World(val server: Server, val folderName: String) {
+    var closed: Boolean = false
+        private set
+
     companion object {
         const val DIFFICULTY_PEACEFUL = 0
         const val DIFFICULTY_EASY = 1
@@ -37,5 +44,25 @@ class World(val server: Server, val folderName: String) {
         const val TIME_SUNRISE = 23000
 
         private var worldIdCounter = 0
+    }
+
+    fun getOrLoadChunkAtPosition(pos: Vector3): Chunk? {
+        TODO("Chunk not yet implemented")
+    }
+
+    fun getTile(pos: Vector3): Tile? {
+        TODO("World not yet implemented")
+    }
+
+    fun addTile(tile: Tile) {
+        TODO("World not yet implemented")
+    }
+
+    fun getBlock(pos: Vector3): Block {
+        TODO("Chunk not yet implemented")
+    }
+
+    fun setBlock(pos: Vector3, block: Block): Any {
+        TODO("Chunk not yet implemented")
     }
 }

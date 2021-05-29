@@ -96,7 +96,7 @@ open class Vector3 @JvmOverloads constructor(var x: Float = 0F, var y: Float = 0
     fun east(step: Int = 1): Vector3 = getSide(Facing.EAST, step)
 
     @JvmOverloads
-    suspend fun sides(step: Int = 1) = sequence {
+    fun sides(step: Int = 1) = sequence {
         Facing.ALL.forEach {
             yield(getSide(it, step))
         }

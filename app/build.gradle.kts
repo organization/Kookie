@@ -22,7 +22,7 @@ import org.jmailen.gradle.kotlinter.tasks.LintTask
 
 plugins {
     // Apply the org.jetbrains.kotlin.jvm Plugin to add support for Kotlin.
-    id("org.jetbrains.kotlin.jvm") version "1.5.0"
+    id("org.jetbrains.kotlin.jvm") version "1.5.10"
 
     // Apply the application plugin to add support for building a CLI application in Java.
     application
@@ -76,7 +76,7 @@ dependencies {
     implementation(group = "com.fasterxml.jackson.dataformat", name = "jackson-dataformat-properties", version = "2.12.3")
 
     // Apache commons IO
-    implementation(group = "commons-io", name = "commons-io", version = "2.8.0")
+    implementation(group = "commons-io", name = "commons-io", version = "2.9.0")
 
     // ini4j
     implementation(group = "org.ini4j", name = "ini4j", version = "0.5.4")
@@ -90,10 +90,10 @@ dependencies {
     implementation(group = "org.fusesource.jansi", name = "jansi", version = "2.3.2")
 
     // netty
-    implementation(group = "io.netty", name = "netty-all", version = "4.1.63.Final")
+    implementation(group = "io.netty", name = "netty-all", version = "4.1.65.Final")
 
     // bedrock-network
-    implementation(group = "org.powernukkit.bedrock.network", name = "raknet", version = "1.6.25-PN")
+    implementation(group = "org.powernukkit.bedrock.network", name = "raknet", version = "1.6.25-PN.2")
 
     // guava
     implementation(group = "com.google.guava", name = "guava", version = "30.1.1-jre")

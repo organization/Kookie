@@ -64,6 +64,12 @@ abstract class Tile(world: World, pos: Vector3) {
 
     fun getBlock(): Block = TODO("get block from world")
 
+    fun onBlockDestroyed(): Any = TODO()
+
+    fun close() {
+        TODO("Close Tile")
+    }
+
     companion object {
         const val TAG_ID = "id"
         const val TAG_X = "x"

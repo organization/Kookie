@@ -19,58 +19,61 @@ package be.zvz.kookie.item
 
 import be.zvz.kookie.block.BlockFactory
 import be.zvz.kookie.nbt.tag.CompoundTag
+import com.koloboke.collect.map.hash.HashIntObjMaps
 
 object ItemFactory {
-    val list = mutableListOf<Item>()
+    val list: MutableMap<Int, Item> = HashIntObjMaps.newMutableMap()
 
     init {
+        TODO("Add Items")
     }
 
     fun register(item: Item, override: Boolean = false) {
         val id: Int = item.getId()
+        val variant = item.getMeta()
+
+        if (!override && isRegistered(id, variant)) {
+            throw RuntimeException("Trying to overwrite an already registered item")
+        }
+        list[getListOffset(id, variant)] = item.clone()
     }
 
     fun remap(identifier: ItemIdentifier, item: Item, override: Boolean = false) {
         if (!override && isRegistered(identifier.id, identifier.meta)) {
-            throw RuntimeException("")
+            throw RuntimeException("Trying to overwrite an already registered item")
         }
 
         list[getListOffset(identifier.id, identifier.meta)] = item.clone()
     }
 
     fun get(id: Int, meta: Int = 0, count: Int = 1, tags: CompoundTag? = null): Item {
-        val item: Item = if (meta != -1) {
-            val offset = getListOffset(id, meta)
-            val zero = getListOffset(id, 0)
-            val durable = list.getOrNull(zero)
+        val offset = getListOffset(id, meta)
+        val zero = getListOffset(id, 0)
 
-            if (list.getOrNull(offset) != null) {
-                list[offset].clone()
-            } else if (durable is Durable) {
-                if (meta <= durable.getMaxDurability()) {
-                    val item = durable.clone()
-                    item.damage = meta
-                    item
-                } else {
-                    Item(ItemIdentifier(id, meta))
-                }
-            } else if (id < 256) {
-                ItemBlock(
-                    ItemIdentifier(id, meta),
-                    BlockFactory.get(
-                        if (id < 0) {
-                            255 - id
+        var item: Item? = when {
+            meta != -1 -> when {
+                list.containsKey(offset) -> list[offset]
+                list.containsKey(zero) -> {
+                    val durableItem = list[zero]
+                    if (durableItem is Durable) {
+                        if (meta <= durableItem.getMaxDurability()) {
+                            val clone = durableItem.clone()
+                            clone.damage = meta
+                            clone
                         } else {
-                            id
-                        },
-                        meta and 0xf
-                    )
-                )
-            } else {
-                Item(ItemIdentifier(id, meta))
+                            Item(ItemIdentifier(id, meta))
+                        }
+                    } else
+                        null
+                }
+                id < 256 -> ItemBlock(ItemIdentifier(id, meta), BlockFactory.get(if (id < 0) -id else id, meta and 0xf))
+                else -> null
             }
-        } else {
-            Item(ItemIdentifier(id, meta))
+            else -> null
+        }
+
+        if (item === null) {
+            item = Item(ItemIdentifier(id, meta))
         }
 
         item.count = count
@@ -87,10 +90,10 @@ object ItemFactory {
 
     fun isRegistered(id: Int, variant: Int = 0): Boolean {
         if (id < 256) {
-            TODO("return BlockFactory.getInstance().isRegistered(id)")
+            return BlockFactory.isRegistered(id)
         }
 
-        return list.getOrNull(getListOffset(id, variant)) != null
+        return list.containsKey(getListOffset(id, variant))
     }
 
     private fun getListOffset(id: Int, variant: Int): Int {
