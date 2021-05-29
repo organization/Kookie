@@ -18,6 +18,9 @@
 package be.zvz.kookie.block
 
 import be.zvz.kookie.block.BlockIdentifier as BID
+//import be.zvz.kookie.block.BlockIdentifierFlattened as BIDFlattened
+import be.zvz.kookie.block.BlockLegacyIds as Ids
+//import be.zvz.kookie.block.BlockLegacyMetadata as Meta
 import be.zvz.kookie.block.util.IllegalBlockStateException
 import com.koloboke.collect.map.hash.HashIntFloatMaps
 import com.koloboke.collect.map.hash.HashIntIntMaps
@@ -33,8 +36,8 @@ object BlockFactory {
 
     init {
         /*val railBreakInfo = BlockBreakInfo(0.7f)
-        register(ActivatorRail(BID(Ids.ACTIVATOR_RAIL.id, 0), "Activator Rail", railBreakInfo))
-        register(Air(BID(Ids.AIR.id, 0), "Air", BlockBreakInfo.indestructible(-1f)))*/
+        register(ActivatorRail(BID(Ids.ACTIVATOR_RAIL.id, 0), "Activator Rail", railBreakInfo))*/
+        register(Air(BID(Ids.AIR.id, 0), "Air", BlockBreakInfo.indestructible(-1f)))
         TODO("Add Blocks")
     }
 
