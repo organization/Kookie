@@ -17,7 +17,7 @@
  */
 package be.zvz.kookie.block
 
-enum class BlockLegacyIds(id: Int) {
+enum class BlockLegacyIds(val id: Int) {
 
     AIR(0),
     STONE(1),

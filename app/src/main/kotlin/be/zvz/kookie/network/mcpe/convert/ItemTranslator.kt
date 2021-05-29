@@ -1,5 +1,6 @@
 package be.zvz.kookie.network.mcpe.convert
 
+import be.zvz.kookie.network.mcpe.protocol.serializer.ItemTypeDictionary
 import be.zvz.kookie.utils.config.JsonBrowser
 import com.koloboke.collect.map.hash.HashIntIntMaps
 import com.koloboke.collect.map.hash.HashIntObjMaps
@@ -51,7 +52,7 @@ class ItemTranslator(dictionary: ItemTypeDictionary, simpleMappings: Map<String,
                 simpleMappings[newId] = legacyStringToIntMap.getValue(oldId).toInt()
             }
             legacyStringToIntMap.forEach { (stringId, intId) ->
-                if(simpleMappings.containsKey(stringId)){
+                if (simpleMappings.containsKey(stringId)) {
                     throw IllegalArgumentException("Old ID $stringId collides with new ID")
                 }
                 simpleMappings[stringId] = intId.toInt()
@@ -62,7 +63,7 @@ class ItemTranslator(dictionary: ItemTypeDictionary, simpleMappings: Map<String,
                     complexMappings[newId] = Pair(legacyStringToIntMap.getValue(oldId).toInt(), meta.toInt())
                 }
             }
-            return ItemTranslator(ItemTypeDictionary.getInstance(), simpleMappings, complexMappings)
+            return ItemTranslator(GlobalItemTypeDictionary.getInstance().dictionary, simpleMappings, complexMappings)
         }
     }
 
@@ -93,9 +94,9 @@ class ItemTranslator(dictionary: ItemTypeDictionary, simpleMappings: Map<String,
 
     fun fromNetworkIdWithWildcardHandling(networkId: Int, networkMeta: Int): Pair<Int, Int> {
         val isComplexMapping = AtomicBoolean(false)
-        if(networkMeta != 0x7fff)
-            return fromNetworkId(networkId,networkMeta)
+        if (networkMeta != 0x7fff)
+            return fromNetworkId(networkId, networkMeta)
         val (id, meta) = fromNetworkId(networkId, 0, isComplexMapping)
-        return Pair(id, if(isComplexMapping.get()) meta else -1)
+        return Pair(id, if (isComplexMapping.get()) meta else -1)
     }
 }
