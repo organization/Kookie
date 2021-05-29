@@ -17,39 +17,37 @@
  */
 package be.zvz.kookie.network.mcpe.protocol
 
+import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
+import be.zvz.kookie.network.mcpe.protocol.types.CacheableNbt
 import be.zvz.kookie.network.mcpe.serializer.PacketSerializer
+import java.util.concurrent.atomic.AtomicInteger
 
 @ProtocolIdentify(ProtocolInfo.IDS.BLOCK_ACTOR_DATA_PACKET)
 class BlockActorDataPacket : DataPacket(), ClientboundPacket, ServerboundPacket {
 
-    var x: Int
-    var y: Int
-    var z: Int
-    /**
-     * @var CacheableNbt
-     * @phpstan-var CacheableNbt<\pocketmine\nbt\tag\CompoundTag>
-     */
-    namedtag
+    var x: AtomicInteger = AtomicInteger()
+    var y: AtomicInteger = AtomicInteger()
+    var z: AtomicInteger = AtomicInteger()
 
-    /**
-     * @phpstan-param CacheableNbt<\pocketmine\nbt\tag\CompoundTag> nbt
-     */
-    static
-    fun create(x: Int, y: Int, z: Int, nbt: CacheableNbt): self {
-        result = new self
-                [result.x, result.y, result.z] = [x, y, z]
-        result.namedtag = nbt
-        return result
+    lateinit var namedtag: CacheableNbt
+
+    companion object {
+        fun create(x: Int, y: Int, z: Int, nbt: CacheableNbt): BlockActorDataPacket = BlockActorDataPacket().apply {
+            this.namedtag = nbt
+            this.x.set(x)
+            this.y.set(y)
+            this.z.set(z)
+        }
     }
 
     override fun decodePayload(input: PacketSerializer) {
         input.getBlockPosition(x, y, z)
-        namedtag = new CacheableNbt (input.getNbtCompoundRoot())
+        namedtag = CacheableNbt(input.getNbtCompoundRoot())
     }
 
     override fun encodePayload(output: PacketSerializer) {
-        output.putBlockPosition(x, y, z)
-        output.put(namedtag->getEncodedNbt())
+        output.putBlockPosition(x.get(), y.get(), z.get())
+        output.put(namedtag.encodedNbt)
     }
 
     override fun handle(handler: PacketHandlerInterface): Boolean {

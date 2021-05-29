@@ -1,5 +1,9 @@
 package be.zvz.kookie.network.mcpe.protocol
 
+import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
+import be.zvz.kookie.network.mcpe.serializer.PacketSerializer
+import java.util.concurrent.atomic.AtomicBoolean
+
 /**
  *
  * _  __           _    _
@@ -18,28 +22,23 @@ package be.zvz.kookie.network.mcpe.protocol
  * (at your option) any later version.
  */
 
+@ProtocolIdentify(ProtocolInfo.IDS.CLIENT_CACHE_STATUS_PACKET)
 class ClientCacheStatusPacket : DataPacket(), ServerboundPacket {
-    @ProtocolIdentify(ProtocolInfo.IDS.CLIENT_CACHE_STATUS_PACKET)
 
-    var enabled: Boolean
+    var enabled: AtomicBoolean = AtomicBoolean()
 
-    static
-    fun create(enabled: Boolean): self {
-        result = new self
-                result.enabled = enabled
-        return result
-    }
-
-    fun isEnabled(): Boolean {
-        return enabled
+    companion object {
+        fun create(enabled: Boolean): ClientCacheStatusPacket = ClientCacheStatusPacket().apply {
+            this.enabled.set(enabled)
+        }
     }
 
     override fun decodePayload(input: PacketSerializer) {
-        enabled = input.getBool()
+        enabled.set(input.getBoolean())
     }
 
     override fun encodePayload(output: PacketSerializer) {
-        output.putBool(enabled)
+        output.putBoolean(enabled.get())
     }
 
     override fun handle(handler: PacketHandlerInterface): Boolean {

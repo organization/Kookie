@@ -17,6 +17,7 @@
  */
 package be.zvz.kookie.network.mcpe.protocol
 
+import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
 import be.zvz.kookie.network.mcpe.protocol.types.ChunkCacheBlob
 import be.zvz.kookie.network.mcpe.serializer.PacketSerializer
 
@@ -27,25 +28,23 @@ class ClientCacheMissResponsePacket : DataPacket(), ClientboundPacket {
 
     companion object {
         fun create(blobs: List<ChunkCacheBlob>): ClientCacheMissResponsePacket = ClientCacheMissResponsePacket().apply {
-            this.blobs = blobs.toMutableList() //이렇게 하면 상관없지 않?
-            // 그러네
+            this.blobs = blobs.toMutableList()
         }
     }
-
 
     override fun decodePayload(input: PacketSerializer) {
         for (i in 0..input.getUnsignedVarInt()) {
             val hash = input.getLLong()
             val payload = input.getString()
-            blobs[] = new ChunkCacheBlob (hash, payload)
+            blobs.add(ChunkCacheBlob(hash, payload))
         }
     }
 
     override fun encodePayload(output: PacketSerializer) {
-        output.putUnsignedVarInt(count(blobs))
-        foreach(blobs blob : as) {
-            output.putLLong(blob.getHash())
-            output.putString(blob.getPayload())
+        output.putUnsignedVarInt(blobs.count())
+        blobs.forEach {
+            output.putLLong(it.hash)
+            output.putString(it.payload)
         }
     }
 

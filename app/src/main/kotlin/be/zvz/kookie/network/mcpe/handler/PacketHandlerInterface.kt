@@ -113,6 +113,16 @@ interface PacketHandlerInterface {
 
     fun handleAutomationClientConnect(packet: AutomationClientConnectPacket): Boolean
 
+    fun handleAvailableActorIdentifiers(packet: AvailableActorIdentifiersPacket): Boolean
+
+    fun handleBiomeDefinitionList(packet: BiomeDefinitionListPacket): Boolean
+
+    fun handleBlockActorData(packet: BlockActorDataPacket): Boolean
+
+    fun handleClientCacheMissResponse(packet: ClientCacheMissResponsePacket): Boolean
+
+    fun handleClientCacheStatus(packet: ClientCacheStatusPacket): Boolean
+
     fun handleBookEdit(packet: BookEditPacket): Boolean
 
     fun handleBossEvent(packet: BossEventPacket): Boolean
