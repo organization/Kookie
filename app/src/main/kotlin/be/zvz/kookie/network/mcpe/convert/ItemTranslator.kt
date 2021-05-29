@@ -1,5 +1,6 @@
 package be.zvz.kookie.network.mcpe.convert
 
+import be.zvz.kookie.network.mcpe.protocol.serializer.ItemTypeDictionary
 import be.zvz.kookie.utils.config.JsonBrowser
 import com.koloboke.collect.map.hash.HashIntIntMaps
 import com.koloboke.collect.map.hash.HashIntObjMaps
@@ -62,7 +63,7 @@ class ItemTranslator(dictionary: ItemTypeDictionary, simpleMappings: Map<String,
                     complexMappings[newId] = Pair(legacyStringToIntMap.getValue(oldId).toInt(), meta.toInt())
                 }
             }
-            return ItemTranslator(ItemTypeDictionary.getInstance(), simpleMappings, complexMappings)
+            return ItemTranslator(GlobalItemTypeDictionary.getInstance().dictionary, simpleMappings, complexMappings)
         }
     }
 
