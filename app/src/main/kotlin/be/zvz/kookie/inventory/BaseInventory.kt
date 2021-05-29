@@ -18,17 +18,17 @@
 package be.zvz.kookie.inventory
 
 import be.zvz.kookie.item.Item
+import be.zvz.kookie.item.ItemFactory
 import be.zvz.kookie.player.Player
 
-abstract class BaseInventory : Inventory, InventoryHelpers<Item> {
-    override val maxStackSize: Int = Inventory.MAX_STACK
+abstract class BaseInventory : InventoryHelpers, Inventory {
+    private val maxStackSize: Int = Inventory.MAX_STACK
     override val viewers = mutableListOf<Player>()
 
-    abstract fun internalSetContents(items: MutableList<Item>)
-    override fun setContents(items: MutableList<Item>) {
-        if (items.size > size) {
-            items.subList(0, size)
-        }
+    override fun getMaxStackSize(): Int = maxStackSize
+    protected abstract fun internalSetContents(items: MutableMap<Int, Item>)
+    override fun setContents(items: MutableMap<Int, Item>) {
+        // TODO: items.size > getSize()
         val oldContents = getContents(true)
         val listeners = listeners.toTypedArray()
         this.listeners.clear()
@@ -47,17 +47,17 @@ abstract class BaseInventory : Inventory, InventoryHelpers<Item> {
         onContentChange(oldContents)
     }
 
-    abstract fun internalSetItem(index: Int, item: Item)
+    protected abstract fun internalSetItem(index: Int, item: Item)
 
     override fun setItem(index: Int, item: Item) {
-        var checkedItem =
+        var newItem =
             if (item.isNull()) {
-                TODO("Not yet implemented")
+                ItemFactory.air()
             } else {
                 item.clone()
             }
         val oldItem = getItem(index)
-        internalSetItem(index, item)
+        internalSetItem(index, newItem)
         onSlotChange(index, oldItem)
     }
 
@@ -78,7 +78,7 @@ abstract class BaseInventory : Inventory, InventoryHelpers<Item> {
         }
     }
 
-    protected fun onContentChange(itemsBefore: MutableList<Item>) {
+    protected fun onContentChange(itemsBefore: MutableMap<Int, Item>) {
         listeners.forEach {
             it.onSlotChange(this, itemsBefore)
         }
@@ -87,5 +87,5 @@ abstract class BaseInventory : Inventory, InventoryHelpers<Item> {
         }
     }
 
-    override fun slotExists(slot: Int) = slot in 0 until size
+    override fun slotExists(slot: Int) = slot in 0 until getSize()
 }

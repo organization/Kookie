@@ -4,18 +4,18 @@ import be.zvz.kookie.item.Item
 import be.zvz.kookie.player.Player
 
 interface Inventory {
-    val maxStackSize: Int
-    val size: Int
+    fun getSize(): Int
+    fun getMaxStackSize(): Int
     fun getItem(index: Int): Item
     fun setItem(index: Int, item: Item)
     fun addItem(vararg slots: Item): MutableList<Item>
     fun canAddItem(item: Item): Boolean
     fun removeItem(vararg slots: Item): MutableList<Item>
-    fun getContents(includeEmpty: Boolean = false): MutableList<Item>
+    fun getContents(includeEmpty: Boolean = false): MutableMap<Int, Item>
     fun setContents(items: MutableList<Item>)
     fun contains(item: Item): Boolean
-    fun all(item: Item): MutableList<Item>
-    fun first(item: Item, exact: Boolean = false): Int
+    fun all(item: Item): MutableMap<Int, Item>
+    fun first(item: Item, exact: Boolean): Int
     fun firstEmpty(): Int
     fun isSlotEmpty(index: Int): Boolean
     fun remove(item: Item)
