@@ -18,20 +18,20 @@ package be.zvz.kookie.network.mcpe.protocol
  * (at your option) any later version.
  */
 
-class SetLocalPlayerAsInitializedPacket : DataPacket(), ServerboundPacket{
-@ProtocolIdentify(ProtocolInfo.IDS.SET_LOCAL_PLAYER_AS_INITIALIZED_PACKET)
+class SetLocalPlayerAsInitializedPacket : DataPacket(), ServerboundPacket {
+    @ProtocolIdentify(ProtocolInfo.IDS.SET_LOCAL_PLAYER_AS_INITIALIZED_PACKET)
 
-	var entityRuntimeId: Int
+    var entityRuntimeId: Int
 
-	override fun decodePayload(input: PacketSerializer) {
-		entityRuntimeId = input.getEntityRuntimeId()
-	}
+    override fun decodePayload(input: PacketSerializer) {
+        entityRuntimeId = input.getEntityRuntimeId()
+    }
 
-	override fun encodePayload(output: PacketSerializer) {
-		output.putEntityRuntimeId(entityRuntimeId)
-	}
+    override fun encodePayload(output: PacketSerializer) {
+        output.putEntityRuntimeId(entityRuntimeId)
+    }
 
-	 override fun handle(handler: PacketHandlerInterface) : Boolean{
-		return handler.handleSetLocalPlayerAsInitialized(this)
-	}
+    override fun handle(handler: PacketHandlerInterface): Boolean {
+        return handler.handleSetLocalPlayerAsInitialized(this)
+    }
 }

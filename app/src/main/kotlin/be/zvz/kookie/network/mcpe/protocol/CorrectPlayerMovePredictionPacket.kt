@@ -18,46 +18,55 @@ package be.zvz.kookie.network.mcpe.protocol
  * (at your option) any later version.
  */
 
-class CorrectPlayerMovePredictionPacket : DataPacket(), ClientboundPacket{
-@ProtocolIdentify(ProtocolInfo.IDS.CORRECT_PLAYER_MOVE_PREDICTION_PACKET)
+class CorrectPlayerMovePredictionPacket : DataPacket(), ClientboundPacket {
+    @ProtocolIdentify(ProtocolInfo.IDS.CORRECT_PLAYER_MOVE_PREDICTION_PACKET)
 
-	var position: Vector3
-	var delta: Vector3
-	var onGround: Boolean
-	var tick: Int
+    var position: Vector3
+    var delta: Vector3
+    var onGround: Boolean
+    var tick: Int
 
-	 static fun create(position: Vector3, delta: Vector3, onGround: Boolean, tick: Int) : self{
-		result = new self
-		result.position = position
-		result.delta = delta
-		result.onGround = onGround
-		result.tick = tick
-		return result
-	}
+    static
+    fun create(position: Vector3, delta: Vector3, onGround: Boolean, tick: Int): self {
+        result = new self
+                result.position = position
+        result.delta = delta
+        result.onGround = onGround
+        result.tick = tick
+        return result
+    }
 
-	 fun getPosition() : Vector3{ return position }
+    fun getPosition(): Vector3 {
+        return position
+    }
 
-	 fun getDelta() : Vector3{ return delta }
+    fun getDelta(): Vector3 {
+        return delta
+    }
 
-	 fun isOnGround() : Boolean{ return onGround }
+    fun isOnGround(): Boolean {
+        return onGround
+    }
 
-	 fun getTick() : Int{ return tick }
+    fun getTick(): Int {
+        return tick
+    }
 
-	override fun decodePayload(input: PacketSerializer) {
-		position = input.getVector3()
-		delta = input.getVector3()
-		onGround = input.getBool()
-		tick = input.getUnsignedVarLong()
-	}
+    override fun decodePayload(input: PacketSerializer) {
+        position = input.getVector3()
+        delta = input.getVector3()
+        onGround = input.getBool()
+        tick = input.getUnsignedVarLong()
+    }
 
-	override fun encodePayload(output: PacketSerializer) {
-		output.putVector3(position)
-		output.putVector3(delta)
-		output.putBool(onGround)
-		output.putUnsignedVarLong(tick)
-	}
+    override fun encodePayload(output: PacketSerializer) {
+        output.putVector3(position)
+        output.putVector3(delta)
+        output.putBool(onGround)
+        output.putUnsignedVarLong(tick)
+    }
 
-	 override fun handle(handler: PacketHandlerInterface) : Boolean{
-		return handler.handleCorrectPlayerMovePrediction(this)
-	}
+    override fun handle(handler: PacketHandlerInterface): Boolean {
+        return handler.handleCorrectPlayerMovePrediction(this)
+    }
 }

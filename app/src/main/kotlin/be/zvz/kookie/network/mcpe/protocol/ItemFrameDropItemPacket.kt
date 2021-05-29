@@ -18,23 +18,23 @@ package be.zvz.kookie.network.mcpe.protocol
  * (at your option) any later version.
  */
 
-class ItemFrameDropItemPacket : DataPacket(), ServerboundPacket{
+class ItemFrameDropItemPacket : DataPacket(), ServerboundPacket {
 
-@ProtocolIdentify(ProtocolInfo.IDS.ITEM_FRAME_DROP_ITEM_PACKET)
+    @ProtocolIdentify(ProtocolInfo.IDS.ITEM_FRAME_DROP_ITEM_PACKET)
 
-	var x: Int
-	var y: Int
-	var z: Int
+    var x: Int
+    var y: Int
+    var z: Int
 
-	override fun decodePayload(input: PacketSerializer) {
-		input.getBlockPosition(x, y, z)
-	}
+    override fun decodePayload(input: PacketSerializer) {
+        input.getBlockPosition(x, y, z)
+    }
 
-	override fun encodePayload(output: PacketSerializer) {
-		output.putBlockPosition(x, y, z)
-	}
+    override fun encodePayload(output: PacketSerializer) {
+        output.putBlockPosition(x, y, z)
+    }
 
-	 override fun handle(handler: PacketHandlerInterface) : Boolean{
-		return handler.handleItemFrameDropItem(this)
-	}
+    override fun handle(handler: PacketHandlerInterface): Boolean {
+        return handler.handleItemFrameDropItem(this)
+    }
 }

@@ -18,31 +18,31 @@ package be.zvz.kookie.network.mcpe.protocol
  * (at your option) any later version.
  */
 
-class LecternUpdatePacket : DataPacket(), ServerboundPacket{
-@ProtocolIdentify(ProtocolInfo.IDS.LECTERN_UPDATE_PACKET)
+class LecternUpdatePacket : DataPacket(), ServerboundPacket {
+    @ProtocolIdentify(ProtocolInfo.IDS.LECTERN_UPDATE_PACKET)
 
-	var page: Int
-	var totalPages: Int
-	var x: Int
-	var y: Int
-	var z: Int
-	var dropBook: Boolean
+    var page: Int
+    var totalPages: Int
+    var x: Int
+    var y: Int
+    var z: Int
+    var dropBook: Boolean
 
-	override fun decodePayload(input: PacketSerializer) {
-		page = input.getByte()
-		totalPages = input.getByte()
-		input.getBlockPosition(x, y, z)
-		dropBook = input.getBool()
-	}
+    override fun decodePayload(input: PacketSerializer) {
+        page = input.getByte()
+        totalPages = input.getByte()
+        input.getBlockPosition(x, y, z)
+        dropBook = input.getBool()
+    }
 
-	override fun encodePayload(output: PacketSerializer) {
-		output.putByte(page)
-		output.putByte(totalPages)
-		output.putBlockPosition(x, y, z)
-		output.putBool(dropBook)
-	}
+    override fun encodePayload(output: PacketSerializer) {
+        output.putByte(page)
+        output.putByte(totalPages)
+        output.putBlockPosition(x, y, z)
+        output.putBool(dropBook)
+    }
 
-	 override fun handle(handler: PacketHandlerInterface) : Boolean{
-		return handler.handleLecternUpdate(this)
-	}
+    override fun handle(handler: PacketHandlerInterface): Boolean {
+        return handler.handleLecternUpdate(this)
+    }
 }

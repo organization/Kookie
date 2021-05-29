@@ -18,23 +18,23 @@ package be.zvz.kookie.network.mcpe.protocol
  * (at your option) any later version.
  */
 
-class ServerSettingsResponsePacket : DataPacket(), ClientboundPacket{
-@ProtocolIdentify(ProtocolInfo.IDS.SERVER_SETTINGS_RESPONSE_PACKET)
+class ServerSettingsResponsePacket : DataPacket(), ClientboundPacket {
+    @ProtocolIdentify(ProtocolInfo.IDS.SERVER_SETTINGS_RESPONSE_PACKET)
 
-	var formId: Int
-	var formData: string //json
+    var formId: Int
+    var formData: string //json
 
-	override fun decodePayload(input: PacketSerializer) {
-		formId = input.getUnsignedVarInt()
-		formData = input.getString()
-	}
+    override fun decodePayload(input: PacketSerializer) {
+        formId = input.getUnsignedVarInt()
+        formData = input.getString()
+    }
 
-	override fun encodePayload(output: PacketSerializer) {
-		output.putUnsignedVarInt(formId)
-		output.putString(formData)
-	}
+    override fun encodePayload(output: PacketSerializer) {
+        output.putUnsignedVarInt(formId)
+        output.putString(formData)
+    }
 
-	 override fun handle(handler: PacketHandlerInterface) : Boolean{
-		return handler.handleServerSettingsResponse(this)
-	}
+    override fun handle(handler: PacketHandlerInterface): Boolean {
+        return handler.handleServerSettingsResponse(this)
+    }
 }

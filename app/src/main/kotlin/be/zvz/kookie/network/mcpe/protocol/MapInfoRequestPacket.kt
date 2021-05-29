@@ -18,20 +18,20 @@ package be.zvz.kookie.network.mcpe.protocol
  * (at your option) any later version.
  */
 
-class MapInfoRequestPacket : DataPacket(), ServerboundPacket{
-@ProtocolIdentify(ProtocolInfo.IDS.MAP_INFO_REQUEST_PACKET)
+class MapInfoRequestPacket : DataPacket(), ServerboundPacket {
+    @ProtocolIdentify(ProtocolInfo.IDS.MAP_INFO_REQUEST_PACKET)
 
-	var mapId: Int
+    var mapId: Int
 
-	override fun decodePayload(input: PacketSerializer) {
-		mapId = input.getEntityUniqueId()
-	}
+    override fun decodePayload(input: PacketSerializer) {
+        mapId = input.getEntityUniqueId()
+    }
 
-	override fun encodePayload(output: PacketSerializer) {
-		output.putEntityUniqueId(mapId)
-	}
+    override fun encodePayload(output: PacketSerializer) {
+        output.putEntityUniqueId(mapId)
+    }
 
-	 override fun handle(handler: PacketHandlerInterface) : Boolean{
-		return handler.handleMapInfoRequest(this)
-	}
+    override fun handle(handler: PacketHandlerInterface): Boolean {
+        return handler.handleMapInfoRequest(this)
+    }
 }

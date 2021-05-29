@@ -11,6 +11,7 @@ data class ItemStackWrapper(val stackId: Int, val itemStack: ItemStack) {
             }
         }
     }
+
     companion object {
         fun read(input: PacketSerializer): ItemStackWrapper {
             var stackId = 0

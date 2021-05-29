@@ -18,45 +18,46 @@ package be.zvz.kookie.network.mcpe.protocol
  * (at your option) any later version.
  */
 
-class LevelEventGenericPacket : DataPacket(), ClientboundPacket{
-@ProtocolIdentify(ProtocolInfo.IDS.LEVEL_EVENT_GENERIC_PACKET)
+class LevelEventGenericPacket : DataPacket(), ClientboundPacket {
+    @ProtocolIdentify(ProtocolInfo.IDS.LEVEL_EVENT_GENERIC_PACKET)
 
-	var eventId: Int
-	/**
-	 * @var CacheableNbt
-	 * @phpstan-var CacheableNbt<\pocketmine\nbt\tag\CompoundTag>
-	 */
-	 eventData
+    var eventId: Int
+    /**
+     * @var CacheableNbt
+     * @phpstan-var CacheableNbt<\pocketmine\nbt\tag\CompoundTag>
+     */
+    eventData
 
-	 static fun create(eventId: Int, data: CompoundTag) : self{
-		result = new self
-		result.eventId = eventId
-		result.eventData = new CacheableNbt(data)
-		return result
-	}
+    static
+    fun create(eventId: Int, data: CompoundTag): self {
+        result = new self
+                result.eventId = eventId
+        result.eventData = new CacheableNbt (data)
+        return result
+    }
 
-	 fun getEventId() : Int{
-		return eventId
-	}
+    fun getEventId(): Int {
+        return eventId
+    }
 
-	/**
-	 * @phpstan-return CacheableNbt<\pocketmine\nbt\tag\CompoundTag>
-	 */
-	 fun getEventData() : CacheableNbt{
-		return eventData
-	}
+    /**
+     * @phpstan-return CacheableNbt<\pocketmine\nbt\tag\CompoundTag>
+     */
+    fun getEventData(): CacheableNbt {
+        return eventData
+    }
 
-	override fun decodePayload(input: PacketSerializer) {
-		eventId = input.getVarInt()
-		eventData = new CacheableNbt(input.getNbtCompoundRoot())
-	}
+    override fun decodePayload(input: PacketSerializer) {
+        eventId = input.getVarInt()
+        eventData = new CacheableNbt (input.getNbtCompoundRoot())
+    }
 
-	override fun encodePayload(output: PacketSerializer) {
-		output.putVarInt(eventId)
-		output.put(eventData->getEncodedNbt())
-	}
+    override fun encodePayload(output: PacketSerializer) {
+        output.putVarInt(eventId)
+        output.put(eventData->getEncodedNbt())
+    }
 
-	 override fun handle(handler: PacketHandlerInterface) : Boolean{
-		return handler.handleLevelEventGeneric(this)
-	}
+    override fun handle(handler: PacketHandlerInterface): Boolean {
+        return handler.handleLevelEventGeneric(this)
+    }
 }

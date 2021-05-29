@@ -18,32 +18,32 @@ package be.zvz.kookie.network.mcpe.protocol
  * (at your option) any later version.
  */
 
-class SetDisplayObjectivePacket : DataPacket(), ClientboundPacket{
-@ProtocolIdentify(ProtocolInfo.IDS.SET_DISPLAY_OBJECTIVE_PACKET)
+class SetDisplayObjectivePacket : DataPacket(), ClientboundPacket {
+    @ProtocolIdentify(ProtocolInfo.IDS.SET_DISPLAY_OBJECTIVE_PACKET)
 
-	var displaySlot: string
-	var objectiveName: string
-	var displayName: string
-	var criteriaName: string
-	var sortOrder: Int
+    var displaySlot: string
+    var objectiveName: string
+    var displayName: string
+    var criteriaName: string
+    var sortOrder: Int
 
-	override fun decodePayload(input: PacketSerializer) {
-		displaySlot = input.getString()
-		objectiveName = input.getString()
-		displayName = input.getString()
-		criteriaName = input.getString()
-		sortOrder = input.getVarInt()
-	}
+    override fun decodePayload(input: PacketSerializer) {
+        displaySlot = input.getString()
+        objectiveName = input.getString()
+        displayName = input.getString()
+        criteriaName = input.getString()
+        sortOrder = input.getVarInt()
+    }
 
-	override fun encodePayload(output: PacketSerializer) {
-		output.putString(displaySlot)
-		output.putString(objectiveName)
-		output.putString(displayName)
-		output.putString(criteriaName)
-		output.putVarInt(sortOrder)
-	}
+    override fun encodePayload(output: PacketSerializer) {
+        output.putString(displaySlot)
+        output.putString(objectiveName)
+        output.putString(displayName)
+        output.putString(criteriaName)
+        output.putVarInt(sortOrder)
+    }
 
-	 override fun handle(handler: PacketHandlerInterface) : Boolean{
-		return handler.handleSetDisplayObjective(this)
-	}
+    override fun handle(handler: PacketHandlerInterface): Boolean {
+        return handler.handleSetDisplayObjective(this)
+    }
 }

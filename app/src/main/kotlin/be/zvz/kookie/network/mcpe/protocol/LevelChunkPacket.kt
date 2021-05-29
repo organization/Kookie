@@ -19,101 +19,103 @@ package be.zvz.kookie.network.mcpe.protocol
  */
 use fun count
 
-class LevelChunkPacket : DataPacket(), ClientboundPacket{
-@ProtocolIdentify(ProtocolInfo.IDS.LEVEL_CHUNK_PACKET)
+class LevelChunkPacket : DataPacket(), ClientboundPacket {
+    @ProtocolIdentify(ProtocolInfo.IDS.LEVEL_CHUNK_PACKET)
 
-	var chunkX: Int
-	var chunkZ: Int
-	var subChunkCount: Int
-	var cacheEnabled: Boolean
-	/** @var Int[] */
-	 usedBlobHashes = []
-	var extraPayload: string
+    var chunkX: Int
+    var chunkZ: Int
+    var subChunkCount: Int
+    var cacheEnabled: Boolean
+    /** @var Int[] */
+    usedBlobHashes = []
+    var extraPayload: string
 
-	 static fun withoutCache(chunkX: Int, chunkZ: Int, subChunkCount: Int, payload: string) : self{
-		result = new self
-		result.chunkX = chunkX
-		result.chunkZ = chunkZ
-		result.subChunkCount = subChunkCount
-		result.extraPayload = payload
+    static
+    fun withoutCache(chunkX: Int, chunkZ: Int, subChunkCount: Int, payload: string): self {
+        result = new self
+                result.chunkX = chunkX
+        result.chunkZ = chunkZ
+        result.subChunkCount = subChunkCount
+        result.extraPayload = payload
 
-		result.cacheEnabled = false
+        result.cacheEnabled = false
 
-		return result
-	}
+        return result
+    }
 
-	/**
-	 * @param Int[] usedBlobHashes
-	 */
-	 static fun withCache(chunkX: Int, chunkZ: Int, subChunkCount: Int, usedBlobHashes: array, extraPayload: string) : self{
-		(static fun(Int ...hashes) {})(...usedBlobHashes)
-		result = new self
-		result.chunkX = chunkX
-		result.chunkZ = chunkZ
-		result.subChunkCount = subChunkCount
-		result.extraPayload = extraPayload
+    /**
+     * @param Int[] usedBlobHashes
+     */
+    static
+    fun withCache(chunkX: Int, chunkZ: Int, subChunkCount: Int, usedBlobHashes: array, extraPayload: string): self {
+        (static fun(Int ...hashes) {})(...usedBlobHashes)
+        result = new self
+                result.chunkX = chunkX
+        result.chunkZ = chunkZ
+        result.subChunkCount = subChunkCount
+        result.extraPayload = extraPayload
 
-		result.cacheEnabled = true
-		result.usedBlobHashes = usedBlobHashes
+        result.cacheEnabled = true
+        result.usedBlobHashes = usedBlobHashes
 
-		return result
-	}
+        return result
+    }
 
-	 fun getChunkX() : Int{
-		return chunkX
-	}
+    fun getChunkX(): Int {
+        return chunkX
+    }
 
-	 fun getChunkZ() : Int{
-		return chunkZ
-	}
+    fun getChunkZ(): Int {
+        return chunkZ
+    }
 
-	 fun getSubChunkCount() : Int{
-		return subChunkCount
-	}
+    fun getSubChunkCount(): Int {
+        return subChunkCount
+    }
 
-	 fun isCacheEnabled() : Boolean{
-		return cacheEnabled
-	}
+    fun isCacheEnabled(): Boolean {
+        return cacheEnabled
+    }
 
-	/**
-	 * @return Int[]
-	 */
-	 fun getUsedBlobHashes() : array{
-		return usedBlobHashes
-	}
+    /**
+     * @return Int[]
+     */
+    fun getUsedBlobHashes(): array {
+        return usedBlobHashes
+    }
 
-	 fun getExtraPayload() : string{
-		return extraPayload
-	}
+    fun getExtraPayload(): string {
+        return extraPayload
+    }
 
-	override fun decodePayload(input: PacketSerializer) {
-		chunkX = input.getVarInt()
-		chunkZ = input.getVarInt()
-		subChunkCount = input.getUnsignedVarInt()
-		cacheEnabled = input.getBool()
-		if(cacheEnabled){
-			for(i =  0, count = input.getUnsignedVarInt() i < count ++i){
-				usedBlobHashes[] = input.getLLong()
-			}
-		}
-		extraPayload = input.getString()
-	}
+    override fun decodePayload(input: PacketSerializer) {
+        chunkX = input.getVarInt()
+        chunkZ = input.getVarInt()
+        subChunkCount = input.getUnsignedVarInt()
+        cacheEnabled = input.getBool()
+        if (cacheEnabled) {
+            for (i = 0, count = input.getUnsignedVarInt() i < count++i){
+                usedBlobHashes[] = input.getLLong()
+            }
+        }
+        extraPayload = input.getString()
+    }
 
-	override fun encodePayload(output: PacketSerializer) {
-		output.putVarInt(chunkX)
-		output.putVarInt(chunkZ)
-		output.putUnsignedVarInt(subChunkCount)
-		output.putBool(cacheEnabled)
-		if(cacheEnabled){
-			output.putUnsignedVarInt(count(usedBlobHashes))
-			foreach(usedBlobHashes hash: as){
-				output.putLLong(hash)
-			}
-		}
-		output.putString(extraPayload)
-	}
+    override fun encodePayload(output: PacketSerializer) {
+        output.putVarInt(chunkX)
+        output.putVarInt(chunkZ)
+        output.putUnsignedVarInt(subChunkCount)
+        output.putBool(cacheEnabled)
+        if (cacheEnabled) {
+            output.putUnsignedVarInt(count(usedBlobHashes))
+            foreach(usedBlobHashes hash : as) {
+                output.putLLong(hash)
+            }
+        }
+        output.putString(extraPayload)
+    }
 
-	 override fun handle(handler: PacketHandlerInterface) : Boolean{
-		return handler.handleLevelChunk(this)
-	}
+    override fun handle(handler: PacketHandlerInterface): Boolean {
+        return handler.handleLevelChunk(this)
+    }
 }

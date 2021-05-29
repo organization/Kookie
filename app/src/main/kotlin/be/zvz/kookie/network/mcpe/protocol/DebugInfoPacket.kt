@@ -18,37 +18,42 @@ package be.zvz.kookie.network.mcpe.protocol
  * (at your option) any later version.
  */
 
-class DebugInfoPacket : DataPacket(), ClientboundPacket, ServerboundPacket{
-@ProtocolIdentify(ProtocolInfo.IDS.DEBUG_INFO_PACKET)
+class DebugInfoPacket : DataPacket(), ClientboundPacket, ServerboundPacket {
+    @ProtocolIdentify(ProtocolInfo.IDS.DEBUG_INFO_PACKET)
 
-	var entityUniqueId: Int
-	var data: string
+    var entityUniqueId: Int
+    var data: string
 
-	 static fun create(entityUniqueId: Int, data: string) : self{
-		result = new self
-		result.entityUniqueId = entityUniqueId
-		result.data = data
-		return result
-	}
+    static
+    fun create(entityUniqueId: Int, data: string): self {
+        result = new self
+                result.entityUniqueId = entityUniqueId
+        result.data = data
+        return result
+    }
 
-	/**
-	 * TODO: we can't call this getEntityRuntimeId() because of base class collision (crap architecture, thanks Shoghi)
-	 */
-	 fun getEntityUniqueIdField() : Int{ return entityUniqueId }
+    /**
+     * TODO: we can't call this getEntityRuntimeId() because of base class collision (crap architecture, thanks Shoghi)
+     */
+    fun getEntityUniqueIdField(): Int {
+        return entityUniqueId
+    }
 
-	 fun getData() : string{ return data }
+    fun getData(): string {
+        return data
+    }
 
-	override fun decodePayload(input: PacketSerializer) {
-		entityUniqueId = input.getEntityUniqueId()
-		data = input.getString()
-	}
+    override fun decodePayload(input: PacketSerializer) {
+        entityUniqueId = input.getEntityUniqueId()
+        data = input.getString()
+    }
 
-	override fun encodePayload(output: PacketSerializer) {
-		output.putEntityUniqueId(entityUniqueId)
-		output.putString(data)
-	}
+    override fun encodePayload(output: PacketSerializer) {
+        output.putEntityUniqueId(entityUniqueId)
+        output.putString(data)
+    }
 
-	 override fun handle(handler: PacketHandlerInterface) : Boolean{
-		return handler.handleDebugInfo(this)
-	}
+    override fun handle(handler: PacketHandlerInterface): Boolean {
+        return handler.handleDebugInfo(this)
+    }
 }

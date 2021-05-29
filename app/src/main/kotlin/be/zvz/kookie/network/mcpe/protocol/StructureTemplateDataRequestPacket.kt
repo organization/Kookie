@@ -18,34 +18,34 @@ package be.zvz.kookie.network.mcpe.protocol
  * (at your option) any later version.
  */
 
-class StructureTemplateDataRequestPacket : DataPacket(), ServerboundPacket{
-@ProtocolIdentify(ProtocolInfo.IDS.STRUCTURE_TEMPLATE_DATA_REQUEST_PACKET)
+class StructureTemplateDataRequestPacket : DataPacket(), ServerboundPacket {
+    @ProtocolIdentify(ProtocolInfo.IDS.STRUCTURE_TEMPLATE_DATA_REQUEST_PACKET)
 
-	 const val TYPE_ALWAYS_LOAD = 1
-	 const val TYPE_CREATE_AND_LOAD = 2
+    const val TYPE_ALWAYS_LOAD = 1
+    const val TYPE_CREATE_AND_LOAD = 2
 
-	var structureTemplateName: string
-	var structureBlockX: Int
-	var structureBlockY: Int
-	var structureBlockZ: Int
-	var structureSettings: StructureSettings
-	var structureTemplateResponseType: Int
+    var structureTemplateName: string
+    var structureBlockX: Int
+    var structureBlockY: Int
+    var structureBlockZ: Int
+    var structureSettings: StructureSettings
+    var structureTemplateResponseType: Int
 
-	override fun decodePayload(input: PacketSerializer) {
-		structureTemplateName = input.getString()
-		input.getBlockPosition(structureBlockX, structureBlockY, structureBlockZ)
-		structureSettings = input.getStructureSettings()
-		structureTemplateResponseType = input.getByte()
-	}
+    override fun decodePayload(input: PacketSerializer) {
+        structureTemplateName = input.getString()
+        input.getBlockPosition(structureBlockX, structureBlockY, structureBlockZ)
+        structureSettings = input.getStructureSettings()
+        structureTemplateResponseType = input.getByte()
+    }
 
-	override fun encodePayload(output: PacketSerializer) {
-		output.putString(structureTemplateName)
-		output.putBlockPosition(structureBlockX, structureBlockY, structureBlockZ)
-		output.putStructureSettings(structureSettings)
-		output.putByte(structureTemplateResponseType)
-	}
+    override fun encodePayload(output: PacketSerializer) {
+        output.putString(structureTemplateName)
+        output.putBlockPosition(structureBlockX, structureBlockY, structureBlockZ)
+        output.putStructureSettings(structureSettings)
+        output.putByte(structureTemplateResponseType)
+    }
 
-	 override fun handle(handler: PacketHandlerInterface) : Boolean{
-		return handler.handleStructureTemplateDataRequest(this)
-	}
+    override fun handle(handler: PacketHandlerInterface): Boolean {
+        return handler.handleStructureTemplateDataRequest(this)
+    }
 }

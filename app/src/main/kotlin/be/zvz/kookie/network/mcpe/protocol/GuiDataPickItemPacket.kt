@@ -18,26 +18,26 @@ package be.zvz.kookie.network.mcpe.protocol
  * (at your option) any later version.
  */
 
-class GuiDataPickItemPacket : DataPacket(), ClientboundPacket{
-@ProtocolIdentify(ProtocolInfo.IDS.GUI_DATA_PICK_ITEM_PACKET)
+class GuiDataPickItemPacket : DataPacket(), ClientboundPacket {
+    @ProtocolIdentify(ProtocolInfo.IDS.GUI_DATA_PICK_ITEM_PACKET)
 
-	var itemDescription: string
-	var itemEffects: string
-	var hotbarSlot: Int
+    var itemDescription: string
+    var itemEffects: string
+    var hotbarSlot: Int
 
-	override fun decodePayload(input: PacketSerializer) {
-		itemDescription = input.getString()
-		itemEffects = input.getString()
-		hotbarSlot = input.getLInt()
-	}
+    override fun decodePayload(input: PacketSerializer) {
+        itemDescription = input.getString()
+        itemEffects = input.getString()
+        hotbarSlot = input.getLInt()
+    }
 
-	override fun encodePayload(output: PacketSerializer) {
-		output.putString(itemDescription)
-		output.putString(itemEffects)
-		output.putLInt(hotbarSlot)
-	}
+    override fun encodePayload(output: PacketSerializer) {
+        output.putString(itemDescription)
+        output.putString(itemEffects)
+        output.putLInt(hotbarSlot)
+    }
 
-	 override fun handle(handler: PacketHandlerInterface) : Boolean{
-		return handler.handleGuiDataPickItem(this)
-	}
+    override fun handle(handler: PacketHandlerInterface): Boolean {
+        return handler.handleGuiDataPickItem(this)
+    }
 }

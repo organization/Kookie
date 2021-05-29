@@ -19,39 +19,42 @@ package be.zvz.kookie.network.mcpe.protocol
  */
 use fun count
 
-class CreativeContentPacket : DataPacket(), ClientboundPacket{
-@ProtocolIdentify(ProtocolInfo.IDS.CREATIVE_CONTENT_PACKET)
+class CreativeContentPacket : DataPacket(), ClientboundPacket {
+    @ProtocolIdentify(ProtocolInfo.IDS.CREATIVE_CONTENT_PACKET)
 
-	/** @var CreativeContentEntry[] */
-	 entries
+    /** @var CreativeContentEntry[] */
+    entries
 
-	/**
-	 * @param CreativeContentEntry[] entries
-	 */
-	 static fun create(entries: array) : self{
-		result = new self
-		result.entries = entries
-		return result
-	}
+    /**
+     * @param CreativeContentEntry[] entries
+     */
+    static
+    fun create(entries: array): self {
+        result = new self
+                result.entries = entries
+        return result
+    }
 
-	/** @return CreativeContentEntry[] */
-	 fun getEntries() : array{ return entries }
+    /** @return CreativeContentEntry[] */
+    fun getEntries(): array {
+        return entries
+    }
 
-	override fun decodePayload(input: PacketSerializer) {
-		entries = []
-		for(i = 0, len = input.getUnsignedVarInt() i < len ++i){
-			entries[] = CreativeContentEntry::read(input)
-		}
-	}
+    override fun decodePayload(input: PacketSerializer) {
+        entries = []
+        for (i = 0, len = input.getUnsignedVarInt() i < len++i){
+            entries[] = CreativeContentEntry::read(input)
+        }
+    }
 
-	override fun encodePayload(output: PacketSerializer) {
-		output.putUnsignedVarInt(count(entries))
-		foreach(entries entry: as){
-			entry.write(output)
-		}
-	}
+    override fun encodePayload(output: PacketSerializer) {
+        output.putUnsignedVarInt(count(entries))
+        foreach(entries entry : as) {
+            entry.write(output)
+        }
+    }
 
-	 override fun handle(handler: PacketHandlerInterface) : Boolean{
-		return handler.handleCreativeContent(this)
-	}
+    override fun handle(handler: PacketHandlerInterface): Boolean {
+        return handler.handleCreativeContent(this)
+    }
 }

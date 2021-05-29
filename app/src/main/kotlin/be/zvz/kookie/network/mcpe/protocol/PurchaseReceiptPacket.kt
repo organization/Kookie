@@ -19,27 +19,27 @@ package be.zvz.kookie.network.mcpe.protocol
  */
 use fun count
 
-class PurchaseReceiptPacket : DataPacket(), ServerboundPacket{
-@ProtocolIdentify(ProtocolInfo.IDS.PURCHASE_RECEIPT_PACKET)
+class PurchaseReceiptPacket : DataPacket(), ServerboundPacket {
+    @ProtocolIdentify(ProtocolInfo.IDS.PURCHASE_RECEIPT_PACKET)
 
-	/** @var string[] */
-	 entries = []
+    /** @var string[] */
+    entries = []
 
-	override fun decodePayload(input: PacketSerializer) {
-		count = input.getUnsignedVarInt()
-		for(i = 0 i < count ++i){
-			entries[] = input.getString()
-		}
-	}
+    override fun decodePayload(input: PacketSerializer) {
+        count = input.getUnsignedVarInt()
+        for (i = 0 i < count ++i){
+            entries[] = input.getString()
+        }
+    }
 
-	override fun encodePayload(output: PacketSerializer) {
-		output.putUnsignedVarInt(count(entries))
-		foreach(entries entry: as){
-			output.putString(entry)
-		}
-	}
+    override fun encodePayload(output: PacketSerializer) {
+        output.putUnsignedVarInt(count(entries))
+        foreach(entries entry : as) {
+            output.putString(entry)
+        }
+    }
 
-	 override fun handle(handler: PacketHandlerInterface) : Boolean{
-		return handler.handlePurchaseReceipt(this)
-	}
+    override fun handle(handler: PacketHandlerInterface): Boolean {
+        return handler.handlePurchaseReceipt(this)
+    }
 }

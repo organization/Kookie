@@ -18,20 +18,20 @@ package be.zvz.kookie.network.mcpe.protocol
  * (at your option) any later version.
  */
 
-class SetHealthPacket : DataPacket(), ClientboundPacket{
-@ProtocolIdentify(ProtocolInfo.IDS.SET_HEALTH_PACKET)
+class SetHealthPacket : DataPacket(), ClientboundPacket {
+    @ProtocolIdentify(ProtocolInfo.IDS.SET_HEALTH_PACKET)
 
-	var health: Int
+    var health: Int
 
-	override fun decodePayload(input: PacketSerializer) {
-		health = input.getVarInt()
-	}
+    override fun decodePayload(input: PacketSerializer) {
+        health = input.getVarInt()
+    }
 
-	override fun encodePayload(output: PacketSerializer) {
-		output.putVarInt(health)
-	}
+    override fun encodePayload(output: PacketSerializer) {
+        output.putVarInt(health)
+    }
 
-	 override fun handle(handler: PacketHandlerInterface) : Boolean{
-		return handler.handleSetHealth(this)
-	}
+    override fun handle(handler: PacketHandlerInterface): Boolean {
+        return handler.handleSetHealth(this)
+    }
 }

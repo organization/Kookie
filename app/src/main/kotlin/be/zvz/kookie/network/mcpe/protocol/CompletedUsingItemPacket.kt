@@ -18,40 +18,40 @@ package be.zvz.kookie.network.mcpe.protocol
  * (at your option) any later version.
  */
 
-class CompletedUsingItemPacket : DataPacket(), ClientboundPacket{
-@ProtocolIdentify(ProtocolInfo.IDS.COMPLETED_USING_ITEM_PACKET)
+class CompletedUsingItemPacket : DataPacket(), ClientboundPacket {
+    @ProtocolIdentify(ProtocolInfo.IDS.COMPLETED_USING_ITEM_PACKET)
 
-	 const val ACTION_UNKNOWN = -1
-	 const val ACTION_EQUIP_ARMOR = 0
-	 const val ACTION_EAT = 1
-	 const val ACTION_ATTACK = 2
-	 const val ACTION_CONSUME = 3
-	 const val ACTION_THROW = 4
-	 const val ACTION_SHOOT = 5
-	 const val ACTION_PLACE = 6
-	 const val ACTION_FILL_BOTTLE = 7
-	 const val ACTION_FILL_BUCKET = 8
-	 const val ACTION_POUR_BUCKET = 9
-	 const val ACTION_USE_TOOL = 10
-	 const val ACTION_INTERACT = 11
-	 const val ACTION_RETRIEVED = 12
-	 const val ACTION_DYED = 13
-	 const val ACTION_TRADED = 14
+    const val ACTION_UNKNOWN = -1
+    const val ACTION_EQUIP_ARMOR = 0
+    const val ACTION_EAT = 1
+    const val ACTION_ATTACK = 2
+    const val ACTION_CONSUME = 3
+    const val ACTION_THROW = 4
+    const val ACTION_SHOOT = 5
+    const val ACTION_PLACE = 6
+    const val ACTION_FILL_BOTTLE = 7
+    const val ACTION_FILL_BUCKET = 8
+    const val ACTION_POUR_BUCKET = 9
+    const val ACTION_USE_TOOL = 10
+    const val ACTION_INTERACT = 11
+    const val ACTION_RETRIEVED = 12
+    const val ACTION_DYED = 13
+    const val ACTION_TRADED = 14
 
-	var itemId: Int
-	var action: Int
+    var itemId: Int
+    var action: Int
 
-	 fun decodePayload(input: PacketSerializer) {
-		itemId = input.getShort()
-		action = input.getLInt()
-	}
+    fun decodePayload(input: PacketSerializer) {
+        itemId = input.getShort()
+        action = input.getLInt()
+    }
 
-	 fun encodePayload(output: PacketSerializer) {
-		output.putShort(itemId)
-		output.putLInt(action)
-	}
+    fun encodePayload(output: PacketSerializer) {
+        output.putShort(itemId)
+        output.putLInt(action)
+    }
 
-	 override fun handle(handler: PacketHandlerInterface) : Boolean{
-		return handler.handleCompletedUsingItem(this)
-	}
+    override fun handle(handler: PacketHandlerInterface): Boolean {
+        return handler.handleCompletedUsingItem(this)
+    }
 }

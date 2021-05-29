@@ -18,34 +18,34 @@ package be.zvz.kookie.network.mcpe.protocol
  * (at your option) any later version.
  */
 
-class LabTablePacket : DataPacket(), ClientboundPacket, ServerboundPacket{
-@ProtocolIdentify(ProtocolInfo.IDS.LAB_TABLE_PACKET)
+class LabTablePacket : DataPacket(), ClientboundPacket, ServerboundPacket {
+    @ProtocolIdentify(ProtocolInfo.IDS.LAB_TABLE_PACKET)
 
-	 const val TYPE_START_COMBINE = 0
-	 const val TYPE_START_REACTION = 1
-	 const val TYPE_RESET = 2
+    const val TYPE_START_COMBINE = 0
+    const val TYPE_START_REACTION = 1
+    const val TYPE_RESET = 2
 
-	var type: Int
+    var type: Int
 
-	var x: Int
-	var y: Int
-	var z: Int
+    var x: Int
+    var y: Int
+    var z: Int
 
-	var reactionType: Int
+    var reactionType: Int
 
-	override fun decodePayload(input: PacketSerializer) {
-		type = input.getByte()
-		input.getSignedBlockPosition(x, y, z)
-		reactionType = input.getByte()
-	}
+    override fun decodePayload(input: PacketSerializer) {
+        type = input.getByte()
+        input.getSignedBlockPosition(x, y, z)
+        reactionType = input.getByte()
+    }
 
-	override fun encodePayload(output: PacketSerializer) {
-		output.putByte(type)
-		output.putSignedBlockPosition(x, y, z)
-		output.putByte(reactionType)
-	}
+    override fun encodePayload(output: PacketSerializer) {
+        output.putByte(type)
+        output.putSignedBlockPosition(x, y, z)
+        output.putByte(reactionType)
+    }
 
-	 override fun handle(handler: PacketHandlerInterface) : Boolean{
-		return handler.handleLabTable(this)
-	}
+    override fun handle(handler: PacketHandlerInterface): Boolean {
+        return handler.handleLabTable(this)
+    }
 }

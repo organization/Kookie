@@ -18,30 +18,31 @@ package be.zvz.kookie.network.mcpe.protocol
  * (at your option) any later version.
  */
 
-class ContainerClosePacket : DataPacket(), ClientboundPacket, ServerboundPacket{
-@ProtocolIdentify(ProtocolInfo.IDS.CONTAINER_CLOSE_PACKET)
+class ContainerClosePacket : DataPacket(), ClientboundPacket, ServerboundPacket {
+    @ProtocolIdentify(ProtocolInfo.IDS.CONTAINER_CLOSE_PACKET)
 
-	var windowId: Int
-	var server: Boolean = false
+    var windowId: Int
+    var server: Boolean = false
 
-	 static fun create(windowId: Int, server: Boolean) : self{
-		result = new self
-		result.windowId = windowId
-		result.server = server
-		return result
-	}
+    static
+    fun create(windowId: Int, server: Boolean): self {
+        result = new self
+                result.windowId = windowId
+        result.server = server
+        return result
+    }
 
-	override fun decodePayload(input: PacketSerializer) {
-		windowId = input.getByte()
-		server = input.getBool()
-	}
+    override fun decodePayload(input: PacketSerializer) {
+        windowId = input.getByte()
+        server = input.getBool()
+    }
 
-	override fun encodePayload(output: PacketSerializer) {
-		output.putByte(windowId)
-		output.putBool(server)
-	}
+    override fun encodePayload(output: PacketSerializer) {
+        output.putByte(windowId)
+        output.putBool(server)
+    }
 
-	 override fun handle(handler: PacketHandlerInterface) : Boolean{
-		return handler.handleContainerClose(this)
-	}
+    override fun handle(handler: PacketHandlerInterface): Boolean {
+        return handler.handleContainerClose(this)
+    }
 }

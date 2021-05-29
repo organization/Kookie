@@ -18,23 +18,23 @@ package be.zvz.kookie.network.mcpe.protocol
  * (at your option) any later version.
  */
 
-class ModalFormResponsePacket : DataPacket(), ServerboundPacket{
-@ProtocolIdentify(ProtocolInfo.IDS.MODAL_FORM_RESPONSE_PACKET)
+class ModalFormResponsePacket : DataPacket(), ServerboundPacket {
+    @ProtocolIdentify(ProtocolInfo.IDS.MODAL_FORM_RESPONSE_PACKET)
 
-	var formId: Int
-	var formData: string //json
+    var formId: Int
+    var formData: string //json
 
-	override fun decodePayload(input: PacketSerializer) {
-		formId = input.getUnsignedVarInt()
-		formData = input.getString()
-	}
+    override fun decodePayload(input: PacketSerializer) {
+        formId = input.getUnsignedVarInt()
+        formData = input.getString()
+    }
 
-	override fun encodePayload(output: PacketSerializer) {
-		output.putUnsignedVarInt(formId)
-		output.putString(formData)
-	}
+    override fun encodePayload(output: PacketSerializer) {
+        output.putUnsignedVarInt(formId)
+        output.putString(formData)
+    }
 
-	 override fun handle(handler: PacketHandlerInterface) : Boolean{
-		return handler.handleModalFormResponse(this)
-	}
+    override fun handle(handler: PacketHandlerInterface): Boolean {
+        return handler.handleModalFormResponse(this)
+    }
 }

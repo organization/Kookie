@@ -18,18 +18,18 @@ package be.zvz.kookie.network.mcpe.protocol
  * (at your option) any later version.
  */
 
-class ServerSettingsRequestPacket : DataPacket(), ServerboundPacket{
-@ProtocolIdentify(ProtocolInfo.IDS.SERVER_SETTINGS_REQUEST_PACKET)
+class ServerSettingsRequestPacket : DataPacket(), ServerboundPacket {
+    @ProtocolIdentify(ProtocolInfo.IDS.SERVER_SETTINGS_REQUEST_PACKET)
 
-	override fun decodePayload(input: PacketSerializer) {
-		//No payload
-	}
+    override fun decodePayload(input: PacketSerializer) {
+        //No payload
+    }
 
-	override fun encodePayload(output: PacketSerializer) {
-		//No payload
-	}
+    override fun encodePayload(output: PacketSerializer) {
+        //No payload
+    }
 
-	 override fun handle(handler: PacketHandlerInterface) : Boolean{
-		return handler.handleServerSettingsRequest(this)
-	}
+    override fun handle(handler: PacketHandlerInterface): Boolean {
+        return handler.handleServerSettingsRequest(this)
+    }
 }

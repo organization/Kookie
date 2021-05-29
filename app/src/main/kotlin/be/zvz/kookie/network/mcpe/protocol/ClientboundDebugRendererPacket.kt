@@ -37,7 +37,8 @@ class ClientboundDebugRendererPacket : DataPacket(), ClientboundPacket {
         type = input.getLInt()
 
         when (type) {
-            TYPE_CLEAR -> {}
+            TYPE_CLEAR -> {
+            }
             TYPE_ADD_CUBE -> {
                 text = input.getString()
                 position = input.getVector3()
@@ -55,7 +56,8 @@ class ClientboundDebugRendererPacket : DataPacket(), ClientboundPacket {
         output.putLInt(type)
 
         when (type) {
-            TYPE_CLEAR -> {}
+            TYPE_CLEAR -> {
+            }
             TYPE_ADD_CUBE -> {
 
                 output.putString(text)

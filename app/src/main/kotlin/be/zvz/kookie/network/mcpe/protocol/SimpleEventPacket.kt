@@ -18,24 +18,24 @@ package be.zvz.kookie.network.mcpe.protocol
  * (at your option) any later version.
  */
 
-class SimpleEventPacket : DataPacket(), ClientboundPacket, ServerboundPacket{
-@ProtocolIdentify(ProtocolInfo.IDS.SIMPLE_EVENT_PACKET)
+class SimpleEventPacket : DataPacket(), ClientboundPacket, ServerboundPacket {
+    @ProtocolIdentify(ProtocolInfo.IDS.SIMPLE_EVENT_PACKET)
 
-	 const val TYPE_ENABLE_COMMANDS = 1
-	 const val TYPE_DISABLE_COMMANDS = 2
-	 const val TYPE_UNLOCK_WORLD_TEMPLATE_SETTINGS = 3
+    const val TYPE_ENABLE_COMMANDS = 1
+    const val TYPE_DISABLE_COMMANDS = 2
+    const val TYPE_UNLOCK_WORLD_TEMPLATE_SETTINGS = 3
 
-	var eventType: Int
+    var eventType: Int
 
-	override fun decodePayload(input: PacketSerializer) {
-		eventType = input.getLShort()
-	}
+    override fun decodePayload(input: PacketSerializer) {
+        eventType = input.getLShort()
+    }
 
-	override fun encodePayload(output: PacketSerializer) {
-		output.putLShort(eventType)
-	}
+    override fun encodePayload(output: PacketSerializer) {
+        output.putLShort(eventType)
+    }
 
-	 override fun handle(handler: PacketHandlerInterface) : Boolean{
-		return handler.handleSimpleEvent(this)
-	}
+    override fun handle(handler: PacketHandlerInterface): Boolean {
+        return handler.handleSimpleEvent(this)
+    }
 }

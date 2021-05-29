@@ -18,26 +18,27 @@ package be.zvz.kookie.network.mcpe.protocol
  * (at your option) any later version.
  */
 
-class SetCommandsEnabledPacket : DataPacket(), ClientboundPacket{
-@ProtocolIdentify(ProtocolInfo.IDS.SET_COMMANDS_ENABLED_PACKET)
+class SetCommandsEnabledPacket : DataPacket(), ClientboundPacket {
+    @ProtocolIdentify(ProtocolInfo.IDS.SET_COMMANDS_ENABLED_PACKET)
 
-	var enabled: Boolean
+    var enabled: Boolean
 
-	 static fun create(enabled: Boolean) : self{
-		result = new self
-		result.enabled = enabled
-		return result
-	}
+    static
+    fun create(enabled: Boolean): self {
+        result = new self
+                result.enabled = enabled
+        return result
+    }
 
-	override fun decodePayload(input: PacketSerializer) {
-		enabled = input.getBool()
-	}
+    override fun decodePayload(input: PacketSerializer) {
+        enabled = input.getBool()
+    }
 
-	override fun encodePayload(output: PacketSerializer) {
-		output.putBool(enabled)
-	}
+    override fun encodePayload(output: PacketSerializer) {
+        output.putBool(enabled)
+    }
 
-	 override fun handle(handler: PacketHandlerInterface) : Boolean{
-		return handler.handleSetCommandsEnabled(this)
-	}
+    override fun handle(handler: PacketHandlerInterface): Boolean {
+        return handler.handleSetCommandsEnabled(this)
+    }
 }

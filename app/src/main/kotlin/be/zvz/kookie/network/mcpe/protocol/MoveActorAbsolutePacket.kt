@@ -42,7 +42,14 @@ class MoveActorAbsolutePacket : DataPacket(), ClientboundPacket, ServerboundPack
         const val UNKNOWN = 0x03
         const val FLAG_FORCE_MOVE_LOCAL_ENTITY = 0x04
 
-        fun create(entityRuntimeId: Long, pos: Vector3, xRot: Float, yRot: Float, zRot: Float, flags: Int = 0): MoveActorAbsolutePacket {
+        fun create(
+            entityRuntimeId: Long,
+            pos: Vector3,
+            xRot: Float,
+            yRot: Float,
+            zRot: Float,
+            flags: Int = 0
+        ): MoveActorAbsolutePacket {
             val result = MoveActorAbsolutePacket()
             result.entityRuntimeId = entityRuntimeId
             result.flags = flags

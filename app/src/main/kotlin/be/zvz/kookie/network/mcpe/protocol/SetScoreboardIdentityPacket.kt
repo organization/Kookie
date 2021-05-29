@@ -19,41 +19,41 @@ package be.zvz.kookie.network.mcpe.protocol
  */
 use fun count
 
-class SetScoreboardIdentityPacket : DataPacket(), ClientboundPacket{
-@ProtocolIdentify(ProtocolInfo.IDS.SET_SCOREBOARD_IDENTITY_PACKET)
+class SetScoreboardIdentityPacket : DataPacket(), ClientboundPacket {
+    @ProtocolIdentify(ProtocolInfo.IDS.SET_SCOREBOARD_IDENTITY_PACKET)
 
-	 const val TYPE_REGISTER_IDENTITY = 0
-	 const val TYPE_CLEAR_IDENTITY = 1
+    const val TYPE_REGISTER_IDENTITY = 0
+    const val TYPE_CLEAR_IDENTITY = 1
 
-	var type: Int
-	/** @var ScoreboardIdentityPacketEntry[] */
-	 entries = []
+    var type: Int
+    /** @var ScoreboardIdentityPacketEntry[] */
+    entries = []
 
-	override fun decodePayload(input: PacketSerializer) {
-		type = input.getByte()
-		for(i = 0, count = input.getUnsignedVarInt() i < count ++i){
-			entry = new ScoreboardIdentityPacketEntry()
-			entry.scoreboardId = input.getVarLong()
-			if(type === TYPE_REGISTER_IDENTITY){
-				entry.entityUniqueId = input.getEntityUniqueId()
-			}
+    override fun decodePayload(input: PacketSerializer) {
+        type = input.getByte()
+        for (i = 0, count = input.getUnsignedVarInt() i < count++i){
+            entry = new ScoreboardIdentityPacketEntry ()
+            entry.scoreboardId = input.getVarLong()
+            if (type === TYPE_REGISTER_IDENTITY) {
+                entry.entityUniqueId = input.getEntityUniqueId()
+            }
 
-			entries[] = entry
-		}
-	}
+            entries[] = entry
+        }
+    }
 
-	override fun encodePayload(output: PacketSerializer) {
-		output.putByte(type)
-		output.putUnsignedVarInt(count(entries))
-		foreach(entries entry: as){
-			output.putVarLong(entry.scoreboardId)
-			if(type === TYPE_REGISTER_IDENTITY){
-				output.putEntityUniqueId(entry.entityUniqueId)
-			}
-		}
-	}
+    override fun encodePayload(output: PacketSerializer) {
+        output.putByte(type)
+        output.putUnsignedVarInt(count(entries))
+        foreach(entries entry : as) {
+            output.putVarLong(entry.scoreboardId)
+            if (type === TYPE_REGISTER_IDENTITY) {
+                output.putEntityUniqueId(entry.entityUniqueId)
+            }
+        }
+    }
 
-	 override fun handle(handler: PacketHandlerInterface) : Boolean{
-		return handler.handleSetScoreboardIdentity(this)
-	}
+    override fun handle(handler: PacketHandlerInterface): Boolean {
+        return handler.handleSetScoreboardIdentity(this)
+    }
 }

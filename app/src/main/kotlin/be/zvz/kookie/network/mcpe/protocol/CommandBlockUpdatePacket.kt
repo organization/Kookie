@@ -18,71 +18,71 @@ package be.zvz.kookie.network.mcpe.protocol
  * (at your option) any later version.
  */
 
-class CommandBlockUpdatePacket : DataPacket(), ServerboundPacket{
-@ProtocolIdentify(ProtocolInfo.IDS.COMMAND_BLOCK_UPDATE_PACKET)
+class CommandBlockUpdatePacket : DataPacket(), ServerboundPacket {
+    @ProtocolIdentify(ProtocolInfo.IDS.COMMAND_BLOCK_UPDATE_PACKET)
 
-	var isBlock: Boolean
+    var isBlock: Boolean
 
-	var x: Int
-	var y: Int
-	var z: Int
-	var commandBlockMode: Int
-	var isRedstoneMode: Boolean
-	var isConditional: Boolean
+    var x: Int
+    var y: Int
+    var z: Int
+    var commandBlockMode: Int
+    var isRedstoneMode: Boolean
+    var isConditional: Boolean
 
-	var minecartEid: Int
+    var minecartEid: Int
 
-	var command: string
-	var lastOutput: string
-	var name: string
-	var shouldTrackOutput: Boolean
-	var tickDelay: Int
-	var executeOnFirstTick: Boolean
+    var command: string
+    var lastOutput: string
+    var name: string
+    var shouldTrackOutput: Boolean
+    var tickDelay: Int
+    var executeOnFirstTick: Boolean
 
-	override fun decodePayload(input: PacketSerializer) {
-		isBlock = input.getBool()
+    override fun decodePayload(input: PacketSerializer) {
+        isBlock = input.getBool()
 
-		if(isBlock){
-			input.getBlockPosition(x, y, z)
-			commandBlockMode = input.getUnsignedVarInt()
-			isRedstoneMode = input.getBool()
-			isConditional = input.getBool()
-		}else{
-			//Minecart with command block
-			minecartEid = input.getEntityRuntimeId()
-		}
+        if (isBlock) {
+            input.getBlockPosition(x, y, z)
+            commandBlockMode = input.getUnsignedVarInt()
+            isRedstoneMode = input.getBool()
+            isConditional = input.getBool()
+        } else {
+            //Minecart with command block
+            minecartEid = input.getEntityRuntimeId()
+        }
 
-		command = input.getString()
-		lastOutput = input.getString()
-		name = input.getString()
+        command = input.getString()
+        lastOutput = input.getString()
+        name = input.getString()
 
-		shouldTrackOutput = input.getBool()
-		tickDelay = input.getLInt()
-		executeOnFirstTick = input.getBool()
-	}
+        shouldTrackOutput = input.getBool()
+        tickDelay = input.getLInt()
+        executeOnFirstTick = input.getBool()
+    }
 
-	override fun encodePayload(output: PacketSerializer) {
-		output.putBool(isBlock)
+    override fun encodePayload(output: PacketSerializer) {
+        output.putBool(isBlock)
 
-		if(isBlock){
-			output.putBlockPosition(x, y, z)
-			output.putUnsignedVarInt(commandBlockMode)
-			output.putBool(isRedstoneMode)
-			output.putBool(isConditional)
-		}else{
-			output.putEntityRuntimeId(minecartEid)
-		}
+        if (isBlock) {
+            output.putBlockPosition(x, y, z)
+            output.putUnsignedVarInt(commandBlockMode)
+            output.putBool(isRedstoneMode)
+            output.putBool(isConditional)
+        } else {
+            output.putEntityRuntimeId(minecartEid)
+        }
 
-		output.putString(command)
-		output.putString(lastOutput)
-		output.putString(name)
+        output.putString(command)
+        output.putString(lastOutput)
+        output.putString(name)
 
-		output.putBool(shouldTrackOutput)
-		output.putLInt(tickDelay)
-		output.putBool(executeOnFirstTick)
-	}
+        output.putBool(shouldTrackOutput)
+        output.putLInt(tickDelay)
+        output.putBool(executeOnFirstTick)
+    }
 
-	 override fun handle(handler: PacketHandlerInterface) : Boolean{
-		return handler.handleCommandBlockUpdate(this)
-	}
+    override fun handle(handler: PacketHandlerInterface): Boolean {
+        return handler.handleCommandBlockUpdate(this)
+    }
 }

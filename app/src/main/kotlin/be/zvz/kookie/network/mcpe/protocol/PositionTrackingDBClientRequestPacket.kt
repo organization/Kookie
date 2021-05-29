@@ -18,36 +18,41 @@ package be.zvz.kookie.network.mcpe.protocol
  * (at your option) any later version.
  */
 
-class PositionTrackingDBClientRequestPacket : DataPacket(), ServerboundPacket{
-@ProtocolIdentify(ProtocolInfo.IDS.POSITION_TRACKING_D_B_CLIENT_REQUEST_PACKET)
+class PositionTrackingDBClientRequestPacket : DataPacket(), ServerboundPacket {
+    @ProtocolIdentify(ProtocolInfo.IDS.POSITION_TRACKING_D_B_CLIENT_REQUEST_PACKET)
 
-	 const val ACTION_QUERY = 0
+    const val ACTION_QUERY = 0
 
-	var action: Int
-	var trackingId: Int
+    var action: Int
+    var trackingId: Int
 
-	 static fun create(action: Int, trackingId: Int) : self{
-		result = new self
-		result.action = action
-		result.trackingId = trackingId
-		return result
-	}
+    static
+    fun create(action: Int, trackingId: Int): self {
+        result = new self
+                result.action = action
+        result.trackingId = trackingId
+        return result
+    }
 
-	 fun getAction() : Int{ return action }
+    fun getAction(): Int {
+        return action
+    }
 
-	 fun getTrackingId() : Int{ return trackingId }
+    fun getTrackingId(): Int {
+        return trackingId
+    }
 
-	override fun decodePayload(input: PacketSerializer) {
-		action = input.getByte()
-		trackingId = input.getVarInt()
-	}
+    override fun decodePayload(input: PacketSerializer) {
+        action = input.getByte()
+        trackingId = input.getVarInt()
+    }
 
-	override fun encodePayload(output: PacketSerializer) {
-		output.putByte(action)
-		output.putVarInt(trackingId)
-	}
+    override fun encodePayload(output: PacketSerializer) {
+        output.putByte(action)
+        output.putVarInt(trackingId)
+    }
 
-	 override fun handle(handler: PacketHandlerInterface) : Boolean{
-		return handler.handlePositionTrackingDBClientRequest(this)
-	}
+    override fun handle(handler: PacketHandlerInterface): Boolean {
+        return handler.handlePositionTrackingDBClientRequest(this)
+    }
 }

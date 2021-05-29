@@ -18,26 +18,26 @@ package be.zvz.kookie.network.mcpe.protocol
  * (at your option) any later version.
  */
 
-class PhotoTransferPacket : DataPacket(), ClientboundPacket{
-@ProtocolIdentify(ProtocolInfo.IDS.PHOTO_TRANSFER_PACKET)
+class PhotoTransferPacket : DataPacket(), ClientboundPacket {
+    @ProtocolIdentify(ProtocolInfo.IDS.PHOTO_TRANSFER_PACKET)
 
-	var photoName: string
-	var photoData: string
-	var bookId: string //photos are stored in a sibling directory to the games folder (screenshots/(some UUID)/bookID/example.png)
+    var photoName: string
+    var photoData: string
+    var bookId: string //photos are stored in a sibling directory to the games folder (screenshots/(some UUID)/bookID/example.png)
 
-	override fun decodePayload(input: PacketSerializer) {
-		photoName = input.getString()
-		photoData = input.getString()
-		bookId = input.getString()
-	}
+    override fun decodePayload(input: PacketSerializer) {
+        photoName = input.getString()
+        photoData = input.getString()
+        bookId = input.getString()
+    }
 
-	override fun encodePayload(output: PacketSerializer) {
-		output.putString(photoName)
-		output.putString(photoData)
-		output.putString(bookId)
-	}
+    override fun encodePayload(output: PacketSerializer) {
+        output.putString(photoName)
+        output.putString(photoData)
+        output.putString(bookId)
+    }
 
-	 override fun handle(handler: PacketHandlerInterface) : Boolean{
-		return handler.handlePhotoTransfer(this)
-	}
+    override fun handle(handler: PacketHandlerInterface): Boolean {
+        return handler.handlePhotoTransfer(this)
+    }
 }

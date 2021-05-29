@@ -18,32 +18,32 @@ package be.zvz.kookie.network.mcpe.protocol
  * (at your option) any later version.
  */
 
-class StructureTemplateDataResponsePacket : DataPacket(), ClientboundPacket{
-@ProtocolIdentify(ProtocolInfo.IDS.STRUCTURE_TEMPLATE_DATA_RESPONSE_PACKET)
+class StructureTemplateDataResponsePacket : DataPacket(), ClientboundPacket {
+    @ProtocolIdentify(ProtocolInfo.IDS.STRUCTURE_TEMPLATE_DATA_RESPONSE_PACKET)
 
-	var structureTemplateName: string
-	/**
-	 * @var CacheableNbt|null
-	 * @phpstan-var CacheableNbt<\pocketmine\nbt\tag\CompoundTag>
-	 */
-	 namedtag
+    var structureTemplateName: string
+    /**
+     * @var CacheableNbt|null
+     * @phpstan-var CacheableNbt<\pocketmine\nbt\tag\CompoundTag>
+     */
+    namedtag
 
-	override fun decodePayload(input: PacketSerializer) {
-		structureTemplateName = input.getString()
-		if(input.getBool()){
-			namedtag = new CacheableNbt(input.getNbtCompoundRoot())
-		}
-	}
+    override fun decodePayload(input: PacketSerializer) {
+        structureTemplateName = input.getString()
+        if (input.getBool()) {
+            namedtag = new CacheableNbt (input.getNbtCompoundRoot())
+        }
+    }
 
-	override fun encodePayload(output: PacketSerializer) {
-		output.putString(structureTemplateName)
-		output.putBool(namedtag !== null)
-		if(namedtag !== null){
-			output.put(namedtag->getEncodedNbt())
-		}
-	}
+    override fun encodePayload(output: PacketSerializer) {
+        output.putString(structureTemplateName)
+        output.putBool(namedtag !== null)
+        if (namedtag !== null) {
+            output.put(namedtag->getEncodedNbt())
+        }
+    }
 
-	 override fun handle(handler: PacketHandlerInterface) : Boolean{
-		return handler.handleStructureTemplateDataResponse(this)
-	}
+    override fun handle(handler: PacketHandlerInterface): Boolean {
+        return handler.handleStructureTemplateDataResponse(this)
+    }
 }

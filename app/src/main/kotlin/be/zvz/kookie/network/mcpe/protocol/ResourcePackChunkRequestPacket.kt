@@ -18,23 +18,23 @@ package be.zvz.kookie.network.mcpe.protocol
  * (at your option) any later version.
  */
 
-class ResourcePackChunkRequestPacket : DataPacket(), ServerboundPacket{
-@ProtocolIdentify(ProtocolInfo.IDS.RESOURCE_PACK_CHUNK_REQUEST_PACKET)
+class ResourcePackChunkRequestPacket : DataPacket(), ServerboundPacket {
+    @ProtocolIdentify(ProtocolInfo.IDS.RESOURCE_PACK_CHUNK_REQUEST_PACKET)
 
-	var packId: string
-	var chunkIndex: Int
+    var packId: string
+    var chunkIndex: Int
 
-	override fun decodePayload(input: PacketSerializer) {
-		packId = input.getString()
-		chunkIndex = input.getLInt()
-	}
+    override fun decodePayload(input: PacketSerializer) {
+        packId = input.getString()
+        chunkIndex = input.getLInt()
+    }
 
-	override fun encodePayload(output: PacketSerializer) {
-		output.putString(packId)
-		output.putLInt(chunkIndex)
-	}
+    override fun encodePayload(output: PacketSerializer) {
+        output.putString(packId)
+        output.putLInt(chunkIndex)
+    }
 
-	 override fun handle(handler: PacketHandlerInterface) : Boolean{
-		return handler.handleResourcePackChunkRequest(this)
-	}
+    override fun handle(handler: PacketHandlerInterface): Boolean {
+        return handler.handleResourcePackChunkRequest(this)
+    }
 }

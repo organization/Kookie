@@ -18,38 +18,39 @@ package be.zvz.kookie.network.mcpe.protocol
  * (at your option) any later version.
  */
 
-class RespawnPacket : DataPacket(), ClientboundPacket, ServerboundPacket{
-@ProtocolIdentify(ProtocolInfo.IDS.RESPAWN_PACKET)
+class RespawnPacket : DataPacket(), ClientboundPacket, ServerboundPacket {
+    @ProtocolIdentify(ProtocolInfo.IDS.RESPAWN_PACKET)
 
-	 const val SEARCHING_FOR_SPAWN = 0
-	 const val READY_TO_SPAWN = 1
-	 const val CLIENT_READY_TO_SPAWN = 2
+    const val SEARCHING_FOR_SPAWN = 0
+    const val READY_TO_SPAWN = 1
+    const val CLIENT_READY_TO_SPAWN = 2
 
-	var position: Vector3
-	var respawnState: Int = SEARCHING_FOR_SPAWN
-	var entityRuntimeId: Int
+    var position: Vector3
+    var respawnState: Int = SEARCHING_FOR_SPAWN
+    var entityRuntimeId: Int
 
-	 static fun create(position: Vector3, respawnStatus: Int, entityRuntimeId: Int) : self{
-		result = new self
-		result.position = position.asVector3()
-		result.respawnState = respawnStatus
-		result.entityRuntimeId = entityRuntimeId
-		return result
-	}
+    static
+    fun create(position: Vector3, respawnStatus: Int, entityRuntimeId: Int): self {
+        result = new self
+                result.position = position.asVector3()
+        result.respawnState = respawnStatus
+        result.entityRuntimeId = entityRuntimeId
+        return result
+    }
 
-	override fun decodePayload(input: PacketSerializer) {
-		position = input.getVector3()
-		respawnState = input.getByte()
-		entityRuntimeId = input.getEntityRuntimeId()
-	}
+    override fun decodePayload(input: PacketSerializer) {
+        position = input.getVector3()
+        respawnState = input.getByte()
+        entityRuntimeId = input.getEntityRuntimeId()
+    }
 
-	override fun encodePayload(output: PacketSerializer) {
-		output.putVector3(position)
-		output.putByte(respawnState)
-		output.putEntityRuntimeId(entityRuntimeId)
-	}
+    override fun encodePayload(output: PacketSerializer) {
+        output.putVector3(position)
+        output.putByte(respawnState)
+        output.putEntityRuntimeId(entityRuntimeId)
+    }
 
-	 override fun handle(handler: PacketHandlerInterface) : Boolean{
-		return handler.handleRespawn(this)
-	}
+    override fun handle(handler: PacketHandlerInterface): Boolean {
+        return handler.handleRespawn(this)
+    }
 }

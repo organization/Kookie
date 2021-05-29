@@ -19,39 +19,42 @@ package be.zvz.kookie.network.mcpe.protocol
  */
 use fun count
 
-class ItemStackRequestPacket : DataPacket(), ServerboundPacket{
-@ProtocolIdentify(ProtocolInfo.IDS.ITEM_STACK_REQUEST_PACKET)
+class ItemStackRequestPacket : DataPacket(), ServerboundPacket {
+    @ProtocolIdentify(ProtocolInfo.IDS.ITEM_STACK_REQUEST_PACKET)
 
-	/** @var ItemStackRequest[] */
-	 requests
+    /** @var ItemStackRequest[] */
+    requests
 
-	/**
-	 * @param ItemStackRequest[] requests
-	 */
-	 static fun create(requests: array) : self{
-		result = new self
-		result.requests = requests
-		return result
-	}
+    /**
+     * @param ItemStackRequest[] requests
+     */
+    static
+    fun create(requests: array): self {
+        result = new self
+                result.requests = requests
+        return result
+    }
 
-	/** @return ItemStackRequest[] */
-	 fun getRequests() : array{ return requests }
+    /** @return ItemStackRequest[] */
+    fun getRequests(): array {
+        return requests
+    }
 
-	override fun decodePayload(input: PacketSerializer) {
-		requests = []
-		for(i = 0, len = input.getUnsignedVarInt() i < len ++i){
-			requests[] = ItemStackRequest::read(input)
-		}
-	}
+    override fun decodePayload(input: PacketSerializer) {
+        requests = []
+        for (i = 0, len = input.getUnsignedVarInt() i < len++i){
+            requests[] = ItemStackRequest::read(input)
+        }
+    }
 
-	override fun encodePayload(output: PacketSerializer) {
-		output.putUnsignedVarInt(count(requests))
-		foreach(requests request: as){
-			request.write(output)
-		}
-	}
+    override fun encodePayload(output: PacketSerializer) {
+        output.putUnsignedVarInt(count(requests))
+        foreach(requests request : as) {
+            request.write(output)
+        }
+    }
 
-	 override fun handle(handler: PacketHandlerInterface) : Boolean{
-		return handler.handleItemStackRequest(this)
-	}
+    override fun handle(handler: PacketHandlerInterface): Boolean {
+        return handler.handleItemStackRequest(this)
+    }
 }

@@ -59,6 +59,6 @@ class MovePlayerPacket : DataPacket(), ClientboundPacket, ServerboundPacket {
         const val MODE_NORMAL = 0
         const val MODE_RESET = 1
         const val MODE_TELEPORT = 2
-        const val MODE_PITCH = 3; // facepalm Mojang
+        const val MODE_PITCH = 3 // facepalm Mojang
     }
 }

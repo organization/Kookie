@@ -18,23 +18,23 @@ package be.zvz.kookie.network.mcpe.protocol
  * (at your option) any later version.
  */
 
-class MapCreateLockedCopyPacket : DataPacket(), ServerboundPacket{
-@ProtocolIdentify(ProtocolInfo.IDS.MAP_CREATE_LOCKED_COPY_PACKET)
+class MapCreateLockedCopyPacket : DataPacket(), ServerboundPacket {
+    @ProtocolIdentify(ProtocolInfo.IDS.MAP_CREATE_LOCKED_COPY_PACKET)
 
-	var originalMapId: Int
-	var newMapId: Int
+    var originalMapId: Int
+    var newMapId: Int
 
-	override fun decodePayload(input: PacketSerializer) {
-		originalMapId = input.getEntityUniqueId()
-		newMapId = input.getEntityUniqueId()
-	}
+    override fun decodePayload(input: PacketSerializer) {
+        originalMapId = input.getEntityUniqueId()
+        newMapId = input.getEntityUniqueId()
+    }
 
-	override fun encodePayload(output: PacketSerializer) {
-		output.putEntityUniqueId(originalMapId)
-		output.putEntityUniqueId(newMapId)
-	}
+    override fun encodePayload(output: PacketSerializer) {
+        output.putEntityUniqueId(originalMapId)
+        output.putEntityUniqueId(newMapId)
+    }
 
-	 override fun handle(handler: PacketHandlerInterface) : Boolean{
-		return handler.handleMapCreateLockedCopy(this)
-	}
+    override fun handle(handler: PacketHandlerInterface): Boolean {
+        return handler.handleMapCreateLockedCopy(this)
+    }
 }

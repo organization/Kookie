@@ -18,20 +18,20 @@ package be.zvz.kookie.network.mcpe.protocol
  * (at your option) any later version.
  */
 
-class SetLastHurtByPacket : DataPacket(), ClientboundPacket{
-@ProtocolIdentify(ProtocolInfo.IDS.SET_LAST_HURT_BY_PACKET)
+class SetLastHurtByPacket : DataPacket(), ClientboundPacket {
+    @ProtocolIdentify(ProtocolInfo.IDS.SET_LAST_HURT_BY_PACKET)
 
-	var entityTypeId: Int
+    var entityTypeId: Int
 
-	override fun decodePayload(input: PacketSerializer) {
-		entityTypeId = input.getVarInt()
-	}
+    override fun decodePayload(input: PacketSerializer) {
+        entityTypeId = input.getVarInt()
+    }
 
-	override fun encodePayload(output: PacketSerializer) {
-		output.putVarInt(entityTypeId)
-	}
+    override fun encodePayload(output: PacketSerializer) {
+        output.putVarInt(entityTypeId)
+    }
 
-	 override fun handle(handler: PacketHandlerInterface) : Boolean{
-		return handler.handleSetLastHurtBy(this)
-	}
+    override fun handle(handler: PacketHandlerInterface): Boolean {
+        return handler.handleSetLastHurtBy(this)
+    }
 }

@@ -19,41 +19,44 @@ package be.zvz.kookie.network.mcpe.protocol
  */
 use fun count
 
-class PlayerEnchantOptionsPacket : DataPacket(), ClientboundPacket{
-@ProtocolIdentify(ProtocolInfo.IDS.PLAYER_ENCHANT_OPTIONS_PACKET)
+class PlayerEnchantOptionsPacket : DataPacket(), ClientboundPacket {
+    @ProtocolIdentify(ProtocolInfo.IDS.PLAYER_ENCHANT_OPTIONS_PACKET)
 
-	/** @var EnchantOption[] */
-	 options
+    /** @var EnchantOption[] */
+    options
 
-	/**
-	 * @param EnchantOption[] options
-	 */
-	 static fun create(options: array) : self{
-		result = new self
-		result.options = options
-		return result
-	}
+    /**
+     * @param EnchantOption[] options
+     */
+    static
+    fun create(options: array): self {
+        result = new self
+                result.options = options
+        return result
+    }
 
-	/**
-	 * @return EnchantOption[]
-	 */
-	 fun getOptions() : array{ return options }
+    /**
+     * @return EnchantOption[]
+     */
+    fun getOptions(): array {
+        return options
+    }
 
-	override fun decodePayload(input: PacketSerializer) {
-		options = []
-		for(i = 0, len = input.getUnsignedVarInt() i < len ++i){
-			options[] = EnchantOption::read(input)
-		}
-	}
+    override fun decodePayload(input: PacketSerializer) {
+        options = []
+        for (i = 0, len = input.getUnsignedVarInt() i < len++i){
+            options[] = EnchantOption::read(input)
+        }
+    }
 
-	override fun encodePayload(output: PacketSerializer) {
-		output.putUnsignedVarInt(count(options))
-		foreach(options option: as){
-			option.write(output)
-		}
-	}
+    override fun encodePayload(output: PacketSerializer) {
+        output.putUnsignedVarInt(count(options))
+        foreach(options option : as) {
+            option.write(output)
+        }
+    }
 
-	 override fun handle(handler: PacketHandlerInterface) : Boolean{
-		return handler.handlePlayerEnchantOptions(this)
-	}
+    override fun handle(handler: PacketHandlerInterface): Boolean {
+        return handler.handlePlayerEnchantOptions(this)
+    }
 }

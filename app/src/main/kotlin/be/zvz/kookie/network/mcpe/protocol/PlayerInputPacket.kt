@@ -18,29 +18,29 @@ package be.zvz.kookie.network.mcpe.protocol
  * (at your option) any later version.
  */
 
-class PlayerInputPacket : DataPacket(), ServerboundPacket{
-@ProtocolIdentify(ProtocolInfo.IDS.PLAYER_INPUT_PACKET)
+class PlayerInputPacket : DataPacket(), ServerboundPacket {
+    @ProtocolIdentify(ProtocolInfo.IDS.PLAYER_INPUT_PACKET)
 
-	var motionX: Float
-	var motionY: Float
-	var jumping: Boolean
-	var sneaking: Boolean
+    var motionX: Float
+    var motionY: Float
+    var jumping: Boolean
+    var sneaking: Boolean
 
-	override fun decodePayload(input: PacketSerializer) {
-		motionX = input.getLFloat()
-		motionY = input.getLFloat()
-		jumping = input.getBool()
-		sneaking = input.getBool()
-	}
+    override fun decodePayload(input: PacketSerializer) {
+        motionX = input.getLFloat()
+        motionY = input.getLFloat()
+        jumping = input.getBool()
+        sneaking = input.getBool()
+    }
 
-	override fun encodePayload(output: PacketSerializer) {
-		output.putLFloat(motionX)
-		output.putLFloat(motionY)
-		output.putBool(jumping)
-		output.putBool(sneaking)
-	}
+    override fun encodePayload(output: PacketSerializer) {
+        output.putLFloat(motionX)
+        output.putLFloat(motionY)
+        output.putBool(jumping)
+        output.putBool(sneaking)
+    }
 
-	 override fun handle(handler: PacketHandlerInterface) : Boolean{
-		return handler.handlePlayerInput(this)
-	}
+    override fun handle(handler: PacketHandlerInterface): Boolean {
+        return handler.handlePlayerInput(this)
+    }
 }

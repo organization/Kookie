@@ -18,36 +18,36 @@ package be.zvz.kookie.network.mcpe.protocol
  * (at your option) any later version.
  */
 
-class NpcRequestPacket : DataPacket(), ServerboundPacket{
-@ProtocolIdentify(ProtocolInfo.IDS.NPC_REQUEST_PACKET)
+class NpcRequestPacket : DataPacket(), ServerboundPacket {
+    @ProtocolIdentify(ProtocolInfo.IDS.NPC_REQUEST_PACKET)
 
-	 const val REQUEST_SET_ACTIONS = 0
-	 const val REQUEST_EXECUTE_ACTION = 1
-	 const val REQUEST_EXECUTE_CLOSING_COMMANDS = 2
-	 const val REQUEST_SET_NAME = 3
-	 const val REQUEST_SET_SKIN = 4
-	 const val REQUEST_SET_INTERACTION_TEXT = 5
+    const val REQUEST_SET_ACTIONS = 0
+    const val REQUEST_EXECUTE_ACTION = 1
+    const val REQUEST_EXECUTE_CLOSING_COMMANDS = 2
+    const val REQUEST_SET_NAME = 3
+    const val REQUEST_SET_SKIN = 4
+    const val REQUEST_SET_INTERACTION_TEXT = 5
 
-	var entityRuntimeId: Int
-	var requestType: Int
-	var commandString: string
-	var actionType: Int
+    var entityRuntimeId: Int
+    var requestType: Int
+    var commandString: string
+    var actionType: Int
 
-	override fun decodePayload(input: PacketSerializer) {
-		entityRuntimeId = input.getEntityRuntimeId()
-		requestType = input.getByte()
-		commandString = input.getString()
-		actionType = input.getByte()
-	}
+    override fun decodePayload(input: PacketSerializer) {
+        entityRuntimeId = input.getEntityRuntimeId()
+        requestType = input.getByte()
+        commandString = input.getString()
+        actionType = input.getByte()
+    }
 
-	override fun encodePayload(output: PacketSerializer) {
-		output.putEntityRuntimeId(entityRuntimeId)
-		output.putByte(requestType)
-		output.putString(commandString)
-		output.putByte(actionType)
-	}
+    override fun encodePayload(output: PacketSerializer) {
+        output.putEntityRuntimeId(entityRuntimeId)
+        output.putByte(requestType)
+        output.putString(commandString)
+        output.putByte(actionType)
+    }
 
-	 override fun handle(handler: PacketHandlerInterface) : Boolean{
-		return handler.handleNpcRequest(this)
-	}
+    override fun handle(handler: PacketHandlerInterface): Boolean {
+        return handler.handleNpcRequest(this)
+    }
 }

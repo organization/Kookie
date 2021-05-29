@@ -18,37 +18,39 @@ package be.zvz.kookie.network.mcpe.protocol
  * (at your option) any later version.
  */
 
-class NetworkStackLatencyPacket : DataPacket(), ClientboundPacket, ServerboundPacket{
-@ProtocolIdentify(ProtocolInfo.IDS.NETWORK_STACK_LATENCY_PACKET)
+class NetworkStackLatencyPacket : DataPacket(), ClientboundPacket, ServerboundPacket {
+    @ProtocolIdentify(ProtocolInfo.IDS.NETWORK_STACK_LATENCY_PACKET)
 
-	var timestamp: Int
-	var needResponse: Boolean
+    var timestamp: Int
+    var needResponse: Boolean
 
-	 static fun request(timestampNs: Int) : self{
-		result = new self
-		result.timestamp = timestampNs
-		result.needResponse = true
-		return result
-	}
+    static
+    fun request(timestampNs: Int): self {
+        result = new self
+                result.timestamp = timestampNs
+        result.needResponse = true
+        return result
+    }
 
-	 static fun response(timestampNs: Int) : self{
-		result = new self
-		result.timestamp = timestampNs
-		result.needResponse = false
-		return result
-	}
+    static
+    fun response(timestampNs: Int): self {
+        result = new self
+                result.timestamp = timestampNs
+        result.needResponse = false
+        return result
+    }
 
-	override fun decodePayload(input: PacketSerializer) {
-		timestamp = input.getLLong()
-		needResponse = input.getBool()
-	}
+    override fun decodePayload(input: PacketSerializer) {
+        timestamp = input.getLLong()
+        needResponse = input.getBool()
+    }
 
-	override fun encodePayload(output: PacketSerializer) {
-		output.putLLong(timestamp)
-		output.putBool(needResponse)
-	}
+    override fun encodePayload(output: PacketSerializer) {
+        output.putLLong(timestamp)
+        output.putBool(needResponse)
+    }
 
-	 override fun handle(handler: PacketHandlerInterface) : Boolean{
-		return handler.handleNetworkStackLatency(this)
-	}
+    override fun handle(handler: PacketHandlerInterface): Boolean {
+        return handler.handleNetworkStackLatency(this)
+    }
 }

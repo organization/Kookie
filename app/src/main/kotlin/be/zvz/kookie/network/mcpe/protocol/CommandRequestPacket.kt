@@ -18,26 +18,26 @@ package be.zvz.kookie.network.mcpe.protocol
  * (at your option) any later version.
  */
 
-class CommandRequestPacket : DataPacket(), ServerboundPacket{
-@ProtocolIdentify(ProtocolInfo.IDS.COMMAND_REQUEST_PACKET)
+class CommandRequestPacket : DataPacket(), ServerboundPacket {
+    @ProtocolIdentify(ProtocolInfo.IDS.COMMAND_REQUEST_PACKET)
 
-	var command: string
-	var originData: CommandOriginData
-	var isInternal: Boolean
+    var command: string
+    var originData: CommandOriginData
+    var isInternal: Boolean
 
-	override fun decodePayload(input: PacketSerializer) {
-		command = input.getString()
-		originData = input.getCommandOriginData()
-		isInternal = input.getBool()
-	}
+    override fun decodePayload(input: PacketSerializer) {
+        command = input.getString()
+        originData = input.getCommandOriginData()
+        isInternal = input.getBool()
+    }
 
-	override fun encodePayload(output: PacketSerializer) {
-		output.putString(command)
-		output.putCommandOriginData(originData)
-		output.putBool(isInternal)
-	}
+    override fun encodePayload(output: PacketSerializer) {
+        output.putString(command)
+        output.putCommandOriginData(originData)
+        output.putBool(isInternal)
+    }
 
-	 override fun handle(handler: PacketHandlerInterface) : Boolean{
-		return handler.handleCommandRequest(this)
-	}
+    override fun handle(handler: PacketHandlerInterface): Boolean {
+        return handler.handleCommandRequest(this)
+    }
 }

@@ -18,38 +18,39 @@ package be.zvz.kookie.network.mcpe.protocol
  * (at your option) any later version.
  */
 
-class CodeBuilderPacket : DataPacket(), ClientboundPacket{
-@ProtocolIdentify(ProtocolInfo.IDS.CODE_BUILDER_PACKET)
+class CodeBuilderPacket : DataPacket(), ClientboundPacket {
+    @ProtocolIdentify(ProtocolInfo.IDS.CODE_BUILDER_PACKET)
 
-	var url: string
-	var openCodeBuilder: Boolean
+    var url: string
+    var openCodeBuilder: Boolean
 
-	 static fun create(url: string, openCodeBuilder: Boolean) : self{
-		result = new self
-		result.url = url
-		result.openCodeBuilder = openCodeBuilder
-		return result
-	}
+    static
+    fun create(url: string, openCodeBuilder: Boolean): self {
+        result = new self
+                result.url = url
+        result.openCodeBuilder = openCodeBuilder
+        return result
+    }
 
-	 fun getUrl() : string{
-		return url
-	}
+    fun getUrl(): string {
+        return url
+    }
 
-	 fun openCodeBuilder() : Boolean{
-		return openCodeBuilder
-	}
+    fun openCodeBuilder(): Boolean {
+        return openCodeBuilder
+    }
 
-	override fun decodePayload(input: PacketSerializer) {
-		url = input.getString()
-		openCodeBuilder = input.getBool()
-	}
+    override fun decodePayload(input: PacketSerializer) {
+        url = input.getString()
+        openCodeBuilder = input.getBool()
+    }
 
-	override fun encodePayload(output: PacketSerializer) {
-		output.putString(url)
-		output.putBool(openCodeBuilder)
-	}
+    override fun encodePayload(output: PacketSerializer) {
+        output.putString(url)
+        output.putBool(openCodeBuilder)
+    }
 
-	 override fun handle(handler: PacketHandlerInterface) : Boolean{
-		return handler.handleCodeBuilder(this)
-	}
+    override fun handle(handler: PacketHandlerInterface): Boolean {
+        return handler.handleCodeBuilder(this)
+    }
 }

@@ -18,20 +18,20 @@ package be.zvz.kookie.network.mcpe.protocol
  * (at your option) any later version.
  */
 
-class RemoveObjectivePacket : DataPacket(), ClientboundPacket{
-@ProtocolIdentify(ProtocolInfo.IDS.REMOVE_OBJECTIVE_PACKET)
+class RemoveObjectivePacket : DataPacket(), ClientboundPacket {
+    @ProtocolIdentify(ProtocolInfo.IDS.REMOVE_OBJECTIVE_PACKET)
 
-	var objectiveName: string
+    var objectiveName: string
 
-	override fun decodePayload(input: PacketSerializer) {
-		objectiveName = input.getString()
-	}
+    override fun decodePayload(input: PacketSerializer) {
+        objectiveName = input.getString()
+    }
 
-	override fun encodePayload(output: PacketSerializer) {
-		output.putString(objectiveName)
-	}
+    override fun encodePayload(output: PacketSerializer) {
+        output.putString(objectiveName)
+    }
 
-	 override fun handle(handler: PacketHandlerInterface) : Boolean{
-		return handler.handleRemoveObjective(this)
-	}
+    override fun handle(handler: PacketHandlerInterface): Boolean {
+        return handler.handleRemoveObjective(this)
+    }
 }

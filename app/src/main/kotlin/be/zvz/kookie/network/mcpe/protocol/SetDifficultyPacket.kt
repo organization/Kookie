@@ -18,26 +18,27 @@ package be.zvz.kookie.network.mcpe.protocol
  * (at your option) any later version.
  */
 
-class SetDifficultyPacket : DataPacket(), ClientboundPacket, ServerboundPacket{
-@ProtocolIdentify(ProtocolInfo.IDS.SET_DIFFICULTY_PACKET)
+class SetDifficultyPacket : DataPacket(), ClientboundPacket, ServerboundPacket {
+    @ProtocolIdentify(ProtocolInfo.IDS.SET_DIFFICULTY_PACKET)
 
-	var difficulty: Int
+    var difficulty: Int
 
-	 static fun create(difficulty: Int) : self{
-		result = new self
-		result.difficulty = difficulty
-		return result
-	}
+    static
+    fun create(difficulty: Int): self {
+        result = new self
+                result.difficulty = difficulty
+        return result
+    }
 
-	override fun decodePayload(input: PacketSerializer) {
-		difficulty = input.getUnsignedVarInt()
-	}
+    override fun decodePayload(input: PacketSerializer) {
+        difficulty = input.getUnsignedVarInt()
+    }
 
-	override fun encodePayload(output: PacketSerializer) {
-		output.putUnsignedVarInt(difficulty)
-	}
+    override fun encodePayload(output: PacketSerializer) {
+        output.putUnsignedVarInt(difficulty)
+    }
 
-	 override fun handle(handler: PacketHandlerInterface) : Boolean{
-		return handler.handleSetDifficulty(this)
-	}
+    override fun handle(handler: PacketHandlerInterface): Boolean {
+        return handler.handleSetDifficulty(this)
+    }
 }

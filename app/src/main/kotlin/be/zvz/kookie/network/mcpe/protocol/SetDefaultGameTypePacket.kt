@@ -18,26 +18,27 @@ package be.zvz.kookie.network.mcpe.protocol
  * (at your option) any later version.
  */
 
-class SetDefaultGameTypePacket : DataPacket(), ClientboundPacket, ServerboundPacket{
-@ProtocolIdentify(ProtocolInfo.IDS.SET_DEFAULT_GAME_TYPE_PACKET)
+class SetDefaultGameTypePacket : DataPacket(), ClientboundPacket, ServerboundPacket {
+    @ProtocolIdentify(ProtocolInfo.IDS.SET_DEFAULT_GAME_TYPE_PACKET)
 
-	var gamemode: Int
+    var gamemode: Int
 
-	 static fun create(gameMode: Int) : self{
-		result = new self
-		result.gamemode = gameMode
-		return result
-	}
+    static
+    fun create(gameMode: Int): self {
+        result = new self
+                result.gamemode = gameMode
+        return result
+    }
 
-	override fun decodePayload(input: PacketSerializer) {
-		gamemode = input.getVarInt()
-	}
+    override fun decodePayload(input: PacketSerializer) {
+        gamemode = input.getVarInt()
+    }
 
-	override fun encodePayload(output: PacketSerializer) {
-		output.putUnsignedVarInt(gamemode)
-	}
+    override fun encodePayload(output: PacketSerializer) {
+        output.putUnsignedVarInt(gamemode)
+    }
 
-	 override fun handle(handler: PacketHandlerInterface) : Boolean{
-		return handler.handleSetDefaultGameType(this)
-	}
+    override fun handle(handler: PacketHandlerInterface): Boolean {
+        return handler.handleSetDefaultGameType(this)
+    }
 }

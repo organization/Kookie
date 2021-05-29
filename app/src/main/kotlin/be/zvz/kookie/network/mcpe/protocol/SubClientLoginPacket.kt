@@ -18,20 +18,20 @@ package be.zvz.kookie.network.mcpe.protocol
  * (at your option) any later version.
  */
 
-class SubClientLoginPacket : DataPacket(), ServerboundPacket{
-@ProtocolIdentify(ProtocolInfo.IDS.SUB_CLIENT_LOGIN_PACKET)
+class SubClientLoginPacket : DataPacket(), ServerboundPacket {
+    @ProtocolIdentify(ProtocolInfo.IDS.SUB_CLIENT_LOGIN_PACKET)
 
-	var connectionRequestData: string
+    var connectionRequestData: string
 
-	override fun decodePayload(input: PacketSerializer) {
-		connectionRequestData = input.getString()
-	}
+    override fun decodePayload(input: PacketSerializer) {
+        connectionRequestData = input.getString()
+    }
 
-	override fun encodePayload(output: PacketSerializer) {
-		output.putString(connectionRequestData)
-	}
+    override fun encodePayload(output: PacketSerializer) {
+        output.putString(connectionRequestData)
+    }
 
-	 override fun handle(handler: PacketHandlerInterface) : Boolean{
-		return handler.handleSubClientLogin(this)
-	}
+    override fun handle(handler: PacketHandlerInterface): Boolean {
+        return handler.handleSubClientLogin(this)
+    }
 }

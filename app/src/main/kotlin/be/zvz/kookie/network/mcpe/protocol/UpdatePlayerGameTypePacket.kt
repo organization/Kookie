@@ -18,39 +18,44 @@ package be.zvz.kookie.network.mcpe.protocol
  * (at your option) any later version.
  */
 
-class UpdatePlayerGameTypePacket : DataPacket(), ClientboundPacket{
-@ProtocolIdentify(ProtocolInfo.IDS.UPDATE_PLAYER_GAME_TYPE_PACKET)
+class UpdatePlayerGameTypePacket : DataPacket(), ClientboundPacket {
+    @ProtocolIdentify(ProtocolInfo.IDS.UPDATE_PLAYER_GAME_TYPE_PACKET)
 
-	/**
-	 * @var Int
-	 * @see GameMode
-	 */
-	 gameMode
+    /**
+     * @var Int
+     * @see GameMode
+     */
+    gameMode
 
-	var playerEntityUniqueId: Int
+    var playerEntityUniqueId: Int
 
-	 static fun create(gameMode: Int, playerEntityUniqueId: Int) : self{
-		result = new self
-		result.gameMode = gameMode
-		result.playerEntityUniqueId = playerEntityUniqueId
-		return result
-	}
+    static
+    fun create(gameMode: Int, playerEntityUniqueId: Int): self {
+        result = new self
+                result.gameMode = gameMode
+        result.playerEntityUniqueId = playerEntityUniqueId
+        return result
+    }
 
-	 fun getGameMode() : Int{ return gameMode }
+    fun getGameMode(): Int {
+        return gameMode
+    }
 
-	 fun getPlayerEntityUniqueId() : Int{ return playerEntityUniqueId }
+    fun getPlayerEntityUniqueId(): Int {
+        return playerEntityUniqueId
+    }
 
-	override fun decodePayload(input: PacketSerializer) {
-		gameMode = input.getVarInt()
-		playerEntityUniqueId = input.getEntityUniqueId()
-	}
+    override fun decodePayload(input: PacketSerializer) {
+        gameMode = input.getVarInt()
+        playerEntityUniqueId = input.getEntityUniqueId()
+    }
 
-	override fun encodePayload(output: PacketSerializer) {
-		output.putVarInt(gameMode)
-		output.putEntityUniqueId(playerEntityUniqueId)
-	}
+    override fun encodePayload(output: PacketSerializer) {
+        output.putVarInt(gameMode)
+        output.putEntityUniqueId(playerEntityUniqueId)
+    }
 
-	 override fun handle(handler: PacketHandlerInterface) : Boolean{
-		return handler.handleUpdatePlayerGameType(this)
-	}
+    override fun handle(handler: PacketHandlerInterface): Boolean {
+        return handler.handleUpdatePlayerGameType(this)
+    }
 }

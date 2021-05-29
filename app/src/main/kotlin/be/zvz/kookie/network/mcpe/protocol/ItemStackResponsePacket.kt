@@ -19,39 +19,42 @@ package be.zvz.kookie.network.mcpe.protocol
  */
 use fun count
 
-class ItemStackResponsePacket : DataPacket(), ClientboundPacket{
-@ProtocolIdentify(ProtocolInfo.IDS.ITEM_STACK_RESPONSE_PACKET)
+class ItemStackResponsePacket : DataPacket(), ClientboundPacket {
+    @ProtocolIdentify(ProtocolInfo.IDS.ITEM_STACK_RESPONSE_PACKET)
 
-	/** @var ItemStackResponse[] */
-	 responses
+    /** @var ItemStackResponse[] */
+    responses
 
-	/**
-	 * @param ItemStackResponse[] responses
-	 */
-	 static fun create(responses: array) : self{
-		result = new self
-		result.responses = responses
-		return result
-	}
+    /**
+     * @param ItemStackResponse[] responses
+     */
+    static
+    fun create(responses: array): self {
+        result = new self
+                result.responses = responses
+        return result
+    }
 
-	/** @return ItemStackResponse[] */
-	 fun getResponses() : array{ return responses }
+    /** @return ItemStackResponse[] */
+    fun getResponses(): array {
+        return responses
+    }
 
-	override fun decodePayload(input: PacketSerializer) {
-		responses = []
-		for(i = 0, len = input.getUnsignedVarInt() i < len ++i){
-			responses[] = ItemStackResponse::read(input)
-		}
-	}
+    override fun decodePayload(input: PacketSerializer) {
+        responses = []
+        for (i = 0, len = input.getUnsignedVarInt() i < len++i){
+            responses[] = ItemStackResponse::read(input)
+        }
+    }
 
-	override fun encodePayload(output: PacketSerializer) {
-		output.putUnsignedVarInt(count(responses))
-		foreach(responses response: as){
-			response.write(output)
-		}
-	}
+    override fun encodePayload(output: PacketSerializer) {
+        output.putUnsignedVarInt(count(responses))
+        foreach(responses response : as) {
+            response.write(output)
+        }
+    }
 
-	 override fun handle(handler: PacketHandlerInterface) : Boolean{
-		return handler.handleItemStackResponse(this)
-	}
+    override fun handle(handler: PacketHandlerInterface): Boolean {
+        return handler.handleItemStackResponse(this)
+    }
 }

@@ -18,20 +18,20 @@ package be.zvz.kookie.network.mcpe.protocol
  * (at your option) any later version.
  */
 
-class ShowProfilePacket : DataPacket(), ClientboundPacket{
-@ProtocolIdentify(ProtocolInfo.IDS.SHOW_PROFILE_PACKET)
+class ShowProfilePacket : DataPacket(), ClientboundPacket {
+    @ProtocolIdentify(ProtocolInfo.IDS.SHOW_PROFILE_PACKET)
 
-	var xuid: string
+    var xuid: string
 
-	override fun decodePayload(input: PacketSerializer) {
-		xuid = input.getString()
-	}
+    override fun decodePayload(input: PacketSerializer) {
+        xuid = input.getString()
+    }
 
-	override fun encodePayload(output: PacketSerializer) {
-		output.putString(xuid)
-	}
+    override fun encodePayload(output: PacketSerializer) {
+        output.putString(xuid)
+    }
 
-	 override fun handle(handler: PacketHandlerInterface) : Boolean{
-		return handler.handleShowProfile(this)
-	}
+    override fun handle(handler: PacketHandlerInterface): Boolean {
+        return handler.handleShowProfile(this)
+    }
 }

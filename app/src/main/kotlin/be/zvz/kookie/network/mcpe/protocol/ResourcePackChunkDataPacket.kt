@@ -18,38 +18,39 @@ package be.zvz.kookie.network.mcpe.protocol
  * (at your option) any later version.
  */
 
-class ResourcePackChunkDataPacket : DataPacket(), ClientboundPacket{
-@ProtocolIdentify(ProtocolInfo.IDS.RESOURCE_PACK_CHUNK_DATA_PACKET)
+class ResourcePackChunkDataPacket : DataPacket(), ClientboundPacket {
+    @ProtocolIdentify(ProtocolInfo.IDS.RESOURCE_PACK_CHUNK_DATA_PACKET)
 
-	var packId: string
-	var chunkIndex: Int
-	var progress: Int
-	var data: string
+    var packId: string
+    var chunkIndex: Int
+    var progress: Int
+    var data: string
 
-	 static fun create(packId: string, chunkIndex: Int, chunkOffset: Int, data: string) : self{
-		result = new self
-		result.packId = packId
-		result.chunkIndex = chunkIndex
-		result.progress = chunkOffset
-		result.data = data
-		return result
-	}
+    static
+    fun create(packId: string, chunkIndex: Int, chunkOffset: Int, data: string): self {
+        result = new self
+                result.packId = packId
+        result.chunkIndex = chunkIndex
+        result.progress = chunkOffset
+        result.data = data
+        return result
+    }
 
-	override fun decodePayload(input: PacketSerializer) {
-		packId = input.getString()
-		chunkIndex = input.getLInt()
-		progress = input.getLLong()
-		data = input.getString()
-	}
+    override fun decodePayload(input: PacketSerializer) {
+        packId = input.getString()
+        chunkIndex = input.getLInt()
+        progress = input.getLLong()
+        data = input.getString()
+    }
 
-	override fun encodePayload(output: PacketSerializer) {
-		output.putString(packId)
-		output.putLInt(chunkIndex)
-		output.putLLong(progress)
-		output.putString(data)
-	}
+    override fun encodePayload(output: PacketSerializer) {
+        output.putString(packId)
+        output.putLInt(chunkIndex)
+        output.putLLong(progress)
+        output.putString(data)
+    }
 
-	 override fun handle(handler: PacketHandlerInterface) : Boolean{
-		return handler.handleResourcePackChunkData(this)
-	}
+    override fun handle(handler: PacketHandlerInterface): Boolean {
+        return handler.handleResourcePackChunkData(this)
+    }
 }

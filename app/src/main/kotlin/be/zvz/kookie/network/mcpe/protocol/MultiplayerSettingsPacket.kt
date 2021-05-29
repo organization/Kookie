@@ -18,34 +18,35 @@ package be.zvz.kookie.network.mcpe.protocol
  * (at your option) any later version.
  */
 
-class MultiplayerSettingsPacket : DataPacket(), ClientboundPacket, ServerboundPacket{
-@ProtocolIdentify(ProtocolInfo.IDS.MULTIPLAYER_SETTINGS_PACKET)
+class MultiplayerSettingsPacket : DataPacket(), ClientboundPacket, ServerboundPacket {
+    @ProtocolIdentify(ProtocolInfo.IDS.MULTIPLAYER_SETTINGS_PACKET)
 
-	 const val ACTION_ENABLE_MULTIPLAYER = 0
-	 const val ACTION_DISABLE_MULTIPLAYER = 1
-	 const val ACTION_REFRESH_JOIN_CODE = 2
+    const val ACTION_ENABLE_MULTIPLAYER = 0
+    const val ACTION_DISABLE_MULTIPLAYER = 1
+    const val ACTION_REFRESH_JOIN_CODE = 2
 
-	var action: Int
+    var action: Int
 
-	 static fun create(action: Int) : self{
-		result = new self
-		result.action = action
-		return result
-	}
+    static
+    fun create(action: Int): self {
+        result = new self
+                result.action = action
+        return result
+    }
 
-	 fun getAction() : Int{
-		return action
-	}
+    fun getAction(): Int {
+        return action
+    }
 
-	override fun decodePayload(input: PacketSerializer) {
-		action = input.getVarInt()
-	}
+    override fun decodePayload(input: PacketSerializer) {
+        action = input.getVarInt()
+    }
 
-	override fun encodePayload(output: PacketSerializer) {
-		output.putVarInt(action)
-	}
+    override fun encodePayload(output: PacketSerializer) {
+        output.putVarInt(action)
+    }
 
-	 override fun handle(handler: PacketHandlerInterface) : Boolean{
-		return handler.handleMultiplayerSettings(this)
-	}
+    override fun handle(handler: PacketHandlerInterface): Boolean {
+        return handler.handleMultiplayerSettings(this)
+    }
 }

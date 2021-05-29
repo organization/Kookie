@@ -18,40 +18,47 @@ package be.zvz.kookie.network.mcpe.protocol
  * (at your option) any later version.
  */
 
-class MotionPredictionHIntsPacket : DataPacket(), ClientboundPacket{
-@ProtocolIdentify(ProtocolInfo.IDS.MOTION_PREDICTION_HINTS_PACKET)
+class MotionPredictionHIntsPacket : DataPacket(), ClientboundPacket {
+    @ProtocolIdentify(ProtocolInfo.IDS.MOTION_PREDICTION_HINTS_PACKET)
 
-	var entityRuntimeId: Int
-	var motion: Vector3
-	var onGround: Boolean
+    var entityRuntimeId: Int
+    var motion: Vector3
+    var onGround: Boolean
 
-	 static fun create(entityRuntimeId: Int, motion: Vector3, onGround: Boolean) : self{
-		result = new self
-		result.entityRuntimeId = entityRuntimeId
-		result.motion = motion
-		result.onGround = onGround
-		return result
-	}
+    static
+    fun create(entityRuntimeId: Int, motion: Vector3, onGround: Boolean): self {
+        result = new self
+                result.entityRuntimeId = entityRuntimeId
+        result.motion = motion
+        result.onGround = onGround
+        return result
+    }
 
-	 fun getEntityRuntimeId() : Int{ return entityRuntimeId }
+    fun getEntityRuntimeId(): Int {
+        return entityRuntimeId
+    }
 
-	 fun getMotion() : Vector3{ return motion }
+    fun getMotion(): Vector3 {
+        return motion
+    }
 
-	 fun isOnGround() : Boolean{ return onGround }
+    fun isOnGround(): Boolean {
+        return onGround
+    }
 
-	override fun decodePayload(input: PacketSerializer) {
-		entityRuntimeId = input.getEntityRuntimeId()
-		motion = input.getVector3()
-		onGround = input.getBool()
-	}
+    override fun decodePayload(input: PacketSerializer) {
+        entityRuntimeId = input.getEntityRuntimeId()
+        motion = input.getVector3()
+        onGround = input.getBool()
+    }
 
-	override fun encodePayload(output: PacketSerializer) {
-		output.putEntityRuntimeId(entityRuntimeId)
-		output.putVector3(motion)
-		output.putBool(onGround)
-	}
+    override fun encodePayload(output: PacketSerializer) {
+        output.putEntityRuntimeId(entityRuntimeId)
+        output.putVector3(motion)
+        output.putBool(onGround)
+    }
 
-	 override fun handle(handler: PacketHandlerInterface) : Boolean{
-		return handler.handleMotionPredictionHInts(this)
-	}
+    override fun handle(handler: PacketHandlerInterface): Boolean {
+        return handler.handleMotionPredictionHInts(this)
+    }
 }

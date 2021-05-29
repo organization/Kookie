@@ -109,7 +109,12 @@ class BossEventPacket : DataPacket(), ClientboundPacket, ServerboundPacket {
             return packet
         }
 
-        fun show(bossEntityUniqueId: Long, title: String, healthPercent: Float, unknownShort: Int = 0): BossEventPacket {
+        fun show(
+            bossEntityUniqueId: Long,
+            title: String,
+            healthPercent: Float,
+            unknownShort: Int = 0
+        ): BossEventPacket {
             val packet = base(bossEntityUniqueId, TYPE_SHOW)
             packet.title = title
             packet.healthPercent = healthPercent

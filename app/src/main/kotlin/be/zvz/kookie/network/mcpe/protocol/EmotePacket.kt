@@ -18,51 +18,52 @@ package be.zvz.kookie.network.mcpe.protocol
  * (at your option) any later version.
  */
 
-class EmotePacket : DataPacket(), ClientboundPacket, ServerboundPacket{
-@ProtocolIdentify(ProtocolInfo.IDS.EMOTE_PACKET)
+class EmotePacket : DataPacket(), ClientboundPacket, ServerboundPacket {
+    @ProtocolIdentify(ProtocolInfo.IDS.EMOTE_PACKET)
 
-	 const val FLAG_SERVER = 1 << 0
+    const val FLAG_SERVER = 1 < < 0
 
-	var entityRuntimeId: Int
-	var emoteId: string
-	var flags: Int
+    var entityRuntimeId: Int
+    var emoteId: string
+    var flags: Int
 
-	 static fun create(entityRuntimeId: Int, emoteId: string, flags: Int) : self{
-		result = new self
-		result.entityRuntimeId = entityRuntimeId
-		result.emoteId = emoteId
-		result.flags = flags
-		return result
-	}
+    static
+    fun create(entityRuntimeId: Int, emoteId: string, flags: Int): self {
+        result = new self
+                result.entityRuntimeId = entityRuntimeId
+        result.emoteId = emoteId
+        result.flags = flags
+        return result
+    }
 
-	/**
-	 * TODO: we can't call this getEntityRuntimeId() because of base class collision (crap architecture, thanks Shoghi)
-	 */
-	 fun getEntityRuntimeIdField() : Int{
-		return entityRuntimeId
-	}
+    /**
+     * TODO: we can't call this getEntityRuntimeId() because of base class collision (crap architecture, thanks Shoghi)
+     */
+    fun getEntityRuntimeIdField(): Int {
+        return entityRuntimeId
+    }
 
-	 fun getEmoteId() : string{
-		return emoteId
-	}
+    fun getEmoteId(): string {
+        return emoteId
+    }
 
-	 fun getFlags() : Int{
-		return flags
-	}
+    fun getFlags(): Int {
+        return flags
+    }
 
-	override fun decodePayload(input: PacketSerializer) {
-		entityRuntimeId = input.getEntityRuntimeId()
-		emoteId = input.getString()
-		flags = input.getByte()
-	}
+    override fun decodePayload(input: PacketSerializer) {
+        entityRuntimeId = input.getEntityRuntimeId()
+        emoteId = input.getString()
+        flags = input.getByte()
+    }
 
-	override fun encodePayload(output: PacketSerializer) {
-		output.putEntityRuntimeId(entityRuntimeId)
-		output.putString(emoteId)
-		output.putByte(flags)
-	}
+    override fun encodePayload(output: PacketSerializer) {
+        output.putEntityRuntimeId(entityRuntimeId)
+        output.putString(emoteId)
+        output.putByte(flags)
+    }
 
-	 override fun handle(handler: PacketHandlerInterface) : Boolean{
-		return handler.handleEmote(this)
-	}
+    override fun handle(handler: PacketHandlerInterface): Boolean {
+        return handler.handleEmote(this)
+    }
 }

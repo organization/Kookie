@@ -34,7 +34,7 @@ class ClientCacheMissResponsePacket : DataPacket(), ClientboundPacket {
 
 
     override fun decodePayload(input: PacketSerializer) {
-        for (i in 0..input.getUnsignedVarInt()){
+        for (i in 0..input.getUnsignedVarInt()) {
             val hash = input.getLLong()
             val payload = input.getString()
             blobs[] = new ChunkCacheBlob (hash, payload)

@@ -18,28 +18,28 @@ package be.zvz.kookie.network.mcpe.protocol
  * (at your option) any later version.
  */
 
-class StructureBlockUpdatePacket : DataPacket(), ServerboundPacket{
-@ProtocolIdentify(ProtocolInfo.IDS.STRUCTURE_BLOCK_UPDATE_PACKET)
+class StructureBlockUpdatePacket : DataPacket(), ServerboundPacket {
+    @ProtocolIdentify(ProtocolInfo.IDS.STRUCTURE_BLOCK_UPDATE_PACKET)
 
-	var x: Int
-	var y: Int
-	var z: Int
-	var structureEditorData: StructureEditorData
-	var isPowered: Boolean
+    var x: Int
+    var y: Int
+    var z: Int
+    var structureEditorData: StructureEditorData
+    var isPowered: Boolean
 
-	override fun decodePayload(input: PacketSerializer) {
-		input.getBlockPosition(x, y, z)
-		structureEditorData = input.getStructureEditorData()
-		isPowered = input.getBool()
-	}
+    override fun decodePayload(input: PacketSerializer) {
+        input.getBlockPosition(x, y, z)
+        structureEditorData = input.getStructureEditorData()
+        isPowered = input.getBool()
+    }
 
-	override fun encodePayload(output: PacketSerializer) {
-		output.putBlockPosition(x, y, z)
-		output.putStructureEditorData(structureEditorData)
-		output.putBool(isPowered)
-	}
+    override fun encodePayload(output: PacketSerializer) {
+        output.putBlockPosition(x, y, z)
+        output.putStructureEditorData(structureEditorData)
+        output.putBool(isPowered)
+    }
 
-	 override fun handle(handler: PacketHandlerInterface) : Boolean{
-		return handler.handleStructureBlockUpdate(this)
-	}
+    override fun handle(handler: PacketHandlerInterface): Boolean {
+        return handler.handleStructureBlockUpdate(this)
+    }
 }

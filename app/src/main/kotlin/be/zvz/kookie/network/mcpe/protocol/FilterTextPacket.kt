@@ -18,34 +18,39 @@ package be.zvz.kookie.network.mcpe.protocol
  * (at your option) any later version.
  */
 
-class FilterTextPacket : DataPacket(), ClientboundPacket, ServerboundPacket{
-@ProtocolIdentify(ProtocolInfo.IDS.FILTER_TEXT_PACKET)
+class FilterTextPacket : DataPacket(), ClientboundPacket, ServerboundPacket {
+    @ProtocolIdentify(ProtocolInfo.IDS.FILTER_TEXT_PACKET)
 
-	var text: string
-	var fromServer: Boolean
+    var text: string
+    var fromServer: Boolean
 
-	 static fun create(text: string, server: Boolean) : self{
-		result = new self
-		result.text = text
-		result.fromServer = server
-		return result
-	}
+    static
+    fun create(text: string, server: Boolean): self {
+        result = new self
+                result.text = text
+        result.fromServer = server
+        return result
+    }
 
-	 fun getText() : string{ return text }
+    fun getText(): string {
+        return text
+    }
 
-	 fun isFromServer() : Boolean{ return fromServer }
+    fun isFromServer(): Boolean {
+        return fromServer
+    }
 
-	override fun decodePayload(input: PacketSerializer) {
-		text = input.getString()
-		fromServer = input.getBool()
-	}
+    override fun decodePayload(input: PacketSerializer) {
+        text = input.getString()
+        fromServer = input.getBool()
+    }
 
-	override fun encodePayload(output: PacketSerializer) {
-		output.putString(text)
-		output.putBool(fromServer)
-	}
+    override fun encodePayload(output: PacketSerializer) {
+        output.putString(text)
+        output.putBool(fromServer)
+    }
 
-	 override fun handle(handler: PacketHandlerInterface) : Boolean{
-		return handler.handleFilterText(this)
-	}
+    override fun handle(handler: PacketHandlerInterface): Boolean {
+        return handler.handleFilterText(this)
+    }
 }

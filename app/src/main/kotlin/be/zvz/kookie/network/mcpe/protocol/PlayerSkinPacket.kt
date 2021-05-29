@@ -19,38 +19,39 @@ package be.zvz.kookie.network.mcpe.protocol
  */
 use Ramsey\Uuid\UuidInterface
 
-class PlayerSkinPacket : DataPacket(), ClientboundPacket, ServerboundPacket{
-@ProtocolIdentify(ProtocolInfo.IDS.PLAYER_SKIN_PACKET)
+class PlayerSkinPacket : DataPacket(), ClientboundPacket, ServerboundPacket {
+    @ProtocolIdentify(ProtocolInfo.IDS.PLAYER_SKIN_PACKET)
 
-	var uuid: UuidInterface
-	var oldSkinName: string = ""
-	var newSkinName: string = ""
-	var skin: SkinData
+    var uuid: UuidInterface
+    var oldSkinName: string = ""
+    var newSkinName: string = ""
+    var skin: SkinData
 
-	 static fun create(uuid: UuidInterface, skinData: SkinData) : self{
-		result = new self
-		result.uuid = uuid
-		result.skin = skinData
-		return result
-	}
+    static
+    fun create(uuid: UuidInterface, skinData: SkinData): self {
+        result = new self
+                result.uuid = uuid
+        result.skin = skinData
+        return result
+    }
 
-	override fun decodePayload(input: PacketSerializer) {
-		uuid = input.getUUID()
-		skin = input.getSkin()
-		newSkinName = input.getString()
-		oldSkinName = input.getString()
-		skin->setVerified(input.getBool())
-	}
+    override fun decodePayload(input: PacketSerializer) {
+        uuid = input.getUUID()
+        skin = input.getSkin()
+        newSkinName = input.getString()
+        oldSkinName = input.getString()
+        skin->setVerified(input.getBool())
+    }
 
-	override fun encodePayload(output: PacketSerializer) {
-		output.putUUID(uuid)
-		output.putSkin(skin)
-		output.putString(newSkinName)
-		output.putString(oldSkinName)
-		output.putBool(skin->isVerified())
-	}
+    override fun encodePayload(output: PacketSerializer) {
+        output.putUUID(uuid)
+        output.putSkin(skin)
+        output.putString(newSkinName)
+        output.putString(oldSkinName)
+        output.putBool(skin->isVerified())
+    }
 
-	 override fun handle(handler: PacketHandlerInterface) : Boolean{
-		return handler.handlePlayerSkin(this)
-	}
+    override fun handle(handler: PacketHandlerInterface): Boolean {
+        return handler.handlePlayerSkin(this)
+    }
 }

@@ -18,20 +18,20 @@ package be.zvz.kookie.network.mcpe.protocol
  * (at your option) any later version.
  */
 
-class RequestChunkRadiusPacket : DataPacket(), ServerboundPacket{
-@ProtocolIdentify(ProtocolInfo.IDS.REQUEST_CHUNK_RADIUS_PACKET)
+class RequestChunkRadiusPacket : DataPacket(), ServerboundPacket {
+    @ProtocolIdentify(ProtocolInfo.IDS.REQUEST_CHUNK_RADIUS_PACKET)
 
-	var radius: Int
+    var radius: Int
 
-	override fun decodePayload(input: PacketSerializer) {
-		radius = input.getVarInt()
-	}
+    override fun decodePayload(input: PacketSerializer) {
+        radius = input.getVarInt()
+    }
 
-	override fun encodePayload(output: PacketSerializer) {
-		output.putVarInt(radius)
-	}
+    override fun encodePayload(output: PacketSerializer) {
+        output.putVarInt(radius)
+    }
 
-	 override fun handle(handler: PacketHandlerInterface) : Boolean{
-		return handler.handleRequestChunkRadius(this)
-	}
+    override fun handle(handler: PacketHandlerInterface): Boolean {
+        return handler.handleRequestChunkRadius(this)
+    }
 }

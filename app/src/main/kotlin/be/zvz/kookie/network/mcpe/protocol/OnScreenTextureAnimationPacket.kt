@@ -18,20 +18,20 @@ package be.zvz.kookie.network.mcpe.protocol
  * (at your option) any later version.
  */
 
-class OnScreenTextureAnimationPacket : DataPacket(), ClientboundPacket{
-@ProtocolIdentify(ProtocolInfo.IDS.ON_SCREEN_TEXTURE_ANIMATION_PACKET)
+class OnScreenTextureAnimationPacket : DataPacket(), ClientboundPacket {
+    @ProtocolIdentify(ProtocolInfo.IDS.ON_SCREEN_TEXTURE_ANIMATION_PACKET)
 
-	var effectId: Int
+    var effectId: Int
 
-	override fun decodePayload(input: PacketSerializer) {
-		effectId = input.getLInt() //unsigned
-	}
+    override fun decodePayload(input: PacketSerializer) {
+        effectId = input.getLInt() //unsigned
+    }
 
-	override fun encodePayload(output: PacketSerializer) {
-		output.putLInt(effectId)
-	}
+    override fun encodePayload(output: PacketSerializer) {
+        output.putLInt(effectId)
+    }
 
-	 override fun handle(handler: PacketHandlerInterface) : Boolean{
-		return handler.handleOnScreenTextureAnimation(this)
-	}
+    override fun handle(handler: PacketHandlerInterface): Boolean {
+        return handler.handleOnScreenTextureAnimation(this)
+    }
 }

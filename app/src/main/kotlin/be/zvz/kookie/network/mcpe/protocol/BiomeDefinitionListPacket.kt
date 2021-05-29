@@ -21,32 +21,33 @@ import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
 import be.zvz.kookie.network.mcpe.serializer.PacketSerializer
 
 @ProtocolIdentify(ProtocolInfo.IDS.BIOME_DEFINITION_LIST_PACKET)
-class BiomeDefinitionListPacket : DataPacket(), ClientboundPacket{
+class BiomeDefinitionListPacket : DataPacket(), ClientboundPacket {
 
-	/**
-	 * @var CacheableNbt
-	 * @phpstan-var CacheableNbt<\pocketmine\nbt\tag\CompoundTag>
-	 */
-	 defs
+    /**
+     * @var CacheableNbt
+     * @phpstan-var CacheableNbt<\pocketmine\nbt\tag\CompoundTag>
+     */
+    defs
 
-	/**
-	 * @phpstan-param CacheableNbt<\pocketmine\nbt\tag\CompoundTag> nbt
-	 */
-	 static fun create(nbt: CacheableNbt) : self{
-		result = new self
-		result.defs = nbt
-		return result
-	}
+    /**
+     * @phpstan-param CacheableNbt<\pocketmine\nbt\tag\CompoundTag> nbt
+     */
+    static
+    fun create(nbt: CacheableNbt): self {
+        result = new self
+                result.defs = nbt
+        return result
+    }
 
-	override fun decodePayload(input: PacketSerializer) {
-		defs = new CacheableNbt(input.getNbtCompoundRoot())
-	}
+    override fun decodePayload(input: PacketSerializer) {
+        defs = new CacheableNbt (input.getNbtCompoundRoot())
+    }
 
-	override fun encodePayload(output: PacketSerializer) {
-		output.put(defs->getEncodedNbt())
-	}
+    override fun encodePayload(output: PacketSerializer) {
+        output.put(defs->getEncodedNbt())
+    }
 
-	 override fun handle(handler: PacketHandlerInterface) : Boolean{
-		return handler.handleBiomeDefinitionList(this)
-	}
+    override fun handle(handler: PacketHandlerInterface): Boolean {
+        return handler.handleBiomeDefinitionList(this)
+    }
 }

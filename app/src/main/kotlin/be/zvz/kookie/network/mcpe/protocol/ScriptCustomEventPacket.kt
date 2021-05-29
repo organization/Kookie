@@ -18,24 +18,25 @@ package be.zvz.kookie.network.mcpe.protocol
  * (at your option) any later version.
  */
 
-class ScriptCustomEventPacket : DataPacket(){ //TODO: this doesn't have handlers in either client or server in the game as of 1.8
-@ProtocolIdentify(ProtocolInfo.IDS.SCRIPT_CUSTOM_EVENT_PACKET)
+class ScriptCustomEventPacket :
+    DataPacket() { //TODO: this doesn't have handlers in either client or server in the game as of 1.8
+    @ProtocolIdentify(ProtocolInfo.IDS.SCRIPT_CUSTOM_EVENT_PACKET)
 
-	var eventName: string
-	/** @var string json data */
-	 eventData
+    var eventName: string
+    /** @var string json data */
+    eventData
 
-	override fun decodePayload(input: PacketSerializer) {
-		eventName = input.getString()
-		eventData = input.getString()
-	}
+    override fun decodePayload(input: PacketSerializer) {
+        eventName = input.getString()
+        eventData = input.getString()
+    }
 
-	override fun encodePayload(output: PacketSerializer) {
-		output.putString(eventName)
-		output.putString(eventData)
-	}
+    override fun encodePayload(output: PacketSerializer) {
+        output.putString(eventName)
+        output.putString(eventData)
+    }
 
-	 override fun handle(handler: PacketHandlerInterface) : Boolean{
-		return handler.handleScriptCustomEvent(this)
-	}
+    override fun handle(handler: PacketHandlerInterface): Boolean {
+        return handler.handleScriptCustomEvent(this)
+    }
 }

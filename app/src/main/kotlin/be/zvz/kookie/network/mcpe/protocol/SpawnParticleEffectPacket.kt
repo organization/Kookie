@@ -18,29 +18,29 @@ package be.zvz.kookie.network.mcpe.protocol
  * (at your option) any later version.
  */
 
-class SpawnParticleEffectPacket : DataPacket(), ClientboundPacket{
-@ProtocolIdentify(ProtocolInfo.IDS.SPAWN_PARTICLE_EFFECT_PACKET)
+class SpawnParticleEffectPacket : DataPacket(), ClientboundPacket {
+    @ProtocolIdentify(ProtocolInfo.IDS.SPAWN_PARTICLE_EFFECT_PACKET)
 
-	var dimensionId: Int = DimensionIds::OVERWORLD //wtf mojang
-	var entityUniqueId: Int = -1 //default none
-	var position: Vector3
-	var particleName: string
+    var dimensionId: Int = DimensionIds::OVERWORLD //wtf mojang
+    var entityUniqueId: Int = -1 //default none
+    var position: Vector3
+    var particleName: string
 
-	override fun decodePayload(input: PacketSerializer) {
-		dimensionId = input.getByte()
-		entityUniqueId = input.getEntityUniqueId()
-		position = input.getVector3()
-		particleName = input.getString()
-	}
+    override fun decodePayload(input: PacketSerializer) {
+        dimensionId = input.getByte()
+        entityUniqueId = input.getEntityUniqueId()
+        position = input.getVector3()
+        particleName = input.getString()
+    }
 
-	override fun encodePayload(output: PacketSerializer) {
-		output.putByte(dimensionId)
-		output.putEntityUniqueId(entityUniqueId)
-		output.putVector3(position)
-		output.putString(particleName)
-	}
+    override fun encodePayload(output: PacketSerializer) {
+        output.putByte(dimensionId)
+        output.putEntityUniqueId(entityUniqueId)
+        output.putVector3(position)
+        output.putString(particleName)
+    }
 
-	 override fun handle(handler: PacketHandlerInterface) : Boolean{
-		return handler.handleSpawnParticleEffect(this)
-	}
+    override fun handle(handler: PacketHandlerInterface): Boolean {
+        return handler.handleSpawnParticleEffect(this)
+    }
 }

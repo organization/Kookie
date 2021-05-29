@@ -18,33 +18,34 @@ package be.zvz.kookie.network.mcpe.protocol
  * (at your option) any later version.
  */
 
-class NetworkSettingsPacket : DataPacket(), ClientboundPacket{
-@ProtocolIdentify(ProtocolInfo.IDS.NETWORK_SETTINGS_PACKET)
+class NetworkSettingsPacket : DataPacket(), ClientboundPacket {
+    @ProtocolIdentify(ProtocolInfo.IDS.NETWORK_SETTINGS_PACKET)
 
-	 const val COMPRESS_NOTHING = 0
-	 const val COMPRESS_EVERYTHING = 1
+    const val COMPRESS_NOTHING = 0
+    const val COMPRESS_EVERYTHING = 1
 
-	var compressionThreshold: Int
+    var compressionThreshold: Int
 
-	 static fun create(compressionThreshold: Int) : self{
-		result = new self
-		result.compressionThreshold = compressionThreshold
-		return result
-	}
+    static
+    fun create(compressionThreshold: Int): self {
+        result = new self
+                result.compressionThreshold = compressionThreshold
+        return result
+    }
 
-	 fun getCompressionThreshold() : Int{
-		return compressionThreshold
-	}
+    fun getCompressionThreshold(): Int {
+        return compressionThreshold
+    }
 
-	override fun decodePayload(input: PacketSerializer) {
-		compressionThreshold = input.getLShort()
-	}
+    override fun decodePayload(input: PacketSerializer) {
+        compressionThreshold = input.getLShort()
+    }
 
-	override fun encodePayload(output: PacketSerializer) {
-		output.putLShort(compressionThreshold)
-	}
+    override fun encodePayload(output: PacketSerializer) {
+        output.putLShort(compressionThreshold)
+    }
 
-	 override fun handle(handler: PacketHandlerInterface) : Boolean{
-		return handler.handleNetworkSettings(this)
-	}
+    override fun handle(handler: PacketHandlerInterface): Boolean {
+        return handler.handleNetworkSettings(this)
+    }
 }

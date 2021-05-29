@@ -19,77 +19,77 @@ package be.zvz.kookie.network.mcpe.protocol
  */
 use fun count
 
-class CommandOutputPacket : DataPacket(), ClientboundPacket{
-@ProtocolIdentify(ProtocolInfo.IDS.COMMAND_OUTPUT_PACKET)
+class CommandOutputPacket : DataPacket(), ClientboundPacket {
+    @ProtocolIdentify(ProtocolInfo.IDS.COMMAND_OUTPUT_PACKET)
 
-	 const val TYPE_LAST = 1
-	 const val TYPE_SILENT = 2
-	 const val TYPE_ALL = 3
-	 const val TYPE_DATA_SET = 4
+    const val TYPE_LAST = 1
+    const val TYPE_SILENT = 2
+    const val TYPE_ALL = 3
+    const val TYPE_DATA_SET = 4
 
-	var originData: CommandOriginData
-	var outputputType: Int
-	var successCount: Int
-	/** @var CommandOutputMessage[] */
-	 messages = []
-	var unknownString: string
+    var originData: CommandOriginData
+    var outputputType: Int
+    var successCount: Int
+    /** @var CommandOutputMessage[] */
+    messages = []
+    var unknownString: string
 
-	override fun decodePayload(input: PacketSerializer) {
-		originData = input.getCommandOriginData()
-		outputType = input.getByte()
-		successCount = input.getUnsignedVarInt()
+    override fun decodePayload(input: PacketSerializer) {
+        originData = input.getCommandOriginData()
+        outputType = input.getByte()
+        successCount = input.getUnsignedVarInt()
 
-		for(i = 0, size = input.getUnsignedVarInt() i < size ++i){
-			messages[] = getCommandMessage(input)
-		}
+        for (i = 0, size = input.getUnsignedVarInt() i < size++i){
+            messages[] = getCommandMessage(input)
+        }
 
-		if(outputType === TYPE_DATA_SET){
-			unknownString = input.getString()
-		}
-	}
+        if (outputType === TYPE_DATA_SET) {
+            unknownString = input.getString()
+        }
+    }
 
-	/**
-	 * @throws BinaryDataException
-	 */
-	override fun getCommandMessage(input: PacketSerializer) : CommandOutputMessage{
-		message = new CommandOutputMessage()
+    /**
+     * @throws BinaryDataException
+     */
+    override fun getCommandMessage(input: PacketSerializer): CommandOutputMessage {
+        message = new CommandOutputMessage ()
 
-		message.isInternal = input.getBool()
-		message.messageId = input.getString()
+        message.isInternal = input.getBool()
+        message.messageId = input.getString()
 
-		for(i = 0, size = input.getUnsignedVarInt() i < size ++i){
-			message.parameters[] = input.getString()
-		}
+        for (i = 0, size = input.getUnsignedVarInt() i < size++i){
+            message.parameters[] = input.getString()
+        }
 
-		return message
-	}
+        return message
+    }
 
-	override fun encodePayload(output: PacketSerializer) {
-		output.putCommandOriginData(originData)
-		output.putByte(outputType)
-		output.putUnsignedVarInt(successCount)
+    override fun encodePayload(output: PacketSerializer) {
+        output.putCommandOriginData(originData)
+        output.putByte(outputType)
+        output.putUnsignedVarInt(successCount)
 
-		output.putUnsignedVarInt(count(messages))
-		foreach(messages message: as){
-			putCommandMessage(message, output)
-		}
+        output.putUnsignedVarInt(count(messages))
+        foreach(messages message : as) {
+            putCommandMessage(message, output)
+        }
 
-		if(outputType === TYPE_DATA_SET){
-			output.putString(unknownString)
-		}
-	}
+        if (outputType === TYPE_DATA_SET) {
+            output.putString(unknownString)
+        }
+    }
 
-	override fun putCommandMessage(message: CommandOutputMessage, output: PacketSerializer) {
-		output.putBool(message.isInternal)
-		output.putString(message.messageId)
+    override fun putCommandMessage(message: CommandOutputMessage, output: PacketSerializer) {
+        output.putBool(message.isInternal)
+        output.putString(message.messageId)
 
-		output.putUnsignedVarInt(count(message.parameters))
-		foreach(message.parameters parameter: as){
-			output.putString(parameter)
-		}
-	}
+        output.putUnsignedVarInt(count(message.parameters))
+        foreach(message.parameters parameter : as) {
+            output.putString(parameter)
+        }
+    }
 
-	 override fun handle(handler: PacketHandlerInterface) : Boolean{
-		return handler.handleCommandOutput(this)
-	}
+    override fun handle(handler: PacketHandlerInterface): Boolean {
+        return handler.handleCommandOutput(this)
+    }
 }

@@ -19,46 +19,49 @@ package be.zvz.kookie.network.mcpe.protocol
  */
 use fun count
 
-class PlayerFogPacket : DataPacket(), ClientboundPacket{
-@ProtocolIdentify(ProtocolInfo.IDS.PLAYER_FOG_PACKET)
+class PlayerFogPacket : DataPacket(), ClientboundPacket {
+    @ProtocolIdentify(ProtocolInfo.IDS.PLAYER_FOG_PACKET)
 
-	/**
-	 * @var string[]
-	 * @phpstan-var list<string>
-	 */
-	 fogLayers
+    /**
+     * @var string[]
+     * @phpstan-var list<string>
+     */
+    fogLayers
 
-	/**
-	 * @param string[] fogLayers
-	 * @phpstan-param list<string> fogLayers
-	 */
-	 static fun create(fogLayers: array) : self{
-		result = new self
-		result.fogLayers = fogLayers
-		return result
-	}
+    /**
+     * @param string[] fogLayers
+     * @phpstan-param list<string> fogLayers
+     */
+    static
+    fun create(fogLayers: array): self {
+        result = new self
+                result.fogLayers = fogLayers
+        return result
+    }
 
-	/**
-	 * @return string[]
-	 * @phpstan-return list<string>
-	 */
-	 fun getFogLayers() : array{ return fogLayers }
+    /**
+     * @return string[]
+     * @phpstan-return list<string>
+     */
+    fun getFogLayers(): array {
+        return fogLayers
+    }
 
-	override fun decodePayload(input: PacketSerializer) {
-		fogLayers = []
-		for(i = 0, len = input.getUnsignedVarInt() i < len ++i){
-			fogLayers[] = input.getString()
-		}
-	}
+    override fun decodePayload(input: PacketSerializer) {
+        fogLayers = []
+        for (i = 0, len = input.getUnsignedVarInt() i < len++i){
+            fogLayers[] = input.getString()
+        }
+    }
 
-	override fun encodePayload(output: PacketSerializer) {
-		output.putUnsignedVarInt(count(fogLayers))
-		foreach(fogLayers fogLayer: as){
-			output.putString(fogLayer)
-		}
-	}
+    override fun encodePayload(output: PacketSerializer) {
+        output.putUnsignedVarInt(count(fogLayers))
+        foreach(fogLayers fogLayer : as) {
+            output.putString(fogLayer)
+        }
+    }
 
-	 override fun handle(handler: PacketHandlerInterface) : Boolean{
-		return handler.handlePlayerFog(this)
-	}
+    override fun handle(handler: PacketHandlerInterface): Boolean {
+        return handler.handlePlayerFog(this)
+    }
 }

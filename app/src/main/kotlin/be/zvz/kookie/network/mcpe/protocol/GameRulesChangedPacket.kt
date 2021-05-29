@@ -18,24 +18,24 @@ package be.zvz.kookie.network.mcpe.protocol
  * (at your option) any later version.
  */
 
-class GameRulesChangedPacket : DataPacket(), ClientboundPacket{
-@ProtocolIdentify(ProtocolInfo.IDS.GAME_RULES_CHANGED_PACKET)
+class GameRulesChangedPacket : DataPacket(), ClientboundPacket {
+    @ProtocolIdentify(ProtocolInfo.IDS.GAME_RULES_CHANGED_PACKET)
 
-	/**
-	 * @var GameRule[]
-	 * @phpstan-var array<string, GameRule>
-	 */
-	 gameRules = []
+    /**
+     * @var GameRule[]
+     * @phpstan-var array<string, GameRule>
+     */
+    gameRules = []
 
-	override fun decodePayload(input: PacketSerializer) {
-		gameRules = input.getGameRules()
-	}
+    override fun decodePayload(input: PacketSerializer) {
+        gameRules = input.getGameRules()
+    }
 
-	override fun encodePayload(output: PacketSerializer) {
-		output.putGameRules(gameRules)
-	}
+    override fun encodePayload(output: PacketSerializer) {
+        output.putGameRules(gameRules)
+    }
 
-	 override fun handle(handler: PacketHandlerInterface) : Boolean{
-		return handler.handleGameRulesChanged(this)
-	}
+    override fun handle(handler: PacketHandlerInterface): Boolean {
+        return handler.handleGameRulesChanged(this)
+    }
 }

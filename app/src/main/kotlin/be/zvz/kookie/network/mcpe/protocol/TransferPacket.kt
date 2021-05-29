@@ -18,30 +18,31 @@ package be.zvz.kookie.network.mcpe.protocol
  * (at your option) any later version.
  */
 
-class TransferPacket : DataPacket(), ClientboundPacket{
-@ProtocolIdentify(ProtocolInfo.IDS.TRANSFER_PACKET)
+class TransferPacket : DataPacket(), ClientboundPacket {
+    @ProtocolIdentify(ProtocolInfo.IDS.TRANSFER_PACKET)
 
-	var address: string
-	var port: Int = 19132
+    var address: string
+    var port: Int = 19132
 
-	 static fun create(address: string, port: Int) : self{
-		result = new self
-		result.address = address
-		result.port = port
-		return result
-	}
+    static
+    fun create(address: string, port: Int): self {
+        result = new self
+                result.address = address
+        result.port = port
+        return result
+    }
 
-	override fun decodePayload(input: PacketSerializer) {
-		address = input.getString()
-		port = input.getLShort()
-	}
+    override fun decodePayload(input: PacketSerializer) {
+        address = input.getString()
+        port = input.getLShort()
+    }
 
-	override fun encodePayload(output: PacketSerializer) {
-		output.putString(address)
-		output.putLShort(port)
-	}
+    override fun encodePayload(output: PacketSerializer) {
+        output.putString(address)
+        output.putLShort(port)
+    }
 
-	 override fun handle(handler: PacketHandlerInterface) : Boolean{
-		return handler.handleTransfer(this)
-	}
+    override fun handle(handler: PacketHandlerInterface): Boolean {
+        return handler.handleTransfer(this)
+    }
 }

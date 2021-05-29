@@ -18,34 +18,35 @@ package be.zvz.kookie.network.mcpe.protocol
  * (at your option) any later version.
  */
 
-class PlayerHotbarPacket : DataPacket(), ClientboundPacket, ServerboundPacket{
-@ProtocolIdentify(ProtocolInfo.IDS.PLAYER_HOTBAR_PACKET)
+class PlayerHotbarPacket : DataPacket(), ClientboundPacket, ServerboundPacket {
+    @ProtocolIdentify(ProtocolInfo.IDS.PLAYER_HOTBAR_PACKET)
 
-	var selectedHotbarSlot: Int
-	var windowId: Int = ContainerIds::INVENTORY
-	var selectHotbarSlot: Boolean = true
+    var selectedHotbarSlot: Int
+    var windowId: Int = ContainerIds::INVENTORY
+    var selectHotbarSlot: Boolean = true
 
-	 static fun create(slot: Int, windowId: Int, Boolean selectSlot = true) : self{
-		result = new self
-		result.selectedHotbarSlot = slot
-		result.windowId = windowId
-		result.selectHotbarSlot = selectSlot
-		return result
-	}
+    static
+    fun create(slot: Int, windowId: Int, Boolean selectSlot = true): self {
+        result = new self
+                result.selectedHotbarSlot = slot
+        result.windowId = windowId
+        result.selectHotbarSlot = selectSlot
+        return result
+    }
 
-	override fun decodePayload(input: PacketSerializer) {
-		selectedHotbarSlot = input.getUnsignedVarInt()
-		windowId = input.getByte()
-		selectHotbarSlot = input.getBool()
-	}
+    override fun decodePayload(input: PacketSerializer) {
+        selectedHotbarSlot = input.getUnsignedVarInt()
+        windowId = input.getByte()
+        selectHotbarSlot = input.getBool()
+    }
 
-	override fun encodePayload(output: PacketSerializer) {
-		output.putUnsignedVarInt(selectedHotbarSlot)
-		output.putByte(windowId)
-		output.putBool(selectHotbarSlot)
-	}
+    override fun encodePayload(output: PacketSerializer) {
+        output.putUnsignedVarInt(selectedHotbarSlot)
+        output.putByte(windowId)
+        output.putBool(selectHotbarSlot)
+    }
 
-	 override fun handle(handler: PacketHandlerInterface) : Boolean{
-		return handler.handlePlayerHotbar(this)
-	}
+    override fun handle(handler: PacketHandlerInterface): Boolean {
+        return handler.handlePlayerHotbar(this)
+    }
 }

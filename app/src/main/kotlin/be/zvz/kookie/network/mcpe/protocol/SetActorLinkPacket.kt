@@ -18,20 +18,20 @@ package be.zvz.kookie.network.mcpe.protocol
  * (at your option) any later version.
  */
 
-class SetActorLinkPacket : DataPacket(), ClientboundPacket{
-@ProtocolIdentify(ProtocolInfo.IDS.SET_ACTOR_LINK_PACKET)
+class SetActorLinkPacket : DataPacket(), ClientboundPacket {
+    @ProtocolIdentify(ProtocolInfo.IDS.SET_ACTOR_LINK_PACKET)
 
-	var link: EntityLink
+    var link: EntityLink
 
-	override fun decodePayload(input: PacketSerializer) {
-		link = input.getEntityLink()
-	}
+    override fun decodePayload(input: PacketSerializer) {
+        link = input.getEntityLink()
+    }
 
-	override fun encodePayload(output: PacketSerializer) {
-		output.putEntityLink(link)
-	}
+    override fun encodePayload(output: PacketSerializer) {
+        output.putEntityLink(link)
+    }
 
-	 override fun handle(handler: PacketHandlerInterface) : Boolean{
-		return handler.handleSetActorLink(this)
-	}
+    override fun handle(handler: PacketHandlerInterface): Boolean {
+        return handler.handleSetActorLink(this)
+    }
 }

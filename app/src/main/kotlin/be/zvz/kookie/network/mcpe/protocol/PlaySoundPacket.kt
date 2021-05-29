@@ -18,34 +18,34 @@ package be.zvz.kookie.network.mcpe.protocol
  * (at your option) any later version.
  */
 
-class PlaySoundPacket : DataPacket(), ClientboundPacket{
-@ProtocolIdentify(ProtocolInfo.IDS.PLAY_SOUND_PACKET)
+class PlaySoundPacket : DataPacket(), ClientboundPacket {
+    @ProtocolIdentify(ProtocolInfo.IDS.PLAY_SOUND_PACKET)
 
-	var soundName: string
-	var x: Float
-	var y: Float
-	var z: Float
-	var volume: Float
-	var pitch: Float
+    var soundName: string
+    var x: Float
+    var y: Float
+    var z: Float
+    var volume: Float
+    var pitch: Float
 
-	override fun decodePayload(input: PacketSerializer) {
-		soundName = input.getString()
-		input.getBlockPosition(x, y, z)
-		x /= 8
-		y /= 8
-		z /= 8
-		volume = input.getLFloat()
-		pitch = input.getLFloat()
-	}
+    override fun decodePayload(input: PacketSerializer) {
+        soundName = input.getString()
+        input.getBlockPosition(x, y, z)
+        x /= 8
+        y /= 8
+        z /= 8
+        volume = input.getLFloat()
+        pitch = input.getLFloat()
+    }
 
-	override fun encodePayload(output: PacketSerializer) {
-		output.putString(soundName)
-		output.putBlockPosition((Int) (x * 8), (Int) (y * 8), (Int) (z * 8))
-		output.putLFloat(volume)
-		output.putLFloat(pitch)
-	}
+    override fun encodePayload(output: PacketSerializer) {
+        output.putString(soundName)
+        output.putBlockPosition((Int)(x * 8), (Int)(y * 8), (Int)(z * 8))
+        output.putLFloat(volume)
+        output.putLFloat(pitch)
+    }
 
-	 override fun handle(handler: PacketHandlerInterface) : Boolean{
-		return handler.handlePlaySound(this)
-	}
+    override fun handle(handler: PacketHandlerInterface): Boolean {
+        return handler.handlePlaySound(this)
+    }
 }

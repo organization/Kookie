@@ -18,29 +18,29 @@ package be.zvz.kookie.network.mcpe.protocol
  * (at your option) any later version.
  */
 
-class UpdateBlockSyncedPacket : UpdateBlockPacket(){
-@ProtocolIdentify(ProtocolInfo.IDS.UPDATE_BLOCK_SYNCED_PACKET)
+class UpdateBlockSyncedPacket : UpdateBlockPacket() {
+    @ProtocolIdentify(ProtocolInfo.IDS.UPDATE_BLOCK_SYNCED_PACKET)
 
-	 const val TYPE_NONE = 0
-	 const val TYPE_CREATE = 1
-	 const val TYPE_DESTROY = 2
+    const val TYPE_NONE = 0
+    const val TYPE_CREATE = 1
+    const val TYPE_DESTROY = 2
 
-	var entityUniqueId: Int
-	var updateType: Int
+    var entityUniqueId: Int
+    var updateType: Int
 
-	override fun decodePayload(input: PacketSerializer) {
-		parent::decodePayload(input)
-		entityUniqueId = input.getUnsignedVarLong()
-		updateType = input.getUnsignedVarLong()
-	}
+    override fun decodePayload(input: PacketSerializer) {
+        parent::decodePayload(input)
+        entityUniqueId = input.getUnsignedVarLong()
+        updateType = input.getUnsignedVarLong()
+    }
 
-	override fun encodePayload(output: PacketSerializer) {
-		parent::encodePayload(output)
-		output.putUnsignedVarLong(entityUniqueId)
-		output.putUnsignedVarLong(updateType)
-	}
+    override fun encodePayload(output: PacketSerializer) {
+        parent::encodePayload(output)
+        output.putUnsignedVarLong(entityUniqueId)
+        output.putUnsignedVarLong(updateType)
+    }
 
-	 override fun handle(handler: PacketHandlerInterface) : Boolean{
-		return handler.handleUpdateBlockSynced(this)
-	}
+    override fun handle(handler: PacketHandlerInterface): Boolean {
+        return handler.handleUpdateBlockSynced(this)
+    }
 }

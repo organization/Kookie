@@ -21,35 +21,35 @@ package be.zvz.kookie.network.mcpe.protocol
 /**
  * Useless leftover from a 1.9 refactor, does nothing
  */
-class LevelSoundEventPacketV2 : DataPacket(){
-@ProtocolIdentify(ProtocolInfo.IDS.LEVEL_SOUND_EVENT_PACKET_V)2
+class LevelSoundEventPacketV2 : DataPacket() {
+    @ProtocolIdentify(ProtocolInfo.IDS.LEVEL_SOUND_EVENT_PACKET_V) 2
 
-	var sound: Int
-	var position: Vector3
-	var extraData: Int = -1
-	var entityType: string = ":" //???
-	var isBabyMob: Boolean = false //...
-	var disableRelativeVolume: Boolean = false
+    var sound: Int
+    var position: Vector3
+    var extraData: Int = -1
+    var entityType: string = ":" //???
+    var isBabyMob: Boolean = false //...
+    var disableRelativeVolume: Boolean = false
 
-	override fun decodePayload(input: PacketSerializer) {
-		sound = input.getByte()
-		position = input.getVector3()
-		extraData = input.getVarInt()
-		entityType = input.getString()
-		isBabyMob = input.getBool()
-		disableRelativeVolume = input.getBool()
-	}
+    override fun decodePayload(input: PacketSerializer) {
+        sound = input.getByte()
+        position = input.getVector3()
+        extraData = input.getVarInt()
+        entityType = input.getString()
+        isBabyMob = input.getBool()
+        disableRelativeVolume = input.getBool()
+    }
 
-	override fun encodePayload(output: PacketSerializer) {
-		output.putByte(sound)
-		output.putVector3(position)
-		output.putVarInt(extraData)
-		output.putString(entityType)
-		output.putBool(isBabyMob)
-		output.putBool(disableRelativeVolume)
-	}
+    override fun encodePayload(output: PacketSerializer) {
+        output.putByte(sound)
+        output.putVector3(position)
+        output.putVarInt(extraData)
+        output.putString(entityType)
+        output.putBool(isBabyMob)
+        output.putBool(disableRelativeVolume)
+    }
 
-	 override fun handle(handler: PacketHandlerInterface) : Boolean{
-		return handler.handleLevelSoundEventPacketV2(this)
-	}
+    override fun handle(handler: PacketHandlerInterface): Boolean {
+        return handler.handleLevelSoundEventPacketV2(this)
+    }
 }

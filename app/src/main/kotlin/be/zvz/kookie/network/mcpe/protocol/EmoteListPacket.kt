@@ -20,45 +20,50 @@ package be.zvz.kookie.network.mcpe.protocol
 use Ramsey\Uuid\UuidInterface
 use fun count
 
-class EmoteListPacket : DataPacket(), ClientboundPacket, ServerboundPacket{
-@ProtocolIdentify(ProtocolInfo.IDS.EMOTE_LIST_PACKET)
+class EmoteListPacket : DataPacket(), ClientboundPacket, ServerboundPacket {
+    @ProtocolIdentify(ProtocolInfo.IDS.EMOTE_LIST_PACKET)
 
-	var playerEntityRuntimeId: Int
-	/** @var UuidInterface[] */
-	 emoteIds
+    var playerEntityRuntimeId: Int
+    /** @var UuidInterface[] */
+    emoteIds
 
-	/**
-	 * @param UuidInterface[] emoteIds
-	 */
-	 static fun create(playerEntityRuntimeId: Int, emoteIds: array) : self{
-		result = new self
-		result.playerEntityRuntimeId = playerEntityRuntimeId
-		result.emoteIds = emoteIds
-		return result
-	}
+    /**
+     * @param UuidInterface[] emoteIds
+     */
+    static
+    fun create(playerEntityRuntimeId: Int, emoteIds: array): self {
+        result = new self
+                result.playerEntityRuntimeId = playerEntityRuntimeId
+        result.emoteIds = emoteIds
+        return result
+    }
 
-	 fun getPlayerEntityRuntimeId() : Int{ return playerEntityRuntimeId }
+    fun getPlayerEntityRuntimeId(): Int {
+        return playerEntityRuntimeId
+    }
 
-	/** @return UuidInterface[] */
-	 fun getEmoteIds() : array{ return emoteIds }
+    /** @return UuidInterface[] */
+    fun getEmoteIds(): array {
+        return emoteIds
+    }
 
-	override fun decodePayload(input: PacketSerializer) {
-		playerEntityRuntimeId = input.getEntityRuntimeId()
-		emoteIds = []
-		for(i = 0, len = input.getUnsignedVarInt() i < len ++i){
-			emoteIds[] = input.getUUID()
-		}
-	}
+    override fun decodePayload(input: PacketSerializer) {
+        playerEntityRuntimeId = input.getEntityRuntimeId()
+        emoteIds = []
+        for (i = 0, len = input.getUnsignedVarInt() i < len++i){
+            emoteIds[] = input.getUUID()
+        }
+    }
 
-	override fun encodePayload(output: PacketSerializer) {
-		output.putEntityRuntimeId(playerEntityRuntimeId)
-		output.putUnsignedVarInt(count(emoteIds))
-		foreach(emoteIds emoteId: as){
-			output.putUUID(emoteId)
-		}
-	}
+    override fun encodePayload(output: PacketSerializer) {
+        output.putEntityRuntimeId(playerEntityRuntimeId)
+        output.putUnsignedVarInt(count(emoteIds))
+        foreach(emoteIds emoteId : as) {
+            output.putUUID(emoteId)
+        }
+    }
 
-	 override fun handle(handler: PacketHandlerInterface) : Boolean{
-		return handler.handleEmoteList(this)
-	}
+    override fun handle(handler: PacketHandlerInterface): Boolean {
+        return handler.handleEmoteList(this)
+    }
 }

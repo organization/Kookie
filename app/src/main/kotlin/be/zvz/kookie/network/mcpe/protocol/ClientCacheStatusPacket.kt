@@ -18,30 +18,31 @@ package be.zvz.kookie.network.mcpe.protocol
  * (at your option) any later version.
  */
 
-class ClientCacheStatusPacket : DataPacket(), ServerboundPacket{
-@ProtocolIdentify(ProtocolInfo.IDS.CLIENT_CACHE_STATUS_PACKET)
+class ClientCacheStatusPacket : DataPacket(), ServerboundPacket {
+    @ProtocolIdentify(ProtocolInfo.IDS.CLIENT_CACHE_STATUS_PACKET)
 
-	var enabled: Boolean
+    var enabled: Boolean
 
-	 static fun create(enabled: Boolean) : self{
-		result = new self
-		result.enabled = enabled
-		return result
-	}
+    static
+    fun create(enabled: Boolean): self {
+        result = new self
+                result.enabled = enabled
+        return result
+    }
 
-	 fun isEnabled() : Boolean{
-		return enabled
-	}
+    fun isEnabled(): Boolean {
+        return enabled
+    }
 
-	override fun decodePayload(input: PacketSerializer) {
-		enabled = input.getBool()
-	}
+    override fun decodePayload(input: PacketSerializer) {
+        enabled = input.getBool()
+    }
 
-	override fun encodePayload(output: PacketSerializer) {
-		output.putBool(enabled)
-	}
+    override fun encodePayload(output: PacketSerializer) {
+        output.putBool(enabled)
+    }
 
-	 override fun handle(handler: PacketHandlerInterface) : Boolean{
-		return handler.handleClientCacheStatus(this)
-	}
+    override fun handle(handler: PacketHandlerInterface): Boolean {
+        return handler.handleClientCacheStatus(this)
+    }
 }

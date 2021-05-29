@@ -18,23 +18,23 @@ package be.zvz.kookie.network.mcpe.protocol
  * (at your option) any later version.
  */
 
-class ShowStoreOfferPacket : DataPacket(), ClientboundPacket{
-@ProtocolIdentify(ProtocolInfo.IDS.SHOW_STORE_OFFER_PACKET)
+class ShowStoreOfferPacket : DataPacket(), ClientboundPacket {
+    @ProtocolIdentify(ProtocolInfo.IDS.SHOW_STORE_OFFER_PACKET)
 
-	var offerId: string
-	var showAll: Boolean
+    var offerId: string
+    var showAll: Boolean
 
-	override fun decodePayload(input: PacketSerializer) {
-		offerId = input.getString()
-		showAll = input.getBool()
-	}
+    override fun decodePayload(input: PacketSerializer) {
+        offerId = input.getString()
+        showAll = input.getBool()
+    }
 
-	override fun encodePayload(output: PacketSerializer) {
-		output.putString(offerId)
-		output.putBool(showAll)
-	}
+    override fun encodePayload(output: PacketSerializer) {
+        output.putString(offerId)
+        output.putBool(showAll)
+    }
 
-	 override fun handle(handler: PacketHandlerInterface) : Boolean{
-		return handler.handleShowStoreOffer(this)
-	}
+    override fun handle(handler: PacketHandlerInterface): Boolean {
+        return handler.handleShowStoreOffer(this)
+    }
 }

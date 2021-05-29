@@ -20,38 +20,39 @@ package be.zvz.kookie.network.mcpe.protocol
 import be.zvz.kookie.network.mcpe.serializer.PacketSerializer
 
 @ProtocolIdentify(ProtocolInfo.IDS.BLOCK_ACTOR_DATA_PACKET)
-class BlockActorDataPacket : DataPacket(), ClientboundPacket, ServerboundPacket{
+class BlockActorDataPacket : DataPacket(), ClientboundPacket, ServerboundPacket {
 
-	var x: Int
-	var y: Int
-	var z: Int
-	/**
-	 * @var CacheableNbt
-	 * @phpstan-var CacheableNbt<\pocketmine\nbt\tag\CompoundTag>
-	 */
-	 namedtag
+    var x: Int
+    var y: Int
+    var z: Int
+    /**
+     * @var CacheableNbt
+     * @phpstan-var CacheableNbt<\pocketmine\nbt\tag\CompoundTag>
+     */
+    namedtag
 
-	/**
-	 * @phpstan-param CacheableNbt<\pocketmine\nbt\tag\CompoundTag> nbt
-	 */
-	 static fun create(x: Int, y: Int, z: Int, nbt: CacheableNbt) : self{
-		result = new self
-		[result.x, result.y, result.z] = [x, y, z]
-		result.namedtag = nbt
-		return result
-	}
+    /**
+     * @phpstan-param CacheableNbt<\pocketmine\nbt\tag\CompoundTag> nbt
+     */
+    static
+    fun create(x: Int, y: Int, z: Int, nbt: CacheableNbt): self {
+        result = new self
+                [result.x, result.y, result.z] = [x, y, z]
+        result.namedtag = nbt
+        return result
+    }
 
-	override fun decodePayload(input: PacketSerializer) {
-		input.getBlockPosition(x, y, z)
-		namedtag = new CacheableNbt(input.getNbtCompoundRoot())
-	}
+    override fun decodePayload(input: PacketSerializer) {
+        input.getBlockPosition(x, y, z)
+        namedtag = new CacheableNbt (input.getNbtCompoundRoot())
+    }
 
-	override fun encodePayload(output: PacketSerializer) {
-		output.putBlockPosition(x, y, z)
-		output.put(namedtag->getEncodedNbt())
-	}
+    override fun encodePayload(output: PacketSerializer) {
+        output.putBlockPosition(x, y, z)
+        output.put(namedtag->getEncodedNbt())
+    }
 
-	 override fun handle(handler: PacketHandlerInterface) : Boolean{
-		return handler.handleBlockActorData(this)
-	}
+    override fun handle(handler: PacketHandlerInterface): Boolean {
+        return handler.handleBlockActorData(this)
+    }
 }
