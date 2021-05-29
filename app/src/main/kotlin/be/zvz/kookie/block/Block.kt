@@ -38,7 +38,7 @@ open class Block(val idInfo: BlockIdentifier, val name: String, val breakInfo: B
                 field = recalculateCollisionBoxes()
                 val extraOffset = getPosOffset()
                 val offset = if (extraOffset !== null) pos.add(extraOffset) else pos
-                field!!.forEach {
+                field?.forEach {
                     it.offset(offset.x, offset.y, offset.z)
                 }
             }
