@@ -34,7 +34,7 @@ class AddItemActorPacket : DataPacket(), ClientboundPacket {
         output.putEntityRuntimeId(entityRuntimeId)
         item.write(output)
         output.putVector3(position)
-        output.putVector3(motion ?: Vector3(0F, 0F, 0F))
+        output.putVector3(motion ?: Vector3())
         output.putEntityMetadata(metadata)
         output.putBoolean(isFromFishing)
     }

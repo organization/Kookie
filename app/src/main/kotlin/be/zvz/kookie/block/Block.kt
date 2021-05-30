@@ -50,7 +50,7 @@ open class Block(val idInfo: BlockIdentifier, val name: String, val breakInfo: B
         if ((idInfo.variant and getStateBitmask()) != 0) {
             throw IllegalArgumentException("Variant 0x" + idInfo.variant.toString(16) + " collides with state bitmask 0x" + getStateBitmask().toString(16))
         }
-        pos = Position(0f, 0f, 0f, null)
+        pos = Position()
     }
 
     fun clone(): Block {
@@ -150,6 +150,7 @@ open class Block(val idInfo: BlockIdentifier, val name: String, val breakInfo: B
      */
     open fun onRandomTick() {
     }
+
     open fun onScheduledUpdate() {
     }
 
@@ -197,7 +198,7 @@ open class Block(val idInfo: BlockIdentifier, val name: String, val breakInfo: B
     open fun addVelocityToEntity(entity: Entity): Vector3? = null
 
     fun position(world: World, x: Int, y: Int, z: Int) {
-        pos = Position(x.toFloat(), y.toFloat(), z.toFloat(), world)
+        pos = Position(x, y, z, world)
     }
 
     open fun getDrops(item: Item): List<Item> {
@@ -343,7 +344,7 @@ open class Block(val idInfo: BlockIdentifier, val name: String, val breakInfo: B
         }
 
         var currentHit: RayTraceResult? = null
-        var currentDistance = Float.MAX_VALUE
+        var currentDistance = Double.MAX_VALUE
 
         bbs.forEach {
             val nextHit = it.calculateIntercept(pos1, pos2)
