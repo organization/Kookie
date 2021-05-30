@@ -32,7 +32,7 @@ class BlockPosMetadataProperty(val value: Vector3) : MetadataProperty() {
             val y = AtomicInteger()
             val z = AtomicInteger()
             input.getBlockPosition(x, y, z)
-            return BlockPosMetadataProperty(Vector3(x.get().toFloat(), y.get().toFloat(), z.get().toFloat()))
+            return BlockPosMetadataProperty(Vector3(x.get(), y.get(), z.get()))
         }
     }
 }
