@@ -63,7 +63,7 @@ class EntityMetadataCollection {
     }
 
     fun setBlockPos(key: Int, value: Vector3?, force: Boolean = false) {
-        set(key, BlockPosMetadataProperty(value ?: Vector3(0F, 0F, 0F)), force)
+        set(key, BlockPosMetadataProperty(value ?: Vector3()), force)
     }
 
     fun setLong(key: Int, value: Int, force: Boolean = false) {
@@ -71,7 +71,7 @@ class EntityMetadataCollection {
     }
 
     fun setVector3(key: Int, value: Vector3?, force: Boolean = false) {
-        set(key, Vec3MetadataProperty(value ?: Vector3(0F, 0F, 0F)), force)
+        set(key, Vec3MetadataProperty(value ?: Vector3()), force)
     }
 
     fun setGenericFlag(flagId: Int, value: Boolean) {
