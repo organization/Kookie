@@ -48,7 +48,7 @@ class UseItemTransactionData : TransactionData() {
         val y = AtomicInteger()
         val z = AtomicInteger()
         input.getBlockPosition(x, y, z)
-        blockPos = Vector3(x.get().toFloat(), y.get().toFloat(), z.get().toFloat())
+        blockPos = Vector3(x.get(), y.get(), z.get())
         face = input.getVarInt()
         itemInHand = ItemStackWrapper.read(input)
         playerPos = input.getVector3()
