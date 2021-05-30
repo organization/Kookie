@@ -144,4 +144,116 @@ open class DefaultPacketHandler : PacketHandlerInterface {
     override fun handleMobEquipment(packet: MobEquipmentPacket): Boolean {
         return false
     }
+
+    override fun handleMobArmorEquipment(packet: MobArmorEquipmentPacket): Boolean {
+        return false
+    }
+
+    override fun handleInteract(packet: InteractPacket): Boolean {
+        return false
+    }
+
+    override fun handleBlockPickRequest(packet: BlockPickRequestPacket): Boolean {
+        return false
+    }
+
+    override fun handleActorPickRequest(packet: ActorPickRequestPacket): Boolean {
+        return false
+    }
+
+    override fun handlePlayerAction(packet: PlayerActionPacket): Boolean {
+        return false
+    }
+
+    override fun handleHurtArmor(packet: HurtArmorPacket): Boolean {
+        return false
+    }
+
+    override fun handleSetActorData(packet: SetActorDataPacket): Boolean {
+        return false
+    }
+
+    override fun handleSetActorMotion(packet: SetActorMotionPacket): Boolean {
+        return false
+    }
+
+    override fun handleAddBehaviorTree(packet: AddBehaviorTreePacket): Boolean {
+        return false
+    }
+
+    override fun handleAddEntity(packet: AddEntityPacket): Boolean {
+        return false
+    }
+
+    override fun handleAdventureSettings(packet: AdventureSettingsPacket): Boolean {
+        return false
+    }
+
+    override fun handleAnimateEntity(packet: AnimateEntityPacket): Boolean {
+        return false
+    }
+
+    override fun handleAnimate(packet: AnimatePacket): Boolean {
+        return false
+    }
+
+    override fun handleAnvilDamage(packet: AnvilDamagePacket): Boolean {
+        return false
+    }
+
+    override fun handleAutomationClientConnect(packet: AutomationClientConnectPacket): Boolean {
+        return false
+    }
+
+    override fun handleAvailableActorIdentifiers(packet: AvailableActorIdentifiersPacket): Boolean {
+        return false
+    }
+
+    override fun handleBiomeDefinitionList(packet: BiomeDefinitionListPacket): Boolean {
+        return false
+    }
+
+    override fun handleBlockActorData(packet: BlockActorDataPacket): Boolean {
+        return false
+    }
+
+    override fun handleClientCacheMissResponse(packet: ClientCacheMissResponsePacket): Boolean {
+        return false
+    }
+
+    override fun handleClientCacheStatus(packet: ClientCacheStatusPacket): Boolean {
+        return false
+    }
+
+    override fun handleBookEdit(packet: BookEditPacket): Boolean {
+        return false
+    }
+
+    override fun handleBossEvent(packet: BossEventPacket): Boolean {
+        return false
+    }
+
+    override fun handleCamera(packet: CameraPacket): Boolean {
+        return false
+    }
+
+    override fun handleCameraShake(packet: CameraShakePacket): Boolean {
+        return false
+    }
+
+    override fun handleChangeDimension(packet: ChangeDimensionPacket): Boolean {
+        return false
+    }
+
+    override fun handleChunkRadiusUpdated(packet: ChunkRadiusUpdatedPacket): Boolean {
+        return false
+    }
+
+    override fun handleClientboundDebugRenderer(packet: ClientboundDebugRendererPacket): Boolean {
+        return false
+    }
+
+    override fun handleClientCacheBlobStatus(packet: ClientCacheBlobStatusPacket): Boolean {
+        return false
+    }
 }
