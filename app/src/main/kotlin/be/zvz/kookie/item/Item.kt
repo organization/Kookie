@@ -35,8 +35,9 @@ import java.util.*
 
 open class Item(
     private val identifier: ItemIdentifier,
-    protected val name: String = "Unknown",
+    protected val vanillaName: String = "Unknown",
 ) : Cloneable, ItemEnchantmentHandling {
+
     override val enchantments: MutableMap<Int, EnchantmentInstance> = HashIntObjMaps.newMutableMap()
     private var nbt: CompoundTag = CompoundTag()
     var count: Int = 1
@@ -50,7 +51,10 @@ open class Item(
     protected var blockEntityTag: CompoundTag? = null
     protected var canPlaceOn = mutableListOf<String>()
     protected var canDestroy = mutableListOf<String>()
-    open var damage: Int = 0
+    open val maxStackSize: Int = 64
+    open val fuelTime: Int = 0
+    open val attackPoint: Int = 1
+    open val defensePoints: Int = 0
     open val blockToolType = BlockToolType.NONE
     open val blockToolHarvestLevel = 0
 
@@ -66,12 +70,15 @@ open class Item(
 
     fun getCustomBlockData(): CompoundTag? = this.blockEntityTag
 
+    fun hasCustomName(): Boolean = customName != ""
+
     fun hasNamedTag(): Boolean = getNamedTag().count() > 0
 
     fun getNamedTag(): CompoundTag {
         serializeCompoundTag(nbt)
         return nbt
     }
+
     fun setNamedTag(tag: CompoundTag): Item = this.apply {
         if (tag.count() == 0) clearNamedTag()
         else {
@@ -208,34 +215,36 @@ open class Item(
     }
 
     fun isNull(): Boolean = count <= 0 || getId() == 0
-    fun getVanillaName(): String = name
+
+    fun getName(): String = if (hasCustomName()) customName else vanillaName
 
     fun canBePlaced(): Boolean = getBlock().canBePlaced()
 
     open fun getBlock(clickedFace: Int? = null): Block = VanillaBlocks.AIR.block
 
     fun getId(): Int = identifier.id
-    open fun getMeta(): Int = identifier.meta
-    fun hasAnyDamageValue(): Boolean = identifier.meta == -1
-    fun getMaxStackSize(): Int = 64
-    fun getFuelTime(): Int = 0
 
-    fun getFuelResidue(): Item {
+    open fun getMeta(): Int = identifier.meta
+
+    fun hasAnyDamageValue(): Boolean = identifier.meta == -1
+
+    open fun getFuelResidue(): Item {
         val item = clone()
         item.pop()
         return item
     }
 
-    fun getAttackPoints(): Int = 1
-    fun getDefensePoints(): Int = 1
-    fun getMiningEfficiency(isCorrectTool: Boolean): Float = 1F
+    open fun getMiningEfficiency(isCorrectTool: Boolean): Float = 1F
 
-    fun onInteractBlock(player: Player, blockReplace: Block, blockClicked: Block, face: Int, clickVector: Vector3): ItemUseResult = ItemUseResult.NONE
-    fun onClickAir(player: Player, directionVector: Vector3): ItemUseResult = ItemUseResult.NONE
-    fun onReleaseUsing(player: Player): ItemUseResult = ItemUseResult.NONE
+    open fun onInteractBlock(player: Player, blockReplace: Block, blockClicked: Block, face: Int, clickVector: Vector3): ItemUseResult = ItemUseResult.NONE
 
-    fun onDestroyBlock(block: Block): Boolean = false
-    fun onAttackEntity(victim: Entity): Boolean = false
+    open fun onClickAir(player: Player, directionVector: Vector3): ItemUseResult = ItemUseResult.NONE
+
+    open fun onReleaseUsing(player: Player): ItemUseResult = ItemUseResult.NONE
+
+    open fun onDestroyBlock(block: Block): Boolean = false
+
+    open fun onAttackEntity(victim: Entity): Boolean = false
 
     fun equals(item: Item, checkDamage: Boolean = true, checkCompound: Boolean = true) =
         getId() == item.getId() &&
@@ -245,7 +254,7 @@ open class Item(
     fun equalsExact(other: Item): Boolean = equals(other) && count == other.count
 
     override fun toString(): String =
-        "Item $name (${getId()}:" + (if (hasAnyDamageValue()) "?" else getMeta()) + ")x$count tags:0x" + (
+        "Item $vanillaName (${getId()}:" + (if (hasAnyDamageValue()) "?" else getMeta()) + ")x$count tags:0x" + (
             if (hasNamedTag()) Base64.getEncoder().encodeToString(
                 LittleEndianNbtSerializer().write(
                     TreeRoot(getNamedTag())

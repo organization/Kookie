@@ -55,14 +55,10 @@ object ItemFactory {
                 list.containsKey(offset) -> list[offset]
                 list.containsKey(zero) -> {
                     val durableItem = list[zero]
-                    if (durableItem is Durable) {
-                        if (meta <= durableItem.getMaxDurability()) {
-                            val clone = durableItem.clone()
-                            clone.damage = meta
-                            clone
-                        } else {
-                            Item(ItemIdentifier(id, meta))
-                        }
+                    if (durableItem is Durable && meta <= durableItem.maxDurability) {
+                        val clone = durableItem.clone() as Durable
+                        clone.damage = meta
+                        clone
                     } else
                         null
                 }

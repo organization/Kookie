@@ -5,16 +5,27 @@ import be.zvz.kookie.nbt.tag.CompoundTag
 import java.util.*
 import kotlin.math.min
 
-abstract class Durable(identifier: ItemIdentifier) : Item(identifier) {
-    override var damage = 0
-    var unbreakable = false
+abstract class Durable(identifier: ItemIdentifier, name: String) : Item(identifier, name) {
+
+    abstract val maxDurability: Int
+
+    var damage: Int = 0
+        set(value) {
+            if (value < 0 || value > maxDurability) {
+                throw IllegalArgumentException("Damage must be in range 0 - $maxDurability")
+            }
+            field = value
+        }
+    var unbreakable: Boolean = false
+
     override fun getMeta(): Int = damage
+
     fun applyDamage(amountArg: Int): Boolean {
         if (unbreakable || isBroken()) {
             return false
         }
         val amount = amountArg - getUnbreakingDamageReduction(amountArg)
-        damage = min(damage + amount, getMaxDurability())
+        damage = min(damage + amount, maxDurability)
         if (isBroken()) {
             onBroken()
         }
@@ -37,14 +48,12 @@ abstract class Durable(identifier: ItemIdentifier) : Item(identifier) {
         return 0
     }
 
-    abstract fun getMaxDurability(): Int
-
     fun onBroken() {
         pop()
     }
 
     fun isBroken(): Boolean {
-        return damage >= getMaxDurability()
+        return damage >= maxDurability
     }
 
     override fun deserializeCompoundTag(tag: CompoundTag) {
