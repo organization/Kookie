@@ -21,7 +21,7 @@ import be.zvz.kookie.item.Item
 
 class BlockBreakInfo(
     val hardness: Float,
-    val toolType: BlockToolType,
+    val toolType: BlockToolType = BlockToolType.NONE,
     val toolHarvestLevel: Int = 0,
     val blastResistance: Float = hardness * 5,
 ) {
@@ -59,6 +59,10 @@ class BlockBreakInfo(
     companion object {
         fun instant(toolType: BlockToolType = BlockToolType.NONE, toolHarvestLevel: Int = 0): BlockBreakInfo {
             return BlockBreakInfo(0f, toolType, toolHarvestLevel, 0f)
+        }
+
+        fun indestructible(blastResistance: Float = 18000000f): BlockBreakInfo {
+            return BlockBreakInfo(-1f, BlockToolType.NONE, 0, blastResistance)
         }
     }
 }

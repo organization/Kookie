@@ -275,7 +275,7 @@ open class Item(
     fun nbtDeserialize(tag: CompoundTag): Item {
         val idTag = tag.getTag("id")
         if (idTag == null || tag.getTag("Count") == null) {
-            return ItemFactory.list[0]
+            return ItemFactory.air()
         }
 
         val count = Binary.unsignByte(tag.getByte("Count"))

@@ -18,10 +18,11 @@
 package be.zvz.kookie.world
 
 import be.zvz.kookie.Server
+import be.zvz.kookie.world.format.io.WorldProviderManager
 import com.koloboke.collect.map.hash.HashIntObjMaps
 import java.nio.file.Path
 
-class WorldManager(private val server: Server) {
+class WorldManager(private val server: Server, val dataPath: String, val providerManager: WorldProviderManager) {
     val worlds: MutableMap<Int, World> = HashIntObjMaps.newMutableMap()
 
     fun loadWorld(world: String) {

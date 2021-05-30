@@ -22,5 +22,5 @@ open class Transparent(
     name: String,
     breakInfo: BlockBreakInfo,
 ) : Block(idInfo, name, breakInfo) {
-    fun isTransparent(): Boolean = true
+    override fun isTransparent(): Boolean = true
 }

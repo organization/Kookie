@@ -22,7 +22,7 @@ import be.zvz.kookie.nbt.LittleEndianNbtSerializer
 import be.zvz.kookie.nbt.NbtDataException
 import be.zvz.kookie.nbt.TreeRoot
 import be.zvz.kookie.nbt.tag.CompoundTag
-import be.zvz.kookie.network.mcpe.convert.ItemTypeDictionary
+import be.zvz.kookie.network.mcpe.convert.GlobalItemTypeDictionary
 import be.zvz.kookie.network.mcpe.protocol.PacketDecodeException
 import be.zvz.kookie.network.mcpe.protocol.types.GameRule
 import be.zvz.kookie.network.mcpe.protocol.types.entity.*
@@ -34,7 +34,7 @@ import java.util.concurrent.atomic.AtomicInteger
 
 class PacketSerializer(buffer: String = "", offset: AtomicInteger = AtomicInteger(0)) : BinaryStream(buffer, offset) {
 
-    private val shieldItemRuntimeId: Int = ItemTypeDictionary.getInstance().fromStringId("minecraft:shield")
+    private val shieldItemRuntimeId: Int = GlobalItemTypeDictionary.getInstance().dictionary.fromStringId("minecraft:shield")
 
     fun getString(): String = get(getUnsignedVarInt())
 

@@ -1,24 +1,20 @@
 package be.zvz.kookie.network.mcpe.convert
 
+import be.zvz.kookie.network.mcpe.protocol.serializer.ItemTypeDictionary
 import be.zvz.kookie.network.mcpe.protocol.types.ItemTypeEntry
 import be.zvz.kookie.utils.Json
 import com.fasterxml.jackson.core.type.TypeReference
-import com.koloboke.collect.map.hash.HashIntObjMaps
-import com.koloboke.collect.map.hash.HashObjObjMaps
 import java.lang.NumberFormatException
 
-class ItemTypeDictionary private constructor(val itemTypes: List<ItemTypeEntry>) {
-
-    private val stringToIntMap: MutableMap<String, Int> = HashObjObjMaps.newMutableMap()
-    private val intToStringIdMap: MutableMap<Int, String> = HashIntObjMaps.newMutableMap()
+class GlobalItemTypeDictionary private constructor(val dictionary: ItemTypeDictionary) {
 
     companion object {
-        private val instance: ItemTypeDictionary = make()
-        fun getInstance(): ItemTypeDictionary {
+        private val instance: GlobalItemTypeDictionary = make()
+        fun getInstance(): GlobalItemTypeDictionary {
             return instance
         }
 
-        private fun make(): ItemTypeDictionary {
+        private fun make(): GlobalItemTypeDictionary {
             val data = Json.jsonMapper.readValue(
                 this::class.java.getResourceAsStream("vanilla/required_item_list.json"),
                 object : TypeReference<Map<String, Map<String, String>>>() {}
@@ -39,20 +35,7 @@ class ItemTypeDictionary private constructor(val itemTypes: List<ItemTypeEntry>)
 
                 itemTypes.add(ItemTypeEntry(name, runtimeId, componentBased))
             }
-            return ItemTypeDictionary(itemTypes)
+            return GlobalItemTypeDictionary(ItemTypeDictionary(itemTypes))
         }
     }
-
-    init {
-        itemTypes.forEach { type ->
-            stringToIntMap[type.stringId] = type.numericId
-            intToStringIdMap[type.numericId] = type.stringId
-        }
-    }
-
-    fun getEntires(): List<ItemTypeEntry> = itemTypes
-
-    fun fromStringId(id: String): Int = stringToIntMap.getValue(id)
-
-    fun fromIntId(id: Int): String = intToStringIdMap.getValue(id)
 }

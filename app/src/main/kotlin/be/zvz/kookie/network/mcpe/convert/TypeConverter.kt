@@ -28,7 +28,7 @@ object TypeConverter {
     private const val DAMAGE_TAG_CONFLICT_RESOLUTION = "___Damage_ProtocolCollisionResolution___"
     private const val PM_META_TAG = "___Meta___"
 
-    private val shieldRuntimeId: Int = ItemTypeDictionary.getInstance().fromStringId("minecraft:shield")
+    private val shieldRuntimeId: Int = GlobalItemTypeDictionary.getInstance().dictionary.fromStringId("minecraft:shield")
 
     fun coreGameModeToProtocol(gameMode: GameMode): Int = when (gameMode) {
         GameMode.SURVIVAL -> ProtocolGameMode.SURVIVAL

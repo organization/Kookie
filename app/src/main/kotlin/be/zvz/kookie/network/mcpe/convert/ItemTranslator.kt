@@ -1,5 +1,6 @@
 package be.zvz.kookie.network.mcpe.convert
 
+import be.zvz.kookie.network.mcpe.protocol.serializer.ItemTypeDictionary
 import be.zvz.kookie.utils.config.JsonBrowser
 import com.koloboke.collect.map.hash.HashIntIntMaps
 import com.koloboke.collect.map.hash.HashIntObjMaps
@@ -44,22 +45,25 @@ class ItemTranslator(dictionary: ItemTypeDictionary, simpleMappings: Map<String,
 
         private fun make(): ItemTranslator {
             val data = JsonBrowser().parse(this::class.java.getResourceAsStream("vanilla/r16_to_current_item_map.json"))
-            val legacyStringToIntMap = JsonBrowser().parse(this::class.java.getResourceAsStream("vanilla/item_id_map.json")).toMap<String, Int>()
+            val legacyStringToIntMap = JsonBrowser().parse(this::class.java.getResourceAsStream("vanilla/item_id_map.json")).toMap<String, String>()
 
             val simpleMappings: MutableMap<String, Int> = HashObjIntMaps.newMutableMap()
             data["simple"].toMap<String, String>().forEach { (oldId, newId) ->
                 simpleMappings[newId] = legacyStringToIntMap.getValue(oldId).toInt()
             }
             legacyStringToIntMap.forEach { (stringId, intId) ->
-                simpleMappings[stringId] = intId
+                if (simpleMappings.containsKey(stringId)) {
+                    throw IllegalArgumentException("Old ID $stringId collides with new ID")
+                }
+                simpleMappings[stringId] = intId.toInt()
             }
             val complexMappings: MutableMap<String, Pair<Int, Int>> = HashObjObjMaps.newMutableMap()
-            data["complex"].toMap<String, Map<Int, String>>().forEach { (oldId, map) ->
+            data["complex"].toMap<String, Map<String, String>>().forEach { (oldId, map) ->
                 map.forEach { (meta, newId) ->
-                    complexMappings[newId] = Pair(legacyStringToIntMap.getValue(oldId).toInt(), meta)
+                    complexMappings[newId] = Pair(legacyStringToIntMap.getValue(oldId).toInt(), meta.toInt())
                 }
             }
-            return ItemTranslator(ItemTypeDictionary.getInstance(), simpleMappings, complexMappings)
+            return ItemTranslator(GlobalItemTypeDictionary.getInstance().dictionary, simpleMappings, complexMappings)
         }
     }
 
@@ -86,5 +90,13 @@ class ItemTranslator(dictionary: ItemTypeDictionary, simpleMappings: Map<String,
             return Pair(simpleNetToCoreMapping.getValue(networkId), networkMeta)
         }
         throw IllegalArgumentException("Unmapped network ID/metadata combination $networkId:$networkMeta")
+    }
+
+    fun fromNetworkIdWithWildcardHandling(networkId: Int, networkMeta: Int): Pair<Int, Int> {
+        val isComplexMapping = AtomicBoolean(false)
+        if (networkMeta != 0x7fff)
+            return fromNetworkId(networkId, networkMeta)
+        val (id, meta) = fromNetworkId(networkId, 0, isComplexMapping)
+        return Pair(id, if (isComplexMapping.get()) meta else -1)
     }
 }
