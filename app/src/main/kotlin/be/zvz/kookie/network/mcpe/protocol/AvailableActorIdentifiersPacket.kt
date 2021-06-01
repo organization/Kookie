@@ -26,12 +26,6 @@ class AvailableActorIdentifiersPacket : DataPacket(), ClientboundPacket {
 
     lateinit var identifiers: CacheableNbt
 
-    companion object {
-        fun create(nbt: CacheableNbt): AvailableActorIdentifiersPacket = AvailableActorIdentifiersPacket().apply {
-            this.identifiers = nbt
-        }
-    }
-
     override fun decodePayload(input: PacketSerializer) {
         identifiers = CacheableNbt(input.getNbtCompoundRoot())
     }
@@ -42,5 +36,11 @@ class AvailableActorIdentifiersPacket : DataPacket(), ClientboundPacket {
 
     override fun handle(handler: PacketHandlerInterface): Boolean {
         return handler.handleAvailableActorIdentifiers(this)
+    }
+
+    companion object {
+        fun create(nbt: CacheableNbt): AvailableActorIdentifiersPacket = AvailableActorIdentifiersPacket().apply {
+            this.identifiers = nbt
+        }
     }
 }

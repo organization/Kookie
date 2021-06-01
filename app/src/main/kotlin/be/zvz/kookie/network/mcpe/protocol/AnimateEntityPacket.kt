@@ -30,29 +30,6 @@ class AnimateEntityPacket : DataPacket(), ClientboundPacket {
 
     var actorRuntimeIds: MutableList<Long> = mutableListOf()
 
-    companion object {
-
-        fun create(
-            animation: String,
-            nextState: String,
-            stopExpression: String,
-            controller: String,
-            blendOutTime: Float,
-            actorRuntimeIds: MutableList<Long>,
-        ): AnimateEntityPacket {
-            val packet = AnimateEntityPacket().apply {
-                this.animation = animation
-                this.nextState = nextState
-                this.stopExpression = stopExpression
-                this.controller = controller
-                this.blendOutTime = blendOutTime
-                this.actorRuntimeIds = actorRuntimeIds
-            }
-
-            return packet
-        }
-    }
-
     override fun decodePayload(input: PacketSerializer) {
         animation = input.getString()
         nextState = input.getString()
@@ -81,5 +58,27 @@ class AnimateEntityPacket : DataPacket(), ClientboundPacket {
 
     override fun handle(handler: PacketHandlerInterface): Boolean {
         return handler.handleAnimateEntity(this)
+    }
+
+    companion object {
+        fun create(
+            animation: String,
+            nextState: String,
+            stopExpression: String,
+            controller: String,
+            blendOutTime: Float,
+            actorRuntimeIds: MutableList<Long>,
+        ): AnimateEntityPacket {
+            val packet = AnimateEntityPacket().apply {
+                this.animation = animation
+                this.nextState = nextState
+                this.stopExpression = stopExpression
+                this.controller = controller
+                this.blendOutTime = blendOutTime
+                this.actorRuntimeIds = actorRuntimeIds
+            }
+
+            return packet
+        }
     }
 }

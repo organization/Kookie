@@ -31,15 +31,6 @@ class BlockActorDataPacket : DataPacket(), ClientboundPacket, ServerboundPacket 
 
     lateinit var namedtag: CacheableNbt
 
-    companion object {
-        fun create(x: Int, y: Int, z: Int, nbt: CacheableNbt): BlockActorDataPacket = BlockActorDataPacket().apply {
-            this.namedtag = nbt
-            this.x.set(x)
-            this.y.set(y)
-            this.z.set(z)
-        }
-    }
-
     override fun decodePayload(input: PacketSerializer) {
         input.getBlockPosition(x, y, z)
         namedtag = CacheableNbt(input.getNbtCompoundRoot())
@@ -52,5 +43,14 @@ class BlockActorDataPacket : DataPacket(), ClientboundPacket, ServerboundPacket 
 
     override fun handle(handler: PacketHandlerInterface): Boolean {
         return handler.handleBlockActorData(this)
+    }
+
+    companion object {
+        fun create(x: Int, y: Int, z: Int, nbt: CacheableNbt): BlockActorDataPacket = BlockActorDataPacket().apply {
+            this.namedtag = nbt
+            this.x.set(x)
+            this.y.set(y)
+            this.z.set(z)
+        }
     }
 }

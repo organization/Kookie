@@ -22,6 +22,8 @@ import be.zvz.kookie.network.mcpe.protocol.types.DimensionIds
 import be.zvz.kookie.network.mcpe.protocol.types.MapTrackedObject
 import be.zvz.kookie.network.mcpe.serializer.PacketSerializer
 import be.zvz.kookie.utils.Binary
+import java.awt.Color
+import java.lang.RuntimeException
 import java.util.concurrent.atomic.AtomicInteger
 
 @ProtocolIdentify(ProtocolInfo.IDS.CLIENTBOUND_MAP_ITEM_DATA_PACKET)
@@ -36,15 +38,17 @@ class ClientboundMapItemDataPacket : DataPacket(), ClientboundPacket {
     var scale: Int = 0
 
     val trackedEntities: MutableList<MapTrackedObject> = mutableListOf()
-    /** @var MapDecoration[] */
-    decorations = []
 
-    var width: Int
-    var height: Int
+    /** @var MapDecoration[] */
+    var decorations: MutableList<MapDecoration> = mutableListOf()
+
+    var width: Int = 0
+    var height: Int = 0
     var xOffset: Int = 0
     var yOffset: Int = 0
+
     /** @var Color[][] */
-    colors = []
+    var colors: MutableMap<Int, MutableMap<Int, Color>> = mutableMapOf()
 
     override fun decodePayload(input: PacketSerializer) {
         mapId = input.getEntityUniqueId()
@@ -79,7 +83,7 @@ class ClientboundMapItemDataPacket : DataPacket(), ClientboundPacket {
                         obj.z = z.get()
                     }
                     MapTrackedObject.TYPE_ENTITY -> obj.entityUniqueId = input.getEntityUniqueId()
-                    else -> PacketDecodeException("Unknown map object type object.type")
+                    else -> throw PacketDecodeException("Unknown map object type object.type")
                 }
 
                 trackedEntities.add(obj)
@@ -91,26 +95,26 @@ class ClientboundMapItemDataPacket : DataPacket(), ClientboundPacket {
                 val yOffset = input.getByte()
                 val label = input.getString()
                 val color = Color.fromRGBA(Binary.flipIntEndianness(input.getUnsignedVarInt()))
-                decorations = MapDecoration(icon, rotation, xOffset, yOffset, label, color)
+                val decorations = MapDecoration(icon, rotation, xOffset, yOffset, label, color)
             }
         }
 
-        if ((type & BITFLAG_TEXTURE_UPDATE) !== 0){
+        if ((type and BITFLAG_TEXTURE_UPDATE) != 0) {
             width = input.getVarInt()
             height = input.getVarInt()
             xOffset = input.getVarInt()
             yOffset = input.getVarInt()
 
-            count = input.getUnsignedVarInt()
-            if (count !== width * height) {
-                throw new PacketDecodeException ("Expected colour count of ".(height * width)." (height height * width width), got count")
+            val count = input.getUnsignedVarInt()
+            if (count != width * height) {
+                throw PacketDecodeException("Expected colour count of " + (height * width) + " (height height * width width), got count")
             }
 
-            for (y = 0 y < height ++y){
-            for (x = 0 x < width ++x){
-            colors[y][x] = Color::fromRGBA(Binary::flipIntEndianness(input.getUnsignedVarInt()))
-        }
-        }
+            for (y in 0..height) {
+                for (x in 0..width) {
+                    colors[y][x] = Color.fromRGBA(Binary.flipIntEndianness(input.getUnsignedVarInt()))
+                }
+            }
         }
     }
 
@@ -118,42 +122,43 @@ class ClientboundMapItemDataPacket : DataPacket(), ClientboundPacket {
         output.putEntityUniqueId(mapId)
 
         type = 0
-        if ((eidsCount = count(eids)) > 0) {
-            type | = 0x08
+        val eidsCount = eids.size
+        if (eidsCount > 0) {
+            type = type or 0x08
         }
-        if ((decorationCount = count(decorations)) > 0) {
-            type | = BITFLAG_DECORATION_UPDATE
+        val decorationCount = decorations.size
+        if (decorationCount > 0) {
+            type = type or BITFLAG_DECORATION_UPDATE
         }
-        if (count(colors) > 0) {
-            type | = BITFLAG_TEXTURE_UPDATE
+        val colorCount = colors.size
+        if (colorCount > 0) {
+            type = type or BITFLAG_TEXTURE_UPDATE
         }
 
         output.putUnsignedVarInt(type)
-        output.putByte(dimensionId)
-        output.putBool(isLocked)
+        output.putByte(dimensionId.id)
+        output.putBoolean(isLocked)
 
-        if ((type & 0x08) !== 0){ //TODO: find out what these are for
+        if ((type and 0x08) != 0){ // TODO: find out what these are for
             output.putUnsignedVarInt(eidsCount)
-            foreach(eids eid : as) {
-                output.putEntityUniqueId(eid)
+            eids.forEach {
+                output.putEntityUniqueId(it)
             }
         }
 
-        if ((type & (0x08 | BITFLAG_TEXTURE_UPDATE | BITFLAG_DECORATION_UPDATE)) !== 0){
+        if ((type and (0x08 or BITFLAG_TEXTURE_UPDATE or BITFLAG_DECORATION_UPDATE)) != 0){
             output.putByte(scale)
         }
 
-        if ((type & BITFLAG_DECORATION_UPDATE) !== 0){
-            output.putUnsignedVarInt(count(trackedEntities))
-            foreach(trackedEntities object : as) {
-                output.putLInt(object.type)
-                if (object.type === MapTrackedObject::TYPE_BLOCK) {
-                    output.putBlockPosition(object.x, object.y, object.z)
-                } elseif (object.type === MapTrackedObject::TYPE_ENTITY){
-                    output.putEntityUniqueId(object.entityUniqueId)
-                }else{
-                throw new \InvalidArgumentException("Unknown map object type object.type")
-            }
+        if ((type and BITFLAG_DECORATION_UPDATE) != 0){
+            output.putUnsignedVarInt(trackedEntities.size)
+            trackedEntities.forEach {
+                output.putLInt(it.type!!)
+                if (it.type == MapTrackedObject.TYPE_BLOCK) {
+                    output.putBlockPosition(it.x!!, it.y!!, it.z!!)
+                } else if (it.type == MapTrackedObject.TYPE_ENTITY) {
+                    output.putEntityUniqueId(it.entityUniqueId!!)
+                } else throw MapTrackedObjectException("Unknown map object type ${it.type}")
             }
 
             output.putUnsignedVarInt(decorationCount)
@@ -192,4 +197,6 @@ class ClientboundMapItemDataPacket : DataPacket(), ClientboundPacket {
         const val BITFLAG_TEXTURE_UPDATE = 0x02
         const val BITFLAG_DECORATION_UPDATE = 0x04
     }
+
+    class MapTrackedObjectException(override val message: String) : RuntimeException()
 }

@@ -6,20 +6,6 @@ import java.util.concurrent.atomic.AtomicInteger
 
 @ProtocolIdentify(ProtocolInfo.IDS.BLOCK_EVENT_PACKET)
 class BlockEventPacket : DataPacket(), ClientboundPacket {
-
-    /*
-    /** @var int */
-	public $x;
-	/** @var int */
-	public $y;
-	/** @var int */
-	public $z;
-	/** @var int */
-	public $eventType;
-	/** @var int */
-	public $eventData;
-     */
-
     var x: AtomicInteger = AtomicInteger()
     var y: AtomicInteger = AtomicInteger()
     var z: AtomicInteger = AtomicInteger()

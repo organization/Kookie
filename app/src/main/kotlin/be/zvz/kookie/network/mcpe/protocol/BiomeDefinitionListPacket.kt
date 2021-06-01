@@ -26,12 +26,6 @@ class BiomeDefinitionListPacket : DataPacket(), ClientboundPacket {
 
     lateinit var defs: CacheableNbt
 
-    companion object {
-        fun create(nbt: CacheableNbt): BiomeDefinitionListPacket = BiomeDefinitionListPacket().apply {
-            this.defs = nbt
-        }
-    }
-
     override fun decodePayload(input: PacketSerializer) {
         defs = CacheableNbt(input.getNbtCompoundRoot())
     }
@@ -42,5 +36,11 @@ class BiomeDefinitionListPacket : DataPacket(), ClientboundPacket {
 
     override fun handle(handler: PacketHandlerInterface): Boolean {
         return handler.handleBiomeDefinitionList(this)
+    }
+
+    companion object {
+        fun create(nbt: CacheableNbt): BiomeDefinitionListPacket = BiomeDefinitionListPacket().apply {
+            this.defs = nbt
+        }
     }
 }
