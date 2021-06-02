@@ -21,8 +21,8 @@ import kotlinx.coroutines.runBlocking
 import kotlin.math.*
 
 open class Vector3 @JvmOverloads constructor(var x: Float = 0F, var y: Float = 0F, var z: Float = 0F) : Vector {
-    @JvmOverloads constructor(x: Int, y: Int = 0, z: Int = 0) : this(x.toFloat(), y.toFloat(), z.toFloat())
-    @JvmOverloads constructor(x: Long, y: Long = 0L, z: Long = 0L) : this(x.toFloat(), y.toFloat(), z.toFloat())
+    @JvmOverloads
+    constructor(x: Int, y: Int = 0, z: Int = 0) : this(x.toFloat(), y.toFloat(), z.toFloat())
 
     override fun equals(other: Any?): Boolean = other is Vector3 && other.x == x && other.y == y && other.z == z
 
@@ -36,29 +36,23 @@ open class Vector3 @JvmOverloads constructor(var x: Float = 0F, var y: Float = 0
     operator fun plus(pos: Vector3): Vector3 = Vector3(this.x + pos.x, this.y + pos.y, this.z + pos.z)
     fun add(pos: Vector3): Vector3 = Vector3(this.x + pos.x, this.y + pos.y, this.z + pos.z)
     fun add(x: Int, y: Int, z: Int): Vector3 = Vector3(this.x + x, this.y + y, this.z + z)
-    fun add(x: Long, y: Long, z: Long): Vector3 = Vector3(this.x + x, this.y + y, this.z + z)
     fun add(x: Float, y: Float, z: Float): Vector3 = Vector3(this.x + x, this.y + y, this.z + z)
 
 
     operator fun minus(pos: Vector3): Vector3 = Vector3(this.x - pos.x, this.y - pos.y, this.z - pos.z)
     fun subtract(pos: Vector3): Vector3 = Vector3(this.x - pos.x, this.y - pos.y, this.z - pos.z)
     fun subtract(x: Int, y: Int, z: Int): Vector3 = Vector3(this.x - x, this.y - y, this.z - z)
-    fun subtract(x: Long, y: Long, z: Long): Vector3 = Vector3(this.x - x, this.y - y, this.z - z)
     fun subtract(x: Float, y: Float, z: Float): Vector3 = Vector3(this.x - x, this.y - y, this.z - z)
 
 
     operator fun times(len: Int): Vector3 = Vector3(x * len, y * len, z * len)
-    operator fun times(len: Long): Vector3 = Vector3(x * len, y * len, z * len)
     operator fun times(len: Float): Vector3 = Vector3(x * len, y * len, z * len)
     fun multiply(len: Int): Vector3 = Vector3(x * len, y * len, z * len)
-    fun multiply(len: Long): Vector3 = Vector3(x * len, y * len, z * len)
     fun multiply(len: Float): Vector3 = Vector3(x * len, y * len, z * len)
 
     operator fun div(len: Int): Vector3 = divide(len.toFloat())
-    operator fun div(len: Long): Vector3 = divide(len.toFloat())
     operator fun div(len: Float): Vector3 = divide(len)
     fun divide(len: Int): Vector3 = divide(len.toFloat())
-    fun divide(len: Long): Vector3 = divide(len.toFloat())
     fun divide(len: Float): Vector3 =
         if (len == 0F) throw RuntimeException("Division by zero") else Vector3(x / len, y / len, z / len)
 
@@ -69,12 +63,10 @@ open class Vector3 @JvmOverloads constructor(var x: Float = 0F, var y: Float = 0
 
     fun distance(pos: Vector3): Float = distance(pos.x, pos.y, pos.z)
     fun distance(x: Int, y: Int, z: Int): Float = distance(x.toFloat(), y.toFloat(), z.toFloat())
-    fun distance(x: Long, y: Long, z: Long): Float = distance(x.toFloat(), y.toFloat(), z.toFloat())
     fun distance(x: Float, y: Float, z: Float): Float = sqrt(distanceSquared(x, y, z))
 
     fun distanceSquared(pos: Vector3): Float = distanceSquared(pos.x, pos.y, pos.z)
     fun distanceSquared(x: Int, y: Int, z: Int): Float = distance(x.toFloat(), y.toFloat(), z.toFloat())
-    fun distanceSquared(x: Long, y: Long, z: Long): Float = distance(x.toFloat(), y.toFloat(), z.toFloat())
     fun distanceSquared(x: Float, y: Float, z: Float): Float =
         (this.x - x).pow(2) + (this.y - y).pow(2) + (this.z - z).pow(2)
 
@@ -147,7 +139,6 @@ open class Vector3 @JvmOverloads constructor(var x: Float = 0F, var y: Float = 0
 
 
     fun maxPlainDistance(v: Vector, z: Int): Float = maxPlainDistance(v, z.toFloat())
-    fun maxPlainDistance(v: Vector, z: Long): Float = maxPlainDistance(v, z.toFloat())
     fun maxPlainDistance(v: Vector, z: Float): Float = when (v) {
         is Vector3 -> maxPlainDistance(v.x, z)
         is Vector2 -> maxPlainDistance(v.x, z)
@@ -155,7 +146,6 @@ open class Vector3 @JvmOverloads constructor(var x: Float = 0F, var y: Float = 0
     }
 
     fun maxPlainDistance(x: Int, z: Float): Float = max(abs(this.x - x.toFloat()), abs(this.z - z))
-    fun maxPlainDistance(x: Long, z: Float): Float = max(abs(this.x - x.toFloat()), abs(this.z - z))
     fun maxPlainDistance(x: Float, z: Float): Float = max(abs(this.x - x), abs(this.z - z))
 
 
@@ -166,7 +156,6 @@ open class Vector3 @JvmOverloads constructor(var x: Float = 0F, var y: Float = 0
     )
 
     fun getIntermediateWithXValue(v: Vector3, x: Int): Vector3? = getIntermediateWithXValue(v, x.toFloat())
-    fun getIntermediateWithXValue(v: Vector3, x: Long): Vector3? = getIntermediateWithXValue(v, x.toFloat())
     fun getIntermediateWithXValue(v: Vector3, x: Float): Vector3? {
         val xDiff = v.x - this.x
         if (xDiff * xDiff < 0.0000001) {
@@ -182,7 +171,6 @@ open class Vector3 @JvmOverloads constructor(var x: Float = 0F, var y: Float = 0
 
 
     fun getIntermediateWithYValue(v: Vector3, y: Int): Vector3? = getIntermediateWithYValue(v, y.toFloat())
-    fun getIntermediateWithYValue(v: Vector3, y: Long): Vector3? = getIntermediateWithYValue(v, y.toFloat())
     fun getIntermediateWithYValue(v: Vector3, y: Float): Vector3? {
         val yDiff = v.y - this.y
         if (yDiff * yDiff < 0.0000001) {
@@ -198,7 +186,6 @@ open class Vector3 @JvmOverloads constructor(var x: Float = 0F, var y: Float = 0
 
 
     fun getIntermediateWithZValue(v: Vector3, z: Int): Vector3? = getIntermediateWithZValue(v, z.toFloat())
-    fun getIntermediateWithZValue(v: Vector3, z: Long): Vector3? = getIntermediateWithZValue(v, z.toFloat())
     fun getIntermediateWithZValue(v: Vector3, z: Float): Vector3? {
         val zDiff = v.z - this.z
         if (zDiff * zDiff < 0.0000001) {
@@ -214,7 +201,6 @@ open class Vector3 @JvmOverloads constructor(var x: Float = 0F, var y: Float = 0
 
 
     fun withComponents(x: Int?, y: Int?, z: Int?): Vector3 = withComponents(x?.toFloat(), y?.toFloat(), z?.toFloat())
-    fun withComponents(x: Long?, y: Long?, z: Long?): Vector3 = withComponents(x?.toFloat(), y?.toFloat(), z?.toFloat())
     fun withComponents(x: Float?, y: Float?, z: Float?): Vector3 =
         if (x !== null || y !== null || z !== null)
             Vector3(x ?: this.x, y ?: this.y, z ?: this.z)
