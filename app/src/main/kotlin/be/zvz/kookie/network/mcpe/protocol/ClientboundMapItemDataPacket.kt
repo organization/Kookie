@@ -23,8 +23,6 @@ import be.zvz.kookie.network.mcpe.protocol.types.MapTrackedObject
 import be.zvz.kookie.network.mcpe.serializer.PacketSerializer
 import be.zvz.kookie.utils.Binary
 import java.awt.Color
-import java.lang.RuntimeException
-import java.util.concurrent.atomic.AtomicInteger
 
 @ProtocolIdentify(ProtocolInfo.IDS.CLIENTBOUND_MAP_ITEM_DATA_PACKET)
 class ClientboundMapItemDataPacket : DataPacket(), ClientboundPacket {
@@ -73,14 +71,10 @@ class ClientboundMapItemDataPacket : DataPacket(), ClientboundPacket {
 
                 when (obj.type) {
                     MapTrackedObject.TYPE_BLOCK -> {
-                        val x = AtomicInteger()
-                        val y = AtomicInteger()
-                        val z = AtomicInteger()
-                        input.getBlockPosition(x, y, z)
-
-                        obj.x = x.get()
-                        obj.y = y.get()
-                        obj.z = z.get()
+                        val pos = input.getBlockPosition()
+                        obj.x = pos.x
+                        obj.y = pos.x
+                        obj.z = pos.x
                     }
                     MapTrackedObject.TYPE_ENTITY -> obj.entityUniqueId = input.getEntityUniqueId()
                     else -> throw PacketDecodeException("Unknown map object type object.type")

@@ -2,14 +2,10 @@ package be.zvz.kookie.network.mcpe.protocol
 
 import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
 import be.zvz.kookie.network.mcpe.serializer.PacketSerializer
-import java.util.concurrent.atomic.AtomicInteger
 
 @ProtocolIdentify(ProtocolInfo.IDS.UPDATE_BLOCK_PACKET)
 class UpdateBlockPacket : DataPacket(), ClientboundPacket {
-
-    var x: AtomicInteger = AtomicInteger()
-    var y: AtomicInteger = AtomicInteger()
-    var z: AtomicInteger = AtomicInteger()
+    val pos = PacketSerializer.BlockPosition()
     var blockRuntimeId: Int = 0
 
     /**
@@ -20,14 +16,14 @@ class UpdateBlockPacket : DataPacket(), ClientboundPacket {
     var dataLayerId: Int = DATA_LAYER_NORMAL
 
     override fun decodePayload(input: PacketSerializer) {
-        input.getBlockPosition(x, y, z)
+        input.getBlockPosition(pos)
         blockRuntimeId = input.getUnsignedVarInt()
         flags = input.getUnsignedVarInt()
         dataLayerId = input.getUnsignedVarInt()
     }
 
     override fun encodePayload(output: PacketSerializer) {
-        output.putBlockPosition(x.get(), y.get(), z.get())
+        output.putBlockPosition(pos)
         output.putUnsignedVarInt(blockRuntimeId)
         output.putUnsignedVarInt(flags)
         output.putUnsignedVarInt(dataLayerId)

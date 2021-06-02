@@ -17,32 +17,23 @@
  */
 package be.zvz.kookie.network.mcpe.protocol
 
+import be.zvz.kookie.math.Vector3
 import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
 import be.zvz.kookie.network.mcpe.serializer.PacketSerializer
-import java.util.concurrent.atomic.AtomicInteger
 
 @ProtocolIdentify(ProtocolInfo.IDS.ANVIL_DAMAGE_PACKET)
 class AnvilDamagePacket : DataPacket(), ServerboundPacket {
-    var x: Int = 0
-    var y: Int = 0
-    var z: Int = 0
     var damageAmount: Int = 0
+    val pos = PacketSerializer.BlockPosition()
 
     override fun decodePayload(input: PacketSerializer) {
         damageAmount = input.getByte()
-        val x = AtomicInteger()
-        val y = AtomicInteger()
-        val z = AtomicInteger()
-        input.getBlockPosition(x, y, z)
-
-        this.x = x.get()
-        this.y = y.get()
-        this.z = z.get()
+        input.getBlockPosition(pos)
     }
 
     override fun encodePayload(output: PacketSerializer) {
         output.putByte(damageAmount)
-        output.putBlockPosition(x, y, z)
+        output.putBlockPosition(pos)
     }
 
     override fun handle(handler: PacketHandlerInterface): Boolean {
@@ -50,15 +41,17 @@ class AnvilDamagePacket : DataPacket(), ServerboundPacket {
     }
 
     companion object {
-        fun create(x: Int, y: Int, z: Int, damageAmount: Int): AnvilDamagePacket {
-            val packet = AnvilDamagePacket().apply {
-                this.x = x
-                this.y = y
-                this.z = z
-                this.damageAmount = damageAmount
-            }
+        fun create(pos: Vector3, damageAmount: Int): AnvilDamagePacket =
+            create(pos.x.toInt(), pos.y.toInt(), pos.z.toInt(), damageAmount)
 
-            return packet
+        fun create(pos: PacketSerializer.BlockPosition, damageAmount: Int): AnvilDamagePacket =
+            create(pos.x, pos.y, pos.z, damageAmount)
+
+        fun create(x: Int, y: Int, z: Int, damageAmount: Int): AnvilDamagePacket = AnvilDamagePacket().apply {
+            this.pos.x = x
+            this.pos.y = y
+            this.pos.z = z
+            this.damageAmount = damageAmount
         }
     }
 }

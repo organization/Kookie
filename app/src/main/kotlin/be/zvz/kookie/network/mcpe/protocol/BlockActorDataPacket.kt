@@ -17,27 +17,23 @@
  */
 package be.zvz.kookie.network.mcpe.protocol
 
+import be.zvz.kookie.math.Vector3
 import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
 import be.zvz.kookie.network.mcpe.protocol.types.CacheableNbt
 import be.zvz.kookie.network.mcpe.serializer.PacketSerializer
-import java.util.concurrent.atomic.AtomicInteger
 
 @ProtocolIdentify(ProtocolInfo.IDS.BLOCK_ACTOR_DATA_PACKET)
 class BlockActorDataPacket : DataPacket(), ClientboundPacket, ServerboundPacket {
-
-    var x: AtomicInteger = AtomicInteger()
-    var y: AtomicInteger = AtomicInteger()
-    var z: AtomicInteger = AtomicInteger()
-
+    val pos = PacketSerializer.BlockPosition()
     lateinit var namedtag: CacheableNbt
 
     override fun decodePayload(input: PacketSerializer) {
-        input.getBlockPosition(x, y, z)
+        input.getBlockPosition(pos)
         namedtag = CacheableNbt(input.getNbtCompoundRoot())
     }
 
     override fun encodePayload(output: PacketSerializer) {
-        output.putBlockPosition(x.get(), y.get(), z.get())
+        output.putBlockPosition(pos)
         output.put(namedtag.encodedNbt)
     }
 
@@ -46,11 +42,17 @@ class BlockActorDataPacket : DataPacket(), ClientboundPacket, ServerboundPacket 
     }
 
     companion object {
+        fun create(pos: Vector3, nbt: CacheableNbt): BlockActorDataPacket =
+            create(pos.x.toInt(), pos.y.toInt(), pos.z.toInt(), nbt)
+
+        fun create(pos: PacketSerializer.BlockPosition, nbt: CacheableNbt): BlockActorDataPacket =
+            create(pos.x, pos.y, pos.z, nbt)
+
         fun create(x: Int, y: Int, z: Int, nbt: CacheableNbt): BlockActorDataPacket = BlockActorDataPacket().apply {
+            this.pos.x = x
+            this.pos.y = y
+            this.pos.z = z
             this.namedtag = nbt
-            this.x.set(x)
-            this.y.set(y)
-            this.z.set(z)
         }
     }
 }
