@@ -344,7 +344,7 @@ open class Block(val idInfo: BlockIdentifier, val name: String, val breakInfo: B
         }
 
         var currentHit: RayTraceResult? = null
-        var currentDistance = Double.MAX_VALUE
+        var currentDistance = Float.MAX_VALUE
 
         bbs.forEach {
             val nextHit = it.calculateIntercept(pos1, pos2)
