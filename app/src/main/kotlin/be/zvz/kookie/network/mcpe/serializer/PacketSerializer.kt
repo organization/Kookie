@@ -55,16 +55,23 @@ class PacketSerializer(buffer: String = "", offset: AtomicInteger = AtomicIntege
         put(bytes.substring(8, 8).reversed())
     }
 
-    fun getBlockPosition(x: AtomicInteger, y: AtomicInteger, z: AtomicInteger) {
-        x.set(getVarInt())
-        y.set(getUnsignedVarInt())
-        z.set(getVarInt())
+    fun getBlockPosition(): BlockPosition = BlockPosition(getVarInt(), getUnsignedVarInt(), getVarInt())
+    fun getBlockPosition(pos: BlockPosition): BlockPosition = pos.apply {
+        x = getVarInt()
+        y = getUnsignedVarInt()
+        z = getVarInt()
     }
 
     fun putBlockPosition(x: Int, y: Int, z: Int) {
         putVarInt(x)
         putUnsignedVarInt(y)
         putVarInt(z)
+    }
+
+    fun putBlockPosition(pos: BlockPosition) {
+        putVarInt(pos.x)
+        putUnsignedVarInt(pos.y)
+        putVarInt(pos.z)
     }
 
     // TODO: SkinData
@@ -473,4 +480,6 @@ class PacketSerializer(buffer: String = "", offset: AtomicInteger = AtomicIntege
         }
         return list
     }
+
+    data class BlockPosition @JvmOverloads constructor(var x: Int = 0, var y: Int = 0, var z: Int = 0)
 }
