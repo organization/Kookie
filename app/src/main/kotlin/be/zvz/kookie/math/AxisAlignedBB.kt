@@ -89,8 +89,8 @@ class AxisAlignedBB constructor(
         maxZ += z
     }
 
-    fun offestCopy(x: Int, y: Int, z: Int): AxisAlignedBB = clone().offset(x, y, z)
-    fun offestCopy(x: Long, y: Long, z: Long): AxisAlignedBB = clone().offset(x, y, z)
+    fun offsetCopy(x: Int, y: Int, z: Int): AxisAlignedBB = clone().offset(x, y, z)
+    fun offsetCopy(x: Long, y: Long, z: Long): AxisAlignedBB = clone().offset(x, y, z)
     fun offsetCopy(x: Float, y: Float, z: Float): AxisAlignedBB = clone().offset(x, y, z)
 
 
@@ -162,13 +162,13 @@ class AxisAlignedBB constructor(
     fun stretchedCopy(axis: Axis, distance: Float): AxisAlignedBB = clone().stretch(axis, distance)
 
 
-    fun sqaush(axis: Axis, distance: Int): AxisAlignedBB = stretch(axis, -distance)
-    fun sqaush(axis: Axis, distance: Long): AxisAlignedBB = stretch(axis, -distance)
+    fun squash(axis: Axis, distance: Int): AxisAlignedBB = stretch(axis, -distance)
+    fun squash(axis: Axis, distance: Long): AxisAlignedBB = stretch(axis, -distance)
     fun squash(axis: Axis, distance: Float): AxisAlignedBB = stretch(axis, -distance)
 
-    fun sqaushedCopy(axis: Axis, distance: Int): AxisAlignedBB = clone().stretch(axis, -distance)
-    fun sqaushedCopy(axis: Axis, distance: Long): AxisAlignedBB = clone().stretch(axis, -distance)
-    fun sqaushedCopy(axis: Axis, distance: Float): AxisAlignedBB = clone().stretch(axis, -distance)
+    fun squashedCopy(axis: Axis, distance: Int): AxisAlignedBB = clone().stretch(axis, -distance)
+    fun squashedCopy(axis: Axis, distance: Long): AxisAlignedBB = clone().stretch(axis, -distance)
+    fun squashedCopy(axis: Axis, distance: Float): AxisAlignedBB = clone().stretch(axis, -distance)
 
 
     fun calculateXOffset(bb: AxisAlignedBB, x: Int): Float = calculateXOffset(bb, x.toFloat())
