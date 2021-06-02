@@ -68,7 +68,7 @@ class Vector2 @JvmOverloads constructor(var x: Float, var y: Float = 0F) : Vecto
     fun round(): Vector2 = Vector2(round(x), round(y))
     fun abs(): Vector2 = Vector2(abs(x), abs(y))
 
-    fun distance(pos: Vector2): Float = distance(x, y)
+    fun distance(pos: Vector2): Float = distance(pos.x, pos.y)
     fun distance(x: Int, y: Int): Float = distance(x.toFloat(), y.toFloat())
     fun distance(x: Long, y: Long): Float = distance(x.toFloat(), y.toFloat())
     fun distance(x: Float, y: Float): Float = sqrt(distanceSquared(x, y))
