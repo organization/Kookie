@@ -19,10 +19,9 @@ package be.zvz.kookie.math
 
 import kotlin.math.*
 
-class Vector2 @JvmOverloads constructor(var x: Float, var y: Float = 0F) : Vector {
-    constructor() : this(0F)
-    constructor(x: Int = 0, y: Int = 0) : this(x.toFloat(), y.toFloat())
-    constructor(x: Long = 0L, y: Long = 0L) : this(x.toFloat(), y.toFloat())
+class Vector2 @JvmOverloads constructor(var x: Float = 0F, var y: Float = 0F) : Vector {
+    @JvmOverloads constructor(x: Int, y: Int = 0) : this(x.toFloat(), y.toFloat())
+    @JvmOverloads constructor(x: Long, y: Long = 0L) : this(x.toFloat(), y.toFloat())
 
     override fun equals(other: Any?): Boolean = other is Vector2 && other.x == x && other.y == y
 
