@@ -1,5 +1,9 @@
 package be.zvz.kookie.network.mcpe.protocol
 
+import be.zvz.kookie.math.Vector3
+import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
+import be.zvz.kookie.network.mcpe.serializer.PacketSerializer
+
 /**
  *
  * _  __           _    _
@@ -18,29 +22,12 @@ package be.zvz.kookie.network.mcpe.protocol
  * (at your option) any later version.
  */
 
-class MotionPredictionHIntsPacket : DataPacket(), ClientboundPacket {
-    @ProtocolIdentify(ProtocolInfo.IDS.MOTION_PREDICTION_HINTS_PACKET)
+@ProtocolIdentify(ProtocolInfo.IDS.MOTION_PREDICTION_HINTS_PACKET)
+class MotionPredictionHintsPacket : DataPacket(), ClientboundPacket {
 
-    var entityRuntimeId: Int
-    var motion: Vector3
-    var onGround: Boolean
-
-    static
-    fun create(entityRuntimeId: Int, motion: Vector3, onGround: Boolean): self {
-        result = new self
-                result.entityRuntimeId = entityRuntimeId
-        result.motion = motion
-        result.onGround = onGround
-        return result
-    }
-
-    fun getEntityRuntimeId(): Int {
-        return entityRuntimeId
-    }
-
-    fun getMotion(): Vector3 {
-        return motion
-    }
+    var entityRuntimeId: Long = 0
+    lateinit var motion: Vector3
+    var onGround: Boolean = false
 
     fun isOnGround(): Boolean {
         return onGround
@@ -49,16 +36,26 @@ class MotionPredictionHIntsPacket : DataPacket(), ClientboundPacket {
     override fun decodePayload(input: PacketSerializer) {
         entityRuntimeId = input.getEntityRuntimeId()
         motion = input.getVector3()
-        onGround = input.getBool()
+        onGround = input.getBoolean()
     }
 
     override fun encodePayload(output: PacketSerializer) {
         output.putEntityRuntimeId(entityRuntimeId)
         output.putVector3(motion)
-        output.putBool(onGround)
+        output.putBoolean(onGround)
     }
 
     override fun handle(handler: PacketHandlerInterface): Boolean {
-        return handler.handleMotionPredictionHInts(this)
+        return handler.handleMotionPredictionHints(this)
+    }
+
+    companion object {
+        fun create(entityRuntimeId: Long, motion: Vector3, onGround: Boolean): MotionPredictionHintsPacket {
+            val result = MotionPredictionHintsPacket()
+            result.entityRuntimeId = entityRuntimeId
+            result.motion = motion
+            result.onGround = onGround
+            return result
+        }
     }
 }

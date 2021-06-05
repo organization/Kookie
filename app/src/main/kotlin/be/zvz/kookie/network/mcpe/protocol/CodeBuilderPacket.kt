@@ -1,5 +1,8 @@
 package be.zvz.kookie.network.mcpe.protocol
 
+import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
+import be.zvz.kookie.network.mcpe.serializer.PacketSerializer
+
 /**
  *
  * _  __           _    _
@@ -18,36 +21,29 @@ package be.zvz.kookie.network.mcpe.protocol
  * (at your option) any later version.
  */
 
+@ProtocolIdentify(ProtocolInfo.IDS.CODE_BUILDER_PACKET)
 class CodeBuilderPacket : DataPacket(), ClientboundPacket {
-    @ProtocolIdentify(ProtocolInfo.IDS.CODE_BUILDER_PACKET)
 
-    var url: string
-    var openCodeBuilder: Boolean
+    lateinit var url: String
+    var openCodeBuilder: Boolean = false
 
-    static
-    fun create(url: string, openCodeBuilder: Boolean): self {
-        result = new self
-                result.url = url
-        result.openCodeBuilder = openCodeBuilder
-        return result
-    }
-
-    fun getUrl(): string {
-        return url
-    }
-
-    fun openCodeBuilder(): Boolean {
-        return openCodeBuilder
+    companion object {
+        fun create(url: String, openCodeBuilder: Boolean): CodeBuilderPacket {
+            val result = CodeBuilderPacket()
+            result.url = url
+            result.openCodeBuilder = openCodeBuilder
+            return result
+        }
     }
 
     override fun decodePayload(input: PacketSerializer) {
         url = input.getString()
-        openCodeBuilder = input.getBool()
+        openCodeBuilder = input.getBoolean()
     }
 
     override fun encodePayload(output: PacketSerializer) {
         output.putString(url)
-        output.putBool(openCodeBuilder)
+        output.putBoolean(openCodeBuilder)
     }
 
     override fun handle(handler: PacketHandlerInterface): Boolean {

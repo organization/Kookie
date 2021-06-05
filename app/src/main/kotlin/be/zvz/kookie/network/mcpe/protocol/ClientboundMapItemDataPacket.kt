@@ -17,12 +17,12 @@
  */
 package be.zvz.kookie.network.mcpe.protocol
 
+import be.zvz.kookie.color.Color
 import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
 import be.zvz.kookie.network.mcpe.protocol.types.DimensionIds
 import be.zvz.kookie.network.mcpe.protocol.types.MapTrackedObject
 import be.zvz.kookie.network.mcpe.serializer.PacketSerializer
 import be.zvz.kookie.utils.Binary
-import java.awt.Color
 
 @ProtocolIdentify(ProtocolInfo.IDS.CLIENTBOUND_MAP_ITEM_DATA_PACKET)
 class ClientboundMapItemDataPacket : DataPacket(), ClientboundPacket {
@@ -106,7 +106,7 @@ class ClientboundMapItemDataPacket : DataPacket(), ClientboundPacket {
 
             for (y in 0..height) {
                 for (x in 0..width) {
-                    colors[y][x] = Color.fromRGBA(Binary.flipIntEndianness(input.getUnsignedVarInt()))
+                    colors.getValue(y)[x] = Color.fromRGBA(Binary.flipIntEndianness(input.getUnsignedVarInt()))
                 }
             }
         }
@@ -148,25 +148,29 @@ class ClientboundMapItemDataPacket : DataPacket(), ClientboundPacket {
             output.putUnsignedVarInt(trackedEntities.size)
             trackedEntities.forEach {
                 output.putLInt(it.type!!)
-                if (it.type == MapTrackedObject.TYPE_BLOCK) {
-                    output.putBlockPosition(it.x!!, it.y!!, it.z!!)
-                } else if (it.type == MapTrackedObject.TYPE_ENTITY) {
-                    output.putEntityUniqueId(it.entityUniqueId!!)
-                } else throw MapTrackedObjectException("Unknown map object type ${it.type}")
+                when (it.type) {
+                    MapTrackedObject.TYPE_BLOCK -> {
+                        output.putBlockPosition(it.x!!, it.y!!, it.z!!)
+                    }
+                    MapTrackedObject.TYPE_ENTITY -> {
+                        output.putEntityUniqueId(it.entityUniqueId!!)
+                    }
+                    else -> throw MapTrackedObjectException("Unknown map object type ${it.type}")
+                }
             }
 
             output.putUnsignedVarInt(decorationCount)
-            foreach(decorations decoration : as) {
+            decorations.forEach { decoration ->
                 output.putByte(decoration.getIcon())
                 output.putByte(decoration.getRotation())
                 output.putByte(decoration.getXOffset())
                 output.putByte(decoration.getYOffset())
                 output.putString(decoration.getLabel())
-                output.putUnsignedVarInt(Binary::flipIntEndianness(decoration.getColor()->toRGBA()))
+                output.putUnsignedVarInt(Binary.flipIntEndianness(decoration.getColor().toRGBA()))
             }
         }
 
-        if ((type & BITFLAG_TEXTURE_UPDATE) !== 0){
+        if ((type and BITFLAG_TEXTURE_UPDATE) != 0){
             output.putVarInt(width)
             output.putVarInt(height)
             output.putVarInt(xOffset)
@@ -174,12 +178,12 @@ class ClientboundMapItemDataPacket : DataPacket(), ClientboundPacket {
 
             output.putUnsignedVarInt(width * height) //list count, but we handle it as a 2D array... thanks for the confusion mojang
 
-            for (y = 0 y < height ++y){
-            for (x = 0 x < width ++x){
-            //if mojang had any sense this would just be a regular LE Int
-            output.putUnsignedVarInt(Binary::flipIntEndianness(colors[y][x]->toRGBA()))
-        }
-        }
+            for (y in 0..height) {
+                for (x in 0..width) {
+                    //if mojang had any sense this would just be a regular LE Int
+                    output.putUnsignedVarInt(Binary.flipIntEndianness(colors.getValue(y).getValue(x).toRGBA()))
+                }
+            }
         }
     }
 
