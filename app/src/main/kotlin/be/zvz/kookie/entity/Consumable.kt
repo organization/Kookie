@@ -7,5 +7,4 @@ interface Consumable {
     fun getAdditionalEffects(): List<EffectInstance>
 
     fun onConsume(consumer: Living)
-
 }

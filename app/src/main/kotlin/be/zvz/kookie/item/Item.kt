@@ -33,7 +33,6 @@ import be.zvz.kookie.utils.Binary
 import com.koloboke.collect.map.hash.HashIntObjMaps
 import com.koloboke.collect.map.hash.HashObjObjMaps
 import java.util.*
-import kotlin.collections.HashMap
 
 open class Item(
     private val identifier: ItemIdentifier,
@@ -270,13 +269,14 @@ open class Item(
     fun equalsExact(other: Item): Boolean = equals(other) && count == other.count
 
     override fun toString(): String =
-        "Item $vanillaName (${getId()}:" + (if (hasAnyDamageValue()) "?" else getMeta()) + ")x$count tags:0x" + (
-            if (hasNamedTag()) Base64.getEncoder().encodeToString(
+        "Item $vanillaName (${getId()}:${if (hasAnyDamageValue()) "?" else getMeta()})x$count tags:0x" + when {
+            hasNamedTag() -> Base64.getEncoder().encodeToString(
                 LittleEndianNbtSerializer().write(
                     TreeRoot(getNamedTag())
                 ).toByteArray()
-            ) else ""
             )
+            else -> ""
+        }
 
     // TODO: json/nbt (de)serialize
 

@@ -11,14 +11,11 @@ open class Effect(val internalRuntimeId: Int, val name: String, val color: Color
     open fun canTick(instance: EffectInstance): Boolean = false
 
     open fun applyEffect(entity: Living, instance: EffectInstance, potency: Float = 1.0f, source: Entity? = null) {
-
     }
 
     open fun add(entity: Living, instance: EffectInstance) {
-
     }
 
     open fun remove(entity: Living, instance: EffectInstance) {
-
     }
 }

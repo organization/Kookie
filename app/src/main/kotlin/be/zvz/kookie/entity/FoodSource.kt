@@ -6,5 +6,4 @@ interface FoodSource : Consumable {
     val saturationRestore: Float
 
     fun requiresHunger(): Boolean
-
 }

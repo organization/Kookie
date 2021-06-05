@@ -12,6 +12,5 @@ abstract class Food(identifier: ItemIdentifier, name: String) : Item(identifier,
     override fun getAdditionalEffects(): List<EffectInstance> = listOf()
 
     override fun onConsume(consumer: Living) {
-
     }
 }
