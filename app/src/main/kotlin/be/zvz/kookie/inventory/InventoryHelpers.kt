@@ -72,7 +72,7 @@ interface InventoryHelpers : Inventory {
         val checkTags = item.hasNamedTag()
 
         getContents().forEach { (index, i) ->
-            if (item.equals(i, checkDamage, checkTags) && (i.count == count || (!exact || i.count > count))) {
+            if (item.equals(i, checkDamage, checkTags) && (i.count == count || !exact || i.count > count)) {
                 return index
             }
         }
