@@ -52,7 +52,7 @@ class NetworkNbtSerializer : BaseNbtSerializer() {
     override fun readIntArray(): IntArray {
         val len = readInt() // varInt
         val list: MutableList<Int> = mutableListOf()
-        for (i in 1..len) {
+        for (i in 0 until len) {
             list.add(readInt()) // varInt
         }
 
@@ -67,7 +67,7 @@ class NetworkNbtSerializer : BaseNbtSerializer() {
     override fun readLongArray(): LongArray {
         val len = readInt() // varInt
         val list: MutableList<Long> = mutableListOf()
-        for (i in 1..len) {
+        for (i in 0 until len) {
             list.add(readLong()) // varInt
         }
 

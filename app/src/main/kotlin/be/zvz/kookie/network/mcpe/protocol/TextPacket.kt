@@ -25,7 +25,7 @@ class TextPacket : DataPacket(), ClientboundPacket, ServerboundPacket {
         }
         if (type in TYPE_TRANSLATION..TYPE_JUKEBOX_POPUP) {
             message = input.getString()
-            for (i in 0..input.getUnsignedVarInt()) {
+            for (i in 0 until input.getUnsignedVarInt()) {
                 parameters.add(input.getString())
             }
         }

@@ -269,7 +269,7 @@ object Binary {
     fun writeUnsignedVarInt(value: Int): String {
         val buf = StringBuilder()
         var x = value and -1
-        for (i in 0..5) {
+        for (i in 0 until 5) {
             if ((x shr 7) != 0) {
                 buf.append(x and 0x80)
             } else {
@@ -316,7 +316,7 @@ object Binary {
     fun writeUnsignedVarLong(value: Long): String {
         val buf = StringBuilder()
         var x = value and -1
-        for (i in 0..10) {
+        for (i in 0 until 10) {
             if ((x shr 7) != 0L) {
                 buf.append(x and 0x80)
             } else {

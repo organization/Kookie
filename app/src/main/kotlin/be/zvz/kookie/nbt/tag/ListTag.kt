@@ -79,7 +79,7 @@ class ListTag<T>(
                     throw IllegalArgumentException("Unexpected non-empty list of TagType.NOTHING")
                 }
                 tracker.protectDepth {
-                    for (i in 0..size) {
+                    for (i in 0 until size) {
                         value.add(NBT.createTag(tagType, reader, tracker) as Tag<Any>)
                     }
                 }

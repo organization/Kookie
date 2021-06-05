@@ -20,7 +20,7 @@ class Experiments(private val experiments: MutableMap<String, Boolean>, private 
     companion object {
         fun read(input: PacketSerializer): Experiments {
             val experiments: MutableMap<String, Boolean> = HashObjObjMaps.newMutableMap()
-            for (i in 0..input.getLInt()) {
+            for (i in 0 until input.getLInt()) {
                 val experimentName = input.getString()
                 val enabled = input.getBoolean()
                 experiments[experimentName] = enabled

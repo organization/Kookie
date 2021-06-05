@@ -12,7 +12,7 @@ class ResourcePackClientResponsePacket : DataPacket(), ServerboundPacket {
 
     override fun decodePayload(input: PacketSerializer) {
         status = input.getByte()
-        for (i in 0..input.getLShort()) {
+        for (i in 0 until input.getLShort()) {
             packIds.add(input.getString())
         }
     }
