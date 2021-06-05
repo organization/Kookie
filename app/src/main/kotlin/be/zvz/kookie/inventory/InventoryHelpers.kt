@@ -19,18 +19,12 @@ package be.zvz.kookie.inventory
 
 import be.zvz.kookie.item.Item
 import be.zvz.kookie.item.ItemFactory
+import com.koloboke.collect.map.hash.HashIntObjMaps
 import kotlin.math.max
 import kotlin.math.min
 
-interface InventoryHelpers {
-    fun getSize(): Int
-    fun getMaxStackSize(): Int
-    fun getItem(index: Int): Item
-    fun setItem(index: Int, item: Item)
-    fun getContents(includeEmpty: Boolean = false): MutableMap<Int, Item>
-    fun setContents(items: MutableMap<Int, Item>)
-
-    fun contains(item: Item): Boolean {
+interface InventoryHelpers : Inventory {
+    override fun contains(item: Item): Boolean {
         var count = max(1, item.count)
         val checkDamage = !item.hasAnyDamageValue()
         val checkTags = item.hasNamedTag()
@@ -47,8 +41,8 @@ interface InventoryHelpers {
         return false
     }
 
-    fun all(item: Item): MutableMap<Int, Item> {
-        val slots = mutableMapOf<Int, Item>()
+    override fun all(item: Item): Map<Int, Item> {
+        val slots = HashIntObjMaps.newMutableMap<Item>()
         val checkDamage = !item.hasAnyDamageValue()
         val checkTags = item.hasNamedTag()
 
@@ -61,7 +55,7 @@ interface InventoryHelpers {
         return slots
     }
 
-    fun remove(item: Item) {
+    override fun remove(item: Item) {
         val checkDamage = !item.hasAnyDamageValue()
         val checkTags = item.hasNamedTag()
 
@@ -72,7 +66,7 @@ interface InventoryHelpers {
         }
     }
 
-    fun first(item: Item, exact: Boolean): Int {
+    override fun first(item: Item, exact: Boolean): Int {
         val count = if (exact) item.count else max(1, item.count)
         val checkDamage = !item.hasAnyDamageValue()
         val checkTags = item.hasNamedTag()
@@ -86,7 +80,7 @@ interface InventoryHelpers {
         return -1
     }
 
-    fun firstEmpty(): Int {
+    override fun firstEmpty(): Int {
         getContents(true).forEach { (index, slot) ->
             if (slot.isNull()) {
                 return index
@@ -96,9 +90,9 @@ interface InventoryHelpers {
         return -1
     }
 
-    fun isSlotEmpty(index: Int): Boolean = getItem(index).isNull()
+    override fun isSlotEmpty(index: Int): Boolean = getItem(index).isNull()
 
-    fun canAddItem(item: Item): Boolean {
+    override fun canAddItem(item: Item): Boolean {
         var count = item.count
         for (i in 0..getSize()) {
             val slot = getItem(i)
@@ -120,7 +114,7 @@ interface InventoryHelpers {
         return false
     }
 
-    fun addItem(vararg slots: Item): MutableList<Item> {
+    override fun addItem(vararg slots: Item): MutableList<Item> {
         val itemSlots = mutableListOf<Item>()
         slots.forEach {
             if (!it.isNull()) {
@@ -212,15 +206,15 @@ interface InventoryHelpers {
         return itemSlots
     }
 
-    fun clear(index: Int) {
+    override fun clear(index: Int) {
         setItem(index, ItemFactory.air())
     }
 
-    fun clearAll() {
-        setContents(mutableMapOf())
+    override fun clearAll() {
+        setContents(HashIntObjMaps.newMutableMap())
     }
 
-    fun swap(slot1: Int, slot2: Int) {
+    override fun swap(slot1: Int, slot2: Int) {
         val i1 = getItem(slot1)
         val i2 = getItem(slot2)
         setItem(slot1, i2)

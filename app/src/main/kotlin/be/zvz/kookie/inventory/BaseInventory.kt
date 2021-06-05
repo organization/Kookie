@@ -21,13 +21,14 @@ import be.zvz.kookie.item.Item
 import be.zvz.kookie.item.ItemFactory
 import be.zvz.kookie.player.Player
 
-abstract class BaseInventory : InventoryHelpers, Inventory {
+abstract class BaseInventory : InventoryHelpers {
     private val maxStackSize: Int = Inventory.MAX_STACK
-    override val viewers = mutableListOf<Player>()
+    private val viewers = mutableListOf<Player>()
+    private val listeners = mutableListOf<InventoryListener>()
 
     override fun getMaxStackSize(): Int = maxStackSize
-    protected abstract fun internalSetContents(items: MutableMap<Int, Item>)
-    override fun setContents(items: MutableMap<Int, Item>) {
+    protected abstract fun internalSetContents(items: Map<Int, Item>)
+    override fun setContents(items: Map<Int, Item>) {
         // TODO: items.size > getSize()
         val oldContents = getContents(true)
         val listeners = listeners.toTypedArray()
@@ -50,7 +51,7 @@ abstract class BaseInventory : InventoryHelpers, Inventory {
     protected abstract fun internalSetItem(index: Int, item: Item)
 
     override fun setItem(index: Int, item: Item) {
-        var newItem =
+        val newItem =
             if (item.isNull()) {
                 ItemFactory.air()
             } else {
@@ -78,7 +79,7 @@ abstract class BaseInventory : InventoryHelpers, Inventory {
         }
     }
 
-    protected fun onContentChange(itemsBefore: MutableMap<Int, Item>) {
+    protected fun onContentChange(itemsBefore: Map<Int, Item>) {
         listeners.forEach {
             it.onSlotChange(this, itemsBefore)
         }
@@ -88,4 +89,6 @@ abstract class BaseInventory : InventoryHelpers, Inventory {
     }
 
     override fun slotExists(slot: Int) = slot in 0 until getSize()
+    override fun getViewers(): MutableList<Player> = viewers
+    override fun getListeners(): MutableList<InventoryListener> = listeners
 }
