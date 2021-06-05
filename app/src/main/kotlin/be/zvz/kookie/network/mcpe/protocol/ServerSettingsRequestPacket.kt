@@ -1,5 +1,3 @@
-package be.zvz.kookie.network.mcpe.protocol
-
 /**
  *
  * _  __           _    _
@@ -17,19 +15,21 @@ package be.zvz.kookie.network.mcpe.protocol
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  */
+package be.zvz.kookie.network.mcpe.protocol
 
+import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
+import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
+
+@ProtocolIdentify(ProtocolInfo.IDS.SERVER_SETTINGS_REQUEST_PACKET)
 class ServerSettingsRequestPacket : DataPacket(), ServerboundPacket {
-    @ProtocolIdentify(ProtocolInfo.IDS.SERVER_SETTINGS_REQUEST_PACKET)
 
     override fun decodePayload(input: PacketSerializer) {
-        //No payload
+        // No payload
     }
 
     override fun encodePayload(output: PacketSerializer) {
-        //No payload
+        // No payload
     }
 
-    override fun handle(handler: PacketHandlerInterface): Boolean {
-        return handler.handleServerSettingsRequest(this)
-    }
+    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleServerSettingsRequest(this)
 }

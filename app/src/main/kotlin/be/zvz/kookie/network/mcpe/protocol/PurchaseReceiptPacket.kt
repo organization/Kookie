@@ -1,5 +1,3 @@
-package be.zvz.kookie.network.mcpe.protocol
-
 /**
  *
  * _  __           _    _
@@ -17,29 +15,28 @@ package be.zvz.kookie.network.mcpe.protocol
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  */
-use fun count
+package be.zvz.kookie.network.mcpe.protocol
 
+import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
+import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
+
+@ProtocolIdentify(ProtocolInfo.IDS.PURCHASE_RECEIPT_PACKET)
 class PurchaseReceiptPacket : DataPacket(), ServerboundPacket {
-    @ProtocolIdentify(ProtocolInfo.IDS.PURCHASE_RECEIPT_PACKET)
-
-    /** @var string[] */
-    entries = []
+    val entries = mutableListOf<String>()
 
     override fun decodePayload(input: PacketSerializer) {
-        count = input.getUnsignedVarInt()
-        for (i = 0 i < count ++i){
-            entries[] = input.getString()
+        val count = input.getUnsignedVarInt()
+        for (i in 0 until count) {
+            entries.add(input.getString())
         }
     }
 
     override fun encodePayload(output: PacketSerializer) {
-        output.putUnsignedVarInt(count(entries))
-        foreach(entries entry : as) {
+        output.putUnsignedVarInt(entries.size)
+        entries.forEach { entry ->
             output.putString(entry)
         }
     }
 
-    override fun handle(handler: PacketHandlerInterface): Boolean {
-        return handler.handlePurchaseReceipt(this)
-    }
+    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handlePurchaseReceipt(this)
 }

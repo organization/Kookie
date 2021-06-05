@@ -25,6 +25,7 @@ import be.zvz.kookie.nbt.tag.CompoundTag
 import be.zvz.kookie.network.mcpe.convert.GlobalItemTypeDictionary
 import be.zvz.kookie.network.mcpe.protocol.PacketDecodeException
 import be.zvz.kookie.network.mcpe.protocol.types.GameRule
+import be.zvz.kookie.network.mcpe.protocol.types.command.CommandOriginData
 import be.zvz.kookie.network.mcpe.protocol.types.entity.*
 import be.zvz.kookie.network.mcpe.protocol.types.inventory.ItemStack
 import be.zvz.kookie.network.mcpe.protocol.types.skin.*
@@ -441,6 +442,25 @@ class PacketSerializer(buffer: String = "", offset: AtomicInteger = AtomicIntege
         putByte(link.type)
         putBoolean(link.immediate)
         putBoolean(link.causedByRider)
+    }
+
+    fun getCommandOriginData(): CommandOriginData = CommandOriginData().apply {
+        this.type = CommandOriginData.Origin.from(getUnsignedVarInt())
+        this.uuid = getUUID()
+        this.requestId = getString()
+
+        if (this.type === CommandOriginData.Origin.DEV_CONSOLE || this.type === CommandOriginData.Origin.TEST) {
+            this.playerEntityUniqueId = getVarLong()
+        }
+    }
+
+    fun putCommandOriginData(data: CommandOriginData) {
+        putUnsignedVarInt(data.type.id)
+        putUUID(data.uuid)
+        putString(data.requestId)
+        if (data.type === CommandOriginData.Origin.DEV_CONSOLE || data.type === CommandOriginData.Origin.TEST) {
+            putVarLong(data.playerEntityUniqueId)
+        }
     }
 
     fun getByteRotation(): Float = (getByte() * (360 / 256)).toFloat()

@@ -1,5 +1,3 @@
-package be.zvz.kookie.network.mcpe.protocol
-
 /**
  *
  * _  __           _    _
@@ -17,30 +15,21 @@ package be.zvz.kookie.network.mcpe.protocol
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  */
+package be.zvz.kookie.network.mcpe.protocol
 
+import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
+import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
+
+@ProtocolIdentify(ProtocolInfo.IDS.POSITION_TRACKING_D_B_CLIENT_REQUEST_PACKET)
 class PositionTrackingDBClientRequestPacket : DataPacket(), ServerboundPacket {
-    @ProtocolIdentify(ProtocolInfo.IDS.POSITION_TRACKING_D_B_CLIENT_REQUEST_PACKET)
+    var action: Int = 0
+    var trackingId: Int = 0
 
-    const val ACTION_QUERY = 0
-
-    var action: Int
-    var trackingId: Int
-
-    static
-    fun create(action: Int, trackingId: Int): self {
-        result = new self
-                result.action = action
-        result.trackingId = trackingId
-        return result
-    }
-
-    fun getAction(): Int {
-        return action
-    }
-
-    fun getTrackingId(): Int {
-        return trackingId
-    }
+    fun create(action: Int, trackingId: Int): PositionTrackingDBClientRequestPacket =
+        PositionTrackingDBClientRequestPacket().apply {
+            this.action = action
+            this.trackingId = trackingId
+        }
 
     override fun decodePayload(input: PacketSerializer) {
         action = input.getByte()
@@ -52,7 +41,13 @@ class PositionTrackingDBClientRequestPacket : DataPacket(), ServerboundPacket {
         output.putVarInt(trackingId)
     }
 
-    override fun handle(handler: PacketHandlerInterface): Boolean {
-        return handler.handlePositionTrackingDBClientRequest(this)
+    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handlePositionTrackingDBClientRequest(this)
+
+    enum class Action(val id: Int) {
+        QUERY(0);
+        companion object {
+            private val VALUES = values()
+            fun from(value: Int) = VALUES.first { it.id == value }
+        }
     }
 }

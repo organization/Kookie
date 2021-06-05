@@ -1,5 +1,10 @@
 package be.zvz.kookie.network.mcpe.protocol
 
+import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
+import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
+import be.zvz.kookie.network.mcpe.protocol.types.CacheableNbt
+import be.zvz.kookie.network.mcpe.protocol.types.inventory.WindowTypes
+
 /**
  *
  * _  __           _    _
@@ -18,50 +23,46 @@ package be.zvz.kookie.network.mcpe.protocol
  * (at your option) any later version.
  */
 
+@ProtocolIdentify(ProtocolInfo.IDS.UPDATE_TRADE_PACKET)
 class UpdateTradePacket : DataPacket(), ClientboundPacket {
-    @ProtocolIdentify(ProtocolInfo.IDS.UPDATE_TRADE_PACKET)
 
-    //TODO: find fields
+    // TODO: find fields
 
-    var windowId: Int
-    var windowType: Int = WindowTypes::TRADING //Mojang hardcoded this -_-
-    var windowSlotCount: Int = 0 //useless, seems to be part of a standard container header
-    var tradeTier: Int
-    var traderEid: Int
-    var playerEid: Int
-    var displayName: string
-    var isV: Boolean2Trading
-    var isWilling: Boolean
-    /**
-     * @var CacheableNbt
-     * @phpstan-var CacheableNbt<\pocketmine\nbt\tag\CompoundTag>
-     */
-    offers
+    var windowId: Int = 0
+    var windowType: WindowTypes = WindowTypes.TRADING // Mojang hardcoded this -_-
+    var windowSlotCount: Int = 0 // useless, seems to be part of a standard container header
+    var tradeTier: Int = 0
+    var traderEid: Long = 0
+    var playerEid: Long = 0
+    lateinit var displayName: String
+    var isV2Trading: Boolean = false
+    var isWilling: Boolean = false
+    lateinit var offers: CacheableNbt
 
     override fun decodePayload(input: PacketSerializer) {
         windowId = input.getByte()
-        windowType = input.getByte()
+        windowType = WindowTypes.from(input.getByte())
         windowSlotCount = input.getVarInt()
         tradeTier = input.getVarInt()
         traderEid = input.getEntityUniqueId()
         playerEid = input.getEntityUniqueId()
         displayName = input.getString()
-        isV2Trading = input.getBool()
-        isWilling = input.getBool()
-        offers = new CacheableNbt (input.getNbtCompoundRoot())
+        isV2Trading = input.getBoolean()
+        isWilling = input.getBoolean()
+        offers = CacheableNbt(input.getNbtCompoundRoot())
     }
 
     override fun encodePayload(output: PacketSerializer) {
         output.putByte(windowId)
-        output.putByte(windowType)
+        output.putByte(windowType.value)
         output.putVarInt(windowSlotCount)
         output.putVarInt(tradeTier)
         output.putEntityUniqueId(traderEid)
         output.putEntityUniqueId(playerEid)
         output.putString(displayName)
-        output.putBool(isV2Trading)
-        output.putBool(isWilling)
-        output.put(offers->getEncodedNbt())
+        output.putBoolean(isV2Trading)
+        output.putBoolean(isWilling)
+        output.put(offers.encodedNbt)
     }
 
     override fun handle(handler: PacketHandlerInterface): Boolean {

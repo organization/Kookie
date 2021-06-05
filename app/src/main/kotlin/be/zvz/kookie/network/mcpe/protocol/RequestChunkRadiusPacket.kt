@@ -1,5 +1,3 @@
-package be.zvz.kookie.network.mcpe.protocol
-
 /**
  *
  * _  __           _    _
@@ -17,11 +15,14 @@ package be.zvz.kookie.network.mcpe.protocol
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  */
+package be.zvz.kookie.network.mcpe.protocol
 
+import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
+import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
+
+@ProtocolIdentify(ProtocolInfo.IDS.REQUEST_CHUNK_RADIUS_PACKET)
 class RequestChunkRadiusPacket : DataPacket(), ServerboundPacket {
-    @ProtocolIdentify(ProtocolInfo.IDS.REQUEST_CHUNK_RADIUS_PACKET)
-
-    var radius: Int
+    var radius: Int = 0
 
     override fun decodePayload(input: PacketSerializer) {
         radius = input.getVarInt()
@@ -31,7 +32,5 @@ class RequestChunkRadiusPacket : DataPacket(), ServerboundPacket {
         output.putVarInt(radius)
     }
 
-    override fun handle(handler: PacketHandlerInterface): Boolean {
-        return handler.handleRequestChunkRadius(this)
-    }
+    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleRequestChunkRadius(this)
 }

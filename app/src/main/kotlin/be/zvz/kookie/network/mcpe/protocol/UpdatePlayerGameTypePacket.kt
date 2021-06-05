@@ -1,5 +1,3 @@
-package be.zvz.kookie.network.mcpe.protocol
-
 /**
  *
  * _  __           _    _
@@ -17,45 +15,36 @@ package be.zvz.kookie.network.mcpe.protocol
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  */
+package be.zvz.kookie.network.mcpe.protocol
 
+import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
+import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
+import be.zvz.kookie.player.GameMode
+
+@ProtocolIdentify(ProtocolInfo.IDS.UPDATE_PLAYER_GAME_TYPE_PACKET)
 class UpdatePlayerGameTypePacket : DataPacket(), ClientboundPacket {
-    @ProtocolIdentify(ProtocolInfo.IDS.UPDATE_PLAYER_GAME_TYPE_PACKET)
-
-    /**
-     * @var Int
-     * @see GameMode
-     */
-    gameMode
-
-    var playerEntityUniqueId: Int
-
-    static
-    fun create(gameMode: Int, playerEntityUniqueId: Int): self {
-        result = new self
-                result.gameMode = gameMode
-        result.playerEntityUniqueId = playerEntityUniqueId
-        return result
-    }
-
-    fun getGameMode(): Int {
-        return gameMode
-    }
-
-    fun getPlayerEntityUniqueId(): Int {
-        return playerEntityUniqueId
-    }
+    var gameMode: GameMode = GameMode.SURVIVAL
+    var playerEntityUniqueId: Long = 0
 
     override fun decodePayload(input: PacketSerializer) {
-        gameMode = input.getVarInt()
+        gameMode = GameMode.from(input.getVarInt())
         playerEntityUniqueId = input.getEntityUniqueId()
     }
 
     override fun encodePayload(output: PacketSerializer) {
-        output.putVarInt(gameMode)
+        output.putVarInt(gameMode.id())
         output.putEntityUniqueId(playerEntityUniqueId)
     }
 
     override fun handle(handler: PacketHandlerInterface): Boolean {
         return handler.handleUpdatePlayerGameType(this)
+    }
+
+    companion object {
+        fun create(gameMode: GameMode, playerEntityUniqueId: Long): UpdatePlayerGameTypePacket =
+            UpdatePlayerGameTypePacket().apply {
+                this.gameMode = gameMode
+                this.playerEntityUniqueId = playerEntityUniqueId
+            }
     }
 }

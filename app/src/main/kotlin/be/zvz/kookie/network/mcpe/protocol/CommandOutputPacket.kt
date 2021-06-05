@@ -1,5 +1,3 @@
-package be.zvz.kookie.network.mcpe.protocol
-
 /**
  *
  * _  __           _    _
@@ -17,33 +15,32 @@ package be.zvz.kookie.network.mcpe.protocol
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  */
-use fun count
+package be.zvz.kookie.network.mcpe.protocol
 
-class CommandOutputPacket : DataPacket(), ClientboundPacket {
-    @ProtocolIdentify(ProtocolInfo.IDS.COMMAND_OUTPUT_PACKET)
+import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
+import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
+import be.zvz.kookie.network.mcpe.protocol.types.command.CommandOriginData
+import be.zvz.kookie.network.mcpe.protocol.types.command.CommandOutputMessage
+import be.zvz.kookie.utils.BinaryDataException
 
-    const val TYPE_LAST = 1
-    const val TYPE_SILENT = 2
-    const val TYPE_ALL = 3
-    const val TYPE_DATA_SET = 4
-
-    var originData: CommandOriginData
-    var outputputType: Int
-    var successCount: Int
-    /** @var CommandOutputMessage[] */
-    messages = []
-    var unknownString: string
+@ProtocolIdentify(ProtocolInfo.IDS.COMMAND_OUTPUT_PACKET)
+open class CommandOutputPacket : DataPacket(), ClientboundPacket {
+    lateinit var originData: CommandOriginData
+    var outputType: Type = Type.UNKNOWN
+    var successCount: Int = 0
+    val messages = mutableListOf<CommandOutputMessage>()
+    lateinit var unknownString: String
 
     override fun decodePayload(input: PacketSerializer) {
         originData = input.getCommandOriginData()
-        outputType = input.getByte()
+        outputType = Type.from(input.getByte())
         successCount = input.getUnsignedVarInt()
 
-        for (i = 0, size = input.getUnsignedVarInt() i < size++i){
-            messages[] = getCommandMessage(input)
+        for (i in 0 until input.getUnsignedVarInt()) {
+            messages.add(getCommandMessage(input))
         }
 
-        if (outputType === TYPE_DATA_SET) {
+        if (outputType === Type.DATA_SET) {
             unknownString = input.getString()
         }
     }
@@ -51,14 +48,14 @@ class CommandOutputPacket : DataPacket(), ClientboundPacket {
     /**
      * @throws BinaryDataException
      */
-    override fun getCommandMessage(input: PacketSerializer): CommandOutputMessage {
-        message = new CommandOutputMessage ()
+    protected open fun getCommandMessage(input: PacketSerializer): CommandOutputMessage {
+        val message = CommandOutputMessage()
 
-        message.isInternal = input.getBool()
+        message.isInternal = input.getBoolean()
         message.messageId = input.getString()
 
-        for (i = 0, size = input.getUnsignedVarInt() i < size++i){
-            message.parameters[] = input.getString()
+        for (i in 0 until input.getUnsignedVarInt()) {
+            message.parameters.add(input.getString())
         }
 
         return message
@@ -66,30 +63,44 @@ class CommandOutputPacket : DataPacket(), ClientboundPacket {
 
     override fun encodePayload(output: PacketSerializer) {
         output.putCommandOriginData(originData)
-        output.putByte(outputType)
+        output.putByte(outputType.id)
         output.putUnsignedVarInt(successCount)
 
-        output.putUnsignedVarInt(count(messages))
-        foreach(messages message : as) {
+        output.putUnsignedVarInt(messages.size)
+        messages.forEach { message ->
             putCommandMessage(message, output)
         }
 
-        if (outputType === TYPE_DATA_SET) {
+        if (outputType === Type.DATA_SET) {
             output.putString(unknownString)
         }
     }
 
-    override fun putCommandMessage(message: CommandOutputMessage, output: PacketSerializer) {
-        output.putBool(message.isInternal)
+    protected open fun putCommandMessage(message: CommandOutputMessage, output: PacketSerializer) {
+        output.putBoolean(message.isInternal)
         output.putString(message.messageId)
 
-        output.putUnsignedVarInt(count(message.parameters))
-        foreach(message.parameters parameter : as) {
+        output.putUnsignedVarInt(message.parameters.size)
+        message.parameters.forEach { parameter ->
             output.putString(parameter)
         }
     }
 
     override fun handle(handler: PacketHandlerInterface): Boolean {
         return handler.handleCommandOutput(this)
+    }
+
+    enum class Type(var id: Int) {
+        LAST(1),
+        SILENT(2),
+        ALL(3),
+        DATA_SET(4),
+        UNKNOWN(-1);
+
+        companion object {
+            fun from(findValue: Int): Type = values().firstOrNull { it.id == findValue } ?: UNKNOWN.apply {
+                id = findValue
+            }
+        }
     }
 }

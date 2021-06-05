@@ -1,5 +1,3 @@
-package be.zvz.kookie.network.mcpe.protocol
-
 /**
  *
  * _  __           _    _
@@ -17,27 +15,37 @@ package be.zvz.kookie.network.mcpe.protocol
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  */
+package be.zvz.kookie.network.mcpe.protocol
 
+import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
+import be.zvz.kookie.network.mcpe.protocol.resourcepacks.ResourcePackType
+import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
+
+@ProtocolIdentify(ProtocolInfo.IDS.RESOURCE_PACK_DATA_INFO_PACKET)
 class ResourcePackDataInfoPacket : DataPacket(), ClientboundPacket {
-    @ProtocolIdentify(ProtocolInfo.IDS.RESOURCE_PACK_DATA_INFO_PACKET)
 
-    var packId: string
-    var maxChunkSize: Int
-    var chunkCount: Int
-    var compressedPackSize: Int
-    var sha: string256
+    lateinit var packId: String
+    var maxChunkSize: Int = 0
+    var chunkCount: Int = 0
+    var compressedPackSize: Long = 0
+    lateinit var sha256: String
     var isPremium: Boolean = false
-    var packType: Int = ResourcePackType::RESOURCES //TODO: check the values for this
+    var packType: ResourcePackType = ResourcePackType.RESOURCES // TODO: check the values for this
 
-    static
-    fun create(packId: string, maxChunkSize: Int, chunkCount: Int, compressedPackSize: Int, sha256sum: string): self {
-        result = new self
-                result.packId = packId
-        result.maxChunkSize = maxChunkSize
-        result.chunkCount = chunkCount
-        result.compressedPackSize = compressedPackSize
-        result.sha256 = sha256sum
-        return result
+    companion object {
+        fun create(
+            packId: String,
+            maxChunkSize: Int,
+            chunkCount: Int,
+            compressedPackSize: Long,
+            sha256sum: String
+        ): ResourcePackDataInfoPacket = ResourcePackDataInfoPacket().apply {
+            this.packId = packId
+            this.maxChunkSize = maxChunkSize
+            this.chunkCount = chunkCount
+            this.compressedPackSize = compressedPackSize
+            this.sha256 = sha256sum
+        }
     }
 
     override fun decodePayload(input: PacketSerializer) {
@@ -46,8 +54,8 @@ class ResourcePackDataInfoPacket : DataPacket(), ClientboundPacket {
         chunkCount = input.getLInt()
         compressedPackSize = input.getLLong()
         sha256 = input.getString()
-        isPremium = input.getBool()
-        packType = input.getByte()
+        isPremium = input.getBoolean()
+        packType = ResourcePackType.from(input.getByte())
     }
 
     override fun encodePayload(output: PacketSerializer) {
@@ -56,11 +64,9 @@ class ResourcePackDataInfoPacket : DataPacket(), ClientboundPacket {
         output.putLInt(chunkCount)
         output.putLLong(compressedPackSize)
         output.putString(sha256)
-        output.putBool(isPremium)
-        output.putByte(packType)
+        output.putBoolean(isPremium)
+        output.putByte(packType.value)
     }
 
-    override fun handle(handler: PacketHandlerInterface): Boolean {
-        return handler.handleResourcePackDataInfo(this)
-    }
+    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleResourcePackDataInfo(this)
 }

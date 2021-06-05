@@ -1,5 +1,3 @@
-package be.zvz.kookie.network.mcpe.protocol
-
 /**
  *
  * _  __           _    _
@@ -17,60 +15,49 @@ package be.zvz.kookie.network.mcpe.protocol
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  */
+package be.zvz.kookie.network.mcpe.protocol
 
+import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
+import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
+import be.zvz.kookie.network.mcpe.protocol.types.CacheableNbt
+
+@ProtocolIdentify(ProtocolInfo.IDS.POSITION_TRACKING_D_B_SERVER_BROADCAST_PACKET)
 class PositionTrackingDBServerBroadcastPacket : DataPacket(), ClientboundPacket {
-    @ProtocolIdentify(ProtocolInfo.IDS.POSITION_TRACKING_D_B_SERVER_BROADCAST_PACKET)
+    var action: Action = Action.UPDATE
+    var trackingId: Int = 0
+    lateinit var nbt: CacheableNbt
 
-    const val ACTION_UPDATE = 0
-    const val ACTION_DESTROY = 1
-    const val ACTION_NOT_FOUND = 2
-
-    var action: Int
-    var trackingId: Int
-    /**
-     * @var CacheableNbt
-     * @phpstan-var CacheableNbt<\pocketmine\nbt\tag\CompoundTag>
-     */
-    nbt
-
-    /**
-     * @phpstan-param CacheableNbt<\pocketmine\nbt\tag\CompoundTag> nbt
-     */
-    static
-    fun create(action: Int, trackingId: Int, nbt: CacheableNbt): self {
-        result = new self
-                result.action = action
-        result.trackingId = trackingId
-        result.nbt = nbt
-        return result
-    }
-
-    fun getAction(): Int {
-        return action
-    }
-
-    fun getTrackingId(): Int {
-        return trackingId
-    }
-
-    /** @phpstan-return CacheableNbt<\pocketmine\nbt\tag\CompoundTag> */
-    fun getNbt(): CacheableNbt {
-        return nbt
-    }
+    fun create(action: Action, trackingId: Int, nbt: CacheableNbt): PositionTrackingDBServerBroadcastPacket =
+        PositionTrackingDBServerBroadcastPacket().apply {
+            this.action = action
+            this.trackingId = trackingId
+            this.nbt = nbt
+        }
 
     override fun decodePayload(input: PacketSerializer) {
-        action = input.getByte()
+        action = Action.from(input.getByte())
         trackingId = input.getVarInt()
-        nbt = new CacheableNbt (input.getNbtCompoundRoot())
+        nbt = CacheableNbt(input.getNbtCompoundRoot())
     }
 
     override fun encodePayload(output: PacketSerializer) {
-        output.putByte(action)
+        output.putByte(action.value)
         output.putVarInt(trackingId)
-        output.put(nbt->getEncodedNbt())
+        output.put(nbt.encodedNbt)
     }
 
     override fun handle(handler: PacketHandlerInterface): Boolean {
         return handler.handlePositionTrackingDBServerBroadcast(this)
+    }
+
+    enum class Action(val value: Int) {
+        UPDATE(0),
+        DESTROY(1),
+        NOT_FOUND(2);
+
+        companion object {
+            private val VALUES = values()
+            fun from(value: Int) = VALUES.first { it.value == value }
+        }
     }
 }

@@ -1,5 +1,3 @@
-package be.zvz.kookie.network.mcpe.protocol
-
 /**
  *
  * _  __           _    _
@@ -17,26 +15,26 @@ package be.zvz.kookie.network.mcpe.protocol
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  */
+package be.zvz.kookie.network.mcpe.protocol
 
+import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
+import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
+import be.zvz.kookie.network.mcpe.protocol.types.CacheableNbt
+
+@ProtocolIdentify(ProtocolInfo.IDS.UPDATE_EQUIP_PACKET)
 class UpdateEquipPacket : DataPacket(), ClientboundPacket {
-    @ProtocolIdentify(ProtocolInfo.IDS.UPDATE_EQUIP_PACKET)
-
-    var windowId: Int
-    var windowType: Int
-    var windowSlotCount: Int //useless, seems to be part of a standard container header
-    var entityUniqueId: Int
-    /**
-     * @var CacheableNbt
-     * @phpstan-var CacheableNbt<\pocketmine\nbt\tag\CompoundTag>
-     */
-    namedtag
+    var windowId: Int = 0
+    var windowType: Int = 0
+    var windowSlotCount: Int = 0 // useless, seems to be part of a standard container header
+    var entityUniqueId: Long = 0
+    lateinit var namedtag: CacheableNbt
 
     override fun decodePayload(input: PacketSerializer) {
         windowId = input.getByte()
         windowType = input.getByte()
         windowSlotCount = input.getVarInt()
         entityUniqueId = input.getEntityUniqueId()
-        namedtag = new CacheableNbt (input.getNbtCompoundRoot())
+        namedtag = CacheableNbt(input.getNbtCompoundRoot())
     }
 
     override fun encodePayload(output: PacketSerializer) {
@@ -44,10 +42,8 @@ class UpdateEquipPacket : DataPacket(), ClientboundPacket {
         output.putByte(windowType)
         output.putVarInt(windowSlotCount)
         output.putEntityUniqueId(entityUniqueId)
-        output.put(namedtag->getEncodedNbt())
+        output.put(namedtag.encodedNbt)
     }
 
-    override fun handle(handler: PacketHandlerInterface): Boolean {
-        return handler.handleUpdateEquip(this)
-    }
+    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleUpdateEquip(this)
 }

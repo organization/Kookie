@@ -1,5 +1,8 @@
 package be.zvz.kookie.network.mcpe.protocol
 
+import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
+import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
+
 /**
  *
  * _  __           _    _
@@ -17,32 +20,25 @@ package be.zvz.kookie.network.mcpe.protocol
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  */
-use fun count
 
+@ProtocolIdentify(ProtocolInfo.IDS.UPDATE_SOFT_ENUM_PACKET)
 class UpdateSoftEnumPacket : DataPacket(), ClientboundPacket {
-    @ProtocolIdentify(ProtocolInfo.IDS.UPDATE_SOFT_ENUM_PACKET)
-
-    const val TYPE_ADD = 0
-    const val TYPE_REMOVE = 1
-    const val TYPE_SET = 2
-
-    var enumName: string
-    /** @var string[] */
-    values = []
-    var type: Int
+    lateinit var enumName: String
+    val values = mutableListOf<String>()
+    var type: Int = 0
 
     override fun decodePayload(input: PacketSerializer) {
         enumName = input.getString()
-        for (i = 0, count = input.getUnsignedVarInt() i < count++i){
-            values[] = input.getString()
+        for (i in 0 until input.getUnsignedVarInt()) {
+            values.add(input.getString())
         }
         type = input.getByte()
     }
 
     override fun encodePayload(output: PacketSerializer) {
         output.putString(enumName)
-        output.putUnsignedVarInt(count(values))
-        foreach(values v : as) {
+        output.putUnsignedVarInt(values.size)
+        values.forEach { v ->
             output.putString(v)
         }
         output.putByte(type)
@@ -50,5 +46,15 @@ class UpdateSoftEnumPacket : DataPacket(), ClientboundPacket {
 
     override fun handle(handler: PacketHandlerInterface): Boolean {
         return handler.handleUpdateSoftEnum(this)
+    }
+
+    enum class Type(val id: Int) {
+        ADD(0),
+        REMOVE(1),
+        SET(2);
+
+        companion object {
+            fun from(findValue: Int): Type = values().firstOrNull { it.id == findValue } ?: ADD
+        }
     }
 }

@@ -1,5 +1,3 @@
-package be.zvz.kookie.network.mcpe.protocol
-
 /**
  *
  * _  __           _    _
@@ -17,35 +15,44 @@ package be.zvz.kookie.network.mcpe.protocol
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  */
+package be.zvz.kookie.network.mcpe.protocol
 
+import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
+import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
+
+@ProtocolIdentify(ProtocolInfo.IDS.NETWORK_SETTINGS_PACKET)
 class NetworkSettingsPacket : DataPacket(), ClientboundPacket {
-    @ProtocolIdentify(ProtocolInfo.IDS.NETWORK_SETTINGS_PACKET)
+    var compressionThreshold: Compress = Compress.NOTHING
 
-    const val COMPRESS_NOTHING = 0
-    const val COMPRESS_EVERYTHING = 1
-
-    var compressionThreshold: Int
-
-    static
-    fun create(compressionThreshold: Int): self {
-        result = new self
-                result.compressionThreshold = compressionThreshold
-        return result
-    }
-
-    fun getCompressionThreshold(): Int {
-        return compressionThreshold
+    companion object {
+        fun create(compressionThreshold: Compress): NetworkSettingsPacket {
+            return NetworkSettingsPacket().apply {
+                this.compressionThreshold = compressionThreshold
+            }
+        }
     }
 
     override fun decodePayload(input: PacketSerializer) {
-        compressionThreshold = input.getLShort()
+        compressionThreshold = Compress.from(input.getLShort())
     }
 
     override fun encodePayload(output: PacketSerializer) {
-        output.putLShort(compressionThreshold)
+        output.putLShort(compressionThreshold.level)
     }
 
     override fun handle(handler: PacketHandlerInterface): Boolean {
         return handler.handleNetworkSettings(this)
+    }
+
+    enum class Compress(var level: Int) {
+        NOTHING(0),
+        EVERYTHING(1),
+        COMPRESS(-1);
+
+        companion object {
+            fun from(value: Int) = values().firstOrNull { it.level == value } ?: COMPRESS.apply {
+                level = value
+            }
+        }
     }
 }

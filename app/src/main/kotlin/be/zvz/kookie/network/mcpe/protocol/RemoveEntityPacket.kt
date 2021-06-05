@@ -1,5 +1,3 @@
-package be.zvz.kookie.network.mcpe.protocol
-
 /**
  *
  * _  __           _    _
@@ -17,21 +15,21 @@ package be.zvz.kookie.network.mcpe.protocol
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  */
+package be.zvz.kookie.network.mcpe.protocol
 
+import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
+import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
+
+@ProtocolIdentify(ProtocolInfo.IDS.REMOVE_ENTITY_PACKET)
 class RemoveEntityPacket : DataPacket(), ClientboundPacket {
-    @ProtocolIdentify(ProtocolInfo.IDS.REMOVE_ENTITY_PACKET)
+    var uvarInt1: Int = 0
 
-    var uvarInt: Int1
-
-    static
-    fun create(uvarInt1: Int): self {
-        result = new self
-                result.uvarInt1 = uvarInt1
-        return result
-    }
-
-    fun getUvarInt1(): Int {
-        return uvarInt1
+    companion object {
+        fun create(uvarInt1: Int): RemoveEntityPacket {
+            return RemoveEntityPacket().apply {
+                this.uvarInt1 = uvarInt1
+            }
+        }
     }
 
     override fun decodePayload(input: PacketSerializer) {
@@ -42,7 +40,5 @@ class RemoveEntityPacket : DataPacket(), ClientboundPacket {
         output.putUnsignedVarInt(uvarInt1)
     }
 
-    override fun handle(handler: PacketHandlerInterface): Boolean {
-        return handler.handleRemoveEntity(this)
-    }
+    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleRemoveEntity(this)
 }

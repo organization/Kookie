@@ -1,5 +1,3 @@
-package be.zvz.kookie.network.mcpe.protocol
-
 /**
  *
  * _  __           _    _
@@ -18,22 +16,26 @@ package be.zvz.kookie.network.mcpe.protocol
  * (at your option) any later version.
  */
 
+package be.zvz.kookie.network.mcpe.protocol
+
+import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
+import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
+
+@ProtocolIdentify(ProtocolInfo.IDS.RESOURCE_PACK_CHUNK_DATA_PACKET)
 class ResourcePackChunkDataPacket : DataPacket(), ClientboundPacket {
-    @ProtocolIdentify(ProtocolInfo.IDS.RESOURCE_PACK_CHUNK_DATA_PACKET)
+    lateinit var packId: String
+    var chunkIndex: Int = 0
+    var progress: Long = 0
+    lateinit var data: String
 
-    var packId: string
-    var chunkIndex: Int
-    var progress: Int
-    var data: string
-
-    static
-    fun create(packId: string, chunkIndex: Int, chunkOffset: Int, data: string): self {
-        result = new self
-                result.packId = packId
-        result.chunkIndex = chunkIndex
-        result.progress = chunkOffset
-        result.data = data
-        return result
+    companion object {
+        fun create(packId: String, chunkIndex: Int, chunkOffset: Long, data: String): ResourcePackChunkDataPacket =
+            ResourcePackChunkDataPacket().apply {
+                this.packId = packId
+                this.chunkIndex = chunkIndex
+                this.progress = chunkOffset
+                this.data = data
+            }
     }
 
     override fun decodePayload(input: PacketSerializer) {

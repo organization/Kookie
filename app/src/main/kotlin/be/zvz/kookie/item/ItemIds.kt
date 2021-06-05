@@ -842,6 +842,7 @@ enum class ItemIds(val id: Int) {
     SHIELD(513);
 
     companion object {
-        fun from(findValue: Int): ItemIds = ItemIds.values().first { it.id == findValue }
+        private val VALUES = values()
+        fun from(findValue: Int): ItemIds = VALUES.first { it.id == findValue }
     }
 }

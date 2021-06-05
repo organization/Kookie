@@ -24,6 +24,7 @@ enum class Rarity(val rarity: Int) {
     MYTHIC(1);
 
     companion object {
-        fun from(findValue: Int): Rarity = Rarity.values().first { it.rarity == findValue }
+        private val VALUES = values()
+        fun from(findValue: Int): Rarity = VALUES.first { it.rarity == findValue }
     }
 }

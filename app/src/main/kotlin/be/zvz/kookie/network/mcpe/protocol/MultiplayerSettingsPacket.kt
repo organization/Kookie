@@ -1,5 +1,3 @@
-package be.zvz.kookie.network.mcpe.protocol
-
 /**
  *
  * _  __           _    _
@@ -17,36 +15,41 @@ package be.zvz.kookie.network.mcpe.protocol
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  */
+package be.zvz.kookie.network.mcpe.protocol
 
+import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
+import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
+
+@ProtocolIdentify(ProtocolInfo.IDS.MULTIPLAYER_SETTINGS_PACKET)
 class MultiplayerSettingsPacket : DataPacket(), ClientboundPacket, ServerboundPacket {
-    @ProtocolIdentify(ProtocolInfo.IDS.MULTIPLAYER_SETTINGS_PACKET)
+    lateinit var action: Action
 
-    const val ACTION_ENABLE_MULTIPLAYER = 0
-    const val ACTION_DISABLE_MULTIPLAYER = 1
-    const val ACTION_REFRESH_JOIN_CODE = 2
-
-    var action: Int
-
-    static
-    fun create(action: Int): self {
-        result = new self
-                result.action = action
-        return result
-    }
-
-    fun getAction(): Int {
-        return action
+    companion object {
+        fun create(action: Action): MultiplayerSettingsPacket = MultiplayerSettingsPacket().apply {
+            this.action = action
+        }
     }
 
     override fun decodePayload(input: PacketSerializer) {
-        action = input.getVarInt()
+        action = Action.from(input.getVarInt())
     }
 
     override fun encodePayload(output: PacketSerializer) {
-        output.putVarInt(action)
+        output.putVarInt(action.value)
     }
 
     override fun handle(handler: PacketHandlerInterface): Boolean {
         return handler.handleMultiplayerSettings(this)
+    }
+
+    enum class Action(val value: Int) {
+        ENABLE_MULTIPLAYER(0),
+        DISABLE_MULTIPLAYER(1),
+        REFRESH_JOIN_CODE(2);
+
+        companion object {
+            private val VALUES = values()
+            fun from(value: Int) = VALUES.first { it.value == value }
+        }
     }
 }

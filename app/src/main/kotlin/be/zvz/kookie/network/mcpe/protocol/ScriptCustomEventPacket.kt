@@ -1,5 +1,3 @@
-package be.zvz.kookie.network.mcpe.protocol
-
 /**
  *
  * _  __           _    _
@@ -17,14 +15,15 @@ package be.zvz.kookie.network.mcpe.protocol
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  */
+package be.zvz.kookie.network.mcpe.protocol
 
-class ScriptCustomEventPacket :
-    DataPacket() { //TODO: this doesn't have handlers in either client or server in the game as of 1.8
-    @ProtocolIdentify(ProtocolInfo.IDS.SCRIPT_CUSTOM_EVENT_PACKET)
+import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
+import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 
-    var eventName: string
-    /** @var string json data */
-    eventData
+@ProtocolIdentify(ProtocolInfo.IDS.SCRIPT_CUSTOM_EVENT_PACKET)
+class ScriptCustomEventPacket : DataPacket() { // TODO: this doesn't have handlers in either client or server in the game as of 1.8
+    lateinit var eventName: String
+    lateinit var eventData: String
 
     override fun decodePayload(input: PacketSerializer) {
         eventName = input.getString()
@@ -36,7 +35,5 @@ class ScriptCustomEventPacket :
         output.putString(eventData)
     }
 
-    override fun handle(handler: PacketHandlerInterface): Boolean {
-        return handler.handleScriptCustomEvent(this)
-    }
+    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleScriptCustomEvent(this)
 }

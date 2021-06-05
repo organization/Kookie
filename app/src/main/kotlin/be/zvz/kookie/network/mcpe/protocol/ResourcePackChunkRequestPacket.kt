@@ -1,5 +1,3 @@
-package be.zvz.kookie.network.mcpe.protocol
-
 /**
  *
  * _  __           _    _
@@ -17,12 +15,15 @@ package be.zvz.kookie.network.mcpe.protocol
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  */
+package be.zvz.kookie.network.mcpe.protocol
 
+import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
+import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
+
+@ProtocolIdentify(ProtocolInfo.IDS.RESOURCE_PACK_CHUNK_REQUEST_PACKET)
 class ResourcePackChunkRequestPacket : DataPacket(), ServerboundPacket {
-    @ProtocolIdentify(ProtocolInfo.IDS.RESOURCE_PACK_CHUNK_REQUEST_PACKET)
-
-    var packId: string
-    var chunkIndex: Int
+    lateinit var packId: String
+    var chunkIndex: Int = 0
 
     override fun decodePayload(input: PacketSerializer) {
         packId = input.getString()
@@ -34,7 +35,5 @@ class ResourcePackChunkRequestPacket : DataPacket(), ServerboundPacket {
         output.putLInt(chunkIndex)
     }
 
-    override fun handle(handler: PacketHandlerInterface): Boolean {
-        return handler.handleResourcePackChunkRequest(this)
-    }
+    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleResourcePackChunkRequest(this)
 }
