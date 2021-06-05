@@ -18,11 +18,11 @@
 package be.zvz.kookie.network.mcpe.protocol
 
 import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
+import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 import be.zvz.kookie.network.mcpe.protocol.types.command.CommandData
 import be.zvz.kookie.network.mcpe.protocol.types.command.CommandEnum
 import be.zvz.kookie.network.mcpe.protocol.types.command.CommandEnumConstraint
 import be.zvz.kookie.network.mcpe.protocol.types.command.CommandParameter
-import be.zvz.kookie.network.mcpe.serializer.PacketSerializer
 import com.koloboke.collect.map.hash.HashIntObjMaps
 import com.koloboke.collect.map.hash.HashObjIntMaps
 import com.koloboke.collect.map.hash.HashObjObjMaps

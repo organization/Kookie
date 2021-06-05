@@ -1,6 +1,6 @@
 package be.zvz.kookie.network.mcpe.protocol.types
 
-import be.zvz.kookie.network.mcpe.serializer.PacketSerializer
+import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 import com.koloboke.collect.map.hash.HashObjObjMaps
 
 class Experiments(private val experiments: MutableMap<String, Boolean>, private val hasPreviouslyUsedExperiments: Boolean) {

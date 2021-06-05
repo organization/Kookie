@@ -1,7 +1,7 @@
 package be.zvz.kookie.network.mcpe.protocol.types.inventory
 
 import be.zvz.kookie.network.mcpe.protocol.PacketDecodeException
-import be.zvz.kookie.network.mcpe.serializer.PacketSerializer
+import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 import java.lang.IllegalArgumentException
 
 class NetworkInventoryAction {

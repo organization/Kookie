@@ -2,7 +2,7 @@ package be.zvz.kookie.network.mcpe.protocol
 
 import be.zvz.kookie.math.Vector3
 import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
-import be.zvz.kookie.network.mcpe.serializer.PacketSerializer
+import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 
 @ProtocolIdentify(ProtocolInfo.IDS.SET_ACTOR_MOTION_PACKET)
 class SetActorMotionPacket : DataPacket(), ClientboundPacket, ServerboundPacket {

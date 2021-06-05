@@ -15,7 +15,7 @@
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  */
-package be.zvz.kookie.network.mcpe.serializer
+package be.zvz.kookie.network.mcpe.protocol.serializer
 
 import be.zvz.kookie.math.Vector3
 import be.zvz.kookie.nbt.LittleEndianNbtSerializer

@@ -4,9 +4,9 @@ import be.zvz.kookie.math.Vector3
 import be.zvz.kookie.nbt.LittleEndianNbtSerializer
 import be.zvz.kookie.nbt.TreeRoot
 import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
+import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 import be.zvz.kookie.network.mcpe.protocol.types.*
 import be.zvz.kookie.network.mcpe.protocol.types.ItemTypeEntry
-import be.zvz.kookie.network.mcpe.serializer.PacketSerializer
 import com.koloboke.collect.map.hash.HashObjObjMaps
 
 @ProtocolIdentify(ProtocolInfo.IDS.START_GAME_PACKET)

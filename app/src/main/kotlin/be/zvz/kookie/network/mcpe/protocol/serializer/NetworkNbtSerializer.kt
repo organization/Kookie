@@ -1,4 +1,4 @@
-package be.zvz.kookie.network.mcpe.protocol
+package be.zvz.kookie.network.mcpe.protocol.serializer
 
 import be.zvz.kookie.nbt.BaseNbtSerializer
 
@@ -51,7 +51,7 @@ class NetworkNbtSerializer : BaseNbtSerializer() {
 
     override fun readIntArray(): IntArray {
         val len = readInt() // varInt
-        val list: MutableList<Int> = mutableListOf()
+        val list = mutableListOf<Int>()
         for (i in 0 until len) {
             list.add(readInt()) // varInt
         }
@@ -66,7 +66,7 @@ class NetworkNbtSerializer : BaseNbtSerializer() {
 
     override fun readLongArray(): LongArray {
         val len = readInt() // varInt
-        val list: MutableList<Long> = mutableListOf()
+        val list = mutableListOf<Long>()
         for (i in 0 until len) {
             list.add(readLong()) // varInt
         }
