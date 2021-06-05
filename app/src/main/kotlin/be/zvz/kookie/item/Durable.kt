@@ -33,14 +33,14 @@ abstract class Durable(identifier: ItemIdentifier, name: String) : Item(identifi
         return true
     }
 
-    protected fun getUnbreakingDamageReduction(amount: Int): Int {
+    protected open fun getUnbreakingDamageReduction(amount: Int): Int {
         val unbreakingLevel = getEnchantmentLevel(VanillaEnchantments.UNBREAKING.enchantment)
         if (unbreakingLevel > 0) {
             var negated = 0
-            val chance = 1 / (unbreakingLevel + 1)
-            for (i in 0..amount) {
+            val chance = 1f / (unbreakingLevel + 1)
+            for (i in 0 until amount) {
                 if (Random().nextFloat() > chance) {
-                    negated++
+                    ++negated
                 }
             }
             return negated
