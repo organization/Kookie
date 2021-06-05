@@ -129,7 +129,10 @@ interface InventoryHelpers : Inventory {
                 emptySlots.add(i)
             }
 
-            itemSlots.forEachIndexed { index, slot ->
+            val iterate = itemSlots.listIterator()
+            var index = 0
+            while (iterate.hasNext()) {
+                val slot = iterate.next()
                 if (slot.equals(item) && item.count < item.maxStackSize) {
                     val amount = min(item.maxStackSize - item.count, min(slot.count, maxStackSize))
                     if (amount > 0) {
@@ -137,11 +140,11 @@ interface InventoryHelpers : Inventory {
                         item.count += amount
                         setItem(index, item)
                         if (slot.count <= 0) {
-                            itemSlots.removeAt(index)
-                            // TODO: removing while running foreach works?
+                            iterate.remove()
                         }
                     }
                 }
+                index++
             }
 
             if (itemSlots.size == 0) {
@@ -151,17 +154,17 @@ interface InventoryHelpers : Inventory {
 
         if (itemSlots.size > 0 && emptySlots.size > 0) {
             emptySlots.forEach { slotIndex ->
-                itemSlots.forEachIndexed { index, slot ->
+                val iterate = itemSlots.listIterator()
+                while (iterate.hasNext()) {
+                    val slot = iterate.next()
                     val amount = min(slot.maxStackSize, min(slot.count, maxStackSize))
                     slot.count -= amount
                     val item = slot.clone()
                     item.count = amount
                     setItem(slotIndex, item)
                     if (slot.count <= 0) {
-                        itemSlots.removeAt(index)
-                        // TODO: removing while running foreach works?
+                        iterate.remove()
                     }
-                    return@forEachIndexed
                 }
             }
         }
@@ -183,7 +186,10 @@ interface InventoryHelpers : Inventory {
                 continue
             }
 
-            itemSlots.forEachIndexed { index, slot ->
+            val iterate = itemSlots.listIterator()
+            var index = 0
+            while (iterate.hasNext()) {
+                val slot = iterate.next()
                 if (slot.equals(item, !slot.hasAnyDamageValue(), slot.hasNamedTag())) {
                     val amount = min(item.count, slot.count)
                     if (amount > 0) {
@@ -191,11 +197,11 @@ interface InventoryHelpers : Inventory {
                         item.count -= amount
                         setItem(index, item)
                         if (slot.count <= 0) {
-                            itemSlots.removeAt(index)
-                            // TODO: removing while running foreach works?
+                            iterate.remove()
                         }
                     }
                 }
+                index++
             }
 
             if (itemSlots.size == 0) {
