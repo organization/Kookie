@@ -31,7 +31,9 @@ import be.zvz.kookie.nbt.tag.*
 import be.zvz.kookie.player.Player
 import be.zvz.kookie.utils.Binary
 import com.koloboke.collect.map.hash.HashIntObjMaps
+import com.koloboke.collect.map.hash.HashObjObjMaps
 import java.util.*
+import kotlin.collections.HashMap
 
 open class Item(
     private val identifier: ItemIdentifier,
@@ -49,8 +51,22 @@ open class Item(
         }
     var lore = mutableListOf<String>()
     protected var blockEntityTag: CompoundTag? = null
-    protected var canPlaceOn = mutableListOf<String>()
-    protected var canDestroy = mutableListOf<String>()
+    protected var canPlaceOn: MutableMap<String, String> = hashMapOf()
+        set(value) {
+            val map: MutableMap<String, String> = HashObjObjMaps.newMutableMap()
+            value.forEach { (_, value) ->
+                map[value] = value
+            }
+            field = map
+        }
+    protected var canDestroy: MutableMap<String, String> = hashMapOf()
+        set(value) {
+            val map: MutableMap<String, String> = HashObjObjMaps.newMutableMap()
+            value.forEach { (_, value) ->
+                map[value] = value
+            }
+            field = map
+        }
     open val maxStackSize: Int = 64
     open val fuelTime: Int = 0
     open val attackPoint: Int = 1
@@ -129,11 +145,11 @@ open class Item(
 
         canPlaceOn.clear()
         tag.getListTag("CanPlaceOn")?.value?.forEach {
-            canPlaceOn.add(it.value.toString())
+            canPlaceOn[it.value.toString()] = it.value.toString()
         }
         canDestroy.clear()
         tag.getListTag("canDestroy")?.value?.forEach {
-            canDestroy.add(it.value.toString())
+            canDestroy[it.value.toString()] = it.value.toString()
         }
     }
 
@@ -186,8 +202,8 @@ open class Item(
 
         if (this.canPlaceOn.isNotEmpty()) {
             val canPlaceOnTag = ListTag<String>()
-            canPlaceOn.forEach {
-                canPlaceOnTag.push(StringTag(it))
+            canPlaceOn.forEach { (_, value) ->
+                canPlaceOnTag.push(StringTag(value))
             }
             tag.setTag("CanPlaceOn", canPlaceOnTag)
         } else {
@@ -195,8 +211,8 @@ open class Item(
         }
         if (this.canDestroy.isNotEmpty()) {
             val canDestroyTag = ListTag<String>()
-            canDestroy.forEach {
-                canDestroyTag.push(StringTag(it))
+            canDestroy.forEach { (_, value) ->
+                canDestroyTag.push(StringTag(value))
             }
             tag.setTag("canDestroy", canDestroyTag)
         } else {

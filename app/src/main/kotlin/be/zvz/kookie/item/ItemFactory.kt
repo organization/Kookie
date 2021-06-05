@@ -25,6 +25,9 @@ object ItemFactory {
     val list: MutableMap<Int, Item> = HashIntObjMaps.newMutableMap()
 
     init {
+        register(Apple(ItemIdentifier(ItemIds.APPLE.id, 0), "Apple"))
+        register(Arrow(ItemIdentifier(ItemIds.ARROW.id, 0), "Arrow"))
+
         TODO("Add Items")
     }
 
