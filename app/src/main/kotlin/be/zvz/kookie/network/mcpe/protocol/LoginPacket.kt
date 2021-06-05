@@ -18,8 +18,8 @@
 package be.zvz.kookie.network.mcpe.protocol
 
 import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
+import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 import be.zvz.kookie.network.mcpe.protocol.types.login.JwtChain
-import be.zvz.kookie.network.mcpe.serializer.PacketSerializer
 import be.zvz.kookie.utils.BinaryStream
 import be.zvz.kookie.utils.Json
 import com.fasterxml.jackson.core.JsonProcessingException

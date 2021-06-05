@@ -1,7 +1,7 @@
 package be.zvz.kookie.network.mcpe.protocol
 
 import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
-import be.zvz.kookie.network.mcpe.serializer.PacketSerializer
+import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 import java.util.concurrent.atomic.AtomicInteger
 
 @ProtocolIdentify(ProtocolInfo.IDS.BLOCK_PICK_REQUEST_PACKET)

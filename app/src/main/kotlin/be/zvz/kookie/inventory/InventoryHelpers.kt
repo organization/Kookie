@@ -94,7 +94,7 @@ interface InventoryHelpers : Inventory {
 
     override fun canAddItem(item: Item): Boolean {
         var count = item.count
-        for (i in 0..getSize()) {
+        for (i in 0 until getSize()) {
             val slot = getItem(i)
             if (item.equals(slot)) {
                 (min(slot.getMaxStackSize(), item.getMaxStackSize()) - slot.count).let {
@@ -123,7 +123,7 @@ interface InventoryHelpers : Inventory {
         }
 
         val emptySlots = mutableListOf<Int>()
-        for (i in 0..getSize()) {
+        for (i in 0 until getSize()) {
             val item = getItem(i)
             if (item.isNull()) {
                 emptySlots.add(i)
@@ -177,7 +177,7 @@ interface InventoryHelpers : Inventory {
             }
         }
 
-        for (i in 0..getSize()) {
+        for (i in 0 until getSize()) {
             val item = getItem(i)
             if (item.isNull()) {
                 continue

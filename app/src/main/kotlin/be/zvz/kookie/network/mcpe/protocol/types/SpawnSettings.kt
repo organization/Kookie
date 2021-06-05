@@ -1,6 +1,6 @@
 package be.zvz.kookie.network.mcpe.protocol.types
 
-import be.zvz.kookie.network.mcpe.serializer.PacketSerializer
+import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 
 class SpawnSettings(private val biomeType: Int, private val biomeName: String, private val dimension: Int) {
 

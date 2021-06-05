@@ -17,7 +17,7 @@
  */
 package be.zvz.kookie.network.mcpe.protocol.types.resourcepack
 
-import be.zvz.kookie.network.mcpe.serializer.PacketSerializer
+import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 
 class BehaviorPackEntry(
     val packId: String,

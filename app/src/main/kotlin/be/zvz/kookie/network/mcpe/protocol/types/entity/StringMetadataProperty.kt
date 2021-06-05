@@ -1,6 +1,6 @@
 package be.zvz.kookie.network.mcpe.protocol.types.entity
 
-import be.zvz.kookie.network.mcpe.serializer.PacketSerializer
+import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 
 class StringMetadataProperty(val value: String) : MetadataProperty() {
 
