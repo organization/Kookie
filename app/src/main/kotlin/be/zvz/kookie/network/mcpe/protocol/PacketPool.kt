@@ -17,6 +17,7 @@
  */
 package be.zvz.kookie.network.mcpe.protocol
 
+import be.zvz.kookie.network.mcpe.serializer.PacketSerializer
 import com.koloboke.collect.map.hash.HashIntObjMaps
 
 class PacketPool {
@@ -45,6 +46,9 @@ class PacketPool {
         val packet = pool[pid] ?: UnknownPacket()
         return packet.clone()
     }
+
+    fun getPacket(buffer: String): Packet =
+        getPacketByPid(PacketSerializer(buffer).getUnsignedVarInt() and DataPacket.PID_MASK)
 
     companion object {
         var instance: PacketPool? = null
