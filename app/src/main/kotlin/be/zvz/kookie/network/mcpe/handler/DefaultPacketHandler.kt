@@ -144,4 +144,36 @@ open class DefaultPacketHandler : PacketHandlerInterface {
     override fun handleMobEquipment(packet: MobEquipmentPacket): Boolean {
         return false
     }
+
+    override fun handleMobArmorEquipment(packet: MobArmorEquipmentPacket): Boolean {
+        return false
+    }
+
+    override fun handleInteract(packet: InteractPacket): Boolean {
+        return false
+    }
+
+    override fun handleBlockPickRequest(packet: BlockPickRequestPacket): Boolean {
+        return false
+    }
+
+    override fun handleActorPickRequest(packet: ActorPickRequestPacket): Boolean {
+        return false
+    }
+
+    override fun handlePlayerAction(packet: PlayerActionPacket): Boolean {
+        return false
+    }
+
+    override fun handleHurtArmor(packet: HurtArmorPacket): Boolean {
+        return false
+    }
+
+    override fun handleSetActorData(packet: SetActorDataPacket): Boolean {
+        return false
+    }
+
+    override fun handleSetActorMotion(packet: SetActorMotionPacket): Boolean {
+        return false
+    }
 }
