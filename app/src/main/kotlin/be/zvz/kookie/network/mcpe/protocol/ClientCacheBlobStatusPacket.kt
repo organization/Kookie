@@ -18,7 +18,7 @@
 package be.zvz.kookie.network.mcpe.protocol
 
 import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
-import be.zvz.kookie.network.mcpe.serializer.PacketSerializer
+import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 
 @ProtocolIdentify(ProtocolInfo.IDS.CLIENT_CACHE_BLOB_STATUS_PACKET)
 class ClientCacheBlobStatusPacket : DataPacket(), ServerboundPacket {
@@ -37,10 +37,10 @@ class ClientCacheBlobStatusPacket : DataPacket(), ServerboundPacket {
     override fun decodePayload(input: PacketSerializer) {
         val missCount = input.getUnsignedVarInt()
         val hitCount = input.getUnsignedVarInt()
-        for (i in 0..missCount) {
+        for (i in 0 until missCount) {
             missHashes.add(input.getLLong())
         }
-        for (i in 0..hitCount) {
+        for (i in 0 until hitCount) {
             hitHashes.add(input.getLLong())
         }
     }

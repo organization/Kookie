@@ -2,7 +2,7 @@ package be.zvz.kookie.network.mcpe.protocol
 
 import be.zvz.kookie.math.Vector3
 import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
-import be.zvz.kookie.network.mcpe.serializer.PacketSerializer
+import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 
 /**
  *
@@ -50,12 +50,11 @@ class MotionPredictionHintsPacket : DataPacket(), ClientboundPacket {
     }
 
     companion object {
-        fun create(entityRuntimeId: Long, motion: Vector3, onGround: Boolean): MotionPredictionHintsPacket {
-            val result = MotionPredictionHintsPacket()
-            result.entityRuntimeId = entityRuntimeId
-            result.motion = motion
-            result.onGround = onGround
-            return result
-        }
+        fun create(entityRuntimeId: Long, motion: Vector3, onGround: Boolean): MotionPredictionHintsPacket =
+            MotionPredictionHintsPacket().apply {
+                this.entityRuntimeId = entityRuntimeId
+                this.motion = motion
+                this.onGround = onGround
+            }
     }
 }

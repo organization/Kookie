@@ -1,7 +1,7 @@
 package be.zvz.kookie.network.mcpe.protocol
 
 import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
-import be.zvz.kookie.network.mcpe.serializer.PacketSerializer
+import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 
 /**
  *
@@ -28,11 +28,9 @@ class CodeBuilderPacket : DataPacket(), ClientboundPacket {
     var openCodeBuilder: Boolean = false
 
     companion object {
-        fun create(url: String, openCodeBuilder: Boolean): CodeBuilderPacket {
-            val result = CodeBuilderPacket()
-            result.url = url
-            result.openCodeBuilder = openCodeBuilder
-            return result
+        fun create(url: String, openCodeBuilder: Boolean): CodeBuilderPacket = CodeBuilderPacket().apply {
+            this.url = url
+            this.openCodeBuilder = openCodeBuilder
         }
     }
 

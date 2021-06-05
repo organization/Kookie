@@ -18,7 +18,7 @@
 package be.zvz.kookie.network.mcpe.protocol
 
 import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
-import be.zvz.kookie.network.mcpe.serializer.PacketSerializer
+import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 
 @ProtocolIdentify(ProtocolInfo.IDS.ANIMATE_ENTITY_PACKET)
 class AnimateEntityPacket : DataPacket(), ClientboundPacket {
@@ -38,7 +38,7 @@ class AnimateEntityPacket : DataPacket(), ClientboundPacket {
         blendOutTime = input.getLFloat()
         actorRuntimeIds = mutableListOf()
 
-        for (i in 0..input.getUnsignedVarInt()) {
+        for (i in 0 until input.getUnsignedVarInt()) {
             actorRuntimeIds[i] = input.getEntityRuntimeId()
         }
     }
@@ -68,17 +68,13 @@ class AnimateEntityPacket : DataPacket(), ClientboundPacket {
             controller: String,
             blendOutTime: Float,
             actorRuntimeIds: MutableList<Long>,
-        ): AnimateEntityPacket {
-            val packet = AnimateEntityPacket().apply {
-                this.animation = animation
-                this.nextState = nextState
-                this.stopExpression = stopExpression
-                this.controller = controller
-                this.blendOutTime = blendOutTime
-                this.actorRuntimeIds = actorRuntimeIds
-            }
-
-            return packet
+        ): AnimateEntityPacket = AnimateEntityPacket().apply {
+            this.animation = animation
+            this.nextState = nextState
+            this.stopExpression = stopExpression
+            this.controller = controller
+            this.blendOutTime = blendOutTime
+            this.actorRuntimeIds = actorRuntimeIds
         }
     }
 }

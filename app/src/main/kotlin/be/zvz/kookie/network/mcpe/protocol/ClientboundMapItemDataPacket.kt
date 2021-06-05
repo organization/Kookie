@@ -19,9 +19,10 @@ package be.zvz.kookie.network.mcpe.protocol
 
 import be.zvz.kookie.color.Color
 import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
+import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 import be.zvz.kookie.network.mcpe.protocol.types.DimensionIds
+import be.zvz.kookie.network.mcpe.protocol.types.MapDecoration
 import be.zvz.kookie.network.mcpe.protocol.types.MapTrackedObject
-import be.zvz.kookie.network.mcpe.serializer.PacketSerializer
 import be.zvz.kookie.utils.Binary
 
 @ProtocolIdentify(ProtocolInfo.IDS.CLIENTBOUND_MAP_ITEM_DATA_PACKET)
@@ -55,7 +56,7 @@ class ClientboundMapItemDataPacket : DataPacket(), ClientboundPacket {
         isLocked = input.getBoolean()
 
         if ((type and 0x08) != 0) {
-            for (i in 0..input.getUnsignedVarInt()) {
+            for (i in 0 until input.getUnsignedVarInt()) {
                 eids[i] = input.getEntityUniqueId()
             }
         }
@@ -65,7 +66,7 @@ class ClientboundMapItemDataPacket : DataPacket(), ClientboundPacket {
         }
 
         if ((type and BITFLAG_DECORATION_UPDATE) != 0) {
-            for (i in 0..input.getUnsignedVarInt()) {
+            for (i in 0 until input.getUnsignedVarInt()) {
                 val obj = MapTrackedObject()
                 obj.type = input.getLInt()
 
@@ -82,14 +83,14 @@ class ClientboundMapItemDataPacket : DataPacket(), ClientboundPacket {
 
                 trackedEntities.add(obj)
             }
-            for (i in 0..input.getUnsignedVarInt()) {
+            for (i in 0 until input.getUnsignedVarInt()) {
                 val icon = input.getByte()
                 val rotation = input.getByte()
                 val xOffset = input.getByte()
                 val yOffset = input.getByte()
                 val label = input.getString()
                 val color = Color.fromRGBA(Binary.flipIntEndianness(input.getUnsignedVarInt()))
-                val decorations = MapDecoration(icon, rotation, xOffset, yOffset, label, color)
+                decorations.add(MapDecoration(icon, rotation, xOffset, yOffset, label, color))
             }
         }
 
@@ -104,8 +105,8 @@ class ClientboundMapItemDataPacket : DataPacket(), ClientboundPacket {
                 throw PacketDecodeException("Expected colour count of " + (height * width) + " (height height * width width), got count")
             }
 
-            for (y in 0..height) {
-                for (x in 0..width) {
+            for (y in 0 until height) {
+                for (x in 0 until width) {
                     colors.getValue(y)[x] = Color.fromRGBA(Binary.flipIntEndianness(input.getUnsignedVarInt()))
                 }
             }
@@ -133,27 +134,27 @@ class ClientboundMapItemDataPacket : DataPacket(), ClientboundPacket {
         output.putByte(dimensionId.id)
         output.putBoolean(isLocked)
 
-        if ((type and 0x08) != 0){ // TODO: find out what these are for
+        if ((type and 0x08) != 0) { // TODO: find out what these are for
             output.putUnsignedVarInt(eidsCount)
             eids.forEach {
                 output.putEntityUniqueId(it)
             }
         }
 
-        if ((type and (0x08 or BITFLAG_TEXTURE_UPDATE or BITFLAG_DECORATION_UPDATE)) != 0){
+        if ((type and (0x08 or BITFLAG_TEXTURE_UPDATE or BITFLAG_DECORATION_UPDATE)) != 0) {
             output.putByte(scale)
         }
 
-        if ((type and BITFLAG_DECORATION_UPDATE) != 0){
+        if ((type and BITFLAG_DECORATION_UPDATE) != 0) {
             output.putUnsignedVarInt(trackedEntities.size)
             trackedEntities.forEach {
-                output.putLInt(it.type!!)
+                output.putLInt(it.type)
                 when (it.type) {
                     MapTrackedObject.TYPE_BLOCK -> {
-                        output.putBlockPosition(it.x!!, it.y!!, it.z!!)
+                        output.putBlockPosition(it.x, it.y, it.z)
                     }
                     MapTrackedObject.TYPE_ENTITY -> {
-                        output.putEntityUniqueId(it.entityUniqueId!!)
+                        output.putEntityUniqueId(it.entityUniqueId)
                     }
                     else -> throw MapTrackedObjectException("Unknown map object type ${it.type}")
                 }
@@ -161,26 +162,26 @@ class ClientboundMapItemDataPacket : DataPacket(), ClientboundPacket {
 
             output.putUnsignedVarInt(decorationCount)
             decorations.forEach { decoration ->
-                output.putByte(decoration.getIcon())
-                output.putByte(decoration.getRotation())
-                output.putByte(decoration.getXOffset())
-                output.putByte(decoration.getYOffset())
-                output.putString(decoration.getLabel())
-                output.putUnsignedVarInt(Binary.flipIntEndianness(decoration.getColor().toRGBA()))
+                output.putByte(decoration.icon)
+                output.putByte(decoration.rotation)
+                output.putByte(decoration.xOffset)
+                output.putByte(decoration.yOffset)
+                output.putString(decoration.label)
+                output.putUnsignedVarInt(Binary.flipIntEndianness(decoration.color.toRGBA()))
             }
         }
 
-        if ((type and BITFLAG_TEXTURE_UPDATE) != 0){
+        if ((type and BITFLAG_TEXTURE_UPDATE) != 0) {
             output.putVarInt(width)
             output.putVarInt(height)
             output.putVarInt(xOffset)
             output.putVarInt(yOffset)
 
-            output.putUnsignedVarInt(width * height) //list count, but we handle it as a 2D array... thanks for the confusion mojang
+            output.putUnsignedVarInt(width * height) // list count, but we handle it as a 2D array... thanks for the confusion mojang
 
-            for (y in 0..height) {
-                for (x in 0..width) {
-                    //if mojang had any sense this would just be a regular LE Int
+            for (y in 0 until height) {
+                for (x in 0 until width) {
+                    // if mojang had any sense this would just be a regular LE Int
                     output.putUnsignedVarInt(Binary.flipIntEndianness(colors.getValue(y).getValue(x).toRGBA()))
                 }
             }

@@ -51,10 +51,8 @@ class PlayStatusPacket : DataPacket(), ClientboundPacket {
         const val LOGIN_FAILED_EDU_VANILLA = 6
         const val LOGIN_FAILED_SERVER_FULL = 7
 
-        fun create(status: Int): PlayStatusPacket {
-            val result = PlayStatusPacket()
-            result.status = status
-            return result
+        fun create(status: Int): PlayStatusPacket = PlayStatusPacket().apply {
+            this.status = status
         }
     }
 }

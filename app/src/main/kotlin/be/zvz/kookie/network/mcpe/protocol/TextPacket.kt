@@ -70,11 +70,9 @@ class TextPacket : DataPacket(), ClientboundPacket, ServerboundPacket {
         const val TYPE_JSON_WHISPER = 9
         const val TYPE_JSON = 10
 
-        private fun messageOnly(type: Int, message: String): TextPacket {
-            val result = TextPacket()
-            result.type = type
-            result.message = message
-            return result
+        private fun messageOnly(type: Int, message: String): TextPacket = TextPacket().apply {
+            this.type = type
+            this.message = message
         }
 
         fun raw(message: String): TextPacket {
@@ -82,10 +80,10 @@ class TextPacket : DataPacket(), ClientboundPacket, ServerboundPacket {
         }
 
         private fun baseTranslation(type: Int, key: String, parameters: MutableList<String>): TextPacket {
-            val result = messageOnly(type, key)
-            result.needTranslation = true
-            result.parameters = parameters
-            return result
+            return messageOnly(type, key).apply {
+                this.needTranslation = true
+                this.parameters = parameters
+            }
         }
 
         fun translation(key: String, parameters: MutableList<String>): TextPacket {

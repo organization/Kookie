@@ -76,7 +76,7 @@ abstract class DataPacket : Packet {
             protocolIdentify.networkId.id
         }
         val v = (networkId or (senderSubId shl SENDER_SUBCLIENT_ID_SHIFT)) or
-                (recipientSubId shl RECIPIENT_SUBCLIENT_ID_SHIFT)
+            (recipientSubId shl RECIPIENT_SUBCLIENT_ID_SHIFT)
         output.putUnsignedVarInt(v)
     }
 

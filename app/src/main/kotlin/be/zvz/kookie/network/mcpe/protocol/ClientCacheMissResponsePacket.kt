@@ -18,8 +18,8 @@
 package be.zvz.kookie.network.mcpe.protocol
 
 import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
+import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 import be.zvz.kookie.network.mcpe.protocol.types.ChunkCacheBlob
-import be.zvz.kookie.network.mcpe.serializer.PacketSerializer
 
 @ProtocolIdentify(ProtocolInfo.IDS.CLIENT_CACHE_MISS_RESPONSE_PACKET)
 class ClientCacheMissResponsePacket : DataPacket(), ClientboundPacket {
@@ -33,7 +33,7 @@ class ClientCacheMissResponsePacket : DataPacket(), ClientboundPacket {
     }
 
     override fun decodePayload(input: PacketSerializer) {
-        for (i in 0..input.getUnsignedVarInt()) {
+        for (i in 0 until input.getUnsignedVarInt()) {
             val hash = input.getLLong()
             val payload = input.getString()
             blobs.add(ChunkCacheBlob(hash, payload))

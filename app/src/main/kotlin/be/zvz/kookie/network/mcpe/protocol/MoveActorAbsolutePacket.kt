@@ -49,15 +49,13 @@ class MoveActorAbsolutePacket : DataPacket(), ClientboundPacket, ServerboundPack
             yRot: Float,
             zRot: Float,
             flags: Int = 0
-        ): MoveActorAbsolutePacket {
-            val result = MoveActorAbsolutePacket()
-            result.entityRuntimeId = entityRuntimeId
-            result.flags = flags
-            result.position = pos
-            result.xRot = xRot
-            result.yRot = yRot
-            result.zRot = zRot
-            return result
+        ): MoveActorAbsolutePacket = MoveActorAbsolutePacket().apply {
+            this.entityRuntimeId = entityRuntimeId
+            this.flags = flags
+            this.position = pos
+            this.xRot = xRot
+            this.yRot = yRot
+            this.zRot = zRot
         }
     }
 }

@@ -1,7 +1,7 @@
 package be.zvz.kookie.network.mcpe.protocol
 
 import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
-import be.zvz.kookie.network.mcpe.serializer.PacketSerializer
+import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 
 /**
  *
@@ -50,7 +50,7 @@ class CommandBlockUpdatePacket : DataPacket(), ServerboundPacket {
             isRedstoneMode = input.getBoolean()
             isConditional = input.getBoolean()
         } else {
-            //Minecart with command block
+            // Minecart with command block
             minecartEid = input.getEntityRuntimeId()
         }
 

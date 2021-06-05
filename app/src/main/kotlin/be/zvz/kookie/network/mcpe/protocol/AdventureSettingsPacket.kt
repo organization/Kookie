@@ -18,8 +18,8 @@
 package be.zvz.kookie.network.mcpe.protocol
 
 import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
+import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 import be.zvz.kookie.network.mcpe.protocol.types.PlayerPermissions
-import be.zvz.kookie.network.mcpe.serializer.PacketSerializer
 
 @ProtocolIdentify(ProtocolInfo.IDS.ADVENTURE_SETTINGS_PACKET)
 class AdventureSettingsPacket : DataPacket(), ClientboundPacket, ServerboundPacket {

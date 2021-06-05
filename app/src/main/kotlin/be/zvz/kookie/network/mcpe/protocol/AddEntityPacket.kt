@@ -18,7 +18,7 @@
 package be.zvz.kookie.network.mcpe.protocol
 
 import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
-import be.zvz.kookie.network.mcpe.serializer.PacketSerializer
+import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 
 @ProtocolIdentify(ProtocolInfo.IDS.ADD_ENTITY_PACKET)
 class AddEntityPacket : DataPacket(), ClientboundPacket {
@@ -26,12 +26,8 @@ class AddEntityPacket : DataPacket(), ClientboundPacket {
         private set
 
     companion object {
-        fun create(uvarint1: Int): AddEntityPacket {
-            val packet = AddEntityPacket().apply {
-                this.uvarint1 = uvarint1
-            }
-
-            return packet
+        fun create(uvarint1: Int): AddEntityPacket = AddEntityPacket().apply {
+            this.uvarint1 = uvarint1
         }
     }
 
