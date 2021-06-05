@@ -24,7 +24,7 @@ class InventoryTransactionChangedSlotsHack(
         fun read(input: PacketSerializer): InventoryTransactionChangedSlotsHack {
             val containerId = input.getByte()
             val changedSlotIndexes = mutableListOf<Int>()
-            for (i in 0..input.getUnsignedVarInt()) {
+            for (i in 0 until input.getUnsignedVarInt()) {
                 changedSlotIndexes.add(i)
             }
             return InventoryTransactionChangedSlotsHack(containerId, changedSlotIndexes)

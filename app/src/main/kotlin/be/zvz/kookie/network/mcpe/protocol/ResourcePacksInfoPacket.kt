@@ -39,11 +39,11 @@ class ResourcePacksInfoPacket : DataPacket(), ClientboundPacket {
         mustAccept = input.getBoolean()
         hasScript = input.getBoolean()
         val behaviorPackCount = input.getLShort()
-        for (i in 0..behaviorPackCount) {
+        for (i in 0 until behaviorPackCount) {
             behaviorPackEntries.add(BehaviorPackEntry.read(input))
         }
         val resourcePackCount = input.getLShort()
-        for (i in 0..resourcePackCount) {
+        for (i in 0 until resourcePackCount) {
             resourcePackEntries.add(ResourcePackEntry.read(input))
         }
     }

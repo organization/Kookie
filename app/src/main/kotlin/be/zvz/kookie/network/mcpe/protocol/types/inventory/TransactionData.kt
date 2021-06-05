@@ -17,7 +17,7 @@ abstract class TransactionData {
     }
 
     fun decode(input: PacketSerializer) {
-        for (i in 0..input.getUnsignedVarInt()) {
+        for (i in 0 until input.getUnsignedVarInt()) {
             actions.add(NetworkInventoryAction().read(input))
         }
         decodeData(input)

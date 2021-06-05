@@ -16,7 +16,7 @@ class InventoryTransactionPacket : DataPacket(), ClientboundPacket, ServerboundP
     override fun decodePayload(input: PacketSerializer) {
         requestId = input.readGenericTypeNetworkId()
         if (requestId != 0) {
-            for (i in 0..input.getUnsignedVarInt()) {
+            for (i in 0 until input.getUnsignedVarInt()) {
                 requestChangedSlot.add(InventoryTransactionChangedSlotsHack.read(input))
             }
         }

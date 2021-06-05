@@ -62,7 +62,7 @@ class AddPlayerPacket : DataPacket(), ClientboundPacket {
 
         long1 = input.getLong().toInt()
 
-        for (i in 0..input.getUnsignedVarInt()) {
+        for (i in 0 until input.getUnsignedVarInt()) {
             links.add(input.getEntityLink())
         }
         deviceId = input.getString()
