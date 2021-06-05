@@ -52,7 +52,7 @@ object BlockFactory {
                 throw IllegalArgumentException("Block registration $id:$variant conflicts with an existing block")
             }
 
-            for (m in variant..(variant or stateMask)) {
+            for (m in variant until (variant or stateMask)) {
                 if ((m and stateMask.inv()) != variant) {
                     continue
                 }
