@@ -39,7 +39,7 @@ open class SimpleInventory(size: Int) : BaseInventory() {
     }
 
     protected override fun internalSetContents(items: Map<Int, Item>) {
-        for (i in 0..getSize()) {
+        for (i in 0 until getSize()) {
             if (items.containsKey(i)) {
                 clear(i)
             } else {

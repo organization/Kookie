@@ -18,9 +18,9 @@
 package be.zvz.kookie.network.mcpe.protocol
 
 import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
+import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 import be.zvz.kookie.network.mcpe.protocol.types.resourcepack.BehaviorPackEntry
 import be.zvz.kookie.network.mcpe.protocol.types.resourcepack.ResourcePackEntry
-import be.zvz.kookie.network.mcpe.serializer.PacketSerializer
 
 @ProtocolIdentify(ProtocolInfo.IDS.RESOURCE_PACK_STACK_PACKET)
 class ResourcePackStackPacket : DataPacket(), ClientboundPacket {
@@ -32,11 +32,11 @@ class ResourcePackStackPacket : DataPacket(), ClientboundPacket {
     override fun decodePayload(input: PacketSerializer) {
         mustAccept = input.getBoolean()
         val behaviorPackCount = input.getUnsignedVarInt()
-        for (i in 0..behaviorPackCount) {
+        for (i in 0 until behaviorPackCount) {
             behaviorStacks.add(BehaviorPackEntry.read(input))
         }
         val resourcePackCount = input.getUnsignedVarInt()
-        for (i in 0..resourcePackCount) {
+        for (i in 0 until resourcePackCount) {
             resourcePackStacks.add(ResourcePackEntry.read(input))
         }
     }

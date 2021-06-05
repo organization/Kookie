@@ -1,8 +1,8 @@
 package be.zvz.kookie.network.mcpe.protocol
 
 import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
+import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 import be.zvz.kookie.network.mcpe.protocol.types.inventory.*
-import be.zvz.kookie.network.mcpe.serializer.PacketSerializer
 
 @ProtocolIdentify(ProtocolInfo.IDS.INVENTORY_TRANSACTION_PACKET)
 class InventoryTransactionPacket : DataPacket(), ClientboundPacket, ServerboundPacket {
@@ -16,7 +16,7 @@ class InventoryTransactionPacket : DataPacket(), ClientboundPacket, ServerboundP
     override fun decodePayload(input: PacketSerializer) {
         requestId = input.readGenericTypeNetworkId()
         if (requestId != 0) {
-            for (i in 0..input.getUnsignedVarInt()) {
+            for (i in 0 until input.getUnsignedVarInt()) {
                 requestChangedSlot.add(InventoryTransactionChangedSlotsHack.read(input))
             }
         }

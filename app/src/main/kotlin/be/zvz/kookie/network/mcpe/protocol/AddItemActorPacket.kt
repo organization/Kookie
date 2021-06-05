@@ -2,9 +2,9 @@ package be.zvz.kookie.network.mcpe.protocol
 
 import be.zvz.kookie.math.Vector3
 import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
+import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 import be.zvz.kookie.network.mcpe.protocol.types.entity.MetadataProperty
 import be.zvz.kookie.network.mcpe.protocol.types.inventory.ItemStackWrapper
-import be.zvz.kookie.network.mcpe.serializer.PacketSerializer
 
 @ProtocolIdentify(ProtocolInfo.IDS.ADD_ITEM_ACTOR_PACKET)
 class AddItemActorPacket : DataPacket(), ClientboundPacket {

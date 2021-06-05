@@ -1,6 +1,6 @@
 package be.zvz.kookie.network.mcpe.protocol.types.entity
 
-import be.zvz.kookie.network.mcpe.serializer.PacketSerializer
+import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 
 class BlockPosMetadataProperty(val value: PacketSerializer.BlockPosition) : MetadataProperty() {
     override val id = EntityMetadataTypes.POS

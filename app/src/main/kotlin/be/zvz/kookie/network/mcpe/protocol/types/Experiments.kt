@@ -1,6 +1,6 @@
 package be.zvz.kookie.network.mcpe.protocol.types
 
-import be.zvz.kookie.network.mcpe.serializer.PacketSerializer
+import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 import com.koloboke.collect.map.hash.HashObjObjMaps
 
 class Experiments(
@@ -23,7 +23,7 @@ class Experiments(
     companion object {
         fun read(input: PacketSerializer): Experiments {
             val experiments: MutableMap<String, Boolean> = HashObjObjMaps.newMutableMap()
-            for (i in 0..input.getLInt()) {
+            for (i in 0 until input.getLInt()) {
                 val experimentName = input.getString()
                 val enabled = input.getBoolean()
                 experiments[experimentName] = enabled

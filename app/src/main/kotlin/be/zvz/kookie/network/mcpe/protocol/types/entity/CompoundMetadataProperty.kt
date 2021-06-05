@@ -3,7 +3,7 @@ package be.zvz.kookie.network.mcpe.protocol.types.entity
 import be.zvz.kookie.nbt.LittleEndianNbtSerializer
 import be.zvz.kookie.nbt.TreeRoot
 import be.zvz.kookie.nbt.tag.CompoundTag
-import be.zvz.kookie.network.mcpe.serializer.PacketSerializer
+import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 
 class CompoundMetadataProperty(var value: CompoundTag) : MetadataProperty() {
 

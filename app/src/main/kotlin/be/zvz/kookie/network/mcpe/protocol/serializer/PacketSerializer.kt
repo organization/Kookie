@@ -15,7 +15,7 @@
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  */
-package be.zvz.kookie.network.mcpe.serializer
+package be.zvz.kookie.network.mcpe.protocol.serializer
 
 import be.zvz.kookie.math.Vector3
 import be.zvz.kookie.nbt.LittleEndianNbtSerializer
@@ -83,7 +83,7 @@ class PacketSerializer(buffer: String = "", offset: AtomicInteger = AtomicIntege
         val skinData = getSkinImage()
         val animations = mutableListOf<SkinAnimation>().apply {
             val animationCount = getLInt()
-            for (i in 0..animationCount) {
+            for (i in 0 until animationCount) {
                 val skinImage = getSkinImage()
                 val animationType = getLInt()
                 val animationFrames = getLFloat()
@@ -103,7 +103,7 @@ class PacketSerializer(buffer: String = "", offset: AtomicInteger = AtomicIntege
         val skinColor = getString()
         val personaPieces = mutableListOf<PersonaSkinPiece>().apply {
             val personaPieceCount = getLInt()
-            for (i in 0..personaPieceCount) {
+            for (i in 0 until personaPieceCount) {
                 val pieceId = getString()
                 val pieceType = getString()
                 val packId = getString()
@@ -115,14 +115,14 @@ class PacketSerializer(buffer: String = "", offset: AtomicInteger = AtomicIntege
 
         val pieceTintColors = mutableListOf<PersonaPieceTintColor>().apply {
             val pieceTintColorCount = getLInt()
-            for (i in 0..pieceTintColorCount) {
+            for (i in 0 until pieceTintColorCount) {
                 val pieceType = getString()
                 add(
                     PersonaPieceTintColor(
                         pieceType,
                         mutableListOf<String>().apply {
                             val colorCount = getLInt()
-                            for (j in 0..colorCount) {
+                            for (j in 0 until colorCount) {
                                 add(getString())
                             }
                         }
@@ -292,12 +292,12 @@ class PacketSerializer(buffer: String = "", offset: AtomicInteger = AtomicIntege
                 throw PacketDecodeException("Unexpected fake NBT length $nbtLen")
             }
             val canPlaceOn = mutableListOf<String>()
-            for (i in 0..extraData.getLInt()) {
+            for (i in 0 until extraData.getLInt()) {
                 canPlaceOn.add(extraData.get(extraData.getLShort()))
             }
 
             val canDestroy = mutableListOf<String>()
-            for (i in 0..extraData.getLInt()) {
+            for (i in 0 until extraData.getLInt()) {
                 canDestroy.add(extraData.get(extraData.getLShort()))
             }
 
@@ -408,7 +408,7 @@ class PacketSerializer(buffer: String = "", offset: AtomicInteger = AtomicIntege
 
     fun getEntityMetadataProperty(): MutableMap<Int, MetadataProperty> {
         val properties: MutableMap<Int, MetadataProperty> = mutableMapOf()
-        for (i in 0..getUnsignedVarInt()) {
+        for (i in 0 until getUnsignedVarInt()) {
             val key = getUnsignedVarInt()
             val type = getUnsignedVarInt()
             properties[key] = readMetadataProperty(type)
@@ -462,7 +462,7 @@ class PacketSerializer(buffer: String = "", offset: AtomicInteger = AtomicIntege
 
     fun getAttributeList(): MutableList<NetworkAttribute> {
         val list: MutableList<NetworkAttribute> = mutableListOf()
-        for (i in 0..getUnsignedVarInt()) {
+        for (i in 0 until getUnsignedVarInt()) {
             val min = getLFloat()
             val max = getLFloat()
             val current = getLFloat()
