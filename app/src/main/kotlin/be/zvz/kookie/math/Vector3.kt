@@ -38,12 +38,10 @@ open class Vector3 @JvmOverloads constructor(var x: Float = 0F, var y: Float = 0
     fun add(x: Int, y: Int, z: Int): Vector3 = Vector3(this.x + x, this.y + y, this.z + z)
     fun add(x: Float, y: Float, z: Float): Vector3 = Vector3(this.x + x, this.y + y, this.z + z)
 
-
     operator fun minus(pos: Vector3): Vector3 = Vector3(this.x - pos.x, this.y - pos.y, this.z - pos.z)
     fun subtract(pos: Vector3): Vector3 = Vector3(this.x - pos.x, this.y - pos.y, this.z - pos.z)
     fun subtract(x: Int, y: Int, z: Int): Vector3 = Vector3(this.x - x, this.y - y, this.z - z)
     fun subtract(x: Float, y: Float, z: Float): Vector3 = Vector3(this.x - x, this.y - y, this.z - z)
-
 
     operator fun times(len: Int): Vector3 = Vector3(x * len, y * len, z * len)
     operator fun times(len: Float): Vector3 = Vector3(x * len, y * len, z * len)
@@ -86,7 +84,6 @@ open class Vector3 @JvmOverloads constructor(var x: Float = 0F, var y: Float = 0
 
     fun asVector3(): Vector3 = Vector3(x, y, z)
 
-
     @JvmOverloads
     open fun getSide(side: Facing, step: Int = 1): Vector3 = when (side) {
         Facing.DOWN -> Vector3(x, y - step, z)
@@ -123,7 +120,6 @@ open class Vector3 @JvmOverloads constructor(var x: Float = 0F, var y: Float = 0
         }
     }
 
-
     @JvmOverloads
     fun sidesArray(step: Int = 1): List<Vector3> = runBlocking {
         return@runBlocking sides(step).toList()
@@ -137,7 +133,6 @@ open class Vector3 @JvmOverloads constructor(var x: Float = 0F, var y: Float = 0
         }
     }
 
-
     fun maxPlainDistance(v: Vector, z: Int): Float = maxPlainDistance(v, z.toFloat())
     fun maxPlainDistance(v: Vector, z: Float): Float = when (v) {
         is Vector3 -> maxPlainDistance(v.x, z)
@@ -147,7 +142,6 @@ open class Vector3 @JvmOverloads constructor(var x: Float = 0F, var y: Float = 0
 
     fun maxPlainDistance(x: Int, z: Float): Float = max(abs(this.x - x.toFloat()), abs(this.z - z))
     fun maxPlainDistance(x: Float, z: Float): Float = max(abs(this.x - x), abs(this.z - z))
-
 
     fun cross(v: Vector3): Vector3 = Vector3(
         y * v.z - z * v.y,
@@ -169,7 +163,6 @@ open class Vector3 @JvmOverloads constructor(var x: Float = 0F, var y: Float = 0
         }
     }
 
-
     fun getIntermediateWithYValue(v: Vector3, y: Int): Vector3? = getIntermediateWithYValue(v, y.toFloat())
     fun getIntermediateWithYValue(v: Vector3, y: Float): Vector3? {
         val yDiff = v.y - this.y
@@ -184,7 +177,6 @@ open class Vector3 @JvmOverloads constructor(var x: Float = 0F, var y: Float = 0
         }
     }
 
-
     fun getIntermediateWithZValue(v: Vector3, z: Int): Vector3? = getIntermediateWithZValue(v, z.toFloat())
     fun getIntermediateWithZValue(v: Vector3, z: Float): Vector3? {
         val zDiff = v.z - this.z
@@ -198,7 +190,6 @@ open class Vector3 @JvmOverloads constructor(var x: Float = 0F, var y: Float = 0
             Vector3(x + (v.x - x), y + (v.y - y) * f, z)
         }
     }
-
 
     fun withComponents(x: Int?, y: Int?, z: Int?): Vector3 = withComponents(x?.toFloat(), y?.toFloat(), z?.toFloat())
     fun withComponents(x: Float?, y: Float?, z: Float?): Vector3 =

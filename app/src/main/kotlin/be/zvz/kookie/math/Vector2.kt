@@ -36,18 +36,15 @@ class Vector2 @JvmOverloads constructor(var x: Float = 0F, var y: Float = 0F) : 
     fun add(x: Int, y: Int): Vector2 = Vector2(this.x + x, this.y + y)
     fun add(x: Float, y: Float): Vector2 = Vector2(this.x + x, this.y + y)
 
-
     operator fun minus(pos: Vector2): Vector2 = Vector2(this.x - pos.x, this.y - pos.y)
     fun subtract(pos: Vector2): Vector2 = Vector2(this.x - pos.x, this.y - pos.y)
     fun subtract(x: Int, y: Int): Vector2 = Vector2(this.x - x, this.y - y)
     fun subtract(x: Float, y: Float): Vector2 = Vector2(this.x - x, this.y - y)
 
-
     operator fun times(len: Int): Vector2 = Vector2(x * len, y * len)
     operator fun times(len: Float): Vector2 = Vector2(x * len, y * len)
     fun multiply(len: Int): Vector2 = Vector2(x * len, y * len)
     fun multiply(len: Float): Vector2 = Vector2(x * len, y * len)
-
 
     operator fun div(len: Int): Vector2 = divide(len.toFloat())
     operator fun div(len: Float): Vector2 = divide(len)
