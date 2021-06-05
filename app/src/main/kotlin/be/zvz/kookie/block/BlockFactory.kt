@@ -17,14 +17,12 @@
  */
 package be.zvz.kookie.block
 
-import be.zvz.kookie.block.BlockIdentifier as BID
-// import be.zvz.kookie.block.BlockIdentifierFlattened as BIDFlattened
-import be.zvz.kookie.block.BlockLegacyIds as Ids
-// import be.zvz.kookie.block.BlockLegacyMetadata as Meta
 import be.zvz.kookie.block.util.IllegalBlockStateException
 import com.koloboke.collect.map.hash.HashIntFloatMaps
 import com.koloboke.collect.map.hash.HashIntIntMaps
 import com.koloboke.collect.map.hash.HashIntObjMaps
+import be.zvz.kookie.block.BlockIdentifier as BID
+import be.zvz.kookie.block.BlockLegacyIds as Ids
 
 object BlockFactory {
 
@@ -132,7 +130,7 @@ object BlockFactory {
 
     /**
      *  @deprecated
-     *  In PMMP, it is used to fetch only blocks without null
+     *  In PUMP, it is used to fetch only blocks without null
      * */
     fun getAllKnownStates() = fullList.toList()
 }
