@@ -1,6 +1,6 @@
 package be.zvz.kookie.network.mcpe.protocol.types.inventory
 
-import be.zvz.kookie.network.mcpe.serializer.PacketSerializer
+import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 
 data class ItemStackWrapper(val stackId: Int, val itemStack: ItemStack) {
     fun write(out: PacketSerializer) {

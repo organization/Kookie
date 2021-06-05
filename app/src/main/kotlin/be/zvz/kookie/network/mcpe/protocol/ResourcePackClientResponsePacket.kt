@@ -1,7 +1,7 @@
 package be.zvz.kookie.network.mcpe.protocol
 
 import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
-import be.zvz.kookie.network.mcpe.serializer.PacketSerializer
+import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 
 @ProtocolIdentify(ProtocolInfo.IDS.RESOURCE_PACK_CLIENT_RESPONSE_PACKET)
 class ResourcePackClientResponsePacket : DataPacket(), ServerboundPacket {
@@ -12,7 +12,7 @@ class ResourcePackClientResponsePacket : DataPacket(), ServerboundPacket {
 
     override fun decodePayload(input: PacketSerializer) {
         status = input.getByte()
-        for (i in 0..input.getLShort()) {
+        for (i in 0 until input.getLShort()) {
             packIds.add(input.getString())
         }
     }

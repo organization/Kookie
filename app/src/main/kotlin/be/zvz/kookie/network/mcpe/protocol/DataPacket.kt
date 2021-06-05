@@ -17,7 +17,7 @@
  */
 package be.zvz.kookie.network.mcpe.protocol
 
-import be.zvz.kookie.network.mcpe.serializer.PacketSerializer
+import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 import be.zvz.kookie.utils.BinaryDataException
 
 @ProtocolIdentify(networkId = ProtocolInfo.IDS.UNKNOWN)

@@ -1,4 +1,4 @@
-package be.zvz.kookie.network.mcpe.serializer
+package be.zvz.kookie.network.mcpe.protocol.serializer
 
 import be.zvz.kookie.network.mcpe.protocol.Packet
 import be.zvz.kookie.network.mcpe.protocol.PacketPool

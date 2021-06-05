@@ -25,8 +25,8 @@ import be.zvz.kookie.network.mcpe.protocol.ClientboundPacket
 import be.zvz.kookie.network.mcpe.protocol.DataPacket
 import be.zvz.kookie.network.mcpe.protocol.Packet
 import be.zvz.kookie.network.mcpe.protocol.UpdateAttributesPacket
+import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 import be.zvz.kookie.network.mcpe.protocol.types.entity.NetworkAttribute
-import be.zvz.kookie.network.mcpe.serializer.PacketSerializer
 import be.zvz.kookie.player.Player
 import be.zvz.kookie.player.PlayerInfo
 import be.zvz.kookie.timings.Timings

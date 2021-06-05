@@ -1,7 +1,7 @@
 package be.zvz.kookie.network.mcpe.protocol
 
 import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
-import be.zvz.kookie.network.mcpe.serializer.PacketSerializer
+import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 
 @ProtocolIdentify(ProtocolInfo.IDS.TEXT_PACKET)
 class TextPacket : DataPacket(), ClientboundPacket, ServerboundPacket {
@@ -25,7 +25,7 @@ class TextPacket : DataPacket(), ClientboundPacket, ServerboundPacket {
         }
         if (type in TYPE_TRANSLATION..TYPE_JUKEBOX_POPUP) {
             message = input.getString()
-            for (i in 0..input.getUnsignedVarInt()) {
+            for (i in 0 until input.getUnsignedVarInt()) {
                 parameters.add(input.getString())
             }
         }

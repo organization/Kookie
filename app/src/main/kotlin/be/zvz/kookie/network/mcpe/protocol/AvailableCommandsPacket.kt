@@ -18,11 +18,11 @@
 package be.zvz.kookie.network.mcpe.protocol
 
 import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
+import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 import be.zvz.kookie.network.mcpe.protocol.types.command.CommandData
 import be.zvz.kookie.network.mcpe.protocol.types.command.CommandEnum
 import be.zvz.kookie.network.mcpe.protocol.types.command.CommandEnumConstraint
 import be.zvz.kookie.network.mcpe.protocol.types.command.CommandParameter
-import be.zvz.kookie.network.mcpe.serializer.PacketSerializer
 import com.koloboke.collect.map.hash.HashIntObjMaps
 import com.koloboke.collect.map.hash.HashObjIntMaps
 import com.koloboke.collect.map.hash.HashObjObjMaps
@@ -40,31 +40,31 @@ class AvailableCommandsPacket : DataPacket(), ClientboundPacket {
 
     override fun decodePayload(input: PacketSerializer) {
         val enumValues = mutableListOf<String>().apply {
-            for (i in 0..input.getUnsignedVarInt()) {
+            for (i in 0 until input.getUnsignedVarInt()) {
                 add(input.getString())
             }
         }
         val postfixes = mutableListOf<String>().apply {
-            for (i in 0..input.getUnsignedVarInt()) {
+            for (i in 0 until input.getUnsignedVarInt()) {
                 add(input.getString())
             }
         }
         val enums = mutableListOf<CommandEnum>()
-        for (i in 0..input.getUnsignedVarInt()) {
+        for (i in 0 until input.getUnsignedVarInt()) {
             val enum = getEnum(enumValues, input)
             enums.add(enum)
             if (HARDCODED_ENUM_NAMES.containsKey(enum.getEnumName())) {
                 hardCodeEnums.add(enum)
             }
         }
-        for (i in 0..input.getUnsignedVarInt()) {
+        for (i in 0 until input.getUnsignedVarInt()) {
             val command = getCommandData(enums, postfixes, input)
             commandData[command.name] = command
         }
-        for (i in 0..input.getUnsignedVarInt()) {
+        for (i in 0 until input.getUnsignedVarInt()) {
             softEnums.add(getSoftEnum(input))
         }
-        for (i in 0..input.getUnsignedVarInt()) {
+        for (i in 0 until input.getUnsignedVarInt()) {
             enumConstraints.add(getEnumConstraint(enums, enumValues, input))
         }
     }
@@ -147,7 +147,7 @@ class AvailableCommandsPacket : DataPacket(), ClientboundPacket {
         val enumValues = mutableListOf<String>()
 
         val listSize = enumList.size
-        for (i in 0..input.getUnsignedVarInt()) {
+        for (i in 0 until input.getUnsignedVarInt()) {
             val index = getEnumValueIndex(listSize, input)
             val enumValue = enumList.getOrNull(index) ?: throw PacketDecodeException("Invalid enum value index $index")
             enumValues.add(enumValue)
@@ -206,12 +206,12 @@ class AvailableCommandsPacket : DataPacket(), ClientboundPacket {
 
         val overloadCount = input.getUnsignedVarInt()
 
-        for (overloadIndex in 0..overloadCount) {
+        for (overloadIndex in 0 until overloadCount) {
             if (!overloads.containsKey(overloadIndex)) {
                 overloads[overloadIndex] = HashIntObjMaps.newMutableMap()
             }
             val paramCount = input.getUnsignedVarInt()
-            for (paramIndex in 0..paramCount) {
+            for (paramIndex in 0 until paramCount) {
                 val parameter = CommandParameter()
                 parameter.paramName = input.getString()
                 parameter.paramType = input.getLInt()
@@ -283,7 +283,7 @@ class AvailableCommandsPacket : DataPacket(), ClientboundPacket {
     protected fun getSoftEnum(input: PacketSerializer): CommandEnum {
         val enumName = input.getString()
         val enumValues = mutableListOf<String>()
-        for (i in 0..input.getUnsignedVarInt()) {
+        for (i in 0 until input.getUnsignedVarInt()) {
             enumValues.add(input.getString())
         }
         return CommandEnum(enumName, enumValues)
@@ -317,7 +317,7 @@ class AvailableCommandsPacket : DataPacket(), ClientboundPacket {
         }
 
         val constraintIds = mutableListOf<Int>().apply {
-            for (i in 0..input.getUnsignedVarInt()) {
+            for (i in 0 until input.getUnsignedVarInt()) {
                 add(input.getByte())
             }
         }
