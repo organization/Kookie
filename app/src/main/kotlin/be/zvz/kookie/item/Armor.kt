@@ -54,7 +54,7 @@ class Armor(identifier: ItemIdentifier, name: String, val armorInfo: ArmorTypeIn
 
     override fun getUnbreakingDamageReduction(amount: Int): Int {
         val unbreakingLevel = getEnchantmentLevel(VanillaEnchantments.UNBREAKING.enchantment)
-        if(unbreakingLevel > 0){
+        if (unbreakingLevel > 0) {
             var negated = 0
             val chance = 1f / (unbreakingLevel + 1)
             for (i in 0 until amount) {
@@ -84,16 +84,16 @@ class Armor(identifier: ItemIdentifier, name: String, val armorInfo: ArmorTypeIn
     override fun deserializeCompoundTag(tag: CompoundTag) {
         super.deserializeCompoundTag(tag)
         val colorTag = tag.getTag(TAG_CUSTOM_COLOR)
-        customColor = if(colorTag !== null) {
+        customColor = if (colorTag !== null) {
             Color.fromARGB(Binary.unsignInt(colorTag.value as Int))
-        }else{
+        } else {
             null
         }
     }
 
     override fun serializeCompoundTag(tag: CompoundTag) {
         super.serializeCompoundTag(tag)
-        if(customColor !== null)
+        if (customColor !== null)
             tag.setInt(TAG_CUSTOM_COLOR, Binary.signInt(customColor!!.toARGB()))
         else
             tag.removeTag(TAG_CUSTOM_COLOR)
