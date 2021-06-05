@@ -1,13 +1,16 @@
 package be.zvz.kookie.color
 
-class Color(val r: Int, val g: Int, val b: Int, val a: Int = 0xff) {
+import java.awt.Color as AwtColor
+
+class Color @JvmOverloads constructor(r: Int, g: Int, b: Int, a: Int = 0xff) : AwtColor(r, g, b, a) {
+    constructor(awtColor: AwtColor) : this(awtColor.red, awtColor.green, awtColor.blue, awtColor.alpha)
 
     fun toARGB(): Int {
-        return (this.a shl 24) or (this.r shl 16) or (this.g shl 8) or this.b
+        return (this.alpha shl 24) or (this.red shl 16) or (this.green shl 8) or this.blue
     }
 
     fun toRGBA(): Int {
-        return (this.r shl 24) or (this.g shl 16) or (this.b shl 8) or this.a
+        return (this.red shl 24) or (this.green shl 16) or (this.blue shl 8) or this.alpha
     }
 
     companion object {
@@ -19,10 +22,10 @@ class Color(val r: Int, val g: Int, val b: Int, val a: Int = 0xff) {
 
             var (a, r, g, b) = listOf(0, 0, 0, 0)
             colorList.forEach {
-                a += it.a
-                r += it.r
-                g += it.g
-                b += it.b
+                a += it.alpha
+                r += it.red
+                g += it.green
+                b += it.blue
             }
 
             return Color(r / count, g / count, b / count, a / count)
