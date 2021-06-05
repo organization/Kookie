@@ -22,11 +22,7 @@ import be.zvz.kookie.item.ItemFactory
 import com.koloboke.collect.map.hash.HashIntObjMaps
 
 open class SimpleInventory(size: Int) : BaseInventory() {
-    private lateinit var slots: Array<Item?>
-
-    init {
-        slots = Array(size) { null }
-    }
+    private var slots: Array<Item?> = Array(size) { null }
 
     override fun getSize(): Int = slots.size
     override fun getItem(index: Int): Item = slots[index]?.clone() ?: ItemFactory.air()
@@ -47,7 +43,7 @@ open class SimpleInventory(size: Int) : BaseInventory() {
             if (items.containsKey(i)) {
                 clear(i)
             } else {
-                setItem(i, items[i]!!)
+                setItem(i, items.getValue(i))
             }
         }
     }
