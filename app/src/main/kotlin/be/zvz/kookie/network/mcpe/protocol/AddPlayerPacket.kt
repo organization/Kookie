@@ -19,7 +19,7 @@ class AddPlayerPacket : DataPacket(), ClientboundPacket {
     var entityRuntimeId: Long = -1
     var platformChatId: String = ""
     lateinit var position: Vector3
-    var motion: Vector3 = Vector3(0F, 0F, 0F)
+    var motion: Vector3 = Vector3()
     var pitch: Float = 0F
     var yaw: Float = 0F
     var headYaw: Float? = null

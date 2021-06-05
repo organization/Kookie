@@ -45,7 +45,7 @@ class BlockTransaction(val world: ChunkManager) {
         blocks.forEach { (x, yLine) ->
             yLine.forEach { (y, zLine) ->
                 zLine.forEach { (z, block) ->
-                    yield(Pair(Vector3(x.toFloat(), y.toFloat(), z.toFloat()), block))
+                    yield(Pair(Vector3(x, y, z), block))
                 }
             }
         }

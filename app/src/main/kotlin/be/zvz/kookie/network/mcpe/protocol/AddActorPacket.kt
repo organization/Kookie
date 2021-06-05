@@ -52,7 +52,7 @@ class AddActorPacket : DataPacket(), ClientboundPacket {
         output.putEntityRuntimeId(entityRuntimeId)
         output.putString(type)
         output.putVector3(position)
-        output.putVector3(motion ?: Vector3(0F, 0F, 0F))
+        output.putVector3(motion ?: Vector3())
         output.putLFloat(pitch)
         output.putLFloat(yaw)
         output.putLFloat(headYaw)

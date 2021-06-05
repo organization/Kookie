@@ -20,6 +20,9 @@ package be.zvz.kookie.math
 import kotlin.math.*
 
 class Vector2 @JvmOverloads constructor(var x: Float = 0F, var y: Float = 0F) : Vector {
+    @JvmOverloads
+    constructor(x: Int, y: Int = 0) : this(x.toFloat(), y.toFloat())
+
     override fun equals(other: Any?): Boolean = other is Vector2 && other.x == x && other.y == y
 
     override fun hashCode(): Int {
@@ -28,60 +31,46 @@ class Vector2 @JvmOverloads constructor(var x: Float = 0F, var y: Float = 0F) : 
         return result
     }
 
-    @JvmOverloads
-    fun add(x: Float, y: Float = 0F): Vector2 = Vector2(this.x + x, this.y + y)
+    operator fun plus(pos: Vector2): Vector2 = Vector2(this.x + pos.x, this.y + pos.y)
+    fun add(pos: Vector2): Vector2 = Vector2(this.x + pos.x, this.y + pos.y)
+    fun add(x: Int, y: Int): Vector2 = Vector2(this.x + x, this.y + y)
+    fun add(x: Float, y: Float): Vector2 = Vector2(this.x + x, this.y + y)
 
-    fun add(x: Vector2): Vector2 = this + x
+    operator fun minus(pos: Vector2): Vector2 = Vector2(this.x - pos.x, this.y - pos.y)
+    fun subtract(pos: Vector2): Vector2 = Vector2(this.x - pos.x, this.y - pos.y)
+    fun subtract(x: Int, y: Int): Vector2 = Vector2(this.x - x, this.y - y)
+    fun subtract(x: Float, y: Float): Vector2 = Vector2(this.x - x, this.y - y)
 
-    operator fun plus(x: Vector2): Vector2 = Vector2(this.x + x.x, this.y + x.y)
-
-    @JvmOverloads
-    fun subtract(x: Float, y: Float = 0F): Vector2 = Vector2(this.x - x, this.y - y)
-
-    fun subtract(x: Vector2): Vector2 = this - x
-
-    operator fun minus(x: Vector2): Vector2 = Vector2(this.x - x.x, this.y - x.y)
-
-    fun multiply(len: Float): Vector2 = this * len
-
+    operator fun times(len: Int): Vector2 = Vector2(x * len, y * len)
     operator fun times(len: Float): Vector2 = Vector2(x * len, y * len)
+    fun multiply(len: Int): Vector2 = Vector2(x * len, y * len)
+    fun multiply(len: Float): Vector2 = Vector2(x * len, y * len)
 
-    fun divide(len: Float): Vector2 = this / len
-
-    operator fun div(len: Float): Vector2 {
-        if (len == 0F) {
-            throw RuntimeException("Division by zero")
-        }
-        return Vector2(x / len, y / len)
-    }
+    operator fun div(len: Int): Vector2 = divide(len.toFloat())
+    operator fun div(len: Float): Vector2 = divide(len)
+    fun divide(len: Int): Vector2 = divide(len.toFloat())
+    fun divide(len: Float): Vector2 =
+        if (len == 0F) throw RuntimeException("Division by zero")
+        else Vector2(x / len, y / len)
 
     fun ceil(): Vector2 = Vector2(ceil(x), ceil(y))
-
     fun floor(): Vector2 = Vector2(floor(x), floor(y))
-
-    fun round(): Vector2 = Vector2(round(x), round(y))
-
     fun abs(): Vector2 = Vector2(abs(x), abs(y))
 
-    fun distance(pos: Vector2): Float = distance(x, y)
-
+    fun distance(pos: Vector2): Float = distance(pos.x, pos.y)
+    fun distance(x: Int, y: Int): Float = distance(x.toFloat(), y.toFloat())
     fun distance(x: Float, y: Float): Float = sqrt(distanceSquared(x, y))
 
     fun distanceSquared(pos: Vector2): Float = distanceSquared(pos.x, pos.y)
-
+    fun distanceSquared(x: Int, y: Int): Float = distanceSquared(x.toFloat(), y.toFloat())
     fun distanceSquared(x: Float, y: Float): Float = (this.x - x).pow(2) + (this.y - y).pow(2)
 
     fun length(): Float = sqrt(lengthSquared())
-
     fun lengthSquared(): Float = x * x + y * y
 
     fun normalize(): Vector2 {
         val len = lengthSquared()
-        return if (len > 0) {
-            this / sqrt(len)
-        } else {
-            Vector2(0F, 0F)
-        }
+        return if (len > 0.0) (this / sqrt(len)) else Vector2()
     }
 
     fun dot(v: Vector2): Float = x * v.x + y * v.y

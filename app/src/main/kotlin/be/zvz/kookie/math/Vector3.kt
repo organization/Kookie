@@ -21,6 +21,8 @@ import kotlinx.coroutines.runBlocking
 import kotlin.math.*
 
 open class Vector3 @JvmOverloads constructor(var x: Float = 0F, var y: Float = 0F, var z: Float = 0F) : Vector {
+    @JvmOverloads
+    constructor(x: Int, y: Int = 0, z: Int = 0) : this(x.toFloat(), y.toFloat(), z.toFloat())
 
     override fun equals(other: Any?): Boolean = other is Vector3 && other.x == x && other.y == y && other.z == z
 
@@ -31,40 +33,56 @@ open class Vector3 @JvmOverloads constructor(var x: Float = 0F, var y: Float = 0
         return result
     }
 
-    @JvmOverloads
-    fun add(x: Float, y: Float = 0F, z: Float = 0F): Vector3 = Vector3(this.x + x, this.y + y, this.z + z)
+    operator fun plus(pos: Vector3): Vector3 = Vector3(this.x + pos.x, this.y + pos.y, this.z + pos.z)
+    fun add(pos: Vector3): Vector3 = Vector3(this.x + pos.x, this.y + pos.y, this.z + pos.z)
+    fun add(x: Int, y: Int, z: Int): Vector3 = Vector3(this.x + x, this.y + y, this.z + z)
+    fun add(x: Float, y: Float, z: Float): Vector3 = Vector3(this.x + x, this.y + y, this.z + z)
 
-    fun add(x: Vector3): Vector3 = this + x
+    operator fun minus(pos: Vector3): Vector3 = Vector3(this.x - pos.x, this.y - pos.y, this.z - pos.z)
+    fun subtract(pos: Vector3): Vector3 = Vector3(this.x - pos.x, this.y - pos.y, this.z - pos.z)
+    fun subtract(x: Int, y: Int, z: Int): Vector3 = Vector3(this.x - x, this.y - y, this.z - z)
+    fun subtract(x: Float, y: Float, z: Float): Vector3 = Vector3(this.x - x, this.y - y, this.z - z)
 
-    operator fun plus(x: Vector3): Vector3 = Vector3(this.x + x.x, this.y + x.y, this.z + x.z)
-
-    @JvmOverloads
-    fun subtract(x: Float, y: Float = 0F, z: Float = 0F): Vector3 = Vector3(this.x - x, this.y - y, this.z - z)
-
-    fun subtract(x: Vector3): Vector3 = this - x
-
-    operator fun minus(x: Vector3): Vector3 = Vector3(this.x - x.x, this.y - x.y, this.z - x.z)
-
-    fun multiply(len: Float): Vector3 = this * len
-
+    operator fun times(len: Int): Vector3 = Vector3(x * len, y * len, z * len)
     operator fun times(len: Float): Vector3 = Vector3(x * len, y * len, z * len)
+    fun multiply(len: Int): Vector3 = Vector3(x * len, y * len, z * len)
+    fun multiply(len: Float): Vector3 = Vector3(x * len, y * len, z * len)
 
-    fun divide(len: Float): Vector3 = this / len
-
-    operator fun div(len: Float): Vector3 {
-        if (len == 0F) {
-            throw RuntimeException("Division by zero")
-        }
-        return Vector3(x / len, y / len, z / len)
-    }
+    operator fun div(len: Int): Vector3 = divide(len.toFloat())
+    operator fun div(len: Float): Vector3 = divide(len)
+    fun divide(len: Int): Vector3 = divide(len.toFloat())
+    fun divide(len: Float): Vector3 =
+        if (len == 0F) throw RuntimeException("Division by zero") else Vector3(x / len, y / len, z / len)
 
     fun ceil(): Vector3 = Vector3(ceil(x), ceil(y), ceil(z))
-
     fun floor(): Vector3 = Vector3(floor(x), floor(y), floor(z))
-
     fun round(): Vector3 = Vector3(round(x), round(y), round(z))
-
     fun abs(): Vector3 = Vector3(abs(x), abs(y), abs(z))
+
+    fun distance(pos: Vector3): Float = distance(pos.x, pos.y, pos.z)
+    fun distance(x: Int, y: Int, z: Int): Float = distance(x.toFloat(), y.toFloat(), z.toFloat())
+    fun distance(x: Float, y: Float, z: Float): Float = sqrt(distanceSquared(x, y, z))
+
+    fun distanceSquared(pos: Vector3): Float = distanceSquared(pos.x, pos.y, pos.z)
+    fun distanceSquared(x: Int, y: Int, z: Int): Float = distance(x.toFloat(), y.toFloat(), z.toFloat())
+    fun distanceSquared(x: Float, y: Float, z: Float): Float =
+        (this.x - x).pow(2) + (this.y - y).pow(2) + (this.z - z).pow(2)
+
+    fun length(): Float = sqrt(lengthSquared())
+    fun lengthSquared(): Float = x * x + y * y + z * z
+
+    fun normalize(): Vector3 {
+        val len = lengthSquared()
+        return if (len > 0) {
+            this / sqrt(len)
+        } else {
+            Vector3()
+        }
+    }
+
+    fun dot(v: Vector3): Float = x * v.x + y * v.y + z * v.z
+
+    fun asVector3(): Vector3 = Vector3(x, y, z)
 
     @JvmOverloads
     open fun getSide(side: Facing, step: Int = 1): Vector3 = when (side) {
@@ -115,42 +133,15 @@ open class Vector3 @JvmOverloads constructor(var x: Float = 0F, var y: Float = 0
         }
     }
 
-    fun asVector3(): Vector3 = Vector3(x, y, z)
-
-    fun distance(pos: Vector3): Float = sqrt(distanceSquared(pos))
-
-    fun distanceSquared(pos: Vector3): Float = (x - pos.x).pow(2) + (y - pos.y).pow(2) + (z - pos.z).pow(2)
-
-    fun maxPlainDistance(x: Vector, z: Float): Float {
-        return when (x) {
-            is Vector3 -> {
-                maxPlainDistance(x, z)
-            }
-            is Vector2 -> {
-                maxPlainDistance(x, z)
-            }
-            else -> {
-                throw IllegalArgumentException("${x::class.simpleName} is not Vector3 / Vector2")
-            }
-        }
+    fun maxPlainDistance(v: Vector, z: Int): Float = maxPlainDistance(v, z.toFloat())
+    fun maxPlainDistance(v: Vector, z: Float): Float = when (v) {
+        is Vector3 -> maxPlainDistance(v.x, z)
+        is Vector2 -> maxPlainDistance(v.x, z)
+        else -> throw IllegalArgumentException("${v::class.simpleName} is not Vector3 / Vector2")
     }
 
+    fun maxPlainDistance(x: Int, z: Float): Float = max(abs(this.x - x.toFloat()), abs(this.z - z))
     fun maxPlainDistance(x: Float, z: Float): Float = max(abs(this.x - x), abs(this.z - z))
-
-    fun length(): Float = sqrt(lengthSquared())
-
-    fun lengthSquared(): Float = x * x + y * y + z * z
-
-    fun normalize(): Vector3 {
-        val len = lengthSquared()
-        return if (len > 0) {
-            this / sqrt(len)
-        } else {
-            Vector3(0F, 0F, 0F)
-        }
-    }
-
-    fun dot(v: Vector3): Float = x * v.x + y * v.y + z * v.z
 
     fun cross(v: Vector3): Vector3 = Vector3(
         y * v.z - z * v.y,
@@ -158,6 +149,7 @@ open class Vector3 @JvmOverloads constructor(var x: Float = 0F, var y: Float = 0
         x * v.y - y * v.x
     )
 
+    fun getIntermediateWithXValue(v: Vector3, x: Int): Vector3? = getIntermediateWithXValue(v, x.toFloat())
     fun getIntermediateWithXValue(v: Vector3, x: Float): Vector3? {
         val xDiff = v.x - this.x
         if (xDiff * xDiff < 0.0000001) {
@@ -171,6 +163,7 @@ open class Vector3 @JvmOverloads constructor(var x: Float = 0F, var y: Float = 0
         }
     }
 
+    fun getIntermediateWithYValue(v: Vector3, y: Int): Vector3? = getIntermediateWithYValue(v, y.toFloat())
     fun getIntermediateWithYValue(v: Vector3, y: Float): Vector3? {
         val yDiff = v.y - this.y
         if (yDiff * yDiff < 0.0000001) {
@@ -184,6 +177,7 @@ open class Vector3 @JvmOverloads constructor(var x: Float = 0F, var y: Float = 0
         }
     }
 
+    fun getIntermediateWithZValue(v: Vector3, z: Int): Vector3? = getIntermediateWithZValue(v, z.toFloat())
     fun getIntermediateWithZValue(v: Vector3, z: Float): Vector3? {
         val zDiff = v.z - this.z
         if (zDiff * zDiff < 0.0000001) {
@@ -197,12 +191,11 @@ open class Vector3 @JvmOverloads constructor(var x: Float = 0F, var y: Float = 0
         }
     }
 
+    fun withComponents(x: Int?, y: Int?, z: Int?): Vector3 = withComponents(x?.toFloat(), y?.toFloat(), z?.toFloat())
     fun withComponents(x: Float?, y: Float?, z: Float?): Vector3 =
-        if (x !== null || y !== null || z !== null) {
+        if (x !== null || y !== null || z !== null)
             Vector3(x ?: this.x, y ?: this.y, z ?: this.z)
-        } else {
-            this
-        }
+        else this.asVector3()
 
     fun maxComponents(vector: Vector3, vararg vectors: Vector3): Vector3 {
         var x = vector.x
@@ -229,14 +222,8 @@ open class Vector3 @JvmOverloads constructor(var x: Float = 0F, var y: Float = 0
     }
 
     fun sum(vararg vector3s: Vector3): Vector3 {
-        var x = 0F
-        var y = 0F
-        var z = 0F
-        vector3s.forEach {
-            x += it.x
-            y += it.y
-            z += it.z
-        }
-        return Vector3(x, y, z)
+        val result = Vector3()
+        vector3s.forEach { result.add(it) }
+        return result
     }
 }

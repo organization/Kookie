@@ -130,13 +130,19 @@ class NetworkSession(
     fun syncAttributes(entity: Living, attributes: Map<String, Attribute>) {
         if (attributes.isNotEmpty()) {
             val networkAttributes: MutableList<NetworkAttribute> = mutableListOf()
-                attributes.forEach { (id, attribute) ->
+            attributes.forEach { (id, attribute) ->
                 networkAttributes.add(
-                    NetworkAttribute(id, attribute.minValue, attribute.maxValue, attribute.currentValue, attribute.defaultValue)
+                    NetworkAttribute(
+                        id,
+                        attribute.minValue,
+                        attribute.maxValue,
+                        attribute.currentValue,
+                        attribute.defaultValue
+                    )
                 )
             }
             val pk = UpdateAttributesPacket()
-            pk.entityRuntimeId = 0L// TODO: Entity runtime id
+            pk.entityRuntimeId = 0L // TODO: Entity runtime id
             pk.entries = networkAttributes
             sendDataPacket(pk)
         }
