@@ -17,9 +17,6 @@
  */
 package be.zvz.kookie.inventory
 
-import be.zvz.kookie.item.Item
+import be.zvz.kookie.entity.Living
 
-interface InventoryListener {
-    fun onSlotChange(inventory: Inventory, slot: Int, oldItem: Item)
-    fun onSlotChange(inventory: Inventory, oldContents: Map<Int, Item>)
-}
+class PlayerCursorInventory(val holder: Living) : SimpleInventory(1)
