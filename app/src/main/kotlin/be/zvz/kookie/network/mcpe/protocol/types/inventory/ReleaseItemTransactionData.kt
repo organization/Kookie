@@ -45,14 +45,12 @@ class ReleaseItemTransactionData : TransactionData() {
             hotbarSlot: Int,
             itemInHand: ItemStackWrapper,
             headPos: Vector3
-        ): ReleaseItemTransactionData {
-            val result = ReleaseItemTransactionData()
-            result.setActions(actions)
-            result.actionType = actionType
-            result.hotbarSlot = hotbarSlot
-            result.itemInHand = itemInHand
-            result.headPos = headPos
-            return result
+        ): ReleaseItemTransactionData = ReleaseItemTransactionData().apply {
+            this.setActions(actions)
+            this.actionType = actionType
+            this.hotbarSlot = hotbarSlot
+            this.itemInHand = itemInHand
+            this.headPos = headPos
         }
     }
 }

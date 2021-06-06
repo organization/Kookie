@@ -13,10 +13,8 @@ class NormalTransactionData : TransactionData() {
     }
 
     companion object {
-        fun new(actions: MutableList<NetworkInventoryAction>): NormalTransactionData {
-            val result = NormalTransactionData()
-            result.setActions(actions)
-            return result
+        fun new(actions: MutableList<NetworkInventoryAction>): NormalTransactionData = NormalTransactionData().apply {
+            this.setActions(actions)
         }
     }
 }

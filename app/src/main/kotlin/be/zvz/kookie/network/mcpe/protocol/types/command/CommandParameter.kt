@@ -32,18 +32,15 @@ class CommandParameter(
         const val FLAG_FORCE_COLLAPSE_ENUM = 0x1
         const val FLAG_HAS_ENUM_CONSTRAINT = 0x2
 
-        private fun baseline(name: String, type: Int, flags: Int, optional: Boolean): CommandParameter {
-            return CommandParameter(name, type, optional, flags, null, null)
-        }
+        private fun baseline(name: String, type: Int, flags: Int, optional: Boolean): CommandParameter =
+            CommandParameter(name, type, optional, flags, null, null)
 
-        fun standard(name: String, type: Int, flags: Int, optional: Boolean = false): CommandParameter {
-            return baseline(name, AvailableCommandsPacket.ARG_FLAG_VALID or type, flags, optional)
-        }
+        fun standard(name: String, type: Int, flags: Int, optional: Boolean = false): CommandParameter =
+            baseline(name, AvailableCommandsPacket.ARG_FLAG_VALID or type, flags, optional)
 
-        fun postfixed(name: String, postfix: String, flags: Int, optional: Boolean = false): CommandParameter {
-            val result = baseline(name, AvailableCommandsPacket.ARG_FLAG_POSTFIX, flags, optional)
-            result.postfix = postfix
-            return result
-        }
+        fun postfixed(name: String, postfix: String, flags: Int, optional: Boolean = false): CommandParameter =
+            baseline(name, AvailableCommandsPacket.ARG_FLAG_POSTFIX, flags, optional).apply {
+                this.postfix = postfix
+            }
     }
 }
