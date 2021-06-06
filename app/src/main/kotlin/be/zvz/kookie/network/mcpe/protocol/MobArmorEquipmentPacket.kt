@@ -20,6 +20,7 @@ class MobArmorEquipmentPacket : DataPacket(), ClientboundPacket, ServerboundPack
         legs = ItemStackWrapper.read(input)
         feet = ItemStackWrapper.read(input)
     }
+
     override fun encodePayload(output: PacketSerializer) {
         output.putEntityRuntimeId(entityRuntimeId)
         head.write(output)

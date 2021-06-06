@@ -221,9 +221,7 @@ open class Vector3 @JvmOverloads constructor(var x: Float = 0F, var y: Float = 0
         return Vector3(x, y, z)
     }
 
-    fun sum(vararg vector3s: Vector3): Vector3 {
-        val result = Vector3()
-        vector3s.forEach { result.add(it) }
-        return result
+    fun sum(vararg vector3s: Vector3): Vector3 = Vector3().apply {
+        vector3s.forEach { add(it) }
     }
 }

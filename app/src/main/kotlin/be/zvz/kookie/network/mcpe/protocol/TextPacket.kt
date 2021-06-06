@@ -1,3 +1,20 @@
+/**
+ *
+ * _  __           _    _
+ * | |/ /___   ___ | | _(_) ___
+ * | ' // _ \ / _ \| |/ / |/ _ \
+ * | . \ (_) | (_) |   <| |  __/
+ * |_|\_\___/ \___/|_|\_\_|\___|
+ *
+ * A server software for Minecraft: Bedrock Edition
+ *
+ * Copyright (C) 2021 organization Team
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ */
 package be.zvz.kookie.network.mcpe.protocol
 
 import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
@@ -70,11 +87,9 @@ class TextPacket : DataPacket(), ClientboundPacket, ServerboundPacket {
         const val TYPE_JSON_WHISPER = 9
         const val TYPE_JSON = 10
 
-        private fun messageOnly(type: Int, message: String): TextPacket {
-            val result = TextPacket()
-            result.type = type
-            result.message = message
-            return result
+        private fun messageOnly(type: Int, message: String): TextPacket = TextPacket().apply {
+            this.type = type
+            this.message = message
         }
 
         fun raw(message: String): TextPacket {
@@ -82,10 +97,10 @@ class TextPacket : DataPacket(), ClientboundPacket, ServerboundPacket {
         }
 
         private fun baseTranslation(type: Int, key: String, parameters: MutableList<String>): TextPacket {
-            val result = messageOnly(type, key)
-            result.needTranslation = true
-            result.parameters = parameters
-            return result
+            return messageOnly(type, key).apply {
+                this.needTranslation = true
+                this.parameters = parameters
+            }
         }
 
         fun translation(key: String, parameters: MutableList<String>): TextPacket {

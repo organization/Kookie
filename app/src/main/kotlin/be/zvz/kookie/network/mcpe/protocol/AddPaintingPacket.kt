@@ -7,7 +7,6 @@ import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 @ProtocolIdentify(ProtocolInfo.IDS.ADD_PAINTING_PACKET)
 class AddPaintingPacket : DataPacket(), ClientboundPacket {
     var entityUniqueId: Long? = null
-
     var entityRuntimeId: Long = 0
     lateinit var position: Vector3
     var direction: Int = 0
