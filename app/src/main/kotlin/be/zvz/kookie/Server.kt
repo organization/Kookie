@@ -52,8 +52,8 @@ class Server(cwd: Path, dataPath: Path, pluginPath: Path) {
      */
     private var tickCounter: Int = 0
     private var nextTick: Float = 0F
-    private val tickAverage: Array<Float> = arrayOf(20F, 20F, 20F, 20F, 20F, 20F, 20F, 20F, 20F, 20F, 20F, 20F, 20F, 20F, 20F, 20F, 20F, 20F, 20F, 20F)
-    private val useAverage: Array<Float> = arrayOf(0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F, 0F)
+    private val tickAverage: FloatArray = FloatArray(20) { 20F }
+    private val useAverage: FloatArray = FloatArray(20) { 0F }
     private var currentTPS: Float = 20F
     private var currentUse: Float = 0F
     private val startTime: Date
