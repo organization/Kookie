@@ -1,5 +1,3 @@
-package be.zvz.kookie.network.mcpe.protocol
-
 /**
  *
  * _  __           _    _
@@ -17,56 +15,45 @@ package be.zvz.kookie.network.mcpe.protocol
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  */
+package be.zvz.kookie.network.mcpe.protocol
 
+import be.zvz.kookie.math.Vector3
+import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
+import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
+
+@ProtocolIdentify(ProtocolInfo.IDS.CORRECT_PLAYER_MOVE_PREDICTION_PACKET)
 class CorrectPlayerMovePredictionPacket : DataPacket(), ClientboundPacket {
-    @ProtocolIdentify(ProtocolInfo.IDS.CORRECT_PLAYER_MOVE_PREDICTION_PACKET)
 
-    var position: Vector3
-    var delta: Vector3
-    var onGround: Boolean
-    var tick: Int
-
-    static
-    fun create(position: Vector3, delta: Vector3, onGround: Boolean, tick: Int): self {
-        result = new self
-                result.position = position
-        result.delta = delta
-        result.onGround = onGround
-        result.tick = tick
-        return result
-    }
-
-    fun getPosition(): Vector3 {
-        return position
-    }
-
-    fun getDelta(): Vector3 {
-        return delta
-    }
-
-    fun isOnGround(): Boolean {
-        return onGround
-    }
-
-    fun getTick(): Int {
-        return tick
-    }
+    lateinit var position: Vector3
+    lateinit var delta: Vector3
+    var onGround: Boolean = false
+    var tick: Long = 0
 
     override fun decodePayload(input: PacketSerializer) {
         position = input.getVector3()
         delta = input.getVector3()
-        onGround = input.getBool()
+        onGround = input.getBoolean()
         tick = input.getUnsignedVarLong()
     }
 
     override fun encodePayload(output: PacketSerializer) {
         output.putVector3(position)
         output.putVector3(delta)
-        output.putBool(onGround)
+        output.putBoolean(onGround)
         output.putUnsignedVarLong(tick)
     }
 
     override fun handle(handler: PacketHandlerInterface): Boolean {
         return handler.handleCorrectPlayerMovePrediction(this)
+    }
+
+    companion object {
+        fun create(position: Vector3, delta: Vector3, onGround: Boolean, tick: Long): CorrectPlayerMovePredictionPacket =
+            CorrectPlayerMovePredictionPacket().apply {
+                this.position = position
+                this.delta = delta
+                this.onGround = onGround
+                this.tick = tick
+            }
     }
 }

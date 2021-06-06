@@ -1,5 +1,3 @@
-package be.zvz.kookie.network.mcpe.protocol
-
 /**
  *
  * _  __           _    _
@@ -17,11 +15,15 @@ package be.zvz.kookie.network.mcpe.protocol
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  */
+package be.zvz.kookie.network.mcpe.protocol
 
+import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
+import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
+
+@ProtocolIdentify(ProtocolInfo.IDS.SUB_CLIENT_LOGIN_PACKET)
 class SubClientLoginPacket : DataPacket(), ServerboundPacket {
-    @ProtocolIdentify(ProtocolInfo.IDS.SUB_CLIENT_LOGIN_PACKET)
 
-    var connectionRequestData: string
+    lateinit var connectionRequestData: String
 
     override fun decodePayload(input: PacketSerializer) {
         connectionRequestData = input.getString()

@@ -1,5 +1,3 @@
-package be.zvz.kookie.network.mcpe.protocol
-
 /**
  *
  * _  __           _    _
@@ -17,24 +15,30 @@ package be.zvz.kookie.network.mcpe.protocol
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  */
+package be.zvz.kookie.network.mcpe.protocol
 
+import be.zvz.kookie.math.Vector3
+import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
+import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
+import be.zvz.kookie.network.mcpe.protocol.types.DimensionIds
+
+@ProtocolIdentify(ProtocolInfo.IDS.SPAWN_PARTICLE_EFFECT_PACKET)
 class SpawnParticleEffectPacket : DataPacket(), ClientboundPacket {
-    @ProtocolIdentify(ProtocolInfo.IDS.SPAWN_PARTICLE_EFFECT_PACKET)
 
-    var dimensionId: Int = DimensionIds::OVERWORLD //wtf mojang
-    var entityUniqueId: Int = -1 //default none
-    var position: Vector3
-    var particleName: string
+    var dimensionId: DimensionIds = DimensionIds.OVERWORLD // wtf mojang
+    var entityUniqueId: Long = -1 // default none
+    lateinit var position: Vector3
+    lateinit var particleName: String
 
     override fun decodePayload(input: PacketSerializer) {
-        dimensionId = input.getByte()
+        dimensionId = DimensionIds.fromInt(input.getByte())
         entityUniqueId = input.getEntityUniqueId()
         position = input.getVector3()
         particleName = input.getString()
     }
 
     override fun encodePayload(output: PacketSerializer) {
-        output.putByte(dimensionId)
+        output.putByte(dimensionId.id)
         output.putEntityUniqueId(entityUniqueId)
         output.putVector3(position)
         output.putString(particleName)

@@ -1,5 +1,3 @@
-package be.zvz.kookie.network.mcpe.protocol
-
 /**
  *
  * _  __           _    _
@@ -17,57 +15,57 @@ package be.zvz.kookie.network.mcpe.protocol
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  */
+package be.zvz.kookie.network.mcpe.protocol
 
+import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
+import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
+
+@ProtocolIdentify(ProtocolInfo.IDS.SET_SPAWN_POSITION_PACKET)
 class SetSpawnPositionPacket : DataPacket(), ClientboundPacket {
-    @ProtocolIdentify(ProtocolInfo.IDS.SET_SPAWN_POSITION_PACKET)
+    var spawnType: Int = 0
 
-    const val TYPE_PLAYER_SPAWN = 0
-    const val TYPE_WORLD_SPAWN = 1
-
-    var spawnType: Int
-    var x: Int
-    var y: Int
-    var z: Int
-    var dimension: Int
-    var x: Int2
-    var y: Int2
-    var z: Int2
-
-    static
-    fun playerSpawn(x: Int, y: Int, z: Int, dimension: Int, x2: Int, y2: Int, z2: Int): self {
-        result = new self
-                result.spawnType = TYPE_PLAYER_SPAWN
-        [result.x, result.y, result.z] = [x, y, z]
-        [result.x2, result.y2, result.z2] = [x2, y2, z2]
-        result.dimension = dimension
-        return result
-    }
-
-    static
-    fun worldSpawn(x: Int, y: Int, z: Int, dimension: Int): self {
-        result = new self
-                result.spawnType = TYPE_WORLD_SPAWN
-        [result.x, result.y, result.z] = [x, y, z]
-        [result.x2, result.y2, result.z2] = [x, y, z]
-        result.dimension = dimension
-        return result
-    }
+    var pos1: PacketSerializer.BlockPosition = PacketSerializer.BlockPosition()
+    var pos2: PacketSerializer.BlockPosition = PacketSerializer.BlockPosition()
+    var dimension: Int = 0
 
     override fun decodePayload(input: PacketSerializer) {
         spawnType = input.getVarInt()
-        input.getBlockPosition(x, y, z)
+        pos1 = input.getBlockPosition()
         dimension = input.getVarInt()
-        input.getBlockPosition(x2, y2, z2)
+        pos2 = input.getBlockPosition()
     }
 
     override fun encodePayload(output: PacketSerializer) {
         output.putVarInt(spawnType)
-        output.putBlockPosition(x, y, z)
+        output.putBlockPosition(pos1)
         output.putVarInt(dimension)
-        output.putBlockPosition(x2, y2, z2)
+        output.putBlockPosition(pos2)
     }
 
     override fun handle(handler: PacketHandlerInterface): Boolean {
         return handler.handleSetSpawnPosition(this)
+    }
+
+    companion object {
+        const val TYPE_PLAYER_SPAWN = 0
+        const val TYPE_WORLD_SPAWN = 1
+
+        fun playerSpawn(x: Int, y: Int, z: Int, dimension: Int, x2: Int, y2: Int, z2: Int): SetSpawnPositionPacket {
+            return SetSpawnPositionPacket().apply {
+                this.spawnType = TYPE_PLAYER_SPAWN
+                this.pos1 = PacketSerializer.BlockPosition(x, y, z)
+                this.pos2 = PacketSerializer.BlockPosition(x2, y2, z2)
+                this.dimension = dimension
+            }
+        }
+
+        fun worldSPawn(x: Int, y: Int, z: Int, dimension: Int): SetSpawnPositionPacket {
+            return SetSpawnPositionPacket().apply {
+                this.spawnType = TYPE_WORLD_SPAWN
+                val pos = PacketSerializer.BlockPosition(x, y, z)
+                this.pos1 = pos
+                this.pos2 = pos
+            }
+        }
     }
 }

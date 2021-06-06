@@ -1,5 +1,3 @@
-package be.zvz.kookie.network.mcpe.protocol
-
 /**
  *
  * _  __           _    _
@@ -17,13 +15,17 @@ package be.zvz.kookie.network.mcpe.protocol
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  */
+package be.zvz.kookie.network.mcpe.protocol
 
+import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
+import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
+
+@ProtocolIdentify(ProtocolInfo.IDS.GUI_DATA_PICK_ITEM_PACKET)
 class GuiDataPickItemPacket : DataPacket(), ClientboundPacket {
-    @ProtocolIdentify(ProtocolInfo.IDS.GUI_DATA_PICK_ITEM_PACKET)
 
-    var itemDescription: string
-    var itemEffects: string
-    var hotbarSlot: Int
+    lateinit var itemDescription: String
+    lateinit var itemEffects: String
+    var hotbarSlot: Int = 0
 
     override fun decodePayload(input: PacketSerializer) {
         itemDescription = input.getString()

@@ -1,5 +1,3 @@
-package be.zvz.kookie.network.mcpe.protocol
-
 /**
  *
  * _  __           _    _
@@ -17,47 +15,37 @@ package be.zvz.kookie.network.mcpe.protocol
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  */
+package be.zvz.kookie.network.mcpe.protocol
 
+import be.zvz.kookie.nbt.tag.CompoundTag
+import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
+import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
+import be.zvz.kookie.network.mcpe.protocol.types.CacheableNbt
+
+@ProtocolIdentify(ProtocolInfo.IDS.LEVEL_EVENT_GENERIC_PACKET)
 class LevelEventGenericPacket : DataPacket(), ClientboundPacket {
-    @ProtocolIdentify(ProtocolInfo.IDS.LEVEL_EVENT_GENERIC_PACKET)
 
-    var eventId: Int
-    /**
-     * @var CacheableNbt
-     * @phpstan-var CacheableNbt<\pocketmine\nbt\tag\CompoundTag>
-     */
-    eventData
-
-    static
-    fun create(eventId: Int, data: CompoundTag): self {
-        result = new self
-                result.eventId = eventId
-        result.eventData = new CacheableNbt (data)
-        return result
-    }
-
-    fun getEventId(): Int {
-        return eventId
-    }
-
-    /**
-     * @phpstan-return CacheableNbt<\pocketmine\nbt\tag\CompoundTag>
-     */
-    fun getEventData(): CacheableNbt {
-        return eventData
-    }
+    var eventId: Int = 0
+    lateinit var eventData: CacheableNbt // TODO: accept only CompoundTag?
 
     override fun decodePayload(input: PacketSerializer) {
         eventId = input.getVarInt()
-        eventData = new CacheableNbt (input.getNbtCompoundRoot())
+        eventData = CacheableNbt(input.getNbtCompoundRoot())
     }
 
     override fun encodePayload(output: PacketSerializer) {
         output.putVarInt(eventId)
-        output.put(eventData->getEncodedNbt())
+        output.put(eventData.encodedNbt)
     }
 
     override fun handle(handler: PacketHandlerInterface): Boolean {
         return handler.handleLevelEventGeneric(this)
+    }
+
+    companion object {
+        fun create(eventId: Int, data: CompoundTag) = LevelEventGenericPacket().apply {
+            this.eventId = eventId
+            this.eventData = CacheableNbt(data)
+        }
     }
 }

@@ -1,5 +1,3 @@
-package be.zvz.kookie.network.mcpe.protocol
-
 /**
  *
  * _  __           _    _
@@ -17,32 +15,35 @@ package be.zvz.kookie.network.mcpe.protocol
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  */
+package be.zvz.kookie.network.mcpe.protocol
 
+import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
+import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
+
+@ProtocolIdentify(ProtocolInfo.IDS.CONTAINER_CLOSE_PACKET)
 class ContainerClosePacket : DataPacket(), ClientboundPacket, ServerboundPacket {
-    @ProtocolIdentify(ProtocolInfo.IDS.CONTAINER_CLOSE_PACKET)
 
-    var windowId: Int
+    var windowId: Int = 0
     var server: Boolean = false
-
-    static
-    fun create(windowId: Int, server: Boolean): self {
-        result = new self
-                result.windowId = windowId
-        result.server = server
-        return result
-    }
 
     override fun decodePayload(input: PacketSerializer) {
         windowId = input.getByte()
-        server = input.getBool()
+        server = input.getBoolean()
     }
 
     override fun encodePayload(output: PacketSerializer) {
         output.putByte(windowId)
-        output.putBool(server)
+        output.putBoolean(server)
     }
 
     override fun handle(handler: PacketHandlerInterface): Boolean {
         return handler.handleContainerClose(this)
+    }
+
+    companion object {
+        fun create(windowId: Int, server: Boolean): ContainerClosePacket = ContainerClosePacket().apply {
+            this.windowId = windowId
+            this.server = server
+        }
     }
 }

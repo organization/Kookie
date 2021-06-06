@@ -41,7 +41,7 @@ class ClientCacheMissResponsePacket : DataPacket(), ClientboundPacket {
     }
 
     override fun encodePayload(output: PacketSerializer) {
-        output.putUnsignedVarInt(blobs.count())
+        output.putUnsignedVarInt(blobs.size)
         blobs.forEach {
             output.putLLong(it.hash)
             output.putString(it.payload)

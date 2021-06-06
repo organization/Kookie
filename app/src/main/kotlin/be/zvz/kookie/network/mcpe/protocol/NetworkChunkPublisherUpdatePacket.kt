@@ -1,5 +1,3 @@
-package be.zvz.kookie.network.mcpe.protocol
-
 /**
  *
  * _  __           _    _
@@ -17,36 +15,35 @@ package be.zvz.kookie.network.mcpe.protocol
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  */
+package be.zvz.kookie.network.mcpe.protocol
 
+import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
+import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
+
+@ProtocolIdentify(ProtocolInfo.IDS.NETWORK_CHUNK_PUBLISHER_UPDATE_PACKET)
 class NetworkChunkPublisherUpdatePacket : DataPacket(), ClientboundPacket {
-    @ProtocolIdentify(ProtocolInfo.IDS.NETWORK_CHUNK_PUBLISHER_UPDATE_PACKET)
 
-    var x: Int
-    var y: Int
-    var z: Int
-    var radius: Int
-
-    static
-    fun create(x: Int, y: Int, z: Int, blockRadius: Int): self {
-        result = new self
-                result.x = x
-        result.y = y
-        result.z = z
-        result.radius = blockRadius
-        return result
-    }
+    lateinit var position: PacketSerializer.BlockPosition
+    var radius: Int = 0
 
     override fun decodePayload(input: PacketSerializer) {
-        input.getSignedBlockPosition(x, y, z)
+        input.getSignedBlockPosition(position)
         radius = input.getUnsignedVarInt()
     }
 
     override fun encodePayload(output: PacketSerializer) {
-        output.putSignedBlockPosition(x, y, z)
+        output.putSignedBlockPosition(position)
         output.putUnsignedVarInt(radius)
     }
 
     override fun handle(handler: PacketHandlerInterface): Boolean {
         return handler.handleNetworkChunkPublisherUpdate(this)
+    }
+
+    companion object {
+        fun create(x: Int, y: Int, z: Int, blockRadius: Int) = NetworkChunkPublisherUpdatePacket().apply {
+            this.position = PacketSerializer.BlockPosition(x, y, z)
+            this.radius = blockRadius
+        }
     }
 }

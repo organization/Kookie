@@ -1,5 +1,3 @@
-package be.zvz.kookie.network.mcpe.protocol
-
 /**
  *
  * _  __           _    _
@@ -17,40 +15,40 @@ package be.zvz.kookie.network.mcpe.protocol
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  */
+package be.zvz.kookie.network.mcpe.protocol
 
+import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
+import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
+
+@ProtocolIdentify(ProtocolInfo.IDS.NETWORK_STACK_LATENCY_PACKET)
 class NetworkStackLatencyPacket : DataPacket(), ClientboundPacket, ServerboundPacket {
-    @ProtocolIdentify(ProtocolInfo.IDS.NETWORK_STACK_LATENCY_PACKET)
 
-    var timestamp: Int
-    var needResponse: Boolean
-
-    static
-    fun request(timestampNs: Int): self {
-        result = new self
-                result.timestamp = timestampNs
-        result.needResponse = true
-        return result
-    }
-
-    static
-    fun response(timestampNs: Int): self {
-        result = new self
-                result.timestamp = timestampNs
-        result.needResponse = false
-        return result
-    }
+    var timestamp: Long = 0
+    var needResponse: Boolean = false
 
     override fun decodePayload(input: PacketSerializer) {
         timestamp = input.getLLong()
-        needResponse = input.getBool()
+        needResponse = input.getBoolean()
     }
 
     override fun encodePayload(output: PacketSerializer) {
         output.putLLong(timestamp)
-        output.putBool(needResponse)
+        output.putBoolean(needResponse)
     }
 
     override fun handle(handler: PacketHandlerInterface): Boolean {
         return handler.handleNetworkStackLatency(this)
+    }
+
+    companion object {
+        fun request(timestampNs: Long) = NetworkStackLatencyPacket().apply {
+            this.timestamp = timestampNs
+            this.needResponse = true
+        }
+
+        fun response(timestampNs: Long) = NetworkStackLatencyPacket().apply {
+            this.timestamp = timestampNs
+            this.needResponse = false
+        }
     }
 }

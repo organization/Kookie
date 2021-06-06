@@ -1,5 +1,3 @@
-package be.zvz.kookie.network.mcpe.protocol
-
 /**
  *
  * _  __           _    _
@@ -17,56 +15,57 @@ package be.zvz.kookie.network.mcpe.protocol
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  */
+package be.zvz.kookie.network.mcpe.protocol
 
+import be.zvz.kookie.math.Vector3
+import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
+import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
+
+@ProtocolIdentify(ProtocolInfo.IDS.CONTAINER_OPEN_PACKET)
 class ContainerOpenPacket : DataPacket(), ClientboundPacket {
-    @ProtocolIdentify(ProtocolInfo.IDS.CONTAINER_OPEN_PACKET)
 
-    var windowId: Int
-    var type: Int
-    var x: Int
-    var y: Int
-    var z: Int
-    var entityUniqueId: Int = -1
-
-    static
-    fun blockInv(windowId: Int, windowType: Int, x: Int, y: Int, z: Int): self {
-        result = new self
-                result.windowId = windowId
-        result.type = windowType
-        [result.x, result.y, result.z] = [x, y, z]
-        return result
-    }
-
-    static
-    fun blockInvVec3(windowId: Int, windowType: Int, vector3: Vector3): self {
-        return blockInv(windowId, windowType, vector3->getFloorX(), vector3->getFloorY(), vector3->getFloorZ())
-    }
-
-    static
-    fun entityInv(windowId: Int, windowType: Int, entityUniqueId: Int): self {
-        result = new self
-                result.windowId = windowId
-        result.type = windowType
-        result.entityUniqueId = entityUniqueId
-        result.x = result.y = result.z = 0 //these have to be set even if they aren't used
-        return result
-    }
+    var windowId: Int = 0
+    var type: Int = 0
+    var pos = PacketSerializer.BlockPosition()
+    var entityUniqueId: Long = -1
 
     override fun decodePayload(input: PacketSerializer) {
         windowId = input.getByte()
         type = input.getByte()
-        input.getBlockPosition(x, y, z)
+        input.getBlockPosition(pos)
         entityUniqueId = input.getEntityUniqueId()
     }
 
     override fun encodePayload(output: PacketSerializer) {
         output.putByte(windowId)
         output.putByte(type)
-        output.putBlockPosition(x, y, z)
+        output.putBlockPosition(pos)
         output.putEntityUniqueId(entityUniqueId)
     }
 
     override fun handle(handler: PacketHandlerInterface): Boolean {
         return handler.handleContainerOpen(this)
+    }
+
+    companion object {
+        fun blockInv(windowId: Int, windowType: Int, x: Int, y: Int, z: Int): ContainerOpenPacket {
+            val result = ContainerOpenPacket()
+            result.windowId = windowId
+            result.type = windowType
+            result.pos = PacketSerializer.BlockPosition(x, y, z)
+            return result
+        }
+
+        fun blockInvVec3(windowId: Int, windowType: Int, vector3: Vector3): ContainerOpenPacket {
+            return blockInv(windowId, windowType, vector3.x.toInt(), vector3.y.toInt(), vector3.z.toInt())
+        }
+
+        fun entityInv(windowId: Int, windowType: Int, entityUniqueId: Long): ContainerOpenPacket =
+            ContainerOpenPacket().apply {
+                this.windowId = windowId
+                this.type = windowType
+                this.entityUniqueId = entityUniqueId
+                this.pos = PacketSerializer.BlockPosition()
+            }
     }
 }

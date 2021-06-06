@@ -1,5 +1,3 @@
-package be.zvz.kookie.network.mcpe.protocol
-
 /**
  *
  * _  __           _    _
@@ -17,19 +15,21 @@ package be.zvz.kookie.network.mcpe.protocol
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  */
+package be.zvz.kookie.network.mcpe.protocol
 
+import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
+import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
+
+@ProtocolIdentify(ProtocolInfo.IDS.MODAL_FORM_REQUEST_PACKET)
 class ModalFormRequestPacket : DataPacket(), ClientboundPacket {
-    @ProtocolIdentify(ProtocolInfo.IDS.MODAL_FORM_REQUEST_PACKET)
+    var formId: Int = 0
+    lateinit var formData: String // json
 
-    var formId: Int
-    var formData: string //json
-
-    static
-    fun create(formId: Int, formData: string): self {
-        result = new self
-                result.formId = formId
-        result.formData = formData
-        return result
+    companion object {
+        fun create(formId: Int, formData: String): ModalFormRequestPacket = ModalFormRequestPacket().apply {
+            this.formId = formId
+            this.formData = formData
+        }
     }
 
     override fun decodePayload(input: PacketSerializer) {

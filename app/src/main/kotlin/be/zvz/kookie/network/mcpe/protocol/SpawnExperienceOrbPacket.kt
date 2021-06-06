@@ -1,5 +1,3 @@
-package be.zvz.kookie.network.mcpe.protocol
-
 /**
  *
  * _  __           _    _
@@ -17,12 +15,17 @@ package be.zvz.kookie.network.mcpe.protocol
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  */
+package be.zvz.kookie.network.mcpe.protocol
 
+import be.zvz.kookie.math.Vector3
+import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
+import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
+
+@ProtocolIdentify(ProtocolInfo.IDS.SPAWN_EXPERIENCE_ORB_PACKET)
 class SpawnExperienceOrbPacket : DataPacket(), ServerboundPacket {
-    @ProtocolIdentify(ProtocolInfo.IDS.SPAWN_EXPERIENCE_ORB_PACKET)
 
-    var position: Vector3
-    var amount: Int
+    lateinit var position: Vector3
+    var amount: Int = 0
 
     override fun decodePayload(input: PacketSerializer) {
         position = input.getVector3()

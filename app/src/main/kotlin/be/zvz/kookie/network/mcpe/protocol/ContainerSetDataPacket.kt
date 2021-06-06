@@ -1,5 +1,3 @@
-package be.zvz.kookie.network.mcpe.protocol
-
 /**
  *
  * _  __           _    _
@@ -17,32 +15,17 @@ package be.zvz.kookie.network.mcpe.protocol
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  */
+package be.zvz.kookie.network.mcpe.protocol
 
+import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
+import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
+
+@ProtocolIdentify(ProtocolInfo.IDS.CONTAINER_SET_DATA_PACKET)
 class ContainerSetDataPacket : DataPacket(), ClientboundPacket {
-    @ProtocolIdentify(ProtocolInfo.IDS.CONTAINER_SET_DATA_PACKET)
 
-    const val PROPERTY_FURNACE_SMELT_PROGRESS = 0
-    const val PROPERTY_FURNACE_REMAINING_FUEL_TIME = 1
-    const val PROPERTY_FURNACE_MAX_FUEL_TIME = 2
-    const val PROPERTY_FURNACE_STORED_XP = 3
-    const val PROPERTY_FURNACE_FUEL_AUX = 4
-
-    const val PROPERTY_BREWING_STAND_BREW_TIME = 0
-    const val PROPERTY_BREWING_STAND_FUEL_AMOUNT = 1
-    const val PROPERTY_BREWING_STAND_FUEL_TOTAL = 2
-
-    var windowId: Int
-    var property: Int
-    var value: Int
-
-    static
-    fun create(windowId: Int, propertyId: Int, value: Int): self {
-        result = new self
-                result.property = propertyId
-        result.value = value
-        result.windowId = windowId
-        return result
-    }
+    var windowId: Int = 0
+    var property: Int = 0
+    var value: Int = 0
 
     override fun decodePayload(input: PacketSerializer) {
         windowId = input.getByte()
@@ -58,5 +41,27 @@ class ContainerSetDataPacket : DataPacket(), ClientboundPacket {
 
     override fun handle(handler: PacketHandlerInterface): Boolean {
         return handler.handleContainerSetData(this)
+    }
+
+    enum class PROPERTY(value: Int) {
+        FURNACE_SMELT_PROGRESS(0),
+        FURNACE_REMAINING_FUEL_TIME(1),
+        FURNACE_MAX_FUEL_TIME(2),
+        FURNACE_STORED_XP(3),
+        FURNACE_FUEL_AUX(4),
+
+        BREWING_STAND_BREW_TIME(0),
+        BREWING_STAND_FUEL_AMOUNT(1),
+        BREWING_STAND_FUEL_TOTAL(2),
+    }
+
+    companion object {
+        fun create(windowId: Int, propertyId: Int, value: Int): ContainerSetDataPacket {
+            val result = ContainerSetDataPacket()
+            result.property = propertyId
+            result.value = value
+            result.windowId = windowId
+            return result
+        }
     }
 }

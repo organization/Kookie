@@ -1,5 +1,3 @@
-package be.zvz.kookie.network.mcpe.protocol
-
 /**
  *
  * _  __           _    _
@@ -17,21 +15,22 @@ package be.zvz.kookie.network.mcpe.protocol
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  */
+package be.zvz.kookie.network.mcpe.protocol
 
+import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
+import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
+
+@ProtocolIdentify(ProtocolInfo.IDS.ITEM_FRAME_DROP_ITEM_PACKET)
 class ItemFrameDropItemPacket : DataPacket(), ServerboundPacket {
 
-    @ProtocolIdentify(ProtocolInfo.IDS.ITEM_FRAME_DROP_ITEM_PACKET)
-
-    var x: Int
-    var y: Int
-    var z: Int
+    lateinit var position: PacketSerializer.BlockPosition
 
     override fun decodePayload(input: PacketSerializer) {
-        input.getBlockPosition(x, y, z)
+        position = input.getBlockPosition()
     }
 
     override fun encodePayload(output: PacketSerializer) {
-        output.putBlockPosition(x, y, z)
+        output.putBlockPosition(position)
     }
 
     override fun handle(handler: PacketHandlerInterface): Boolean {

@@ -1,5 +1,3 @@
-package be.zvz.kookie.network.mcpe.protocol
-
 /**
  *
  * _  __           _    _
@@ -17,15 +15,15 @@ package be.zvz.kookie.network.mcpe.protocol
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  */
+package be.zvz.kookie.network.mcpe.protocol
 
+import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
+import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
+
+@ProtocolIdentify(ProtocolInfo.IDS.SIMPLE_EVENT_PACKET)
 class SimpleEventPacket : DataPacket(), ClientboundPacket, ServerboundPacket {
-    @ProtocolIdentify(ProtocolInfo.IDS.SIMPLE_EVENT_PACKET)
 
-    const val TYPE_ENABLE_COMMANDS = 1
-    const val TYPE_DISABLE_COMMANDS = 2
-    const val TYPE_UNLOCK_WORLD_TEMPLATE_SETTINGS = 3
-
-    var eventType: Int
+    var eventType: Int = 0
 
     override fun decodePayload(input: PacketSerializer) {
         eventType = input.getLShort()
@@ -37,5 +35,11 @@ class SimpleEventPacket : DataPacket(), ClientboundPacket, ServerboundPacket {
 
     override fun handle(handler: PacketHandlerInterface): Boolean {
         return handler.handleSimpleEvent(this)
+    }
+
+    companion object {
+        const val TYPE_ENABLE_COMMANDS = 1
+        const val TYPE_DISABLE_COMMANDS = 2
+        const val TYPE_UNLOCK_WORLD_TEMPLATE_SETTINGS = 3
     }
 }

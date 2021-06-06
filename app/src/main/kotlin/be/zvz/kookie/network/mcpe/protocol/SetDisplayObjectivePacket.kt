@@ -1,5 +1,3 @@
-package be.zvz.kookie.network.mcpe.protocol
-
 /**
  *
  * _  __           _    _
@@ -17,15 +15,19 @@ package be.zvz.kookie.network.mcpe.protocol
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  */
+package be.zvz.kookie.network.mcpe.protocol
 
+import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
+import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
+
+@ProtocolIdentify(ProtocolInfo.IDS.SET_DISPLAY_OBJECTIVE_PACKET)
 class SetDisplayObjectivePacket : DataPacket(), ClientboundPacket {
-    @ProtocolIdentify(ProtocolInfo.IDS.SET_DISPLAY_OBJECTIVE_PACKET)
 
-    var displaySlot: string
-    var objectiveName: string
-    var displayName: string
-    var criteriaName: string
-    var sortOrder: Int
+    lateinit var displaySlot: String
+    lateinit var objectiveName: String
+    lateinit var displayName: String
+    lateinit var criteriaName: String
+    var sortOrder: Int = 0
 
     override fun decodePayload(input: PacketSerializer) {
         displaySlot = input.getString()

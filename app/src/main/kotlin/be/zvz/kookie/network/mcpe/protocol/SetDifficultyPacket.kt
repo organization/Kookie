@@ -1,5 +1,3 @@
-package be.zvz.kookie.network.mcpe.protocol
-
 /**
  *
  * _  __           _    _
@@ -17,18 +15,15 @@ package be.zvz.kookie.network.mcpe.protocol
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  */
+package be.zvz.kookie.network.mcpe.protocol
 
+import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
+import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
+
+@ProtocolIdentify(ProtocolInfo.IDS.SET_DIFFICULTY_PACKET)
 class SetDifficultyPacket : DataPacket(), ClientboundPacket, ServerboundPacket {
-    @ProtocolIdentify(ProtocolInfo.IDS.SET_DIFFICULTY_PACKET)
 
-    var difficulty: Int
-
-    static
-    fun create(difficulty: Int): self {
-        result = new self
-                result.difficulty = difficulty
-        return result
-    }
+    var difficulty: Int = 0
 
     override fun decodePayload(input: PacketSerializer) {
         difficulty = input.getUnsignedVarInt()
@@ -40,5 +35,11 @@ class SetDifficultyPacket : DataPacket(), ClientboundPacket, ServerboundPacket {
 
     override fun handle(handler: PacketHandlerInterface): Boolean {
         return handler.handleSetDifficulty(this)
+    }
+
+    companion object {
+        fun create(difficulty: Int) = SetDifficultyPacket().apply {
+            this.difficulty = difficulty
+        }
     }
 }

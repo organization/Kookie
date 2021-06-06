@@ -1,5 +1,3 @@
-package be.zvz.kookie.network.mcpe.protocol
-
 /**
  *
  * _  __           _    _
@@ -17,31 +15,16 @@ package be.zvz.kookie.network.mcpe.protocol
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  */
+package be.zvz.kookie.network.mcpe.protocol
 
+import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
+import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
+
+@ProtocolIdentify(ProtocolInfo.IDS.DEBUG_INFO_PACKET)
 class DebugInfoPacket : DataPacket(), ClientboundPacket, ServerboundPacket {
-    @ProtocolIdentify(ProtocolInfo.IDS.DEBUG_INFO_PACKET)
 
-    var entityUniqueId: Int
-    var data: string
-
-    static
-    fun create(entityUniqueId: Int, data: string): self {
-        result = new self
-                result.entityUniqueId = entityUniqueId
-        result.data = data
-        return result
-    }
-
-    /**
-     * TODO: we can't call this getEntityRuntimeId() because of base class collision (crap architecture, thanks Shoghi)
-     */
-    fun getEntityUniqueIdField(): Int {
-        return entityUniqueId
-    }
-
-    fun getData(): string {
-        return data
-    }
+    var entityUniqueId: Long = 0
+    lateinit var data: String
 
     override fun decodePayload(input: PacketSerializer) {
         entityUniqueId = input.getEntityUniqueId()
@@ -55,5 +38,13 @@ class DebugInfoPacket : DataPacket(), ClientboundPacket, ServerboundPacket {
 
     override fun handle(handler: PacketHandlerInterface): Boolean {
         return handler.handleDebugInfo(this)
+    }
+
+    companion object {
+        fun create(entityUniqueId: Long, data: String): DebugInfoPacket =
+            DebugInfoPacket().apply {
+                this.entityUniqueId = entityUniqueId
+                this.data = data
+            }
     }
 }

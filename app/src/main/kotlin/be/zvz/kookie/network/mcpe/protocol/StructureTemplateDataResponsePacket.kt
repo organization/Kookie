@@ -1,5 +1,3 @@
-package be.zvz.kookie.network.mcpe.protocol
-
 /**
  *
  * _  __           _    _
@@ -17,29 +15,31 @@ package be.zvz.kookie.network.mcpe.protocol
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  */
+package be.zvz.kookie.network.mcpe.protocol
 
+import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
+import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
+import be.zvz.kookie.network.mcpe.protocol.types.CacheableNbt
+
+@ProtocolIdentify(ProtocolInfo.IDS.STRUCTURE_TEMPLATE_DATA_RESPONSE_PACKET)
 class StructureTemplateDataResponsePacket : DataPacket(), ClientboundPacket {
-    @ProtocolIdentify(ProtocolInfo.IDS.STRUCTURE_TEMPLATE_DATA_RESPONSE_PACKET)
 
-    var structureTemplateName: string
-    /**
-     * @var CacheableNbt|null
-     * @phpstan-var CacheableNbt<\pocketmine\nbt\tag\CompoundTag>
-     */
-    namedtag
+    lateinit var structureTemplateName: String
+
+    var namedtag: CacheableNbt? = null
 
     override fun decodePayload(input: PacketSerializer) {
         structureTemplateName = input.getString()
-        if (input.getBool()) {
-            namedtag = new CacheableNbt (input.getNbtCompoundRoot())
+        if (input.getBoolean()) {
+            namedtag = CacheableNbt(input.getNbtCompoundRoot())
         }
     }
 
     override fun encodePayload(output: PacketSerializer) {
         output.putString(structureTemplateName)
-        output.putBool(namedtag !== null)
-        if (namedtag !== null) {
-            output.put(namedtag->getEncodedNbt())
+        output.putBoolean(namedtag != null)
+        if (namedtag != null) {
+            output.put(namedtag!!.encodedNbt)
         }
     }
 

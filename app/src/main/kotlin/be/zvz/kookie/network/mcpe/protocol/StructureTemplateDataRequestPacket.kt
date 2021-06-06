@@ -1,5 +1,3 @@
-package be.zvz.kookie.network.mcpe.protocol
-
 /**
  *
  * _  __           _    _
@@ -17,35 +15,42 @@ package be.zvz.kookie.network.mcpe.protocol
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  */
+package be.zvz.kookie.network.mcpe.protocol
 
+import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
+import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
+import be.zvz.kookie.network.mcpe.protocol.types.StructureSettings
+
+@ProtocolIdentify(ProtocolInfo.IDS.STRUCTURE_TEMPLATE_DATA_REQUEST_PACKET)
 class StructureTemplateDataRequestPacket : DataPacket(), ServerboundPacket {
-    @ProtocolIdentify(ProtocolInfo.IDS.STRUCTURE_TEMPLATE_DATA_REQUEST_PACKET)
 
-    const val TYPE_ALWAYS_LOAD = 1
-    const val TYPE_CREATE_AND_LOAD = 2
+    lateinit var structureTemplateName: String
 
-    var structureTemplateName: string
-    var structureBlockX: Int
-    var structureBlockY: Int
-    var structureBlockZ: Int
-    var structureSettings: StructureSettings
-    var structureTemplateResponseType: Int
+    var blockPos: PacketSerializer.BlockPosition = PacketSerializer.BlockPosition()
+
+    lateinit var structureSettings: StructureSettings
+    var structureTemplateResponseType: Int = 0
 
     override fun decodePayload(input: PacketSerializer) {
         structureTemplateName = input.getString()
-        input.getBlockPosition(structureBlockX, structureBlockY, structureBlockZ)
+        blockPos = input.getBlockPosition()
         structureSettings = input.getStructureSettings()
         structureTemplateResponseType = input.getByte()
     }
 
     override fun encodePayload(output: PacketSerializer) {
         output.putString(structureTemplateName)
-        output.putBlockPosition(structureBlockX, structureBlockY, structureBlockZ)
+        output.putBlockPosition(blockPos)
         output.putStructureSettings(structureSettings)
         output.putByte(structureTemplateResponseType)
     }
 
     override fun handle(handler: PacketHandlerInterface): Boolean {
         return handler.handleStructureTemplateDataRequest(this)
+    }
+
+    enum class Type(val value: Int) {
+        ALWAYS_LOAD(1),
+        CREATE_AND_LOAD(2),
     }
 }

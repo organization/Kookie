@@ -1,10 +1,3 @@
-package be.zvz.kookie.network.mcpe.protocol
-
-import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
-import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
-import be.zvz.kookie.network.mcpe.protocol.types.CacheableNbt
-import be.zvz.kookie.network.mcpe.protocol.types.inventory.WindowTypes
-
 /**
  *
  * _  __           _    _
@@ -22,6 +15,12 @@ import be.zvz.kookie.network.mcpe.protocol.types.inventory.WindowTypes
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  */
+package be.zvz.kookie.network.mcpe.protocol
+
+import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
+import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
+import be.zvz.kookie.network.mcpe.protocol.types.CacheableNbt
+import be.zvz.kookie.network.mcpe.protocol.types.inventory.WindowTypes
 
 @ProtocolIdentify(ProtocolInfo.IDS.UPDATE_TRADE_PACKET)
 class UpdateTradePacket : DataPacket(), ClientboundPacket {

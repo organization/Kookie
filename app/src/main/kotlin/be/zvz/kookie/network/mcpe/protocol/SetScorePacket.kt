@@ -1,5 +1,3 @@
-package be.zvz.kookie.network.mcpe.protocol
-
 /**
  *
  * _  __           _    _
@@ -17,62 +15,52 @@ package be.zvz.kookie.network.mcpe.protocol
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  */
-use fun count
+package be.zvz.kookie.network.mcpe.protocol
 
+import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
+import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
+import be.zvz.kookie.network.mcpe.protocol.types.ScorePacketEntry
+import be.zvz.kookie.network.mcpe.protocol.types.ScorePacketEntry.Type as EntryType
+
+@ProtocolIdentify(ProtocolInfo.IDS.SET_SCORE_PACKET)
 class SetScorePacket : DataPacket(), ClientboundPacket {
-    @ProtocolIdentify(ProtocolInfo.IDS.SET_SCORE_PACKET)
-
-    const val TYPE_CHANGE = 0
-    const val TYPE_REMOVE = 1
-
-    var type: Int
-    /** @var ScorePacketEntry[] */
-    entries = []
+    lateinit var type: Type
+    val entries = mutableListOf<ScorePacketEntry>()
 
     override fun decodePayload(input: PacketSerializer) {
-        type = input.getByte()
-        for (i = 0, i2 = input.getUnsignedVarInt() i < i2++i){
-            entry = new ScorePacketEntry ()
-            entry.scoreboardId = input.getVarLong()
-            entry.objectiveName = input.getString()
-            entry.score = input.getLInt()
-            if (type !== TYPE_REMOVE) {
-                entry.type = input.getByte()
-                switch(entry.type) {
-                    case ScorePacketEntry ::TYPE_PLAYER:
-                    case ScorePacketEntry ::TYPE_ENTITY:
-                    entry.entityUniqueId = input.getEntityUniqueId()
-                    break
-                    case ScorePacketEntry ::TYPE_FAKE_PLAYER:
-                    entry.customName = input.getString()
-                    break
-                    default:
-                    throw new PacketDecodeException ("Unknown entry type entry.type")
+        type = Type.from(input.getByte())
+        for (i in 0 until input.getUnsignedVarInt()) {
+            val entry =
+                ScorePacketEntry(
+                    scoreboardId = input.getVarLong(),
+                    objectiveName = input.getString(),
+                    score = input.getLInt()
+                )
+
+            if (type == Type.CHANGE) {
+                entry.type = EntryType.from(input.getByte())
+                when (entry.type) {
+                    EntryType.PLAYER, EntryType.ENTITY -> entry.entityUniqueId = input.getEntityUniqueId()
+                    EntryType.FAKE_PLAYER -> entry.customName = input.getString()
                 }
             }
-            entries[] = entry
+
+            entries.add(entry)
         }
     }
 
     override fun encodePayload(output: PacketSerializer) {
-        output.putByte(type)
-        output.putUnsignedVarInt(count(entries))
-        foreach(entries entry : as) {
-            output.putVarLong(entry.scoreboardId)
-            output.putString(entry.objectiveName)
-            output.putLInt(entry.score)
-            if (type !== TYPE_REMOVE) {
-                output.putByte(entry.type)
-                switch(entry.type) {
-                    case ScorePacketEntry ::TYPE_PLAYER:
-                    case ScorePacketEntry ::TYPE_ENTITY:
-                    output.putEntityUniqueId(entry.entityUniqueId)
-                    break
-                    case ScorePacketEntry ::TYPE_FAKE_PLAYER:
-                    output.putString(entry.customName)
-                    break
-                    default:
-                    throw new \InvalidArgumentException("Unknown entry type entry.type")
+        output.putByte(type.id)
+        output.putUnsignedVarInt(entries.size)
+        entries.forEach {
+            output.putVarLong(it.scoreboardId)
+            output.putString(it.objectiveName)
+            output.putLInt(it.score)
+            it.type?.let { type ->
+                output.putByte(type.id)
+                when (type) {
+                    EntryType.PLAYER, EntryType.ENTITY -> output.putEntityUniqueId(it.entityUniqueId)
+                    EntryType.FAKE_PLAYER -> output.putString(it.customName)
                 }
             }
         }
@@ -80,5 +68,16 @@ class SetScorePacket : DataPacket(), ClientboundPacket {
 
     override fun handle(handler: PacketHandlerInterface): Boolean {
         return handler.handleSetScore(this)
+    }
+
+    enum class Type(val id: Int) {
+        CHANGE(0),
+        REMOVE(1);
+
+        companion object {
+            private val VALUES = values()
+            fun from(value: Int) = VALUES.firstOrNull { it.id == value }
+                ?: throw PacketDecodeException("Unhandled set score type $value!")
+        }
     }
 }

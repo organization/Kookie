@@ -1,5 +1,3 @@
-package be.zvz.kookie.network.mcpe.protocol
-
 /**
  *
  * _  __           _    _
@@ -17,47 +15,35 @@ package be.zvz.kookie.network.mcpe.protocol
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  */
+package be.zvz.kookie.network.mcpe.protocol
 
+import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
+import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
+
+@ProtocolIdentify(ProtocolInfo.IDS.MOVE_ACTOR_DELTA_PACKET)
 class MoveActorDeltaPacket : DataPacket(), ClientboundPacket {
-    @ProtocolIdentify(ProtocolInfo.IDS.MOVE_ACTOR_DELTA_PACKET)
 
-    const val FLAG_HAS_X = 0x01
-    const val FLAG_HAS_Y = 0x02
-    const val FLAG_HAS_Z = 0x04
-    const val FLAG_HAS_ROT_X = 0x08
-    const val FLAG_HAS_ROT_Y = 0x10
-    const val FLAG_HAS_ROT_Z = 0x20
-    const val FLAG_GROUND = 0x40
-    const val FLAG_TELEPORT = 0x80
-    const val FLAG_FORCE_MOVE_LOCAL_ENTITY = 0x100
+    var entityRuntimeId: Long = 0
+    var flags: Int = 0
+    var xPos: Float = 0F
+    var yPos: Float = 0F
+    var zPos: Float = 0F
+    var xRot: Float = 0.0F
+    var yRot: Float = 0.0F
+    var zRot: Float = 0.0F
 
-    var entityRuntimeId: Int
-    var flags: Int
-    var xPos: Float = 0
-    var yPos: Float = 0
-    var zPos: Float = 0
-    var xRot: Float = 0.0
-    var yRot: Float = 0.0
-    var zRot: Float = 0.0
-
-    /**
-     * @throws BinaryDataException
-     */
     fun maybeReadCoord(flag: Int, input: PacketSerializer): Float {
-        if ((flags & flag) !== 0){
+        if ((flags and flag) != 0) {
             return input.getLFloat()
         }
-        return 0
+        return 0F
     }
 
-    /**
-     * @throws BinaryDataException
-     */
     fun maybeReadRotation(flag: Int, input: PacketSerializer): Float {
-        if ((flags & flag) !== 0){
+        if ((flags and flag) != 0) {
             return input.getByteRotation()
         }
-        return 0.0
+        return 0.0F
     }
 
     override fun decodePayload(input: PacketSerializer) {
@@ -71,15 +57,15 @@ class MoveActorDeltaPacket : DataPacket(), ClientboundPacket {
         zRot = maybeReadRotation(FLAG_HAS_ROT_Z, input)
     }
 
-    fun maybeWriteCoord(flag: Int, val : Float, output: PacketSerializer) {
-        if ((flags & flag) !== 0){
-            output.putLFloat(val)
+    fun maybeWriteCoord(flag: Int, value: Float, output: PacketSerializer) {
+        if ((flags and flag) != 0) {
+            output.putLFloat(value)
         }
     }
 
-    fun maybeWriteRotation(flag: Int, val : Float, output: PacketSerializer) {
-        if ((flags & flag) !== 0){
-            output.putByteRotation(val)
+    fun maybeWriteRotation(flag: Int, value: Float, output: PacketSerializer) {
+        if ((flags and flag) != 0) {
+            output.putByteRotation(value)
         }
     }
 
@@ -94,7 +80,19 @@ class MoveActorDeltaPacket : DataPacket(), ClientboundPacket {
         maybeWriteRotation(FLAG_HAS_ROT_Z, zRot, output)
     }
 
-    override fun handle(session: PacketHandlerInterface): Boolean {
-        return session.handleMoveActorDelta(this)
+    override fun handle(handler: PacketHandlerInterface): Boolean {
+        return handler.handleMoveActorDelta(this)
+    }
+
+    companion object {
+        const val FLAG_HAS_X = 0x01
+        const val FLAG_HAS_Y = 0x02
+        const val FLAG_HAS_Z = 0x04
+        const val FLAG_HAS_ROT_X = 0x08
+        const val FLAG_HAS_ROT_Y = 0x10
+        const val FLAG_HAS_ROT_Z = 0x20
+        const val FLAG_GROUND = 0x40
+        const val FLAG_TELEPORT = 0x80
+        const val FLAG_FORCE_MOVE_LOCAL_ENTITY = 0x100
     }
 }

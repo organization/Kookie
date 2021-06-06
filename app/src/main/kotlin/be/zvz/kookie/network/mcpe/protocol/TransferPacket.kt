@@ -1,5 +1,3 @@
-package be.zvz.kookie.network.mcpe.protocol
-
 /**
  *
  * _  __           _    _
@@ -17,20 +15,16 @@ package be.zvz.kookie.network.mcpe.protocol
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  */
+package be.zvz.kookie.network.mcpe.protocol
 
+import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
+import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
+
+@ProtocolIdentify(ProtocolInfo.IDS.TRANSFER_PACKET)
 class TransferPacket : DataPacket(), ClientboundPacket {
-    @ProtocolIdentify(ProtocolInfo.IDS.TRANSFER_PACKET)
 
-    var address: string
+    lateinit var address: String
     var port: Int = 19132
-
-    static
-    fun create(address: string, port: Int): self {
-        result = new self
-                result.address = address
-        result.port = port
-        return result
-    }
 
     override fun decodePayload(input: PacketSerializer) {
         address = input.getString()
@@ -44,5 +38,14 @@ class TransferPacket : DataPacket(), ClientboundPacket {
 
     override fun handle(handler: PacketHandlerInterface): Boolean {
         return handler.handleTransfer(this)
+    }
+
+    companion object {
+        fun create(address: String, port: Int): TransferPacket {
+            return TransferPacket().apply {
+                this.address = address
+                this.port = port
+            }
+        }
     }
 }

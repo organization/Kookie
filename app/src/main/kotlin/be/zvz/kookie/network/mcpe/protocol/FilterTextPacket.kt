@@ -1,5 +1,3 @@
-package be.zvz.kookie.network.mcpe.protocol
-
 /**
  *
  * _  __           _    _
@@ -17,40 +15,36 @@ package be.zvz.kookie.network.mcpe.protocol
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  */
+package be.zvz.kookie.network.mcpe.protocol
 
+import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
+import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
+
+@ProtocolIdentify(ProtocolInfo.IDS.FILTER_TEXT_PACKET)
 class FilterTextPacket : DataPacket(), ClientboundPacket, ServerboundPacket {
-    @ProtocolIdentify(ProtocolInfo.IDS.FILTER_TEXT_PACKET)
 
-    var text: string
-    var fromServer: Boolean
-
-    static
-    fun create(text: string, server: Boolean): self {
-        result = new self
-                result.text = text
-        result.fromServer = server
-        return result
-    }
-
-    fun getText(): string {
-        return text
-    }
-
-    fun isFromServer(): Boolean {
-        return fromServer
-    }
+    lateinit var text: String
+    var fromServer: Boolean = false
 
     override fun decodePayload(input: PacketSerializer) {
         text = input.getString()
-        fromServer = input.getBool()
+        fromServer = input.getBoolean()
     }
 
     override fun encodePayload(output: PacketSerializer) {
         output.putString(text)
-        output.putBool(fromServer)
+        output.putBoolean(fromServer)
     }
 
     override fun handle(handler: PacketHandlerInterface): Boolean {
         return handler.handleFilterText(this)
+    }
+
+    companion object {
+        fun create(text: String, server: Boolean): FilterTextPacket =
+            FilterTextPacket().apply {
+                this.text = text
+                this.fromServer = server
+            }
     }
 }

@@ -1,5 +1,3 @@
-package be.zvz.kookie.network.mcpe.protocol
-
 /**
  *
  * _  __           _    _
@@ -17,39 +15,34 @@ package be.zvz.kookie.network.mcpe.protocol
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  */
-use fun count
+package be.zvz.kookie.network.mcpe.protocol
 
+import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
+import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
+import be.zvz.kookie.network.mcpe.protocol.types.inventory.CreativeContentEntry
+
+@ProtocolIdentify(ProtocolInfo.IDS.CREATIVE_CONTENT_PACKET)
 class CreativeContentPacket : DataPacket(), ClientboundPacket {
-    @ProtocolIdentify(ProtocolInfo.IDS.CREATIVE_CONTENT_PACKET)
+    lateinit var entries: List<CreativeContentEntry>
+        private set
 
-    /** @var CreativeContentEntry[] */
-    entries
-
-    /**
-     * @param CreativeContentEntry[] entries
-     */
-    static
-    fun create(entries: array): self {
-        result = new self
-                result.entries = entries
-        return result
-    }
-
-    /** @return CreativeContentEntry[] */
-    fun getEntries(): array {
-        return entries
+    companion object {
+        fun create(entries: List<CreativeContentEntry>): CreativeContentPacket = CreativeContentPacket().apply {
+            this.entries = entries
+        }
     }
 
     override fun decodePayload(input: PacketSerializer) {
-        entries = []
-        for (i = 0, len = input.getUnsignedVarInt() i < len++i){
-            entries[] = CreativeContentEntry::read(input)
+        entries = mutableListOf<CreativeContentEntry>().apply {
+            for (i in 0 until input.getUnsignedVarInt()) {
+                add(CreativeContentEntry.read(input))
+            }
         }
     }
 
     override fun encodePayload(output: PacketSerializer) {
-        output.putUnsignedVarInt(count(entries))
-        foreach(entries entry : as) {
+        output.putUnsignedVarInt(entries.size)
+        entries.forEach { entry ->
             entry.write(output)
         }
     }

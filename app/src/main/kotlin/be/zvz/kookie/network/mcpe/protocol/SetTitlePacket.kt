@@ -1,5 +1,3 @@
-package be.zvz.kookie.network.mcpe.protocol
-
 /**
  *
  * _  __           _    _
@@ -17,22 +15,16 @@ package be.zvz.kookie.network.mcpe.protocol
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  */
+package be.zvz.kookie.network.mcpe.protocol
 
+import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
+import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
+
+@ProtocolIdentify(ProtocolInfo.IDS.SET_TITLE_PACKET)
 class SetTitlePacket : DataPacket(), ClientboundPacket {
-    @ProtocolIdentify(ProtocolInfo.IDS.SET_TITLE_PACKET)
 
-    const val TYPE_CLEAR_TITLE = 0
-    const val TYPE_RESET_TITLE = 1
-    const val TYPE_SET_TITLE = 2
-    const val TYPE_SET_SUBTITLE = 3
-    const val TYPE_SET_ACTIONBAR_MESSAGE = 4
-    const val TYPE_SET_ANIMATION_TIMES = 5
-    const val TYPE_SET_TITLE_JSON = 6
-    const val TYPE_SET_SUBTITLE_JSON = 7
-    const val TYPE_SET_ACTIONBAR_MESSAGE_JSON = 8
-
-    var type: Int
-    var text: string = ""
+    var type: Int = 0
+    var text: String = ""
     var fadeInTime: Int = 0
     var stayTime: Int = 0
     var fadeOutTime: Int = 0
@@ -57,51 +49,40 @@ class SetTitlePacket : DataPacket(), ClientboundPacket {
         return handler.handleSetTitle(this)
     }
 
-    static
-    fun type(type: Int): self {
-        result = new self
-                result.type = type
-        return result
-    }
+    companion object {
+        const val TYPE_CLEAR_TITLE = 0
+        const val TYPE_RESET_TITLE = 1
+        const val TYPE_SET_TITLE = 2
+        const val TYPE_SET_SUBTITLE = 3
+        const val TYPE_SET_ACTIONBAR_MESSAGE = 4
+        const val TYPE_SET_ANIMATION_TIMES = 5
+        const val TYPE_SET_TITLE_JSON = 6
+        const val TYPE_SET_SUBTITLE_JSON = 7
+        const val TYPE_SET_ACTIONBAR_MESSAGE_JSON = 8
 
-    static
-    fun text(type: Int, text: string): self {
-        result = type(type)
-        result.text = text
-        return result
-    }
+        fun type(type: Int): SetTitlePacket = SetTitlePacket().apply {
+            this.type = type
+        }
 
-    static
-    fun title(text: string): self {
-        return text(TYPE_SET_TITLE, text)
-    }
+        fun text(type: Int, text: String): SetTitlePacket = type(type).apply {
+            this.text = text
+        }
 
-    static
-    fun subtitle(text: string): self {
-        return text(TYPE_SET_SUBTITLE, text)
-    }
+        fun title(text: String): SetTitlePacket = text(TYPE_SET_TITLE, text)
 
-    static
-    fun actionBarMessage(text: string): self {
-        return text(TYPE_SET_ACTIONBAR_MESSAGE, text)
-    }
+        fun subtitle(text: String): SetTitlePacket = text(TYPE_SET_SUBTITLE, text)
 
-    static
-    fun clearTitle(): self {
-        return type(TYPE_CLEAR_TITLE)
-    }
+        fun actionBarMessage(text: String): SetTitlePacket = text(TYPE_SET_ACTIONBAR_MESSAGE, text)
 
-    static
-    fun resetTitleOptions(): self {
-        return type(TYPE_RESET_TITLE)
-    }
+        fun clearTitle(): SetTitlePacket = type(TYPE_CLEAR_TITLE)
 
-    static
-    fun setAnimationTimes(fadeIn: Int, stay: Int, fadeOut: Int): self {
-        result = type(TYPE_SET_ANIMATION_TIMES)
-        result.fadeInTime = fadeIn
-        result.stayTime = stay
-        result.fadeOutTime = fadeOut
-        return result
+        fun resetTitleOptions(): SetTitlePacket = type(TYPE_RESET_TITLE)
+
+        fun setAnimationTimes(fadeIn: Int, stay: Int, fadeOut: Int): SetTitlePacket =
+            type(TYPE_SET_ANIMATION_TIMES).apply {
+                this.fadeInTime = fadeIn
+                this.stayTime = stay
+                this.fadeOutTime = fadeOut
+            }
     }
 }

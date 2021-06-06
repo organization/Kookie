@@ -1,5 +1,3 @@
-package be.zvz.kookie.network.mcpe.protocol
-
 /**
  *
  * _  __           _    _
@@ -17,12 +15,16 @@ package be.zvz.kookie.network.mcpe.protocol
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  */
+package be.zvz.kookie.network.mcpe.protocol
 
+import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
+import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
+
+@ProtocolIdentify(ProtocolInfo.IDS.MAP_CREATE_LOCKED_COPY_PACKET)
 class MapCreateLockedCopyPacket : DataPacket(), ServerboundPacket {
-    @ProtocolIdentify(ProtocolInfo.IDS.MAP_CREATE_LOCKED_COPY_PACKET)
 
-    var originalMapId: Int
-    var newMapId: Int
+    var originalMapId: Long = 0
+    var newMapId: Long = 0
 
     override fun decodePayload(input: PacketSerializer) {
         originalMapId = input.getEntityUniqueId()

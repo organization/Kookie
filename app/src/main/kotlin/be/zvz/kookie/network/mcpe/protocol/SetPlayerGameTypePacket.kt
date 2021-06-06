@@ -1,5 +1,3 @@
-package be.zvz.kookie.network.mcpe.protocol
-
 /**
  *
  * _  __           _    _
@@ -17,18 +15,15 @@ package be.zvz.kookie.network.mcpe.protocol
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  */
+package be.zvz.kookie.network.mcpe.protocol
 
+import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
+import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
+
+@ProtocolIdentify(ProtocolInfo.IDS.SET_PLAYER_GAME_TYPE_PACKET)
 class SetPlayerGameTypePacket : DataPacket(), ClientboundPacket, ServerboundPacket {
-    @ProtocolIdentify(ProtocolInfo.IDS.SET_PLAYER_GAME_TYPE_PACKET)
 
-    var gamemode: Int
-
-    static
-    fun create(gamemode: Int): self {
-        pk = new self
-                pk.gamemode = gamemode
-        return pk
-    }
+    var gamemode: Int = 0
 
     override fun decodePayload(input: PacketSerializer) {
         gamemode = input.getVarInt()
@@ -40,5 +35,11 @@ class SetPlayerGameTypePacket : DataPacket(), ClientboundPacket, ServerboundPack
 
     override fun handle(handler: PacketHandlerInterface): Boolean {
         return handler.handleSetPlayerGameType(this)
+    }
+
+    companion object {
+        fun create(gamemode: Int) = SetPlayerGameTypePacket().apply {
+            this.gamemode = gamemode
+        }
     }
 }

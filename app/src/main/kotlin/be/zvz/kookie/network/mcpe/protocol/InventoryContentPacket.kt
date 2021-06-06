@@ -1,5 +1,3 @@
-package be.zvz.kookie.network.mcpe.protocol
-
 /**
  *
  * _  __           _    _
@@ -17,45 +15,41 @@ package be.zvz.kookie.network.mcpe.protocol
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  */
-use fun count
+package be.zvz.kookie.network.mcpe.protocol
 
+import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
+import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
+import be.zvz.kookie.network.mcpe.protocol.types.inventory.ItemStackWrapper
+
+@ProtocolIdentify(ProtocolInfo.IDS.INVENTORY_CONTENT_PACKET)
 class InventoryContentPacket : DataPacket(), ClientboundPacket {
-    @ProtocolIdentify(ProtocolInfo.IDS.INVENTORY_CONTENT_PACKET)
 
-    var windowId: Int
-    /** @var ItemStackWrapper[] */
-    items = []
-
-    /**
-     * @param ItemStackWrapper[] items
-     *
-     * @return InventoryContentPacket
-     */
-    static
-    fun create(windowId: Int, items: array): self {
-        result = new self
-                result.windowId = windowId
-        result.items = items
-        return result
-    }
+    var windowId: Int = 0
+    lateinit var items: MutableList<ItemStackWrapper>
 
     override fun decodePayload(input: PacketSerializer) {
         windowId = input.getUnsignedVarInt()
-        count = input.getUnsignedVarInt()
-        for (i = 0 i < count ++i){
-            items[] = ItemStackWrapper::read(input)
+        for (i in 0 until input.getUnsignedVarInt()) {
+            items.add(ItemStackWrapper.read(input))
         }
     }
 
     override fun encodePayload(output: PacketSerializer) {
         output.putUnsignedVarInt(windowId)
-        output.putUnsignedVarInt(count(items))
-        foreach(items item : as) {
-            item.write(output)
+        output.putUnsignedVarInt(items.size)
+        items.forEach {
+            it.write(output)
         }
     }
 
     override fun handle(handler: PacketHandlerInterface): Boolean {
         return handler.handleInventoryContent(this)
+    }
+
+    companion object {
+        fun create(windowId: Int, items: MutableList<ItemStackWrapper>) = InventoryContentPacket().apply {
+            this.windowId = windowId
+            this.items = items
+        }
     }
 }

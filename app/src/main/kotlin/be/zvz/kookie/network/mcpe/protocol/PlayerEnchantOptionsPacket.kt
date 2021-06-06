@@ -1,5 +1,3 @@
-package be.zvz.kookie.network.mcpe.protocol
-
 /**
  *
  * _  __           _    _
@@ -17,46 +15,39 @@ package be.zvz.kookie.network.mcpe.protocol
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  */
-use fun count
+package be.zvz.kookie.network.mcpe.protocol
 
+import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
+import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
+import be.zvz.kookie.network.mcpe.protocol.types.EnchantOption
+
+@ProtocolIdentify(ProtocolInfo.IDS.PLAYER_ENCHANT_OPTIONS_PACKET)
 class PlayerEnchantOptionsPacket : DataPacket(), ClientboundPacket {
-    @ProtocolIdentify(ProtocolInfo.IDS.PLAYER_ENCHANT_OPTIONS_PACKET)
 
-    /** @var EnchantOption[] */
-    options
-
-    /**
-     * @param EnchantOption[] options
-     */
-    static
-    fun create(options: array): self {
-        result = new self
-                result.options = options
-        return result
-    }
-
-    /**
-     * @return EnchantOption[]
-     */
-    fun getOptions(): array {
-        return options
-    }
+    lateinit var options: List<EnchantOption>
 
     override fun decodePayload(input: PacketSerializer) {
-        options = []
-        for (i = 0, len = input.getUnsignedVarInt() i < len++i){
-            options[] = EnchantOption::read(input)
+        options = mutableListOf<EnchantOption>().apply {
+            for (i in 0 until input.getUnsignedVarInt()) {
+                add(EnchantOption.read(input))
+            }
         }
     }
 
     override fun encodePayload(output: PacketSerializer) {
-        output.putUnsignedVarInt(count(options))
-        foreach(options option : as) {
-            option.write(output)
+        output.putUnsignedVarInt(options.size)
+        options.forEach {
+            it.write(output)
         }
     }
 
     override fun handle(handler: PacketHandlerInterface): Boolean {
         return handler.handlePlayerEnchantOptions(this)
+    }
+
+    companion object {
+        fun create(options: List<EnchantOption>) = PlayerEnchantOptionsPacket().apply {
+            this.options = options
+        }
     }
 }

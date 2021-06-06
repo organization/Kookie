@@ -1,5 +1,8 @@
 package be.zvz.kookie.network.mcpe.protocol
 
+import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
+import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
+
 /**
  *
  * _  __           _    _
@@ -18,34 +21,32 @@ package be.zvz.kookie.network.mcpe.protocol
  * (at your option) any later version.
  */
 
+@ProtocolIdentify(ProtocolInfo.IDS.LAB_TABLE_PACKET)
 class LabTablePacket : DataPacket(), ClientboundPacket, ServerboundPacket {
-    @ProtocolIdentify(ProtocolInfo.IDS.LAB_TABLE_PACKET)
 
-    const val TYPE_START_COMBINE = 0
-    const val TYPE_START_REACTION = 1
-    const val TYPE_RESET = 2
-
-    var type: Int
-
-    var x: Int
-    var y: Int
-    var z: Int
-
-    var reactionType: Int
+    var type: Int = 0
+    lateinit var position: PacketSerializer.BlockPosition
+    var reactionType: Int = 0
 
     override fun decodePayload(input: PacketSerializer) {
         type = input.getByte()
-        input.getSignedBlockPosition(x, y, z)
+        input.getSignedBlockPosition(position)
         reactionType = input.getByte()
     }
 
     override fun encodePayload(output: PacketSerializer) {
         output.putByte(type)
-        output.putSignedBlockPosition(x, y, z)
+        output.putSignedBlockPosition(position)
         output.putByte(reactionType)
     }
 
     override fun handle(handler: PacketHandlerInterface): Boolean {
         return handler.handleLabTable(this)
+    }
+
+    companion object {
+        const val TYPE_START_COMBINE = 0
+        const val TYPE_START_REACTION = 1
+        const val TYPE_RESET = 2
     }
 }

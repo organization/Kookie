@@ -1,5 +1,3 @@
-package be.zvz.kookie.network.mcpe.protocol
-
 /**
  *
  * _  __           _    _
@@ -17,28 +15,31 @@ package be.zvz.kookie.network.mcpe.protocol
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  */
+package be.zvz.kookie.network.mcpe.protocol
 
+import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
+import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
+
+@ProtocolIdentify(ProtocolInfo.IDS.SET_COMMANDS_ENABLED_PACKET)
 class SetCommandsEnabledPacket : DataPacket(), ClientboundPacket {
-    @ProtocolIdentify(ProtocolInfo.IDS.SET_COMMANDS_ENABLED_PACKET)
 
-    var enabled: Boolean
-
-    static
-    fun create(enabled: Boolean): self {
-        result = new self
-                result.enabled = enabled
-        return result
-    }
+    var enabled: Boolean = false
 
     override fun decodePayload(input: PacketSerializer) {
-        enabled = input.getBool()
+        enabled = input.getBoolean()
     }
 
     override fun encodePayload(output: PacketSerializer) {
-        output.putBool(enabled)
+        output.putBoolean(enabled)
     }
 
     override fun handle(handler: PacketHandlerInterface): Boolean {
         return handler.handleSetCommandsEnabled(this)
+    }
+
+    companion object {
+        fun create(enabled: Boolean) = SetCommandsEnabledPacket().apply {
+            this.enabled = enabled
+        }
     }
 }

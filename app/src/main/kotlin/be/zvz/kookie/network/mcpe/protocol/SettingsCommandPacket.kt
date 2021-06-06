@@ -1,5 +1,3 @@
-package be.zvz.kookie.network.mcpe.protocol
-
 /**
  *
  * _  __           _    _
@@ -17,40 +15,33 @@ package be.zvz.kookie.network.mcpe.protocol
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  */
+package be.zvz.kookie.network.mcpe.protocol
 
+import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
+import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
+
+@ProtocolIdentify(ProtocolInfo.IDS.SETTINGS_COMMAND_PACKET)
 class SettingsCommandPacket : DataPacket(), ServerboundPacket {
-    @ProtocolIdentify(ProtocolInfo.IDS.SETTINGS_COMMAND_PACKET)
 
-    var command: string
-    var suppressOutput: Boolean
-
-    static
-    fun create(command: string, suppressOutput: Boolean): self {
-        result = new self
-                result.command = command
-        result.suppressOutput = suppressOutput
-        return result
-    }
-
-    fun getCommand(): string {
-        return command
-    }
-
-    fun getSuppressOutput(): Boolean {
-        return suppressOutput
-    }
+    lateinit var command: String
+    var suppressOutput: Boolean = false
 
     override fun decodePayload(input: PacketSerializer) {
         command = input.getString()
-        suppressOutput = input.getBool()
+        suppressOutput = input.getBoolean()
     }
 
     override fun encodePayload(output: PacketSerializer) {
         output.putString(command)
-        output.putBool(suppressOutput)
+        output.putBoolean(suppressOutput)
     }
 
-    override fun handle(handler: PacketHandlerInterface): Boolean {
-        return handler.handleSettingsCommand(this)
+    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleSettingsCommand(this)
+
+    companion object {
+        fun create(command: String, supressOutput: Boolean): SettingsCommandPacket = SettingsCommandPacket().apply {
+            this.command = command
+            this.suppressOutput = supressOutput
+        }
     }
 }

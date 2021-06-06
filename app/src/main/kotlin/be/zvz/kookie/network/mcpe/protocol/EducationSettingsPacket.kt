@@ -1,5 +1,3 @@
-package be.zvz.kookie.network.mcpe.protocol
-
 /**
  *
  * _  __           _    _
@@ -17,79 +15,58 @@ package be.zvz.kookie.network.mcpe.protocol
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  */
+package be.zvz.kookie.network.mcpe.protocol
 
+import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
+import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
+
+@ProtocolIdentify(ProtocolInfo.IDS.EDUCATION_SETTINGS_PACKET)
 class EducationSettingsPacket : DataPacket(), ClientboundPacket {
-    @ProtocolIdentify(ProtocolInfo.IDS.EDUCATION_SETTINGS_PACKET)
 
-    var codeBuilderDefaultUri: string
-    var codeBuilderTitle: string
-    var canResizeCodeBuilder: Boolean
-    var codeBuilderOverrideUri: string|null
-    var hasQuiz: Boolean
-
-    static
-    fun create(
-        codeBuilderDefaultUri: string,
-        codeBuilderTitle: string,
-        canResizeCodeBuilder: Boolean,
-        ?
-        codeBuilderOverrideUri: string,
-        hasQuiz: Boolean
-    ): self {
-        result = new self
-                result.codeBuilderDefaultUri = codeBuilderDefaultUri
-        result.codeBuilderTitle = codeBuilderTitle
-        result.canResizeCodeBuilder = canResizeCodeBuilder
-        result.codeBuilderOverrideUri = codeBuilderOverrideUri
-        result.hasQuiz = hasQuiz
-        return result
-    }
-
-    fun getCodeBuilderDefaultUri(): string {
-        return codeBuilderDefaultUri
-    }
-
-    fun getCodeBuilderTitle(): string {
-        return codeBuilderTitle
-    }
-
-    fun canResizeCodeBuilder(): Boolean {
-        return canResizeCodeBuilder
-    }
-
-    fun getCodeBuilderOverrideUri(): ?string
-    {
-        return codeBuilderOverrideUri
-    }
-
-    fun getHasQuiz(): Boolean {
-        return hasQuiz
-    }
+    lateinit var codeBuilderDefaultUri: String
+    lateinit var codeBuilderTitle: String
+    var canResizeCodeBuilder: Boolean = false
+    var codeBuilderOverrideUri: String? = null
+    var hasQuiz: Boolean = false
 
     override fun decodePayload(input: PacketSerializer) {
         codeBuilderDefaultUri = input.getString()
         codeBuilderTitle = input.getString()
-        canResizeCodeBuilder = input.getBool()
-        if (input.getBool()) {
+        canResizeCodeBuilder = input.getBoolean()
+        if (input.getBoolean()) {
             codeBuilderOverrideUri = input.getString()
         } else {
             codeBuilderOverrideUri = null
         }
-        hasQuiz = input.getBool()
+        hasQuiz = input.getBoolean()
     }
 
     override fun encodePayload(output: PacketSerializer) {
         output.putString(codeBuilderDefaultUri)
         output.putString(codeBuilderTitle)
-        output.putBool(canResizeCodeBuilder)
-        output.putBool(codeBuilderOverrideUri !== null)
-        if (codeBuilderOverrideUri !== null) {
-            output.putString(codeBuilderOverrideUri)
-        }
-        output.putBool(hasQuiz)
+        output.putBoolean(canResizeCodeBuilder)
+        output.putBoolean(codeBuilderOverrideUri !== null)
+        codeBuilderOverrideUri?.let { output.putString(it) }
+        output.putBoolean(hasQuiz)
     }
 
     override fun handle(handler: PacketHandlerInterface): Boolean {
         return handler.handleEducationSettings(this)
+    }
+
+    companion object {
+        fun create(
+            codeBuilderDefaultUri: String,
+            codeBuilderTitle: String,
+            canResizeCodeBuilder: Boolean,
+            codeBuilderOverrideUri: String?,
+            hasQuiz: Boolean
+        ): EducationSettingsPacket = EducationSettingsPacket().apply {
+            this.codeBuilderDefaultUri = codeBuilderDefaultUri
+            this.codeBuilderTitle = codeBuilderTitle
+            this.canResizeCodeBuilder = canResizeCodeBuilder
+            this.codeBuilderOverrideUri = codeBuilderOverrideUri
+            this.hasQuiz = hasQuiz
+        }
     }
 }

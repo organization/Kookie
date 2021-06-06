@@ -1,5 +1,3 @@
-package be.zvz.kookie.network.mcpe.protocol
-
 /**
  *
  * _  __           _    _
@@ -17,27 +15,31 @@ package be.zvz.kookie.network.mcpe.protocol
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  */
+package be.zvz.kookie.network.mcpe.protocol
 
+import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
+import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
+
+@ProtocolIdentify(ProtocolInfo.IDS.PLAYER_INPUT_PACKET)
 class PlayerInputPacket : DataPacket(), ServerboundPacket {
-    @ProtocolIdentify(ProtocolInfo.IDS.PLAYER_INPUT_PACKET)
 
-    var motionX: Float
-    var motionY: Float
-    var jumping: Boolean
-    var sneaking: Boolean
+    var motionX: Float = 0.0f
+    var motionY: Float = 0.0f
+    var jumping: Boolean = false
+    var sneaking: Boolean = false
 
     override fun decodePayload(input: PacketSerializer) {
         motionX = input.getLFloat()
         motionY = input.getLFloat()
-        jumping = input.getBool()
-        sneaking = input.getBool()
+        jumping = input.getBoolean()
+        sneaking = input.getBoolean()
     }
 
     override fun encodePayload(output: PacketSerializer) {
         output.putLFloat(motionX)
         output.putLFloat(motionY)
-        output.putBool(jumping)
-        output.putBool(sneaking)
+        output.putBoolean(jumping)
+        output.putBoolean(sneaking)
     }
 
     override fun handle(handler: PacketHandlerInterface): Boolean {

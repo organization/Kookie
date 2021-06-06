@@ -2,12 +2,13 @@ package be.zvz.kookie.network.mcpe.protocol.serializer
 
 import be.zvz.kookie.network.mcpe.protocol.Packet
 import be.zvz.kookie.network.mcpe.protocol.PacketPool
+import com.koloboke.collect.map.hash.HashObjObjMaps
 
 class PacketBatch(private val buffer: String = "") {
 
     fun getPackets(): MutableMap<Packet, String> {
         val serializer = PacketSerializer(buffer)
-        val list: MutableMap<Packet, String> = mutableMapOf()
+        val list: MutableMap<Packet, String> = HashObjObjMaps.newMutableMap()
         try {
             while (!serializer.feof()) {
                 val buf = serializer.getString()

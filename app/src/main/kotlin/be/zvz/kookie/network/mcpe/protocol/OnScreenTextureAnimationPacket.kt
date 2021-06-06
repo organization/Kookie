@@ -1,5 +1,3 @@
-package be.zvz.kookie.network.mcpe.protocol
-
 /**
  *
  * _  __           _    _
@@ -17,14 +15,18 @@ package be.zvz.kookie.network.mcpe.protocol
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  */
+package be.zvz.kookie.network.mcpe.protocol
 
+import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
+import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
+
+@ProtocolIdentify(ProtocolInfo.IDS.ON_SCREEN_TEXTURE_ANIMATION_PACKET)
 class OnScreenTextureAnimationPacket : DataPacket(), ClientboundPacket {
-    @ProtocolIdentify(ProtocolInfo.IDS.ON_SCREEN_TEXTURE_ANIMATION_PACKET)
 
-    var effectId: Int
+    var effectId: Int = 0
 
     override fun decodePayload(input: PacketSerializer) {
-        effectId = input.getLInt() //unsigned
+        effectId = input.getLInt() // unsigned
     }
 
     override fun encodePayload(output: PacketSerializer) {

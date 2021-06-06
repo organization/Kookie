@@ -1,5 +1,3 @@
-package be.zvz.kookie.network.mcpe.protocol
-
 /**
  *
  * _  __           _    _
@@ -17,39 +15,17 @@ package be.zvz.kookie.network.mcpe.protocol
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  */
+package be.zvz.kookie.network.mcpe.protocol
 
+import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
+import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
+
+@ProtocolIdentify(ProtocolInfo.IDS.EMOTE_PACKET)
 class EmotePacket : DataPacket(), ClientboundPacket, ServerboundPacket {
-    @ProtocolIdentify(ProtocolInfo.IDS.EMOTE_PACKET)
 
-    const val FLAG_SERVER = 1 < < 0
-
-    var entityRuntimeId: Int
-    var emoteId: string
-    var flags: Int
-
-    static
-    fun create(entityRuntimeId: Int, emoteId: string, flags: Int): self {
-        result = new self
-                result.entityRuntimeId = entityRuntimeId
-        result.emoteId = emoteId
-        result.flags = flags
-        return result
-    }
-
-    /**
-     * TODO: we can't call this getEntityRuntimeId() because of base class collision (crap architecture, thanks Shoghi)
-     */
-    fun getEntityRuntimeIdField(): Int {
-        return entityRuntimeId
-    }
-
-    fun getEmoteId(): string {
-        return emoteId
-    }
-
-    fun getFlags(): Int {
-        return flags
-    }
+    var entityRuntimeId: Long = 0
+    lateinit var emoteId: String
+    var flags: Int = 0
 
     override fun decodePayload(input: PacketSerializer) {
         entityRuntimeId = input.getEntityRuntimeId()
@@ -65,5 +41,16 @@ class EmotePacket : DataPacket(), ClientboundPacket, ServerboundPacket {
 
     override fun handle(handler: PacketHandlerInterface): Boolean {
         return handler.handleEmote(this)
+    }
+
+    companion object {
+        const val FLAG_SERVER = 1 shl 0
+
+        fun create(entityRuntimeId: Long, emoteId: String, flags: Int): EmotePacket =
+            EmotePacket().apply {
+                this.entityRuntimeId = entityRuntimeId
+                this.emoteId = emoteId
+                this.flags = flags
+            }
     }
 }

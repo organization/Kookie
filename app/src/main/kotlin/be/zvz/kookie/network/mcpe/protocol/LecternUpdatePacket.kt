@@ -1,5 +1,3 @@
-package be.zvz.kookie.network.mcpe.protocol
-
 /**
  *
  * _  __           _    _
@@ -17,29 +15,31 @@ package be.zvz.kookie.network.mcpe.protocol
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  */
+package be.zvz.kookie.network.mcpe.protocol
 
+import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
+import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
+
+@ProtocolIdentify(ProtocolInfo.IDS.LECTERN_UPDATE_PACKET)
 class LecternUpdatePacket : DataPacket(), ServerboundPacket {
-    @ProtocolIdentify(ProtocolInfo.IDS.LECTERN_UPDATE_PACKET)
 
-    var page: Int
-    var totalPages: Int
-    var x: Int
-    var y: Int
-    var z: Int
-    var dropBook: Boolean
+    var page: Int = 0
+    var totalPages: Int = 0
+    lateinit var position: PacketSerializer.BlockPosition
+    var dropBook: Boolean = false
 
     override fun decodePayload(input: PacketSerializer) {
         page = input.getByte()
         totalPages = input.getByte()
-        input.getBlockPosition(x, y, z)
-        dropBook = input.getBool()
+        input.getBlockPosition(position)
+        dropBook = input.getBoolean()
     }
 
     override fun encodePayload(output: PacketSerializer) {
         output.putByte(page)
         output.putByte(totalPages)
-        output.putBlockPosition(x, y, z)
-        output.putBool(dropBook)
+        output.putBlockPosition(position)
+        output.putBoolean(dropBook)
     }
 
     override fun handle(handler: PacketHandlerInterface): Boolean {

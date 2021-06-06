@@ -1,5 +1,3 @@
-package be.zvz.kookie.network.mcpe.protocol
-
 /**
  *
  * _  __           _    _
@@ -17,18 +15,23 @@ package be.zvz.kookie.network.mcpe.protocol
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  */
+package be.zvz.kookie.network.mcpe.protocol
+
+import be.zvz.kookie.math.Vector3
+import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
+import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 
 /**
  * Useless leftover from a 1.9 refactor, does nothing
  */
+@ProtocolIdentify(ProtocolInfo.IDS.LEVEL_SOUND_EVENT_PACKET_V2)
 class LevelSoundEventPacketV2 : DataPacket() {
-    @ProtocolIdentify(ProtocolInfo.IDS.LEVEL_SOUND_EVENT_PACKET_V) 2
 
-    var sound: Int
-    var position: Vector3
+    var sound: Int = 0
+    lateinit var position: Vector3
     var extraData: Int = -1
-    var entityType: string = ":" //???
-    var isBabyMob: Boolean = false //...
+    var entityType: String = ":" // ???
+    var isBabyMob: Boolean = false // ...
     var disableRelativeVolume: Boolean = false
 
     override fun decodePayload(input: PacketSerializer) {
@@ -36,8 +39,8 @@ class LevelSoundEventPacketV2 : DataPacket() {
         position = input.getVector3()
         extraData = input.getVarInt()
         entityType = input.getString()
-        isBabyMob = input.getBool()
-        disableRelativeVolume = input.getBool()
+        isBabyMob = input.getBoolean()
+        disableRelativeVolume = input.getBoolean()
     }
 
     override fun encodePayload(output: PacketSerializer) {
@@ -45,8 +48,8 @@ class LevelSoundEventPacketV2 : DataPacket() {
         output.putVector3(position)
         output.putVarInt(extraData)
         output.putString(entityType)
-        output.putBool(isBabyMob)
-        output.putBool(disableRelativeVolume)
+        output.putBoolean(isBabyMob)
+        output.putBoolean(disableRelativeVolume)
     }
 
     override fun handle(handler: PacketHandlerInterface): Boolean {

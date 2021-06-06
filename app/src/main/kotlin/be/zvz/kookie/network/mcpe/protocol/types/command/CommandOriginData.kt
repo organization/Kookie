@@ -24,7 +24,8 @@ class CommandOriginData {
         UNKNOWN(-1);
 
         companion object {
-            fun from(findValue: Int): Origin = values().firstOrNull { it.id == findValue } ?: UNKNOWN.apply {
+            private val VALUES = values()
+            fun from(findValue: Int): Origin = VALUES.firstOrNull { it.id == findValue } ?: UNKNOWN.apply {
                 id = findValue
             }
         }

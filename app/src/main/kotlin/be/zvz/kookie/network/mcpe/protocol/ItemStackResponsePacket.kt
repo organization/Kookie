@@ -1,5 +1,3 @@
-package be.zvz.kookie.network.mcpe.protocol
-
 /**
  *
  * _  __           _    _
@@ -17,44 +15,37 @@ package be.zvz.kookie.network.mcpe.protocol
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  */
-use fun count
+package be.zvz.kookie.network.mcpe.protocol
 
+import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
+import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
+import be.zvz.kookie.network.mcpe.protocol.types.inventory.stackresponse.ItemStackResponse
+
+@ProtocolIdentify(ProtocolInfo.IDS.ITEM_STACK_RESPONSE_PACKET)
 class ItemStackResponsePacket : DataPacket(), ClientboundPacket {
-    @ProtocolIdentify(ProtocolInfo.IDS.ITEM_STACK_RESPONSE_PACKET)
 
-    /** @var ItemStackResponse[] */
-    responses
-
-    /**
-     * @param ItemStackResponse[] responses
-     */
-    static
-    fun create(responses: array): self {
-        result = new self
-                result.responses = responses
-        return result
-    }
-
-    /** @return ItemStackResponse[] */
-    fun getResponses(): array {
-        return responses
-    }
+    lateinit var responses: MutableList<ItemStackResponse>
 
     override fun decodePayload(input: PacketSerializer) {
-        responses = []
-        for (i = 0, len = input.getUnsignedVarInt() i < len++i){
-            responses[] = ItemStackResponse::read(input)
+        val responses = mutableListOf<ItemStackResponse>()
+        for (i in 0 until input.getUnsignedVarInt()) {
+            responses.add(ItemStackResponse.read(input))
         }
     }
 
     override fun encodePayload(output: PacketSerializer) {
-        output.putUnsignedVarInt(count(responses))
-        foreach(responses response : as) {
-            response.write(output)
+        responses.forEach {
+            it.write(output)
         }
     }
 
     override fun handle(handler: PacketHandlerInterface): Boolean {
         return handler.handleItemStackResponse(this)
+    }
+
+    companion object {
+        fun create(responses: MutableList<ItemStackResponse>) = ItemStackResponsePacket().apply {
+            this.responses = responses
+        }
     }
 }

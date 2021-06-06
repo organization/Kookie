@@ -4,14 +4,15 @@ import be.zvz.kookie.block.tile.Tile
 import be.zvz.kookie.network.mcpe.protocol.DataPacket
 import be.zvz.kookie.network.mcpe.protocol.ProtocolIdentify
 import be.zvz.kookie.network.mcpe.protocol.ProtocolInfo
+import com.koloboke.collect.map.hash.HashObjObjMaps
 
 object Timings {
     const val INCLUDED_BY_OTHER_TIMINGS_PREFIX = "** "
 
-    private val timings: MutableMap<Any, TimingsHandler> = mutableMapOf()
+    private val timings: MutableMap<String, TimingsHandler> = HashObjObjMaps.newMutableMap()
 
     fun getTileEntityTimings(tile: Tile): TimingsHandler {
-        var exist = timings.getOrDefault(tile::class.java.simpleName, null)
+        var exist = timings[tile::class.java.simpleName]
         if (exist == null) {
             exist = TimingsHandler("Tile " + tile::class.java.simpleName)
             timings[tile::class.java.simpleName] = exist
@@ -27,8 +28,8 @@ object Timings {
             protocolIdentify.networkId.id
         }
         val key = "PacketDecode: $networkId"
-        var exist = timings.getOrDefault(key, null)
-        if (exist == null) {
+        var exist = timings[key]
+        if (exist === null) {
             exist = TimingsHandler("Packet " + packet::class.java.simpleName + "($networkId) decode", null)
             timings[key] = exist
         }
@@ -43,8 +44,8 @@ object Timings {
             protocolIdentify.networkId.id
         }
         val key = "PacketSend: $networkId"
-        var exist = timings.getOrDefault(key, null)
-        if (exist == null) {
+        var exist = timings[key]
+        if (exist === null) {
             exist = TimingsHandler("Packet " + packet::class.java.simpleName + "($networkId) send", null)
             timings[key] = exist
         }

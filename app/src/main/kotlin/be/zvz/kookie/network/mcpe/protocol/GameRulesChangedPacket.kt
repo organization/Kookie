@@ -1,5 +1,3 @@
-package be.zvz.kookie.network.mcpe.protocol
-
 /**
  *
  * _  __           _    _
@@ -17,15 +15,16 @@ package be.zvz.kookie.network.mcpe.protocol
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  */
+package be.zvz.kookie.network.mcpe.protocol
 
+import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
+import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
+import be.zvz.kookie.network.mcpe.protocol.types.GameRule
+
+@ProtocolIdentify(ProtocolInfo.IDS.GAME_RULES_CHANGED_PACKET)
 class GameRulesChangedPacket : DataPacket(), ClientboundPacket {
-    @ProtocolIdentify(ProtocolInfo.IDS.GAME_RULES_CHANGED_PACKET)
 
-    /**
-     * @var GameRule[]
-     * @phpstan-var array<string, GameRule>
-     */
-    gameRules = []
+    lateinit var gameRules: Map<String, GameRule>
 
     override fun decodePayload(input: PacketSerializer) {
         gameRules = input.getGameRules()

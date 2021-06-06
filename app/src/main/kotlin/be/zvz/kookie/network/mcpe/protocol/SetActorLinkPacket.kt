@@ -1,5 +1,3 @@
-package be.zvz.kookie.network.mcpe.protocol
-
 /**
  *
  * _  __           _    _
@@ -17,11 +15,16 @@ package be.zvz.kookie.network.mcpe.protocol
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  */
+package be.zvz.kookie.network.mcpe.protocol
 
+import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
+import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
+import be.zvz.kookie.network.mcpe.protocol.types.entity.EntityLink
+
+@ProtocolIdentify(ProtocolInfo.IDS.SET_ACTOR_LINK_PACKET)
 class SetActorLinkPacket : DataPacket(), ClientboundPacket {
-    @ProtocolIdentify(ProtocolInfo.IDS.SET_ACTOR_LINK_PACKET)
 
-    var link: EntityLink
+    lateinit var link: EntityLink
 
     override fun decodePayload(input: PacketSerializer) {
         link = input.getEntityLink()

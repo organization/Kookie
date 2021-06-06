@@ -24,18 +24,22 @@ import be.zvz.kookie.nbt.TreeRoot
 import be.zvz.kookie.nbt.tag.CompoundTag
 import be.zvz.kookie.network.mcpe.convert.GlobalItemTypeDictionary
 import be.zvz.kookie.network.mcpe.protocol.PacketDecodeException
-import be.zvz.kookie.network.mcpe.protocol.types.GameRule
+import be.zvz.kookie.network.mcpe.protocol.types.*
 import be.zvz.kookie.network.mcpe.protocol.types.command.CommandOriginData
 import be.zvz.kookie.network.mcpe.protocol.types.entity.*
 import be.zvz.kookie.network.mcpe.protocol.types.inventory.ItemStack
+import be.zvz.kookie.network.mcpe.protocol.types.recipe.RecipeIngredient
 import be.zvz.kookie.network.mcpe.protocol.types.skin.*
 import be.zvz.kookie.utils.BinaryStream
+import com.koloboke.collect.map.hash.HashIntObjMaps
+import com.koloboke.collect.map.hash.HashObjObjMaps
 import java.util.*
 import java.util.concurrent.atomic.AtomicInteger
 
 class PacketSerializer(buffer: String = "", offset: AtomicInteger = AtomicInteger(0)) : BinaryStream(buffer, offset) {
 
-    private val shieldItemRuntimeId: Int = GlobalItemTypeDictionary.getInstance().dictionary.fromStringId("minecraft:shield")
+    private val shieldItemRuntimeId: Int =
+        GlobalItemTypeDictionary.getInstance().dictionary.fromStringId("minecraft:shield")
 
     fun getString(): String = get(getUnsignedVarInt())
 
@@ -72,6 +76,25 @@ class PacketSerializer(buffer: String = "", offset: AtomicInteger = AtomicIntege
     fun putBlockPosition(pos: BlockPosition) {
         putVarInt(pos.x)
         putUnsignedVarInt(pos.y)
+        putVarInt(pos.z)
+    }
+
+    fun getSignedBlockPosition(): BlockPosition = BlockPosition(getVarInt(), getVarInt(), getVarInt())
+    fun getSignedBlockPosition(pos: BlockPosition): BlockPosition = pos.apply {
+        x = getVarInt()
+        y = getVarInt()
+        z = getVarInt()
+    }
+
+    fun putSignedBlockPosition(x: Int, y: Int, z: Int) {
+        putVarInt(x)
+        putVarInt(y)
+        putVarInt(z)
+    }
+
+    fun putSignedBlockPosition(pos: BlockPosition) {
+        putVarInt(pos.x)
+        putVarInt(pos.y)
         putVarInt(pos.z)
     }
 
@@ -359,15 +382,25 @@ class PacketSerializer(buffer: String = "", offset: AtomicInteger = AtomicIntege
         putLFloat(vector.z)
     }
 
-    fun readGenericTypeNetworkId(): Int {
-        return getVarInt()
+    fun readGameRule(type: Int): GameRule = when (type) {
+        GameRuleType.BOOL -> BooleanGameRule.decode(this)
+        GameRuleType.INT -> IntGameRule.decode(this)
+        GameRuleType.FLOAT -> FloatGameRule.decode(this)
+        else -> throw PacketDecodeException("Unknown gamerule type $type")
     }
 
-    fun writeGenericTypeNetworkId(id: Int) {
-        putVarInt(id)
+    fun getGameRules(): Map<String, GameRule> {
+        val count = getUnsignedVarInt()
+        val rules = HashObjObjMaps.newMutableMap<String, GameRule>()
+        for (i in 0 until count) {
+            val name = getString()
+            val type = getUnsignedVarInt()
+            rules[name] = readGameRule(type)
+        }
+        return rules
     }
 
-    fun putGameRules(gameRules: MutableMap<String, GameRule>) {
+    fun putGameRules(gameRules: Map<String, GameRule>) {
         putUnsignedVarInt(gameRules.size)
         gameRules.forEach { (name, gameRule) ->
             putString(name)
@@ -407,8 +440,29 @@ class PacketSerializer(buffer: String = "", offset: AtomicInteger = AtomicIntege
         }
     }
 
+    fun getRecipeIngredient(): RecipeIngredient {
+        val id = getVarInt()
+        if (id == 0)
+            return RecipeIngredient(0, 0, 0)
+
+        val meta = getVarInt()
+        val count = getVarInt()
+
+        return RecipeIngredient(id, meta, count)
+    }
+
+    fun putRecipeIngredient(ingredient: RecipeIngredient) {
+        if (ingredient.id == 0) {
+            putVarInt(0)
+        } else {
+            putVarInt(ingredient.id)
+            putVarInt(ingredient.meta)
+            putVarInt(ingredient.count)
+        }
+    }
+
     fun getEntityMetadataProperty(): MutableMap<Int, MetadataProperty> {
-        val properties: MutableMap<Int, MetadataProperty> = mutableMapOf()
+        val properties: MutableMap<Int, MetadataProperty> = HashIntObjMaps.newMutableMap()
         for (i in 0 until getUnsignedVarInt()) {
             val key = getUnsignedVarInt()
             val type = getUnsignedVarInt()
@@ -463,6 +517,67 @@ class PacketSerializer(buffer: String = "", offset: AtomicInteger = AtomicIntege
         }
     }
 
+    fun getStructureSettings(): StructureSettings = StructureSettings().apply {
+        paletteName = getString()
+        ignoreEntities = getBoolean()
+        ignoreBlocks = getBoolean()
+        val structureSize = getBlockPosition()
+        structureSizeX = structureSize.x
+        structureSizeY = structureSize.y
+        structureSizeZ = structureSize.z
+        val structureOffset = getBlockPosition()
+        structureOffsetX = structureOffset.x
+        structureOffsetY = structureOffset.y
+        structureOffsetZ = structureOffset.z
+        lastTouchedByPlayerID = getEntityUniqueId()
+        rotation = getByte()
+        mirror = getByte()
+        integrityValue = getFloat()
+        integritySeed = getInt()
+        pivot = getVector3()
+    }
+
+    fun putStructureSettings(structureSettings: StructureSettings) {
+        putString(structureSettings.paletteName)
+
+        putBoolean(structureSettings.ignoreEntities)
+        putBoolean(structureSettings.ignoreBlocks)
+
+        putBlockPosition(structureSettings.structureSizeX, structureSettings.structureSizeY, structureSettings.structureSizeZ)
+        putBlockPosition(structureSettings.structureOffsetX, structureSettings.structureOffsetY, structureSettings.structureOffsetZ)
+
+        putEntityUniqueId(structureSettings.lastTouchedByPlayerID)
+        putByte(structureSettings.rotation)
+        putByte(structureSettings.mirror)
+        putFloat(structureSettings.integrityValue)
+        putInt(structureSettings.integritySeed)
+        putVector3(structureSettings.pivot)
+    }
+
+    fun getStructureEditorData(): StructureEditorData = StructureEditorData().apply {
+        structureName = getString()
+        structureDataField = getString()
+
+        includePlayers = getBoolean()
+        showBoundingBox = getBoolean()
+
+        structureBlockType = getVarInt()
+        structureSettings = getStructureSettings()
+        structureRedstoneSaveMove = getVarInt()
+    }
+
+    fun putStructureEditorData(structureEditorData: StructureEditorData) {
+        putString(structureEditorData.structureName)
+        putString(structureEditorData.structureDataField)
+
+        putBoolean(structureEditorData.includePlayers)
+        putBoolean(structureEditorData.showBoundingBox)
+
+        putVarInt(structureEditorData.structureBlockType)
+        putStructureSettings(structureEditorData.structureSettings)
+        putVarInt(structureEditorData.structureRedstoneSaveMove)
+    }
+
     fun getByteRotation(): Float = (getByte() * (360 / 256)).toFloat()
 
     fun putByteRotation(rotation: Float) {
@@ -499,6 +614,14 @@ class PacketSerializer(buffer: String = "", offset: AtomicInteger = AtomicIntege
             )
         }
         return list
+    }
+
+    fun readGenericTypeNetworkId(): Int {
+        return getVarInt()
+    }
+
+    fun writeGenericTypeNetworkId(id: Int) {
+        putVarInt(id)
     }
 
     data class BlockPosition @JvmOverloads constructor(var x: Int = 0, var y: Int = 0, var z: Int = 0)

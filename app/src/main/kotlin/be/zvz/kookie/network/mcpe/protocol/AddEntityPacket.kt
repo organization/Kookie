@@ -22,21 +22,21 @@ import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 
 @ProtocolIdentify(ProtocolInfo.IDS.ADD_ENTITY_PACKET)
 class AddEntityPacket : DataPacket(), ClientboundPacket {
-    var uvarint1: Int = 0
+    var entityNetId: Int = 0
         private set
 
     companion object {
-        fun create(uvarint1: Int): AddEntityPacket = AddEntityPacket().apply {
-            this.uvarint1 = uvarint1
+        fun create(entityNetId: Int): AddEntityPacket = AddEntityPacket().apply {
+            this.entityNetId = entityNetId
         }
     }
 
     override fun decodePayload(input: PacketSerializer) {
-        uvarint1 = input.getUnsignedVarInt()
+        entityNetId = input.getUnsignedVarInt()
     }
 
     override fun encodePayload(output: PacketSerializer) {
-        output.putUnsignedVarInt(uvarint1)
+        output.putUnsignedVarInt(entityNetId)
     }
 
     override fun handle(handler: PacketHandlerInterface): Boolean {

@@ -1,5 +1,3 @@
-package be.zvz.kookie.network.mcpe.protocol
-
 /**
  *
  * _  __           _    _
@@ -17,54 +15,45 @@ package be.zvz.kookie.network.mcpe.protocol
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  */
-use fun count
+package be.zvz.kookie.network.mcpe.protocol
 
+import be.zvz.kookie.nbt.TreeRoot
+import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
+import be.zvz.kookie.network.mcpe.protocol.serializer.NetworkNbtSerializer
+import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
+import be.zvz.kookie.network.mcpe.protocol.types.ItemComponentPacketEntry
+
+@ProtocolIdentify(ProtocolInfo.IDS.ITEM_COMPONENT_PACKET)
 class ItemComponentPacket : DataPacket(), ClientboundPacket {
-    @ProtocolIdentify(ProtocolInfo.IDS.ITEM_COMPONENT_PACKET)
 
-    /**
-     * @var ItemComponentPacketEntry[]
-     * @phpstan-var list<ItemComponentPacketEntry>
-     */
-    entries
-
-    /**
-     * @param ItemComponentPacketEntry[] entries
-     * @phpstan-param list<ItemComponentPacketEntry> entries
-     */
-    static
-    fun create(entries: array): self {
-        result = new self
-                result.entries = entries
-        return result
-    }
-
-    /**
-     * @return ItemComponentPacketEntry[]
-     * @phpstan-return list<ItemComponentPacketEntry>
-     */
-    fun getEntries(): array {
-        return entries
-    }
+    lateinit var entries: List<ItemComponentPacketEntry>
 
     override fun decodePayload(input: PacketSerializer) {
-        entries = []
-        for (i = 0, len = input.getUnsignedVarInt() i < len++i){
-            name = input.getString()
-            nbt = input.getNbtCompoundRoot()
-            entries[] = new ItemComponentPacketEntry (name, nbt)
+        entries = mutableListOf<ItemComponentPacketEntry>().apply {
+            for (i in 0 until input.getUnsignedVarInt()) {
+                val name = input.getString()
+                val nbt = input.getNbtCompoundRoot()
+                add(ItemComponentPacketEntry(name, nbt))
+            }
         }
     }
 
     override fun encodePayload(output: PacketSerializer) {
-        output.putUnsignedVarInt(count(entries))
-        foreach(entries entry : as) {
-            output.putString(entry.getName())
-            output.put((new NetworkNbtSerializer ())->write(new TreeRoot(entry.getComponentNbt())))
+        output.putUnsignedVarInt(entries.size)
+        entries.forEach {
+            output.putString(it.name)
+            output.put(NetworkNbtSerializer().write(TreeRoot(it.componentNbt)))
         }
     }
 
     override fun handle(handler: PacketHandlerInterface): Boolean {
         return handler.handleItemComponent(this)
+    }
+
+    companion object {
+        fun create(entries: List<ItemComponentPacketEntry>) =
+            ItemComponentPacket().apply {
+                this.entries = entries
+            }
     }
 }

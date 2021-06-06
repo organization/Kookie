@@ -1,5 +1,8 @@
 package be.zvz.kookie.network.mcpe.protocol
 
+import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
+import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
+
 /**
  *
  * _  __           _    _
@@ -18,14 +21,11 @@ package be.zvz.kookie.network.mcpe.protocol
  * (at your option) any later version.
  */
 
+@ProtocolIdentify(ProtocolInfo.IDS.SHOW_CREDITS_PACKET)
 class ShowCreditsPacket : DataPacket(), ClientboundPacket, ServerboundPacket {
-    @ProtocolIdentify(ProtocolInfo.IDS.SHOW_CREDITS_PACKET)
 
-    const val STATUS_START_CREDITS = 0
-    const val STATUS_END_CREDITS = 1
-
-    var playerEid: Int
-    var status: Int
+    var playerEid: Long = 0
+    var status: Int = 0
 
     override fun decodePayload(input: PacketSerializer) {
         playerEid = input.getEntityRuntimeId()
@@ -39,5 +39,10 @@ class ShowCreditsPacket : DataPacket(), ClientboundPacket, ServerboundPacket {
 
     override fun handle(handler: PacketHandlerInterface): Boolean {
         return handler.handleShowCredits(this)
+    }
+
+    companion object {
+        const val STATUS_START_CREDITS = 0
+        const val STATUS_END_CREDITS = 1
     }
 }

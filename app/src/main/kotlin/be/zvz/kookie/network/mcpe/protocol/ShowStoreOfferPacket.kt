@@ -1,5 +1,3 @@
-package be.zvz.kookie.network.mcpe.protocol
-
 /**
  *
  * _  __           _    _
@@ -17,21 +15,25 @@ package be.zvz.kookie.network.mcpe.protocol
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  */
+package be.zvz.kookie.network.mcpe.protocol
 
+import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
+import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
+
+@ProtocolIdentify(ProtocolInfo.IDS.SHOW_STORE_OFFER_PACKET)
 class ShowStoreOfferPacket : DataPacket(), ClientboundPacket {
-    @ProtocolIdentify(ProtocolInfo.IDS.SHOW_STORE_OFFER_PACKET)
 
-    var offerId: string
-    var showAll: Boolean
+    lateinit var offerId: String
+    var showAll: Boolean = false
 
     override fun decodePayload(input: PacketSerializer) {
         offerId = input.getString()
-        showAll = input.getBool()
+        showAll = input.getBoolean()
     }
 
     override fun encodePayload(output: PacketSerializer) {
         output.putString(offerId)
-        output.putBool(showAll)
+        output.putBoolean(showAll)
     }
 
     override fun handle(handler: PacketHandlerInterface): Boolean {

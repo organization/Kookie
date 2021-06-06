@@ -50,17 +50,15 @@ class DisconnectPacket : DataPacket(), ClientboundPacket, ServerboundPacket {
     }
 
     companion object {
-        fun silent(): DisconnectPacket {
-            val pk = DisconnectPacket()
-            pk.hideDisconnectionScreen = true
-            return pk
-        }
+        fun silent(): DisconnectPacket =
+            DisconnectPacket().apply {
+                this.hideDisconnectionScreen = false
+            }
 
-        fun message(message: String): DisconnectPacket {
-            val pk = DisconnectPacket()
-            pk.hideDisconnectionScreen = false
-            pk.message = message
-            return pk
-        }
+        fun message(message: String): DisconnectPacket =
+            DisconnectPacket().apply {
+                this.hideDisconnectionScreen = false
+                this.message = message
+            }
     }
 }

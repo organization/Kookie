@@ -1,5 +1,3 @@
-package be.zvz.kookie.network.mcpe.protocol
-
 /**
  *
  * _  __           _    _
@@ -17,38 +15,37 @@ package be.zvz.kookie.network.mcpe.protocol
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  */
-use fun count
+package be.zvz.kookie.network.mcpe.protocol
 
+import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
+import be.zvz.kookie.network.mcpe.protocol.SetScorePacket.Type
+import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
+import be.zvz.kookie.network.mcpe.protocol.types.ScoreboardIdentityPacketEntry
+
+@ProtocolIdentify(ProtocolInfo.IDS.SET_SCOREBOARD_IDENTITY_PACKET)
 class SetScoreboardIdentityPacket : DataPacket(), ClientboundPacket {
-    @ProtocolIdentify(ProtocolInfo.IDS.SET_SCOREBOARD_IDENTITY_PACKET)
-
-    const val TYPE_REGISTER_IDENTITY = 0
-    const val TYPE_CLEAR_IDENTITY = 1
-
-    var type: Int
-    /** @var ScoreboardIdentityPacketEntry[] */
-    entries = []
+    lateinit var type: Type
+    val entries = mutableListOf<ScoreboardIdentityPacketEntry>()
 
     override fun decodePayload(input: PacketSerializer) {
-        type = input.getByte()
-        for (i = 0, count = input.getUnsignedVarInt() i < count++i){
-            entry = new ScoreboardIdentityPacketEntry ()
-            entry.scoreboardId = input.getVarLong()
-            if (type === TYPE_REGISTER_IDENTITY) {
-                entry.entityUniqueId = input.getEntityUniqueId()
-            }
-
-            entries[] = entry
+        type = Type.from(input.getByte())
+        for (i in 0 until input.getUnsignedVarInt()) {
+            entries.add(
+                ScoreboardIdentityPacketEntry(
+                    scoreboardId = input.getVarLong(),
+                    entityUniqueId = if (type === Type.CHANGE) input.getEntityUniqueId() else null
+                )
+            )
         }
     }
 
     override fun encodePayload(output: PacketSerializer) {
-        output.putByte(type)
-        output.putUnsignedVarInt(count(entries))
-        foreach(entries entry : as) {
-            output.putVarLong(entry.scoreboardId)
-            if (type === TYPE_REGISTER_IDENTITY) {
-                output.putEntityUniqueId(entry.entityUniqueId)
+        output.putByte(type.id)
+        output.putUnsignedVarInt(entries.size)
+        entries.forEach {
+            output.putVarLong(it.scoreboardId)
+            if (it.entityUniqueId != null) {
+                output.putEntityUniqueId(it.entityUniqueId)
             }
         }
     }

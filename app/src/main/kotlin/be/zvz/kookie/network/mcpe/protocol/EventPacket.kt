@@ -1,5 +1,3 @@
-package be.zvz.kookie.network.mcpe.protocol
-
 /**
  *
  * _  __           _    _
@@ -17,46 +15,24 @@ package be.zvz.kookie.network.mcpe.protocol
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  */
+package be.zvz.kookie.network.mcpe.protocol
 
+import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
+import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
+
+@ProtocolIdentify(ProtocolInfo.IDS.EVENT_PACKET)
 class EventPacket : DataPacket(), ClientboundPacket {
-    @ProtocolIdentify(ProtocolInfo.IDS.EVENT_PACKET)
 
-    const val TYPE_ACHIEVEMENT_AWARDED = 0
-    const val TYPE_ENTITY_INTERACT = 1
-    const val TYPE_PORTAL_BUILT = 2
-    const val TYPE_PORTAL_USED = 3
-    const val TYPE_MOB_KILLED = 4
-    const val TYPE_CAULDRON_USED = 5
-    const val TYPE_PLAYER_DEATH = 6
-    const val TYPE_BOSS_KILLED = 7
-    const val TYPE_AGENT_COMMAND = 8
-    const val TYPE_AGENT_CREATED = 9
-    const val TYPE_PATTERN_REMOVED = 10 //???
-    const val TYPE_COMMANED_EXECUTED = 11
-    const val TYPE_FISH_BUCKETED = 12
-    const val TYPE_MOB_BORN = 13
-    const val TYPE_PET_DIED = 14
-    const val TYPE_CAULDRON_BLOCK_USED = 15
-    const val TYPE_COMPOSTER_BLOCK_USED = 16
-    const val TYPE_BELL_BLOCK_USED = 17
-    const val TYPE_ACTOR_DEFINITION = 18
-    const val TYPE_RAID_UPDATE = 19
-    const val TYPE_PLAYER_MOVEMENT_ANOMALY = 20 //anti cheat
-    const val TYPE_PLAYER_MOVEMENT_CORRECTED = 21
-    const val TYPE_HONEY_HARVESTED = 22
-    const val TYPE_TARGET_BLOCK_HIT = 23
-    const val TYPE_PIGLIN_BARTER = 24
-
-    var playerRuntimeId: Int
-    var eventData: Int
-    var type: Int
+    var playerRuntimeId: Long = 0
+    var eventData: Int = 0
+    var type: Int = 0
 
     override fun decodePayload(input: PacketSerializer) {
         playerRuntimeId = input.getEntityRuntimeId()
         eventData = input.getVarInt()
         type = input.getByte()
 
-        //TODO: nice confusing mess
+        // TODO: nice confusing mess
     }
 
     override fun encodePayload(output: PacketSerializer) {
@@ -64,10 +40,38 @@ class EventPacket : DataPacket(), ClientboundPacket {
         output.putVarInt(eventData)
         output.putByte(type)
 
-        //TODO: also nice confusing mess
+        // TODO: also nice confusing mess
     }
 
     override fun handle(handler: PacketHandlerInterface): Boolean {
         return handler.handleEvent(this)
+    }
+
+    enum class TYPE(value: Int) {
+        ACHIEVEMENT_AWARDED(0),
+        ENTITY_INTERACT(1),
+        PORTAL_BUILT(2),
+        PORTAL_USED(3),
+        MOB_KILLED(4),
+        CAULDRON_USED(5),
+        PLAYER_DEATH(6),
+        BOSS_KILLED(7),
+        AGENT_COMMAND(8),
+        AGENT_CREATED(9),
+        PATTERN_REMOVED(10), // ???
+        COMMANED_EXECUTED(11),
+        FISH_BUCKETED(12),
+        MOB_BORN(13),
+        PET_DIED(14),
+        CAULDRON_BLOCK_USED(15),
+        COMPOSTER_BLOCK_USED(16),
+        BELL_BLOCK_USED(17),
+        ACTOR_DEFINITION(18),
+        RAID_UPDATE(19),
+        PLAYER_MOVEMENT_ANOMALY(20), // anti cheat
+        PLAYER_MOVEMENT_CORRECTED(21),
+        HONEY_HARVESTED(22),
+        TARGET_BLOCK_HIT(23),
+        PIGLIN_BARTER(24),
     }
 }

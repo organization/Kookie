@@ -1,5 +1,3 @@
-package be.zvz.kookie.network.mcpe.protocol
-
 /**
  *
  * _  __           _    _
@@ -17,33 +15,32 @@ package be.zvz.kookie.network.mcpe.protocol
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  */
-use Ramsey\Uuid\UuidInterface
-use fun count
+package be.zvz.kookie.network.mcpe.protocol
 
+import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
+import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
+import be.zvz.kookie.network.mcpe.protocol.types.inventory.ItemStackWrapper
+import java.util.*
+
+@ProtocolIdentify(ProtocolInfo.IDS.CRAFTING_EVENT_PACKET)
 class CraftingEventPacket : DataPacket(), ServerboundPacket {
-    @ProtocolIdentify(ProtocolInfo.IDS.CRAFTING_EVENT_PACKET)
 
-    var windowId: Int
-    var type: Int
-    var id: UuidInterface
-    /** @var ItemStackWrapper[] */
-    inputput = []
-    /** @var ItemStackWrapper[] */
-    outputput = []
+    var windowId: Int = -1
+    var type: Int = -1
+    lateinit var id: UUID
+    val inputStacks = mutableListOf<ItemStackWrapper>()
+    val outputStacks = mutableListOf<ItemStackWrapper>()
 
     override fun decodePayload(input: PacketSerializer) {
         windowId = input.getByte()
         type = input.getVarInt()
         id = input.getUUID()
 
-        size = input.getUnsignedVarInt()
-        for (i = 0 i < size and i < 128++i){
-            input[] = ItemStackWrapper::read(input)
+        for (i in 0 until Math.min(input.getUnsignedVarInt(), 128)) {
+            inputStacks.add(ItemStackWrapper.read(input))
         }
-
-        size = input.getUnsignedVarInt()
-        for (i = 0 i < size and i < 128++i){
-            output[] = ItemStackWrapper::read(input)
+        for (i in 0 until Math.min(input.getUnsignedVarInt(), 128)) {
+            outputStacks.add(ItemStackWrapper.read(input))
         }
     }
 
@@ -52,13 +49,13 @@ class CraftingEventPacket : DataPacket(), ServerboundPacket {
         output.putVarInt(type)
         output.putUUID(id)
 
-        output.putUnsignedVarInt(count(input))
-        foreach(input item : as) {
+        output.putUnsignedVarInt(inputStacks.size)
+        inputStacks.forEach { item ->
             item.write(output)
         }
 
-        output.putUnsignedVarInt(count(output))
-        foreach(output item : as) {
+        output.putUnsignedVarInt(outputStacks.size)
+        outputStacks.forEach { item ->
             item.write(output)
         }
     }

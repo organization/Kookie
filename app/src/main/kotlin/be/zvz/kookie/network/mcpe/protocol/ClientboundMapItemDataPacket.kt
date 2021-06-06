@@ -24,6 +24,7 @@ import be.zvz.kookie.network.mcpe.protocol.types.DimensionIds
 import be.zvz.kookie.network.mcpe.protocol.types.MapDecoration
 import be.zvz.kookie.network.mcpe.protocol.types.MapTrackedObject
 import be.zvz.kookie.utils.Binary
+import com.koloboke.collect.map.hash.HashIntObjMaps
 
 @ProtocolIdentify(ProtocolInfo.IDS.CLIENTBOUND_MAP_ITEM_DATA_PACKET)
 class ClientboundMapItemDataPacket : DataPacket(), ClientboundPacket {
@@ -47,7 +48,7 @@ class ClientboundMapItemDataPacket : DataPacket(), ClientboundPacket {
     var yOffset: Int = 0
 
     /** @var Color[][] */
-    var colors: MutableMap<Int, MutableMap<Int, Color>> = mutableMapOf()
+    var colors: MutableMap<Int, MutableMap<Int, Color>> = HashIntObjMaps.newMutableMap()
 
     override fun decodePayload(input: PacketSerializer) {
         mapId = input.getEntityUniqueId()

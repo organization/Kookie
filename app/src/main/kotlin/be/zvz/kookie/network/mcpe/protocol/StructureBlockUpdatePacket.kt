@@ -1,5 +1,3 @@
-package be.zvz.kookie.network.mcpe.protocol
-
 /**
  *
  * _  __           _    _
@@ -17,26 +15,29 @@ package be.zvz.kookie.network.mcpe.protocol
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  */
+package be.zvz.kookie.network.mcpe.protocol
 
+import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
+import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
+import be.zvz.kookie.network.mcpe.protocol.types.StructureEditorData
+
+@ProtocolIdentify(ProtocolInfo.IDS.STRUCTURE_BLOCK_UPDATE_PACKET)
 class StructureBlockUpdatePacket : DataPacket(), ServerboundPacket {
-    @ProtocolIdentify(ProtocolInfo.IDS.STRUCTURE_BLOCK_UPDATE_PACKET)
 
-    var x: Int
-    var y: Int
-    var z: Int
-    var structureEditorData: StructureEditorData
-    var isPowered: Boolean
+    var blockPos: PacketSerializer.BlockPosition = PacketSerializer.BlockPosition()
+    lateinit var structureEditorData: StructureEditorData
+    var isPowered: Boolean = false
 
     override fun decodePayload(input: PacketSerializer) {
-        input.getBlockPosition(x, y, z)
+        blockPos = input.getBlockPosition()
         structureEditorData = input.getStructureEditorData()
-        isPowered = input.getBool()
+        isPowered = input.getBoolean()
     }
 
     override fun encodePayload(output: PacketSerializer) {
-        output.putBlockPosition(x, y, z)
+        output.putBlockPosition(blockPos)
         output.putStructureEditorData(structureEditorData)
-        output.putBool(isPowered)
+        output.putBoolean(isPowered)
     }
 
     override fun handle(handler: PacketHandlerInterface): Boolean {

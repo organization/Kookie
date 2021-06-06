@@ -1,5 +1,3 @@
-package be.zvz.kookie.network.mcpe.protocol
-
 /**
  *
  * _  __           _    _
@@ -17,30 +15,27 @@ package be.zvz.kookie.network.mcpe.protocol
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  */
-use Ramsey\Uuid\UuidInterface
+package be.zvz.kookie.network.mcpe.protocol
 
+import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
+import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
+import be.zvz.kookie.network.mcpe.protocol.types.skin.SkinData
+import java.util.*
+
+@ProtocolIdentify(ProtocolInfo.IDS.PLAYER_SKIN_PACKET)
 class PlayerSkinPacket : DataPacket(), ClientboundPacket, ServerboundPacket {
-    @ProtocolIdentify(ProtocolInfo.IDS.PLAYER_SKIN_PACKET)
 
-    var uuid: UuidInterface
-    var oldSkinName: string = ""
-    var newSkinName: string = ""
-    var skin: SkinData
-
-    static
-    fun create(uuid: UuidInterface, skinData: SkinData): self {
-        result = new self
-                result.uuid = uuid
-        result.skin = skinData
-        return result
-    }
+    lateinit var uuid: UUID
+    lateinit var oldSkinName: String
+    lateinit var newSkinName: String
+    lateinit var skin: SkinData
 
     override fun decodePayload(input: PacketSerializer) {
         uuid = input.getUUID()
         skin = input.getSkin()
         newSkinName = input.getString()
         oldSkinName = input.getString()
-        skin->setVerified(input.getBool())
+        skin.isVerified = input.getBoolean()
     }
 
     override fun encodePayload(output: PacketSerializer) {
@@ -48,10 +43,17 @@ class PlayerSkinPacket : DataPacket(), ClientboundPacket, ServerboundPacket {
         output.putSkin(skin)
         output.putString(newSkinName)
         output.putString(oldSkinName)
-        output.putBool(skin->isVerified())
+        output.putBoolean(skin.isVerified)
     }
 
     override fun handle(handler: PacketHandlerInterface): Boolean {
         return handler.handlePlayerSkin(this)
+    }
+
+    companion object {
+        fun create(uuid: UUID, skinData: SkinData) = PlayerSkinPacket().apply {
+            this.uuid = uuid
+            this.skin = skinData
+        }
     }
 }

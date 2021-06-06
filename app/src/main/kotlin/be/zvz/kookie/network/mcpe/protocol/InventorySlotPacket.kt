@@ -1,5 +1,9 @@
 package be.zvz.kookie.network.mcpe.protocol
 
+import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
+import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
+import be.zvz.kookie.network.mcpe.protocol.types.inventory.ItemStackWrapper
+
 /**
  *
  * _  __           _    _
@@ -18,36 +22,35 @@ package be.zvz.kookie.network.mcpe.protocol
  * (at your option) any later version.
  */
 
+@ProtocolIdentify(ProtocolInfo.IDS.INVENTORY_SLOT_PACKET)
 class InventorySlotPacket : DataPacket(), ClientboundPacket {
-    @ProtocolIdentify(ProtocolInfo.IDS.INVENTORY_SLOT_PACKET)
 
-    var windowId: Int
-    var inputventorySlot: Int
-    var item: ItemStackWrapper
-
-    static
-    fun create(windowId: Int, slot: Int, item: ItemStackWrapper): self {
-        result = new self
-                result.inventorySlot = slot
-        result.item = item
-        result.windowId = windowId
-
-        return result
-    }
+    var windowId: Int = 0
+    var inventorySlot: Int = 0
+    lateinit var item: ItemStackWrapper
 
     override fun decodePayload(input: PacketSerializer) {
         windowId = input.getUnsignedVarInt()
         inventorySlot = input.getUnsignedVarInt()
-        item = ItemStackWrapper::read(input)
+        item = ItemStackWrapper.read(input)
     }
 
     override fun encodePayload(output: PacketSerializer) {
         output.putUnsignedVarInt(windowId)
         output.putUnsignedVarInt(inventorySlot)
-        item->write(output)
+        item.write(output)
     }
 
     override fun handle(handler: PacketHandlerInterface): Boolean {
         return handler.handleInventorySlot(this)
+    }
+
+    companion object {
+        fun create(windowId: Int, slot: Int, item: ItemStackWrapper) =
+            InventorySlotPacket().apply {
+                this.inventorySlot = slot
+                this.item = item
+                this.windowId = windowId
+            }
     }
 }

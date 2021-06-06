@@ -1,5 +1,3 @@
-package be.zvz.kookie.network.mcpe.protocol
-
 /**
  *
  * _  __           _    _
@@ -17,117 +15,28 @@ package be.zvz.kookie.network.mcpe.protocol
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  */
-use fun assert
+package be.zvz.kookie.network.mcpe.protocol
 
+import be.zvz.kookie.math.Vector3
+import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
+import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
+import be.zvz.kookie.network.mcpe.protocol.types.PlayMode
+
+@ProtocolIdentify(ProtocolInfo.IDS.PLAYER_AUTH_INPUT_PACKET)
 class PlayerAuthInputPacket : DataPacket(), ServerboundPacket {
-    @ProtocolIdentify(ProtocolInfo.IDS.PLAYER_AUTH_INPUT_PACKET)
 
-    var position: Vector3
-    var pitch: Float
-    var yaw: Float
-    var headYaw: Float
-    var moveVecX: Float
-    var moveVecZ: Float
-    var inputputFlags: Int
-    var inputputMode: Int
-    var playMode: Int
-    var vrGazeDirection: Vector3|null = null
-    var tick: Int
-    var delta: Vector3
-
-    /**
-     * @param Int          inputputFlags @see InputFlags
-     * @param Int          inputputMode @see InputMode
-     * @param Int          playMode @see PlayMode
-     * @param Vector3|null vrGazeDirection only used when PlayMode::VR
-     */
-    static
-    fun create(
-        position: Vector3,
-        pitch: Float,
-        yaw: Float,
-        headYaw: Float,
-        moveVecX: Float,
-        moveVecZ: Float,
-        inputputFlags: Int,
-        inputputMode: Int,
-        playMode: Int,
-        ?
-        vrGazeDirection: Vector3,
-        tick: Int,
-        delta: Vector3
-    ): self {
-        if (playMode === PlayMode::VR and vrGazeDirection === null) {
-            //yuck, can we get a properly written packet just once? ...
-            throw new \InvalidArgumentException("Gaze direction must be provided for VR play mode")
-        }
-        result = new self
-                result.position = position.asVector3()
-        result.pitch = pitch
-        result.yaw = yaw
-        result.headYaw = headYaw
-        result.moveVecX = moveVecX
-        result.moveVecZ = moveVecZ
-        result.inputFlags = inputputFlags
-        result.inputMode = inputputMode
-        result.playMode = playMode
-        if (vrGazeDirection !== null) {
-            result.vrGazeDirection = vrGazeDirection.asVector3()
-        }
-        result.tick = tick
-        result.delta = delta
-        return result
-    }
-
-    fun getPosition(): Vector3 {
-        return position
-    }
-
-    fun getPitch(): Float {
-        return pitch
-    }
-
-    fun getYaw(): Float {
-        return yaw
-    }
-
-    fun getHeadYaw(): Float {
-        return headYaw
-    }
-
-    fun getMoveVecX(): Float {
-        return moveVecX
-    }
-
-    fun getMoveVecZ(): Float {
-        return moveVecZ
-    }
-
-    /**
-     * @see PlayerAuthInputFlags
-     */
-    fun getInputFlags(): Int {
-        return inputFlags
-    }
-
-    /**
-     * @see InputMode
-     */
-    fun getInputMode(): Int {
-        return inputMode
-    }
-
-    /**
-     * @see PlayMode
-     */
-    fun getPlayMode(): Int {
-        return playMode
-    }
-
-    fun getVrGazeDirection(): ?Vector3
-    {
-        return vrGazeDirection
-    }
+    lateinit var position: Vector3
+    var pitch: Float = 0.0f
+    var yaw: Float = 0.0f
+    var headYaw: Float = 0.0f
+    var moveVecX: Float = 0.0f
+    var moveVecZ: Float = 0.0f
+    var inputFlags: Long = 0
+    var inputMode: Int = 0
+    var playMode: Int = 0
+    lateinit var vrGazeDirection: Vector3
+    var tick: Long = 0
+    lateinit var delta: Vector3
 
     override fun decodePayload(input: PacketSerializer) {
         pitch = input.getLFloat()
@@ -139,7 +48,7 @@ class PlayerAuthInputPacket : DataPacket(), ServerboundPacket {
         inputFlags = input.getUnsignedVarLong()
         inputMode = input.getUnsignedVarInt()
         playMode = input.getUnsignedVarInt()
-        if (playMode === PlayMode::VR) {
+        if (playMode == PlayMode.VR.mode) {
             vrGazeDirection = input.getVector3()
         }
         tick = input.getUnsignedVarLong()
@@ -156,15 +65,46 @@ class PlayerAuthInputPacket : DataPacket(), ServerboundPacket {
         output.putUnsignedVarLong(inputFlags)
         output.putUnsignedVarInt(inputMode)
         output.putUnsignedVarInt(playMode)
-        if (playMode === PlayMode::VR) {
-            assert(vrGazeDirection !== null)
+        if (playMode == PlayMode.VR.mode && this::vrGazeDirection.isInitialized) {
             output.putVector3(vrGazeDirection)
         }
         output.putUnsignedVarLong(tick)
         output.putVector3(delta)
     }
 
-    override fun handle(handler: PacketHandlerInterface): Boolean {
-        return handler.handlePlayerAuthInput(this)
+    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handlePlayerAuthInput(this)
+
+    companion object {
+        fun create(
+            position: Vector3,
+            pitch: Float,
+            yaw: Float,
+            headYaw: Float,
+            moveVecX: Float,
+            moveVecZ: Float,
+            inputFlags: Long,
+            inputMode: Int,
+            playMode: Int,
+            vrGazeDirection: Vector3?,
+            tick: Long,
+            delta: Vector3
+        ) = PlayerAuthInputPacket().apply {
+            if (playMode == PlayMode.VR.mode && vrGazeDirection === null) {
+                // yuck, can we get a properly written packet just once? ...
+                throw IllegalArgumentException("Gaze direction must be provided for VR play mode")
+            }
+            this.position = position.asVector3()
+            this.pitch = pitch
+            this.yaw = yaw
+            this.headYaw = headYaw
+            this.moveVecX = moveVecX
+            this.moveVecZ = moveVecZ
+            this.inputFlags = inputFlags
+            this.inputMode = inputMode
+            this.playMode = playMode
+            vrGazeDirection?.let { this.vrGazeDirection = vrGazeDirection.asVector3() }
+            this.tick = tick
+            this.delta = delta
+        }
     }
 }

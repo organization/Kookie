@@ -1,5 +1,3 @@
-package be.zvz.kookie.network.mcpe.protocol
-
 /**
  *
  * _  __           _    _
@@ -17,44 +15,37 @@ package be.zvz.kookie.network.mcpe.protocol
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  */
-use fun count
+package be.zvz.kookie.network.mcpe.protocol
 
+import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
+import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
+import be.zvz.kookie.network.mcpe.protocol.types.inventory.stackrequest.ItemStackRequest
+
+@ProtocolIdentify(ProtocolInfo.IDS.ITEM_STACK_REQUEST_PACKET)
 class ItemStackRequestPacket : DataPacket(), ServerboundPacket {
-    @ProtocolIdentify(ProtocolInfo.IDS.ITEM_STACK_REQUEST_PACKET)
-
-    /** @var ItemStackRequest[] */
-    requests
-
-    /**
-     * @param ItemStackRequest[] requests
-     */
-    static
-    fun create(requests: array): self {
-        result = new self
-                result.requests = requests
-        return result
-    }
-
-    /** @return ItemStackRequest[] */
-    fun getRequests(): array {
-        return requests
-    }
+    lateinit var requests: MutableList<ItemStackRequest>
 
     override fun decodePayload(input: PacketSerializer) {
-        requests = []
-        for (i = 0, len = input.getUnsignedVarInt() i < len++i){
-            requests[] = ItemStackRequest::read(input)
+        requests.clear()
+        for (i in 0 until input.getUnsignedVarInt()) {
+            requests.add(ItemStackRequest.read(input))
         }
     }
 
     override fun encodePayload(output: PacketSerializer) {
-        output.putUnsignedVarInt(count(requests))
-        foreach(requests request : as) {
-            request.write(output)
+        output.putUnsignedVarInt(requests.size)
+        requests.forEach {
+            it.write(output)
         }
     }
 
     override fun handle(handler: PacketHandlerInterface): Boolean {
         return handler.handleItemStackRequest(this)
+    }
+
+    companion object {
+        fun create(requests: MutableList<ItemStackRequest>) = ItemStackRequestPacket().apply {
+            this.requests = requests
+        }
     }
 }

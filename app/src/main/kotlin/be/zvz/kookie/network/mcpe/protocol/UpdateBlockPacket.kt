@@ -4,7 +4,7 @@ import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
 import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 
 @ProtocolIdentify(ProtocolInfo.IDS.UPDATE_BLOCK_PACKET)
-class UpdateBlockPacket : DataPacket(), ClientboundPacket {
+open class UpdateBlockPacket : DataPacket(), ClientboundPacket {
     val pos = PacketSerializer.BlockPosition()
     var blockRuntimeId: Int = 0
 
