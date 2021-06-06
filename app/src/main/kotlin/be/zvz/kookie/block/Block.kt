@@ -89,7 +89,7 @@ open class Block(val idInfo: BlockIdentifier, val name: String, val breakInfo: B
     }
 
     open fun writeStateToWorld() {
-        pos.world?.getOrLoadChunkAtPosition(pos)?.setFullBlock(pos.x.toInt() and 0xf, pos.y.toInt(), pos.z.toInt() and 0xf, getFullId())
+        pos.world?.getOrLoadChunkAtPosition(pos)?.setFullBlock(pos.x.toInt() and 0xf, pos.y.toInt(), pos.z.toInt() and 0xf, getFullId().toLong())
 
         var tileType: Class<*>? = null
         // TODO: Completion of getTile method in World

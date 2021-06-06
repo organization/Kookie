@@ -53,7 +53,7 @@ object BlockFactory {
             }
 
             for (m in variant until (variant or stateMask)) {
-                if ((m and stateMask.inv()) != variant) {
+                if (m and stateMask.inv() != variant) {
                     continue
                 }
 
@@ -61,7 +61,7 @@ object BlockFactory {
                     throw IllegalArgumentException("Block registration ${block::class} has states which conflict with other blocks")
                 }
 
-                val index = (id shl 4) or m
+                val index = id shl 4 or m
 
                 val v = block.clone()
                 try {
@@ -81,7 +81,7 @@ object BlockFactory {
     }
 
     fun remap(id: Int, meta: Int, block: Block) {
-        val index = (id shl 4) or meta
+        val index = id shl 4 or meta
         if (isRegistered(id, meta)) {
             val existing = fullList[index]
             if (existing !== null && existing.getFullId() == index) {
