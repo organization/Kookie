@@ -4,6 +4,7 @@
     <disabledRules>
       <list>
         <option value="no-wildcard-imports" />
+        <option value="no-trailing-spaces" />
       </list>
     </disabledRules>
   </component>

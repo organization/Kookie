@@ -1,10 +1,7 @@
 package be.zvz.kookie.world.format
 
-import be.zvz.kookie.world.format.dummy.LightArray
-import be.zvz.kookie.world.format.dummy.PalettedBlockArray
-
 class SubChunk(
-    val emptyBlockId: Int,
+    val emptyBlockId: Long,
     var blockLayers: MutableList<PalettedBlockArray>,
     var skyLight: LightArray = LightArray.fill(0),
     var blockLight: LightArray = LightArray.fill(0),
@@ -18,14 +15,16 @@ class SubChunk(
 
     fun isEmptyFast(): Boolean = blockLayers.size == 0
 
-    fun getFullBlock(x: Int, y: Int, z: Int): Int = when (blockLayers.size) {
+    fun getFullBlock(x: Int, y: Int, z: Int): Long = when (blockLayers.size) {
         0 -> emptyBlockId
         else -> blockLayers[0].get(x, y, z)
     }
 
-    fun setFullBlock(x: Int, y: Int, z: Int, block: Int) = when (blockLayers.size) {
-        0 -> blockLayers.add(PalettedBlockArray(emptyBlockId))
-        else -> blockLayers[0].set(x, y, z, block)
+    fun setFullBlock(x: Int, y: Int, z: Int, block: Long) {
+        when (blockLayers.size) {
+            0 -> blockLayers.add(PalettedBlockArray(emptyBlockId))
+            else -> blockLayers[0].set(x, y, z, block)
+        }
     }
 
     fun getHighestBlockAt(x: Int, z: Int): Int? {
@@ -46,9 +45,9 @@ class SubChunk(
         var check: Boolean
         blockLayers.forEachIndexed { index, layer ->
             check = false
-            layer.collectGarbage()
+            // TODO: layer.collectGarbage()
 
-            layer.palette.forEach {
+            layer.getPalette().forEach {
                 if (it != emptyBlockId) {
                     check = true
                     return@forEach
@@ -60,8 +59,8 @@ class SubChunk(
             }
         }
 
-        skyLight.collectGarbage()
-        blockLight.collectGarbage()
+        // TODO: skyLight.collectGarbage()
+        // TODO: blockLight.collectGarbage()
     }
 
     fun clone(): SubChunk {

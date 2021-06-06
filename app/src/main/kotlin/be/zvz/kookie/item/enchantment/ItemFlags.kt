@@ -42,6 +42,7 @@ enum class ItemFlags(val flags: Int) {
     TRIDENT(0x8000);
 
     companion object {
-        fun from(findValue: Int): ItemFlags = ItemFlags.values().first { it.flags == findValue }
+        private val VALUE = values()
+        fun from(findValue: Int): ItemFlags = VALUE.first { it.flags == findValue }
     }
 }

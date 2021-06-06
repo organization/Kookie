@@ -60,16 +60,14 @@ class UseItemOnEntityTransactionData : TransactionData() {
             itemInHand: ItemStackWrapper,
             playerPos: Vector3,
             clickPos: Vector3
-        ): UseItemOnEntityTransactionData {
-            val result = UseItemOnEntityTransactionData()
-            result.setActions(actions)
-            result.entityRuntimeId = entityRuntimeId
-            result.actionType = actionType
-            result.hotbarSlot = hotbarSlot
-            result.itemInHand = itemInHand
-            result.playerPos = playerPos
-            result.clickPos = clickPos
-            return result
+        ): UseItemOnEntityTransactionData = UseItemOnEntityTransactionData().apply {
+            this.setActions(actions)
+            this.entityRuntimeId = entityRuntimeId
+            this.actionType = actionType
+            this.hotbarSlot = hotbarSlot
+            this.itemInHand = itemInHand
+            this.playerPos = playerPos
+            this.clickPos = clickPos
         }
     }
 }

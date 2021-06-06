@@ -854,6 +854,7 @@ enum class ItemIds(val id: Int) {
     NETHERITE_SCARP(752);
 
     companion object {
-        fun from(findValue: Int): ItemIds = values().first { it.id == findValue }
+        private val VALUES = values()
+        fun from(findValue: Int): ItemIds = VALUES.first { it.id == findValue }
     }
 }

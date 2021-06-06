@@ -38,7 +38,7 @@ class AddPlayerPacket : DataPacket(), ClientboundPacket {
 
     var deviceId: String = ""
 
-    var buildPlatform: Int = DeviceOS.UNKNOWN
+    var buildPlatform: DeviceOS = DeviceOS.UNKNOWN
 
     override fun decodePayload(input: PacketSerializer) {
         uuid = input.getUUID()
@@ -66,7 +66,7 @@ class AddPlayerPacket : DataPacket(), ClientboundPacket {
             links.add(input.getEntityLink())
         }
         deviceId = input.getString()
-        buildPlatform = input.getLInt()
+        buildPlatform = DeviceOS.from(input.getLInt())
     }
 
     override fun encodePayload(output: PacketSerializer) {
@@ -95,7 +95,7 @@ class AddPlayerPacket : DataPacket(), ClientboundPacket {
             output.putEntityLink(it)
         }
         output.putString(deviceId)
-        output.putLInt(buildPlatform)
+        output.putLInt(buildPlatform.id)
     }
 
     override fun handle(handler: PacketHandlerInterface): Boolean {
