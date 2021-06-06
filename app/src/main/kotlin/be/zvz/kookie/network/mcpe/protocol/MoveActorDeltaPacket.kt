@@ -33,14 +33,14 @@ class MoveActorDeltaPacket : DataPacket(), ClientboundPacket {
     var zRot: Float = 0.0F
 
     fun maybeReadCoord(flag: Int, input: PacketSerializer): Float {
-        if ((flags and flag) != 0) {
+        if (flags and flag != 0) {
             return input.getLFloat()
         }
         return 0F
     }
 
     fun maybeReadRotation(flag: Int, input: PacketSerializer): Float {
-        if ((flags and flag) != 0) {
+        if (flags and flag != 0) {
             return input.getByteRotation()
         }
         return 0.0F
@@ -58,13 +58,13 @@ class MoveActorDeltaPacket : DataPacket(), ClientboundPacket {
     }
 
     fun maybeWriteCoord(flag: Int, value: Float, output: PacketSerializer) {
-        if ((flags and flag) != 0) {
+        if (flags and flag != 0) {
             output.putLFloat(value)
         }
     }
 
     fun maybeWriteRotation(flag: Int, value: Float, output: PacketSerializer) {
-        if ((flags and flag) != 0) {
+        if (flags and flag != 0) {
             output.putByteRotation(value)
         }
     }

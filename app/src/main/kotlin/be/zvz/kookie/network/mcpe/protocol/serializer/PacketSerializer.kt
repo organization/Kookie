@@ -419,7 +419,7 @@ class PacketSerializer(buffer: String = "", offset: AtomicInteger = AtomicIntege
 
     fun getNbtRoot(): TreeRoot {
         try {
-            return (LittleEndianNbtSerializer()).read(buffer.toString(), offset, 512)
+            return LittleEndianNbtSerializer().read(buffer.toString(), offset, 512)
         } catch (ignored: NbtDataException) {
             throw PacketDecodeException.wrap(ignored, "Failed to decode NBT root")
         }

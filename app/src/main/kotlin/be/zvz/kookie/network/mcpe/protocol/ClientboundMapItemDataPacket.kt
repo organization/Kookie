@@ -56,17 +56,17 @@ class ClientboundMapItemDataPacket : DataPacket(), ClientboundPacket {
         dimensionId = DimensionIds.fromInt(input.getByte())
         isLocked = input.getBoolean()
 
-        if ((type and 0x08) != 0) {
+        if (type and 0x08 != 0) {
             for (i in 0 until input.getUnsignedVarInt()) {
                 eids[i] = input.getEntityUniqueId()
             }
         }
 
-        if ((type and (0x08 or BITFLAG_DECORATION_UPDATE or BITFLAG_TEXTURE_UPDATE)) != 0) {
+        if (type and (0x08 or BITFLAG_DECORATION_UPDATE or BITFLAG_TEXTURE_UPDATE) != 0) {
             scale = input.getByte()
         }
 
-        if ((type and BITFLAG_DECORATION_UPDATE) != 0) {
+        if (type and BITFLAG_DECORATION_UPDATE != 0) {
             for (i in 0 until input.getUnsignedVarInt()) {
                 val obj = MapTrackedObject()
                 obj.type = input.getLInt()
@@ -95,7 +95,7 @@ class ClientboundMapItemDataPacket : DataPacket(), ClientboundPacket {
             }
         }
 
-        if ((type and BITFLAG_TEXTURE_UPDATE) != 0) {
+        if (type and BITFLAG_TEXTURE_UPDATE != 0) {
             width = input.getVarInt()
             height = input.getVarInt()
             xOffset = input.getVarInt()
@@ -103,7 +103,7 @@ class ClientboundMapItemDataPacket : DataPacket(), ClientboundPacket {
 
             val count = input.getUnsignedVarInt()
             if (count != width * height) {
-                throw PacketDecodeException("Expected colour count of " + (height * width) + " (height height * width width), got count")
+                throw PacketDecodeException("Expected colour count of ${height * width} (height height * width width), got count")
             }
 
             for (y in 0 until height) {
@@ -135,18 +135,18 @@ class ClientboundMapItemDataPacket : DataPacket(), ClientboundPacket {
         output.putByte(dimensionId.id)
         output.putBoolean(isLocked)
 
-        if ((type and 0x08) != 0) { // TODO: find out what these are for
+        if (type and 0x08 != 0) { // TODO: find out what these are for
             output.putUnsignedVarInt(eidsCount)
             eids.forEach {
                 output.putEntityUniqueId(it)
             }
         }
 
-        if ((type and (0x08 or BITFLAG_TEXTURE_UPDATE or BITFLAG_DECORATION_UPDATE)) != 0) {
+        if (type and (0x08 or BITFLAG_TEXTURE_UPDATE or BITFLAG_DECORATION_UPDATE) != 0) {
             output.putByte(scale)
         }
 
-        if ((type and BITFLAG_DECORATION_UPDATE) != 0) {
+        if (type and BITFLAG_DECORATION_UPDATE != 0) {
             output.putUnsignedVarInt(trackedEntities.size)
             trackedEntities.forEach {
                 output.putLInt(it.type)
@@ -172,7 +172,7 @@ class ClientboundMapItemDataPacket : DataPacket(), ClientboundPacket {
             }
         }
 
-        if ((type and BITFLAG_TEXTURE_UPDATE) != 0) {
+        if (type and BITFLAG_TEXTURE_UPDATE != 0) {
             output.putVarInt(width)
             output.putVarInt(height)
             output.putVarInt(xOffset)

@@ -29,7 +29,7 @@ class PlayerArmorDamagePacket : DataPacket(), ClientboundPacket {
     var feetSlotDamage: Int? = null
 
     fun maybeReadDamage(flags: Int, flag: Int, input: PacketSerializer): Int? {
-        if ((flags and (1 shl flag)) != 0) {
+        if (flags and (1 shl flag) != 0) {
             return input.getVarInt()
         }
         return null

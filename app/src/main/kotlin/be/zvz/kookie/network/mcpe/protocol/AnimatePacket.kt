@@ -29,7 +29,7 @@ class AnimatePacket : DataPacket(), ClientboundPacket, ServerboundPacket {
     override fun decodePayload(input: PacketSerializer) {
         action = input.getVarInt()
         entityRuntimeId = input.getEntityRuntimeId()
-        if ((action and 0x80) != 0) {
+        if (action and 0x80 != 0) {
             float = input.getLFloat()
         }
     }
@@ -37,7 +37,7 @@ class AnimatePacket : DataPacket(), ClientboundPacket, ServerboundPacket {
     override fun encodePayload(output: PacketSerializer) {
         output.putVarInt(action)
         output.putEntityRuntimeId(entityRuntimeId)
-        if ((action and 0x80) != 0) {
+        if (action and 0x80 != 0) {
             output.putLFloat(float)
         }
     }

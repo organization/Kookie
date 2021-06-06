@@ -48,12 +48,10 @@ class AdventureSettingsPacket : DataPacket(), ClientboundPacket, ServerboundPack
         output.putLLong(entityUniqueId)
     }
 
-    fun getFlag(flag: Int): Boolean {
-        if ((flag and BITFLAG_SECOND_SET) != 0) {
-            return (flags2 and flag) != 0
-        }
-
-        return (flags and flag) != 0
+    fun getFlag(flag: Int): Boolean = if (flag and BITFLAG_SECOND_SET != 0) {
+        flags2 and flag != 0
+    } else {
+        flags and flag != 0
     }
 
     fun setFlag(flag: Int, value: Boolean) {
