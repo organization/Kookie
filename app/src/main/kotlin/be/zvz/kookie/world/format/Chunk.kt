@@ -6,7 +6,7 @@ import be.zvz.kookie.entity.Entity
 import be.zvz.kookie.world.biome.BiomeIds
 
 class Chunk(
-    val subChunks: MutableList<SubChunk> = MutableList(MAX_SUBCHUNKS) { SubChunk(BlockLegacyIds.AIR.ordinal shl 4, mutableListOf()) },
+    val subChunks: MutableList<SubChunk> = MutableList(MAX_SUBCHUNKS) { SubChunk(BlockLegacyIds.AIR.id.toLong() shl 4, mutableListOf()) },
     val NBTentities: MutableList<Entity> = mutableListOf(),
     val NBTtiles: MutableList<Tile> = mutableListOf(),
     val biomeIds: BiomeArray = BiomeArray.fill(BiomeIds.OCEAN.id),
@@ -16,7 +16,7 @@ class Chunk(
 
     fun getHeight(): Int = subChunks.size
 
-    fun getFullBlock(x: Int, y: Int, z: Int): Int {
+    fun getFullBlock(x: Int, y: Int, z: Int): Long {
         return getSubChunk(y shr 4).getFullBlock(x, y and 0xf, z)
     }
 
@@ -28,7 +28,7 @@ class Chunk(
         return subChunks[y]
     }
 
-    fun setFullBlock(x: Int, y: Int, z: Int, block: Int) {
+    fun setFullBlock(x: Int, y: Int, z: Int, block: Long) {
         getSubChunk(y shr 4).setFullBlock(x, y and 0xf, z, block)
         dirtyFlags = dirtyFlags or DIRTY_FLAG_TERRAIN
     }
