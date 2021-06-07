@@ -19,7 +19,7 @@ package be.zvz.kookie.network.mcpe.protocol
 
 import be.zvz.kookie.math.Vector3
 import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
-import be.zvz.kookie.network.mcpe.serializer.PacketSerializer
+import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 
 @ProtocolIdentify(ProtocolInfo.IDS.LEVEL_EVENT_PACKET)
 class LevelEventPacket : DataPacket(), ClientboundPacket {
@@ -108,16 +108,13 @@ class LevelEventPacket : DataPacket(), ClientboundPacket {
         const val EVENT_ADD_PARTICLE_MASK = 16384
         const val PID_MASK = 1023
 
-        fun create(evid: Int, data: Int, pos: Vector3? = null): LevelEventPacket {
-            return LevelEventPacket().apply {
-                this.evid = evid
-                this.data = data
-                this.position = pos
-            }
+        fun create(evid: Int, data: Int, pos: Vector3? = null) = LevelEventPacket().apply {
+            this.evid = evid
+            this.data = data
+            this.position = pos
         }
 
-        fun standardParticle(particleId: Int, data: Int, pos: Vector3): LevelEventPacket {
-            return create(EVENT_ADD_PARTICLE_MASK or particleId, data, pos)
-        }
+        fun standardParticle(particleId: Int, data: Int, pos: Vector3) =
+            create(EVENT_ADD_PARTICLE_MASK or particleId, data, pos)
     }
 }

@@ -18,8 +18,7 @@
 package be.zvz.kookie.network.mcpe.protocol.types.inventory
 
 import be.zvz.kookie.network.mcpe.protocol.PacketDecodeException
-import be.zvz.kookie.network.mcpe.serializer.PacketSerializer
-import java.lang.IllegalArgumentException
+import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 
 class NetworkInventoryAction {
 
@@ -37,7 +36,8 @@ class NetworkInventoryAction {
         when (input.getUnsignedVarInt()) {
             SOURCE_CONTAINER -> windowId = input.getVarInt()
             SOURCE_WORLD -> sourceFlags = input.getUnsignedVarInt()
-            SOURCE_CREATIVE -> {}
+            SOURCE_CREATIVE -> {
+            }
             SOURCE_TODO -> windowId = input.getVarInt()
             else -> throw PacketDecodeException("Unknown inventory action source type this.sourceType")
         }
@@ -54,7 +54,8 @@ class NetworkInventoryAction {
         when (sourceType) {
             SOURCE_CONTAINER -> output.putVarInt(windowId)
             SOURCE_WORLD -> output.putUnsignedVarInt(sourceFlags)
-            SOURCE_CREATIVE -> {}
+            SOURCE_CREATIVE -> {
+            }
             SOURCE_TODO -> output.putVarInt(windowId)
             else -> throw IllegalArgumentException("Unknown inventory action source type ${this.sourceType}")
         }

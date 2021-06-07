@@ -18,18 +18,18 @@
 package be.zvz.kookie.network.mcpe.protocol
 
 import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
-import be.zvz.kookie.network.mcpe.serializer.PacketSerializer
+import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 
 @ProtocolIdentify(ProtocolInfo.IDS.RESOURCE_PACK_CLIENT_RESPONSE_PACKET)
 class ResourcePackClientResponsePacket : DataPacket(), ServerboundPacket {
 
     var status: Int = -1
 
-    var packIds: MutableList<String> = mutableListOf()
+    var packIds = mutableListOf<String>()
 
     override fun decodePayload(input: PacketSerializer) {
         status = input.getByte()
-        for (i in 0..input.getLShort()) {
+        for (i in 0 until input.getLShort()) {
             packIds.add(input.getString())
         }
     }
@@ -45,10 +45,10 @@ class ResourcePackClientResponsePacket : DataPacket(), ServerboundPacket {
         return handler.handleResourcePackClientResponse(this)
     }
 
-    companion object {
-        const val STATUS_REFUSED = 1
-        const val STATUS_SEND_PACKS = 2
-        const val STATUS_HAVE_ALL_PACKS = 3
-        const val STATUS_COMPLETED = 4
+    enum class Status(val state: Int) {
+        REFUSED(1),
+        SEND_PACKS(2),
+        HAVE_ALL_PACKS(3),
+        COMPLETED(4),
     }
 }

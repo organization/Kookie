@@ -17,7 +17,7 @@
  */
 package be.zvz.kookie.world.format
 
-class LightArray {
+class LightArray : Cloneable {
     private val values: IntArray = IntArray(DATA_SIZE)
 
     private constructor(payload: String) {
@@ -53,6 +53,8 @@ class LightArray {
             }
         }
     )
+
+    public override fun clone(): LightArray = super.clone() as LightArray
 
     companion object {
         private const val DATA_SIZE = 2048

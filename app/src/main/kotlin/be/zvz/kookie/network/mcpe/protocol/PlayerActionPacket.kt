@@ -18,29 +18,26 @@
 package be.zvz.kookie.network.mcpe.protocol
 
 import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
-import be.zvz.kookie.network.mcpe.serializer.PacketSerializer
-import java.util.concurrent.atomic.AtomicInteger
+import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 
 @ProtocolIdentify(ProtocolInfo.IDS.PLAYER_ACTION_PACKET)
 class PlayerActionPacket : DataPacket(), ServerboundPacket {
     var entityRuntimeId: Long = 0
     var action: Int = 0
-    var x: AtomicInteger = AtomicInteger()
-    var y: AtomicInteger = AtomicInteger()
-    var z: AtomicInteger = AtomicInteger()
+    val pos = PacketSerializer.BlockPosition()
     var face: Int = 0
 
     override fun decodePayload(input: PacketSerializer) {
         this.entityRuntimeId = input.getEntityRuntimeId()
         this.action = input.getVarInt()
-        input.getBlockPosition(x, y, z)
+        input.getBlockPosition(pos)
         this.face = input.getVarInt()
     }
 
     override fun encodePayload(output: PacketSerializer) {
         output.putEntityRuntimeId(entityRuntimeId)
         output.putVarInt(action)
-        output.putBlockPosition(x.get(), y.get(), z.get())
+        output.putBlockPosition(pos)
         output.putVarInt(face)
     }
 

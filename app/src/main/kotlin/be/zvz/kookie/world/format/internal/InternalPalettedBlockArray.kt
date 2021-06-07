@@ -88,9 +88,9 @@ class InternalPalettedBlockArray<Block> internal constructor(private val bitsPer
 
     fun countUniqueBlocks(): Int {
         val hasFound: MutableSet<Block> = HashObjSets.newMutableSet()
-        for (x in 0..IPalettedBlockArray.ARRAY_DIM) {
-            for (z in 0..IPalettedBlockArray.ARRAY_DIM) {
-                for (y in 0..IPalettedBlockArray.ARRAY_DIM) {
+        for (x in 0 until IPalettedBlockArray.ARRAY_DIM) {
+            for (z in 0 until IPalettedBlockArray.ARRAY_DIM) {
+                for (y in 0 until IPalettedBlockArray.ARRAY_DIM) {
                     val inserted = hasFound.add(palette[internalGetPaletteOffset(x, y, z)])
                     if (inserted && hasFound.size == getPaletteSize()) {
                         break
@@ -109,7 +109,7 @@ class InternalPalettedBlockArray<Block> internal constructor(private val bitsPer
 
     override fun set(x: Int, y: Int, z: Int, v: Block): Boolean {
         var offset = -1
-        for (i in 0..nextPaletteIndex) {
+        for (i in 0 until nextPaletteIndex) {
             if (palette[i] == v) {
                 offset = i
                 break
@@ -140,7 +140,7 @@ class InternalPalettedBlockArray<Block> internal constructor(private val bitsPer
     }
 
     override fun replaceAll(from: Block, to: Block) {
-        for (i in 0..nextPaletteIndex) {
+        for (i in 0 until nextPaletteIndex) {
             if (palette[i] == from) {
                 palette[i] = to
             }
@@ -148,9 +148,9 @@ class InternalPalettedBlockArray<Block> internal constructor(private val bitsPer
     }
 
     override fun convertFrom(otherArray: IPalettedBlockArray<Block>) {
-        for (x in 0..IPalettedBlockArray.ARRAY_DIM) {
-            for (z in 0..IPalettedBlockArray.ARRAY_DIM) {
-                for (y in 0..IPalettedBlockArray.ARRAY_DIM) {
+        for (x in 0 until IPalettedBlockArray.ARRAY_DIM) {
+            for (z in 0 until IPalettedBlockArray.ARRAY_DIM) {
+                for (y in 0 until IPalettedBlockArray.ARRAY_DIM) {
                     if (!set(x, y, z, otherArray.get(x, y, z))) {
                         throw IndexOutOfBoundsException("out of palette space")
                     }

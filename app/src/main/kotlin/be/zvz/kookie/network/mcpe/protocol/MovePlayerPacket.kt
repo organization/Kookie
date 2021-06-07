@@ -19,7 +19,7 @@ package be.zvz.kookie.network.mcpe.protocol
 
 import be.zvz.kookie.math.Vector3
 import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
-import be.zvz.kookie.network.mcpe.serializer.PacketSerializer
+import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 
 @ProtocolIdentify(ProtocolInfo.IDS.MOVE_PLAYER_PACKET)
 class MovePlayerPacket : DataPacket(), ClientboundPacket, ServerboundPacket {
@@ -76,6 +76,6 @@ class MovePlayerPacket : DataPacket(), ClientboundPacket, ServerboundPacket {
         const val MODE_NORMAL = 0
         const val MODE_RESET = 1
         const val MODE_TELEPORT = 2
-        const val MODE_PITCH = 3; // facepalm Mojang
+        const val MODE_PITCH = 3 // facepalm Mojang
     }
 }

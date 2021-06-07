@@ -19,12 +19,11 @@ package be.zvz.kookie.network.mcpe.protocol
 
 import be.zvz.kookie.math.Vector3
 import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
-import be.zvz.kookie.network.mcpe.serializer.PacketSerializer
+import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 
 @ProtocolIdentify(ProtocolInfo.IDS.ADD_PAINTING_PACKET)
 class AddPaintingPacket : DataPacket(), ClientboundPacket {
     var entityUniqueId: Long? = null
-
     var entityRuntimeId: Long = 0
     lateinit var position: Vector3
     var direction: Int = 0

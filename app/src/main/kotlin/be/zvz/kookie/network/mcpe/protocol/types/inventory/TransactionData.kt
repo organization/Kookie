@@ -17,7 +17,7 @@
  */
 package be.zvz.kookie.network.mcpe.protocol.types.inventory
 
-import be.zvz.kookie.network.mcpe.serializer.PacketSerializer
+import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 
 abstract class TransactionData {
 
@@ -34,7 +34,7 @@ abstract class TransactionData {
     }
 
     fun decode(input: PacketSerializer) {
-        for (i in 0..input.getUnsignedVarInt()) {
+        for (i in 0 until input.getUnsignedVarInt()) {
             actions.add(NetworkInventoryAction().read(input))
         }
         decodeData(input)

@@ -19,11 +19,11 @@ package be.zvz.kookie.network.mcpe.protocol
 
 import be.zvz.kookie.math.Vector3
 import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
+import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 import be.zvz.kookie.network.mcpe.protocol.types.DeviceOS
 import be.zvz.kookie.network.mcpe.protocol.types.entity.EntityLink
 import be.zvz.kookie.network.mcpe.protocol.types.entity.MetadataProperty
 import be.zvz.kookie.network.mcpe.protocol.types.inventory.ItemStackWrapper
-import be.zvz.kookie.network.mcpe.serializer.PacketSerializer
 import com.koloboke.collect.map.hash.HashObjObjMaps
 import java.util.*
 
@@ -55,7 +55,7 @@ class AddPlayerPacket : DataPacket(), ClientboundPacket {
 
     var deviceId: String = ""
 
-    var buildPlatform: Int = DeviceOS.UNKNOWN
+    var buildPlatform: DeviceOS = DeviceOS.UNKNOWN
 
     override fun decodePayload(input: PacketSerializer) {
         uuid = input.getUUID()
@@ -79,11 +79,11 @@ class AddPlayerPacket : DataPacket(), ClientboundPacket {
 
         long1 = input.getLong().toInt()
 
-        for (i in 0..input.getUnsignedVarInt()) {
+        for (i in 0 until input.getUnsignedVarInt()) {
             links.add(input.getEntityLink())
         }
         deviceId = input.getString()
-        buildPlatform = input.getLInt()
+        buildPlatform = DeviceOS.from(input.getLInt())
     }
 
     override fun encodePayload(output: PacketSerializer) {
@@ -112,7 +112,7 @@ class AddPlayerPacket : DataPacket(), ClientboundPacket {
             output.putEntityLink(it)
         }
         output.putString(deviceId)
-        output.putLInt(buildPlatform)
+        output.putLInt(buildPlatform.id)
     }
 
     override fun handle(handler: PacketHandlerInterface): Boolean {

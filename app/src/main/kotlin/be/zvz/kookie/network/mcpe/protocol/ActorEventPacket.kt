@@ -18,11 +18,10 @@
 package be.zvz.kookie.network.mcpe.protocol
 
 import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
-import be.zvz.kookie.network.mcpe.serializer.PacketSerializer
+import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 
 @ProtocolIdentify(ProtocolInfo.IDS.ACTOR_EVENT_PACKET)
 class ActorEventPacket : DataPacket(), ClientboundPacket, ServerboundPacket {
-
     var entityRuntimeId: Long = 0
     var eventId: Int = 0
     var data: Int = 0

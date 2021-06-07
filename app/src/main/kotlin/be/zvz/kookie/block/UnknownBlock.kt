@@ -29,5 +29,5 @@ class UnknownBlock(
 ) {
     override fun canBePlaced(): Boolean = false
 
-    fun getDrops(item: Item) = listOf<Item>()
+    override fun getDrops(item: Item) = listOf<Item>()
 }

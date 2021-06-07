@@ -19,7 +19,7 @@ package be.zvz.kookie.network.mcpe.protocol
 
 import be.zvz.kookie.math.Vector3
 import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
-import be.zvz.kookie.network.mcpe.serializer.PacketSerializer
+import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 
 @ProtocolIdentify(ProtocolInfo.IDS.MOVE_ACTOR_ABSOLUTE_PACKET)
 class MoveActorAbsolutePacket : DataPacket(), ClientboundPacket, ServerboundPacket {
@@ -59,15 +59,20 @@ class MoveActorAbsolutePacket : DataPacket(), ClientboundPacket, ServerboundPack
         const val UNKNOWN = 0x03
         const val FLAG_FORCE_MOVE_LOCAL_ENTITY = 0x04
 
-        fun create(entityRuntimeId: Long, pos: Vector3, xRot: Float, yRot: Float, zRot: Float, flags: Int = 0): MoveActorAbsolutePacket {
-            val result = MoveActorAbsolutePacket()
-            result.entityRuntimeId = entityRuntimeId
-            result.flags = flags
-            result.position = pos
-            result.xRot = xRot
-            result.yRot = yRot
-            result.zRot = zRot
-            return result
+        fun create(
+            entityRuntimeId: Long,
+            pos: Vector3,
+            xRot: Float,
+            yRot: Float,
+            zRot: Float,
+            flags: Int = 0
+        ): MoveActorAbsolutePacket = MoveActorAbsolutePacket().apply {
+            this.entityRuntimeId = entityRuntimeId
+            this.flags = flags
+            this.position = pos
+            this.xRot = xRot
+            this.yRot = yRot
+            this.zRot = zRot
         }
     }
 }

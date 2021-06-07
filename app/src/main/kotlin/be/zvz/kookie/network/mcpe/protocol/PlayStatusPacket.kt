@@ -18,19 +18,19 @@
 package be.zvz.kookie.network.mcpe.protocol
 
 import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
-import be.zvz.kookie.network.mcpe.serializer.PacketSerializer
+import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 
 @ProtocolIdentify(ProtocolInfo.IDS.PLAY_STATUS_PACKET)
 class PlayStatusPacket : DataPacket(), ClientboundPacket {
 
-    var status: Int = LOGIN_SUCCESS
+    var status: PlayStatus = PlayStatus.LOGIN_SUCCESS
 
     override fun decodePayload(input: PacketSerializer) {
-        status = input.getInt()
+        status = PlayStatus.from(input.getInt())
     }
 
     override fun encodePayload(output: PacketSerializer) {
-        output.putInt(status)
+        output.putInt(status.state)
     }
 
     override fun handle(handler: PacketHandlerInterface): Boolean {
@@ -41,20 +41,26 @@ class PlayStatusPacket : DataPacket(), ClientboundPacket {
         return true
     }
 
-    companion object {
-        const val LOGIN_SUCCESS = 0
-        const val LOGIN_FAILED_CLIENT = 1
-        const val LOGIN_FAILED_SERVER = 2
-        const val PLAYER_SPAWN = 3
-        const val LOGIN_FAILED_INVALID_TENANT = 4
-        const val LOGIN_FAILED_VANILLA_EDU = 5
-        const val LOGIN_FAILED_EDU_VANILLA = 6
-        const val LOGIN_FAILED_SERVER_FULL = 7
+    enum class PlayStatus(val state: Int) {
+        LOGIN_SUCCESS(0),
+        LOGIN_FAILED_CLIENT(1),
+        LOGIN_FAILED_SERVER(2),
+        PLAYER_SPAWN(3),
+        LOGIN_FAILED_INVALID_TENANT(4),
+        LOGIN_FAILED_VANILLA_EDU(5),
+        LOGIN_FAILED_EDU_VANILLA(6),
+        LOGIN_FAILED_SERVER_FULL(7);
 
-        fun create(status: Int): PlayStatusPacket {
-            val result = PlayStatusPacket()
-            result.status = status
-            return result
+        companion object {
+            private val VALUES = values()
+            fun from(value: Int) = VALUES.first { it.state == value }
+        }
+    }
+
+    companion object {
+
+        fun create(status: PlayStatus): PlayStatusPacket = PlayStatusPacket().apply {
+            this.status = status
         }
     }
 }

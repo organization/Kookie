@@ -17,14 +17,12 @@
  */
 package be.zvz.kookie.block
 
-import be.zvz.kookie.block.BlockIdentifier as BID
-// import be.zvz.kookie.block.BlockIdentifierFlattened as BIDFlattened
-import be.zvz.kookie.block.BlockLegacyIds as Ids
-// import be.zvz.kookie.block.BlockLegacyMetadata as Meta
 import be.zvz.kookie.block.util.IllegalBlockStateException
 import com.koloboke.collect.map.hash.HashIntFloatMaps
 import com.koloboke.collect.map.hash.HashIntIntMaps
 import com.koloboke.collect.map.hash.HashIntObjMaps
+import be.zvz.kookie.block.BlockIdentifier as BID
+import be.zvz.kookie.block.BlockLegacyIds as Ids
 
 object BlockFactory {
 
@@ -54,8 +52,8 @@ object BlockFactory {
                 throw IllegalArgumentException("Block registration $id:$variant conflicts with an existing block")
             }
 
-            for (m in variant..(variant or stateMask)) {
-                if ((m and stateMask.inv()) != variant) {
+            for (m in variant until (variant or stateMask)) {
+                if (m and stateMask.inv() != variant) {
                     continue
                 }
 
@@ -63,7 +61,7 @@ object BlockFactory {
                     throw IllegalArgumentException("Block registration ${block::class} has states which conflict with other blocks")
                 }
 
-                val index = (id shl 4) or m
+                val index = id shl 4 or m
 
                 val v = block.clone()
                 try {
@@ -83,7 +81,7 @@ object BlockFactory {
     }
 
     fun remap(id: Int, meta: Int, block: Block) {
-        val index = (id shl 4) or meta
+        val index = id shl 4 or meta
         if (isRegistered(id, meta)) {
             val existing = fullList[index]
             if (existing !== null && existing.getFullId() == index) {
@@ -132,7 +130,7 @@ object BlockFactory {
 
     /**
      *  @deprecated
-     *  In PMMP, it is used to fetch only blocks without null
+     *  In PUMP, it is used to fetch only blocks without null
      * */
     fun getAllKnownStates() = fullList.toList()
 }

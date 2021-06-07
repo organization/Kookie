@@ -18,7 +18,7 @@
 package be.zvz.kookie.network.mcpe.protocol
 
 import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
-import be.zvz.kookie.network.mcpe.serializer.PacketSerializer
+import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 
 @ProtocolIdentify(ProtocolInfo.IDS.SET_TIME_PACKET)
 class SetTimePacket : DataPacket(), ClientboundPacket {
@@ -38,10 +38,8 @@ class SetTimePacket : DataPacket(), ClientboundPacket {
     }
 
     companion object {
-        fun create(time: Int): SetTimePacket {
-            val result = SetTimePacket()
-            result.time = time and 0xffffffff.toInt()
-            return result
+        fun create(time: Int): SetTimePacket = SetTimePacket().apply {
+            this.time = time and 0xffffffff.toInt()
         }
     }
 }

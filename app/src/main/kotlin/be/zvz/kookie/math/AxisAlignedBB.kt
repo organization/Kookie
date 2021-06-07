@@ -20,15 +20,15 @@ package be.zvz.kookie.math
 import kotlin.math.abs
 
 class AxisAlignedBB constructor(
-    var minX: Float,
-    var minY: Float,
-    var minZ: Float,
-    var maxX: Float,
-    var maxY: Float,
-    var maxZ: Float
+    var minX: Double,
+    var minY: Double,
+    var minZ: Double,
+    var maxX: Double,
+    var maxY: Double,
+    var maxZ: Double
 ) {
     constructor(minX: Int, minY: Int, minZ: Int, maxX: Int, maxY: Int, maxZ: Int) :
-            this(minX.toFloat(), minY.toFloat(), minZ.toFloat(), maxX.toFloat(), maxY.toFloat(), maxZ.toFloat())
+        this(minX.toDouble(), minY.toDouble(), minZ.toDouble(), maxX.toDouble(), maxY.toDouble(), maxZ.toDouble())
 
     init {
         if (minX > maxX) {
@@ -44,8 +44,8 @@ class AxisAlignedBB constructor(
 
     fun clone(): AxisAlignedBB = AxisAlignedBB(minX, minY, minZ, maxX, maxY, maxZ)
 
-    fun addCoord(x: Int, y: Int, z: Int): AxisAlignedBB = addCoord(x.toFloat(), y.toFloat(), z.toFloat())
-    fun addCoord(x: Float, y: Float, z: Float): AxisAlignedBB {
+    fun addCoord(x: Int, y: Int, z: Int): AxisAlignedBB = addCoord(x.toDouble(), y.toDouble(), z.toDouble())
+    fun addCoord(x: Double, y: Double, z: Double): AxisAlignedBB {
         var minX = minX
         var minY = minY
         var minZ = minZ
@@ -74,9 +74,8 @@ class AxisAlignedBB constructor(
         return AxisAlignedBB(minX, minY, minZ, maxX, maxY, maxZ)
     }
 
-
-    fun expand(x: Int, y: Int, z: Int): AxisAlignedBB = expand(x.toFloat(), y.toFloat(), z.toFloat())
-    fun expand(x: Float, y: Float, z: Float): AxisAlignedBB = this.apply {
+    fun expand(x: Int, y: Int, z: Int): AxisAlignedBB = expand(x.toDouble(), y.toDouble(), z.toDouble())
+    fun expand(x: Double, y: Double, z: Double): AxisAlignedBB = this.apply {
         minX -= x
         minY -= y
         minZ -= z
@@ -86,11 +85,10 @@ class AxisAlignedBB constructor(
     }
 
     fun expandedCopy(x: Int, y: Int, z: Int): AxisAlignedBB = clone().expand(x, y, z)
-    fun expandedCopy(x: Float, y: Float, z: Float): AxisAlignedBB = clone().expand(x, y, z)
+    fun expandedCopy(x: Double, y: Double, z: Double): AxisAlignedBB = clone().expand(x, y, z)
 
-
-    fun offset(x: Int, y: Int, z: Int): AxisAlignedBB = offset(x.toFloat(), y.toFloat(), z.toFloat())
-    fun offset(x: Float, y: Float, z: Float): AxisAlignedBB = this.apply {
+    fun offset(x: Int, y: Int, z: Int): AxisAlignedBB = offset(x.toDouble(), y.toDouble(), z.toDouble())
+    fun offset(x: Double, y: Double, z: Double): AxisAlignedBB = this.apply {
         minX += x
         minY += y
         minZ += z
@@ -100,11 +98,10 @@ class AxisAlignedBB constructor(
     }
 
     fun offsetCopy(x: Int, y: Int, z: Int): AxisAlignedBB = clone().offset(x, y, z)
-    fun offsetCopy(x: Float, y: Float, z: Float): AxisAlignedBB = clone().offset(x, y, z)
+    fun offsetCopy(x: Double, y: Double, z: Double): AxisAlignedBB = clone().offset(x, y, z)
 
-
-    fun contract(x: Int, y: Int, z: Int): AxisAlignedBB = contract(x.toFloat(), y.toFloat(), z.toFloat())
-    fun contract(x: Float, y: Float, z: Float): AxisAlignedBB = this.apply {
+    fun contract(x: Int, y: Int, z: Int): AxisAlignedBB = contract(x.toDouble(), y.toDouble(), z.toDouble())
+    fun contract(x: Double, y: Double, z: Double): AxisAlignedBB = this.apply {
         minX -= x
         minY -= y
         minZ -= z
@@ -114,11 +111,10 @@ class AxisAlignedBB constructor(
     }
 
     fun contractCopy(x: Int, y: Int, z: Int): AxisAlignedBB = clone().contract(x, y, z)
-    fun contractCopy(x: Float, y: Float, z: Float): AxisAlignedBB = clone().contract(x, y, z)
+    fun contractCopy(x: Double, y: Double, z: Double): AxisAlignedBB = clone().contract(x, y, z)
 
-
-    fun extend(face: Facing, distance: Int): AxisAlignedBB = extend(face, distance.toFloat())
-    fun extend(face: Facing, distance: Float): AxisAlignedBB = this.apply {
+    fun extend(face: Facing, distance: Int): AxisAlignedBB = extend(face, distance.toDouble())
+    fun extend(face: Facing, distance: Double): AxisAlignedBB = this.apply {
         when (face) {
             Facing.DOWN -> minY -= distance
             Facing.UP -> minY += distance
@@ -131,18 +127,16 @@ class AxisAlignedBB constructor(
     }
 
     fun extendedCopy(face: Facing, distance: Int): AxisAlignedBB = clone().extend(face, distance)
-    fun extendedCopy(face: Facing, distance: Float): AxisAlignedBB = clone().extend(face, distance)
-
+    fun extendedCopy(face: Facing, distance: Double): AxisAlignedBB = clone().extend(face, distance)
 
     fun trim(face: Facing, distance: Int): AxisAlignedBB = extend(face, -distance)
-    fun trim(face: Facing, distance: Float): AxisAlignedBB = extend(face, -distance)
+    fun trim(face: Facing, distance: Double): AxisAlignedBB = extend(face, -distance)
 
     fun trimmedCopy(face: Facing, distance: Int): AxisAlignedBB = clone().extend(face, -distance)
-    fun trimmedCopy(face: Facing, distance: Float): AxisAlignedBB = clone().extend(face, -distance)
+    fun trimmedCopy(face: Facing, distance: Double): AxisAlignedBB = clone().extend(face, -distance)
 
-
-    fun stretch(axis: Axis, distance: Int): AxisAlignedBB = stretch(axis, distance.toFloat())
-    fun stretch(axis: Axis, distance: Float): AxisAlignedBB = this.apply {
+    fun stretch(axis: Axis, distance: Int): AxisAlignedBB = stretch(axis, distance.toDouble())
+    fun stretch(axis: Axis, distance: Double): AxisAlignedBB = this.apply {
         when (axis) {
             Axis.Y -> {
                 minY -= distance
@@ -160,18 +154,16 @@ class AxisAlignedBB constructor(
     }
 
     fun stretchedCopy(axis: Axis, distance: Int): AxisAlignedBB = clone().stretch(axis, distance)
-    fun stretchedCopy(axis: Axis, distance: Float): AxisAlignedBB = clone().stretch(axis, distance)
-
+    fun stretchedCopy(axis: Axis, distance: Double): AxisAlignedBB = clone().stretch(axis, distance)
 
     fun squash(axis: Axis, distance: Int): AxisAlignedBB = stretch(axis, -distance)
-    fun squash(axis: Axis, distance: Float): AxisAlignedBB = stretch(axis, -distance)
+    fun squash(axis: Axis, distance: Double): AxisAlignedBB = stretch(axis, -distance)
 
     fun squashedCopy(axis: Axis, distance: Int): AxisAlignedBB = clone().stretch(axis, -distance)
-    fun squashedCopy(axis: Axis, distance: Float): AxisAlignedBB = clone().stretch(axis, -distance)
+    fun squashedCopy(axis: Axis, distance: Double): AxisAlignedBB = clone().stretch(axis, -distance)
 
-
-    fun calculateXOffset(bb: AxisAlignedBB, x: Int): Float = calculateXOffset(bb, x.toFloat())
-    fun calculateXOffset(bb: AxisAlignedBB, x: Float): Float = when {
+    fun calculateXOffset(bb: AxisAlignedBB, x: Int): Double = calculateXOffset(bb, x.toDouble())
+    fun calculateXOffset(bb: AxisAlignedBB, x: Double): Double = when {
         bb.maxY <= minY || bb.minY >= maxY -> x
         bb.maxZ <= minZ || bb.minZ >= maxZ -> x
         x > 0 && bb.maxX <= minX -> {
@@ -187,8 +179,8 @@ class AxisAlignedBB constructor(
         else -> x
     }
 
-    fun calculateYOffset(bb: AxisAlignedBB, y: Int): Float = calculateYOffset(bb, y.toFloat())
-    fun calculateYOffset(bb: AxisAlignedBB, y: Float): Float = when {
+    fun calculateYOffset(bb: AxisAlignedBB, y: Int): Double = calculateYOffset(bb, y.toDouble())
+    fun calculateYOffset(bb: AxisAlignedBB, y: Double): Double = when {
         bb.maxX <= minX || bb.minX >= maxX -> y
         bb.maxZ <= minZ || bb.minZ >= maxZ -> y
         y > 0 && bb.maxY <= minY -> {
@@ -204,8 +196,8 @@ class AxisAlignedBB constructor(
         else -> y
     }
 
-    fun calculateZOffset(bb: AxisAlignedBB, z: Int): Float = calculateZOffset(bb, z.toFloat())
-    fun calculateZOffset(bb: AxisAlignedBB, z: Float): Float = when {
+    fun calculateZOffset(bb: AxisAlignedBB, z: Int): Double = calculateZOffset(bb, z.toDouble())
+    fun calculateZOffset(bb: AxisAlignedBB, z: Double): Double = when {
         bb.maxX <= minX || bb.minX >= maxX -> z
         bb.maxY <= minY || bb.minY >= maxY -> z
         z > 0 && bb.maxZ <= minZ -> {
@@ -221,9 +213,9 @@ class AxisAlignedBB constructor(
         else -> z
     }
 
-    fun intersectsWith(bb: AxisAlignedBB): Boolean = intersectsWith(bb, 0.00001F)
-    fun intersectsWith(bb: AxisAlignedBB, epsilon: Int): Boolean = intersectsWith(bb, epsilon.toFloat())
-    fun intersectsWith(bb: AxisAlignedBB, epsilon: Float): Boolean {
+    fun intersectsWith(bb: AxisAlignedBB): Boolean = intersectsWith(bb, 0.00001)
+    fun intersectsWith(bb: AxisAlignedBB, epsilon: Int): Boolean = intersectsWith(bb, epsilon.toDouble())
+    fun intersectsWith(bb: AxisAlignedBB, epsilon: Double): Boolean {
         if (bb.maxX - minX > epsilon && maxX - bb.minX > epsilon) {
             if (bb.maxY - minY > epsilon && maxY - bb.minY > epsilon) {
                 return bb.maxZ - minZ > epsilon && maxZ - bb.minZ > epsilon
@@ -239,24 +231,24 @@ class AxisAlignedBB constructor(
         else -> vector.z > minZ && vector.z < maxZ
     }
 
-    fun getAverageEdgeLength(): Float {
+    fun getAverageEdgeLength(): Double {
         return (maxX - minX + maxY - minY + maxZ - minZ) / 3
     }
 
-    fun getXLength(): Float = (maxX - minX)
+    fun getXLength(): Double = (maxX - minX)
 
-    fun getYLength(): Float = (maxY - minY)
+    fun getYLength(): Double = (maxY - minY)
 
-    fun getZLength(): Float = (maxZ - minZ)
+    fun getZLength(): Double = (maxZ - minZ)
 
-    fun isCube(): Boolean = isCube(0.000001F)
-    fun isCube(epsilon: Int): Boolean = isCube(epsilon.toFloat())
-    fun isCube(epsilon: Float): Boolean {
+    fun isCube(): Boolean = isCube(0.000001)
+    fun isCube(epsilon: Int): Boolean = isCube(epsilon.toDouble())
+    fun isCube(epsilon: Double): Boolean {
         val yLen = getYLength()
         return abs(getXLength() - yLen) < epsilon && abs(yLen - getZLength()) < epsilon
     }
 
-    fun getVolume(): Float = (maxX - minX) * (maxY - minY) * (maxZ - minZ)
+    fun getVolume(): Double = (maxX - minX) * (maxY - minY) * (maxZ - minZ)
 
     fun isVectorInYZ(vector: Vector3): Boolean = vector.y in minY..maxY && vector.z >= minZ && vector.z <= maxZ
 
@@ -297,11 +289,11 @@ class AxisAlignedBB constructor(
         }
 
         var vector: Vector3? = null
-        var distance = Float.MAX_VALUE
+        var distance = Double.MAX_VALUE
 
         arrayOf(v1, v2, v3, v4, v5, v6).forEach { v ->
             v?.let {
-                val d: Float = pos1.distanceSquared(v)
+                val d: Double = pos1.distanceSquared(v)
                 if (d < distance) {
                     vector = v
                     distance = d
@@ -329,6 +321,6 @@ class AxisAlignedBB constructor(
     }
 
     companion object {
-        fun one(): AxisAlignedBB = AxisAlignedBB(0f, 0f, 0f, 1f, 1f, 1f)
+        fun one(): AxisAlignedBB = AxisAlignedBB(0.0, 0.0, 0.0, 1.0, 1.0, 1.0)
     }
 }

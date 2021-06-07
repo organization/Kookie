@@ -19,7 +19,7 @@ package be.zvz.kookie.network.mcpe.protocol.types.inventory
 
 import be.zvz.kookie.math.Vector3
 import be.zvz.kookie.network.mcpe.protocol.InventoryTransactionPacket
-import be.zvz.kookie.network.mcpe.serializer.PacketSerializer
+import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 
 class ReleaseItemTransactionData : TransactionData() {
 
@@ -62,14 +62,12 @@ class ReleaseItemTransactionData : TransactionData() {
             hotbarSlot: Int,
             itemInHand: ItemStackWrapper,
             headPos: Vector3
-        ): ReleaseItemTransactionData {
-            val result = ReleaseItemTransactionData()
-            result.setActions(actions)
-            result.actionType = actionType
-            result.hotbarSlot = hotbarSlot
-            result.itemInHand = itemInHand
-            result.headPos = headPos
-            return result
+        ): ReleaseItemTransactionData = ReleaseItemTransactionData().apply {
+            this.setActions(actions)
+            this.actionType = actionType
+            this.hotbarSlot = hotbarSlot
+            this.itemInHand = itemInHand
+            this.headPos = headPos
         }
     }
 }

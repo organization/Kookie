@@ -19,16 +19,14 @@ package be.zvz.kookie.network.mcpe.protocol.types.inventory
 
 import be.zvz.kookie.math.Vector3
 import be.zvz.kookie.network.mcpe.protocol.InventoryTransactionPacket
-import be.zvz.kookie.network.mcpe.serializer.PacketSerializer
-import java.util.concurrent.atomic.AtomicInteger
+import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 
 class UseItemTransactionData : TransactionData() {
-
     override val typeId = InventoryTransactionPacket.TYPE_USE_ITEM
 
     private var actionType: Int = -1
 
-    private lateinit var blockPos: Vector3
+    private lateinit var blockPos: PacketSerializer.BlockPosition
 
     private var face: Int = -1
 
@@ -44,7 +42,7 @@ class UseItemTransactionData : TransactionData() {
 
     fun getActionType(): Int = actionType
 
-    fun getBlockPos(): Vector3 = blockPos
+    fun getBlockPos(): PacketSerializer.BlockPosition = blockPos
 
     fun getFace(): Int = face
 
@@ -60,12 +58,7 @@ class UseItemTransactionData : TransactionData() {
 
     override fun decodeData(input: PacketSerializer) {
         actionType = input.getUnsignedVarInt()
-
-        val x = AtomicInteger()
-        val y = AtomicInteger()
-        val z = AtomicInteger()
-        input.getBlockPosition(x, y, z)
-        blockPos = Vector3(x.get(), y.get(), z.get())
+        blockPos = input.getBlockPosition()
         face = input.getVarInt()
         itemInHand = ItemStackWrapper.read(input)
         playerPos = input.getVector3()
@@ -75,7 +68,7 @@ class UseItemTransactionData : TransactionData() {
 
     override fun encodeData(output: PacketSerializer) {
         output.putUnsignedVarInt(actionType)
-        output.putBlockPosition(blockPos.x.toInt(), blockPos.y.toInt(), blockPos.z.toInt())
+        output.putBlockPosition(blockPos)
         output.putVarInt(face)
         output.putVarInt(hotbarSlot)
         itemInHand.write(output)
@@ -92,7 +85,7 @@ class UseItemTransactionData : TransactionData() {
         fun new(
             actions: MutableList<NetworkInventoryAction>,
             actionType: Int,
-            blockPos: Vector3,
+            blockPos: PacketSerializer.BlockPosition,
             face: Int,
             hotbarSlot: Int,
             itemInHand: ItemStackWrapper,

@@ -18,7 +18,7 @@
 package be.zvz.kookie.network.mcpe.protocol.types.inventory
 
 import be.zvz.kookie.network.mcpe.protocol.InventoryTransactionPacket
-import be.zvz.kookie.network.mcpe.serializer.PacketSerializer
+import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 
 class NormalTransactionData : TransactionData() {
 
@@ -30,10 +30,8 @@ class NormalTransactionData : TransactionData() {
     }
 
     companion object {
-        fun new(actions: MutableList<NetworkInventoryAction>): NormalTransactionData {
-            val result = NormalTransactionData()
-            result.setActions(actions)
-            return result
+        fun new(actions: MutableList<NetworkInventoryAction>): NormalTransactionData = NormalTransactionData().apply {
+            this.setActions(actions)
         }
     }
 }

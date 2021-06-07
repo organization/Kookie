@@ -18,8 +18,8 @@
 package be.zvz.kookie.network.mcpe.protocol
 
 import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
+import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 import be.zvz.kookie.network.mcpe.protocol.types.inventory.ItemStackWrapper
-import be.zvz.kookie.network.mcpe.serializer.PacketSerializer
 
 @ProtocolIdentify(ProtocolInfo.IDS.MOB_ARMOR_EQUIPMENT_PACKET)
 class MobArmorEquipmentPacket : DataPacket(), ClientboundPacket, ServerboundPacket {
@@ -37,6 +37,7 @@ class MobArmorEquipmentPacket : DataPacket(), ClientboundPacket, ServerboundPack
         legs = ItemStackWrapper.read(input)
         feet = ItemStackWrapper.read(input)
     }
+
     override fun encodePayload(output: PacketSerializer) {
         output.putEntityRuntimeId(entityRuntimeId)
         head.write(output)

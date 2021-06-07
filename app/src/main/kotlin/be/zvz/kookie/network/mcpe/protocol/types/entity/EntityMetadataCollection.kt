@@ -19,6 +19,7 @@ package be.zvz.kookie.network.mcpe.protocol.types.entity
 
 import be.zvz.kookie.math.Vector3
 import be.zvz.kookie.nbt.tag.CompoundTag
+import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 import com.koloboke.collect.map.hash.HashIntObjMaps
 
 class EntityMetadataCollection {
@@ -62,8 +63,8 @@ class EntityMetadataCollection {
         set(key, CompoundMetadataProperty(value), force)
     }
 
-    fun setBlockPos(key: Int, value: Vector3?, force: Boolean = false) {
-        set(key, BlockPosMetadataProperty(value ?: Vector3()), force)
+    fun setBlockPos(key: Int, value: PacketSerializer.BlockPosition?, force: Boolean = false) {
+        set(key, BlockPosMetadataProperty(value ?: PacketSerializer.BlockPosition()), force)
     }
 
     fun setLong(key: Int, value: Int, force: Boolean = false) {

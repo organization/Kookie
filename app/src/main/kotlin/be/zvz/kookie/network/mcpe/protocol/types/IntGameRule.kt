@@ -17,7 +17,7 @@
  */
 package be.zvz.kookie.network.mcpe.protocol.types
 
-import be.zvz.kookie.network.mcpe.serializer.PacketSerializer
+import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 
 class IntGameRule(private val value: Int) : GameRule() {
 
@@ -27,5 +27,9 @@ class IntGameRule(private val value: Int) : GameRule() {
 
     override fun encode(output: PacketSerializer) {
         output.putUnsignedVarInt(value)
+    }
+
+    companion object {
+        fun decode(input: PacketSerializer) = IntGameRule(input.getUnsignedVarInt())
     }
 }

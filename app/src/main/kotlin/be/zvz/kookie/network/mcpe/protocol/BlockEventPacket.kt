@@ -18,40 +18,22 @@
 package be.zvz.kookie.network.mcpe.protocol
 
 import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
-import be.zvz.kookie.network.mcpe.serializer.PacketSerializer
-import java.util.concurrent.atomic.AtomicInteger
+import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 
 @ProtocolIdentify(ProtocolInfo.IDS.BLOCK_EVENT_PACKET)
 class BlockEventPacket : DataPacket(), ClientboundPacket {
-
-    /*
-    /** @var int */
-	public $x;
-	/** @var int */
-	public $y;
-	/** @var int */
-	public $z;
-	/** @var int */
-	public $eventType;
-	/** @var int */
-	public $eventData;
-     */
-
-    var x: AtomicInteger = AtomicInteger()
-    var y: AtomicInteger = AtomicInteger()
-    var z: AtomicInteger = AtomicInteger()
-
+    val pos = PacketSerializer.BlockPosition()
     var eventType: Int = 0
     var eventData: Int = 0
 
     override fun decodePayload(input: PacketSerializer) {
-        input.getBlockPosition(x, y, z)
+        input.getBlockPosition(pos)
         eventType = input.getVarInt()
         eventData = input.getVarInt()
     }
 
     override fun encodePayload(output: PacketSerializer) {
-        output.putBlockPosition(x.get(), y.get(), z.get())
+        output.putBlockPosition(pos)
         output.putVarInt(eventType)
         output.putVarInt(eventData)
     }

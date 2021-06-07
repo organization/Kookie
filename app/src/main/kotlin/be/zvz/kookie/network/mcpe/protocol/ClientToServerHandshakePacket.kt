@@ -18,7 +18,7 @@
 package be.zvz.kookie.network.mcpe.protocol
 
 import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
-import be.zvz.kookie.network.mcpe.serializer.PacketSerializer
+import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 
 @ProtocolIdentify(ProtocolInfo.IDS.CLIENT_TO_SERVER_HANDSHAKE_PACKET)
 class ClientToServerHandshakePacket : DataPacket(), ServerboundPacket {

@@ -17,7 +17,7 @@
  */
 package be.zvz.kookie.network.mcpe.protocol.types
 
-import be.zvz.kookie.network.mcpe.serializer.PacketSerializer
+import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 
 class FloatGameRule(private val value: Float) : GameRule() {
 
@@ -27,5 +27,9 @@ class FloatGameRule(private val value: Float) : GameRule() {
 
     override fun encode(output: PacketSerializer) {
         output.putLFloat(value)
+    }
+
+    companion object {
+        fun decode(input: PacketSerializer) = FloatGameRule(input.getLFloat())
     }
 }

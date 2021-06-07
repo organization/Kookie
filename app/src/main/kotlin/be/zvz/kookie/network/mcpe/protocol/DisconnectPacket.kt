@@ -18,7 +18,7 @@
 package be.zvz.kookie.network.mcpe.protocol
 
 import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
-import be.zvz.kookie.network.mcpe.serializer.PacketSerializer
+import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 
 @ProtocolIdentify(ProtocolInfo.IDS.DISCONNECT_PACKET)
 class DisconnectPacket : DataPacket(), ClientboundPacket, ServerboundPacket {
@@ -50,17 +50,15 @@ class DisconnectPacket : DataPacket(), ClientboundPacket, ServerboundPacket {
     }
 
     companion object {
-        fun silent(): DisconnectPacket {
-            val pk = DisconnectPacket()
-            pk.hideDisconnectionScreen = true
-            return pk
-        }
+        fun silent(): DisconnectPacket =
+            DisconnectPacket().apply {
+                this.hideDisconnectionScreen = false
+            }
 
-        fun message(message: String): DisconnectPacket {
-            val pk = DisconnectPacket()
-            pk.hideDisconnectionScreen = false
-            pk.message = message
-            return pk
-        }
+        fun message(message: String): DisconnectPacket =
+            DisconnectPacket().apply {
+                this.hideDisconnectionScreen = false
+                this.message = message
+            }
     }
 }

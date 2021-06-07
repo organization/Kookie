@@ -19,14 +19,14 @@ package be.zvz.kookie.network.mcpe.protocol
 
 import be.zvz.kookie.math.Vector3
 import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
+import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 import be.zvz.kookie.network.mcpe.protocol.types.entity.EntityLink
 import be.zvz.kookie.network.mcpe.protocol.types.entity.MetadataProperty
 import be.zvz.kookie.network.mcpe.protocol.types.entity.NetworkAttribute
-import be.zvz.kookie.network.mcpe.serializer.PacketSerializer
+import com.koloboke.collect.map.hash.HashIntObjMaps
 
 @ProtocolIdentify(ProtocolInfo.IDS.ADD_ACTOR_PACKET)
 class AddActorPacket : DataPacket(), ClientboundPacket {
-
     var entityUniqueId: Long? = null
     var entityRuntimeId: Long = -1L
     var type: String = ""
@@ -36,11 +36,10 @@ class AddActorPacket : DataPacket(), ClientboundPacket {
     var yaw: Float = 0F
     var headYaw: Float = 0F
 
-    var metadata: MutableMap<Int, MetadataProperty> = mutableMapOf()
-
+    var metadata: MutableMap<Int, MetadataProperty> = HashIntObjMaps.newMutableMap()
     val attributes: MutableList<NetworkAttribute> = mutableListOf()
-
     var links: MutableList<EntityLink> = mutableListOf()
+
     override fun decodePayload(input: PacketSerializer) {
         entityUniqueId = input.getEntityUniqueId()
         entityRuntimeId = input.getEntityRuntimeId()
@@ -51,7 +50,7 @@ class AddActorPacket : DataPacket(), ClientboundPacket {
         yaw = input.getLFloat()
         headYaw = input.getLFloat()
 
-        for (i in 0..input.getUnsignedVarInt()) {
+        for (i in 0 until input.getUnsignedVarInt()) {
             val id = input.getString()
             val min = input.getLFloat()
             val current = input.getLFloat()
@@ -59,7 +58,7 @@ class AddActorPacket : DataPacket(), ClientboundPacket {
             attributes.add(NetworkAttribute(id, min, max, current, current))
         }
         metadata = input.getEntityMetadataProperty()
-        for (i in 0..input.getUnsignedVarInt()) {
+        for (i in 0 until input.getUnsignedVarInt()) {
             links.add(input.getEntityLink())
         }
     }
