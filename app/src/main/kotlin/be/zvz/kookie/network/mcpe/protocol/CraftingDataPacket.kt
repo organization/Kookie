@@ -19,7 +19,13 @@ package be.zvz.kookie.network.mcpe.protocol
 
 import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
 import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
-import be.zvz.kookie.network.mcpe.protocol.types.recipe.*
+import be.zvz.kookie.network.mcpe.protocol.types.recipe.FurnaceRecipe
+import be.zvz.kookie.network.mcpe.protocol.types.recipe.MultiRecipe
+import be.zvz.kookie.network.mcpe.protocol.types.recipe.PotionContainerChangeRecipe
+import be.zvz.kookie.network.mcpe.protocol.types.recipe.PotionTypeRecipe
+import be.zvz.kookie.network.mcpe.protocol.types.recipe.RecipeWithTypeId
+import be.zvz.kookie.network.mcpe.protocol.types.recipe.ShapedRecipe
+import be.zvz.kookie.network.mcpe.protocol.types.recipe.ShapelessRecipe
 
 @ProtocolIdentify(ProtocolInfo.IDS.CRAFTING_DATA_PACKET)
 class CraftingDataPacket : DataPacket(), ClientboundPacket {

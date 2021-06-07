@@ -18,11 +18,19 @@
 package be.zvz.kookie.math
 
 import kotlinx.coroutines.runBlocking
-import kotlin.math.*
+import kotlin.math.abs
+import kotlin.math.ceil
+import kotlin.math.floor
+import kotlin.math.max
+import kotlin.math.min
+import kotlin.math.pow
+import kotlin.math.round
+import kotlin.math.sqrt
 
 open class Vector3 @JvmOverloads constructor(var x: Double = 0.0, var y: Double = 0.0, var z: Double = 0.0) : Vector {
     @JvmOverloads
     constructor(x: Int, y: Int = 0, z: Int = 0) : this(x.toDouble(), y.toDouble(), z.toDouble())
+
     @JvmOverloads
     constructor(x: Float, y: Float = 0F, z: Float = 0F) : this(x.toDouble(), y.toDouble(), z.toDouble())
 

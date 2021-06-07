@@ -21,7 +21,11 @@ import be.zvz.kookie.constant.CorePaths
 import be.zvz.kookie.constant.FilePermission
 import be.zvz.kookie.wizard.SetupWizard
 import org.slf4j.LoggerFactory
-import kotlin.io.path.*
+import kotlin.io.path.createDirectories
+import kotlin.io.path.createFile
+import kotlin.io.path.deleteIfExists
+import kotlin.io.path.exists
+import kotlin.io.path.setPosixFilePermissions
 import kotlin.system.exitProcess
 
 class App {

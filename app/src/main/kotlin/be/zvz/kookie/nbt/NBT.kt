@@ -17,7 +17,20 @@
  */
 package be.zvz.kookie.nbt
 
-import be.zvz.kookie.nbt.tag.*
+import be.zvz.kookie.nbt.tag.ByteArrayTag
+import be.zvz.kookie.nbt.tag.ByteTag
+import be.zvz.kookie.nbt.tag.CompoundTag
+import be.zvz.kookie.nbt.tag.DoubleTag
+import be.zvz.kookie.nbt.tag.FloatTag
+import be.zvz.kookie.nbt.tag.IntArrayTag
+import be.zvz.kookie.nbt.tag.IntTag
+import be.zvz.kookie.nbt.tag.ListTag
+import be.zvz.kookie.nbt.tag.LongArrayTag
+import be.zvz.kookie.nbt.tag.LongTag
+import be.zvz.kookie.nbt.tag.ReaderTracker
+import be.zvz.kookie.nbt.tag.ShortTag
+import be.zvz.kookie.nbt.tag.StringTag
+import be.zvz.kookie.nbt.tag.Tag
 
 class NBT {
 

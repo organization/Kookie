@@ -17,7 +17,11 @@
  */
 package be.zvz.kookie.nbt.tag
 
-import be.zvz.kookie.nbt.*
+import be.zvz.kookie.nbt.NBT
+import be.zvz.kookie.nbt.NbtDataException
+import be.zvz.kookie.nbt.NbtException
+import be.zvz.kookie.nbt.NbtStreamReader
+import be.zvz.kookie.nbt.NbtStreamWriter
 import com.koloboke.collect.map.hash.HashObjObjMaps
 
 class CompoundTag : Tag<Map<String, Tag<*>>>() {
