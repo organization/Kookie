@@ -8,7 +8,7 @@ class CommandOriginData {
     lateinit var requestId: String
     var playerEntityUniqueId: Long = 0
 
-    enum class Origin(var id: Int) {
+    enum class Origin(val id: Int) {
         PLAYER(0),
         BLOCK(1),
         MINECART_BLOCK(2),
@@ -25,9 +25,7 @@ class CommandOriginData {
 
         companion object {
             private val VALUES = values()
-            fun from(findValue: Int): Origin = VALUES.firstOrNull { it.id == findValue } ?: UNKNOWN.apply {
-                id = findValue
-            }
+            fun from(findValue: Int): Origin = VALUES.firstOrNull { it.id == findValue } ?: UNKNOWN
         }
     }
 }

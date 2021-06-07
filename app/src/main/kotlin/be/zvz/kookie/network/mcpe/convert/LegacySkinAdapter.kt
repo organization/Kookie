@@ -24,7 +24,7 @@ import be.zvz.kookie.network.mcpe.protocol.types.skin.SkinImage
 import be.zvz.kookie.utils.Json
 import com.fasterxml.jackson.core.JsonProcessingException
 import com.fasterxml.jackson.module.kotlin.readValue
-import java.util.*
+import java.util.Random
 
 class LegacySkinAdapter : SkinAdapter {
     override fun toSkinData(skin: Skin): SkinData {

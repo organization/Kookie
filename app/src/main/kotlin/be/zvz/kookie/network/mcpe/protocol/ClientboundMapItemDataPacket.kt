@@ -79,7 +79,7 @@ class ClientboundMapItemDataPacket : DataPacket(), ClientboundPacket {
                         obj.z = pos.x
                     }
                     MapTrackedObject.TYPE_ENTITY -> obj.entityUniqueId = input.getEntityUniqueId()
-                    else -> throw PacketDecodeException("Unknown map object type object.type")
+                    else -> throw PacketDecodeException("Unknown map object type ${obj.type}")
                 }
 
                 trackedEntities.add(obj)

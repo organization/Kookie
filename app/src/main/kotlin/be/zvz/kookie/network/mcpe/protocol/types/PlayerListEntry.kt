@@ -1,7 +1,7 @@
 package be.zvz.kookie.network.mcpe.protocol.types
 
 import be.zvz.kookie.network.mcpe.protocol.types.skin.SkinData
-import java.util.*
+import java.util.UUID
 
 class PlayerListEntry {
     lateinit var uuid: UUID

@@ -37,7 +37,7 @@ object Timings {
     fun getTileEntityTimings(tile: Tile): TimingsHandler {
         var exist = timings[tile::class.java.simpleName]
         if (exist == null) {
-            exist = TimingsHandler("Tile " + tile::class.java.simpleName)
+            exist = TimingsHandler("Tile ${tile::class.java.simpleName}")
             timings[tile::class.java.simpleName] = exist
         }
         return exist
@@ -53,7 +53,7 @@ object Timings {
         val key = "PacketDecode: $networkId"
         var exist = timings[key]
         if (exist === null) {
-            exist = TimingsHandler("Packet " + packet::class.java.simpleName + "($networkId) decode", null)
+            exist = TimingsHandler("Packet ${packet::class.java.simpleName}($networkId) decode", null)
             timings[key] = exist
         }
         return exist
@@ -69,7 +69,7 @@ object Timings {
         val key = "PacketSend: $networkId"
         var exist = timings[key]
         if (exist === null) {
-            exist = TimingsHandler("Packet " + packet::class.java.simpleName + "($networkId) send", null)
+            exist = TimingsHandler("Packet ${packet::class.java.simpleName}($networkId) send", null)
             timings[key] = exist
         }
         return exist

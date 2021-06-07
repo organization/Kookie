@@ -34,7 +34,7 @@ import be.zvz.kookie.network.mcpe.protocol.types.skin.*
 import be.zvz.kookie.utils.BinaryStream
 import com.koloboke.collect.map.hash.HashIntObjMaps
 import com.koloboke.collect.map.hash.HashObjObjMaps
-import java.util.*
+import java.util.UUID
 import java.util.concurrent.atomic.AtomicInteger
 
 class PacketSerializer(buffer: String = "", offset: AtomicInteger = AtomicInteger(0)) : BinaryStream(buffer, offset) {

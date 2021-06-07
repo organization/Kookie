@@ -20,7 +20,7 @@ package be.zvz.kookie.network.mcpe.protocol
 import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
 import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 import be.zvz.kookie.network.mcpe.protocol.types.skin.SkinData
-import java.util.*
+import java.util.UUID
 
 @ProtocolIdentify(ProtocolInfo.IDS.PLAYER_SKIN_PACKET)
 class PlayerSkinPacket : DataPacket(), ClientboundPacket, ServerboundPacket {

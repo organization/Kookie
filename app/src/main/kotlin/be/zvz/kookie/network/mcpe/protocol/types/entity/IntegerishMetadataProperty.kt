@@ -22,7 +22,7 @@ interface IntegerishMetadataProperty {
 
     fun initialize(v: Int) {
         if (v < min() || v > max()) {
-            throw AssertionError("Value is out of range " + min() + " - " + max())
+            throw AssertionError("Value is out of range ${min()} - ${max()}")
         }
         value = v
     }

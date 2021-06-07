@@ -34,7 +34,7 @@ class Network(private val server: Server, private val logger: Logger) {
     private val sessionManager = NetworkSessionManager()
 
     init {
-        setName(server.configGroup.getConfigString("motd", VersionInfo.NAME + " Server"))
+        setName(server.configGroup.getConfigString("motd", "${VersionInfo.NAME} Server"))
     }
 
     fun setName(name: String) {

@@ -67,7 +67,7 @@ class CompoundTag : Tag<Map<String, Tag<*>>>() {
             return tag.value!!
         }
         if (tag != null) {
-            throw NbtException("Expected a tag of type $expectedClass, got " + tag.javaClass.name)
+            throw NbtException("Expected a tag of type $expectedClass, got ${tag.javaClass.name}")
         }
         if (default == null) {
             throw NbtException("Tag \"$name\" does not exist")
