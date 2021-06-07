@@ -18,7 +18,7 @@
 package be.zvz.kookie.entity
 
 class Attribute @JvmOverloads constructor(
-    val id: String,
+    val id: Identifier,
     minValue: Float,
     maxValue: Float,
     defaultValue: Float,
@@ -68,8 +68,36 @@ class Attribute @JvmOverloads constructor(
 
     fun isSyncable(): Boolean = shouldSend
     fun isDesynchronized(): Boolean = shouldSend && desynchronized
+
     @JvmOverloads
     fun markSynchronized(synced: Boolean = true) {
         desynchronized = !synced
+    }
+
+    enum class Identifier(val id: String) {
+        ABSORPTION("absorption"),
+        SATURATION("player.saturation"),
+        EXHAUSTION("player.exhaustion"),
+        KNOCKBACK_RESISTANCE("knockback_resistance"),
+        HEALTH("health"),
+        MOVEMENT_SPEED("movement"),
+        FOLLOW_RANGE("follow_range"),
+        HUNGER("player.hunger"),
+        ATTACK_DAMAGE("attack_damage"),
+        EXPERIENCE_LEVEL("player.level"),
+        EXPERIENCE("player.experience"),
+        UNDERWATER_MOVEMENT("underwater_movement"),
+        LUCK("luck"),
+        FALL_DAMAGE("fall_damage"),
+        HORSE_JUMP_STRENGTH("horse.jump_strength"),
+        ZOMBIE_SPAWN_REINFORCEMENTS("zombie.spawn_reinforcements"),
+        LAVA_MOVEMENT("lava_movement");
+
+        val fullId = "minecraft:$id"
+
+        companion object {
+            private val VALUES = values()
+            fun from(value: String) = VALUES.firstOrNull { it.id == value || it.fullId == value }
+        }
     }
 }
