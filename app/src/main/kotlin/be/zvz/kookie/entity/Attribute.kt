@@ -75,6 +75,7 @@ class Attribute @JvmOverloads constructor(
     }
 
     enum class Identifier(val id: String) {
+        UNKNOWN(""),
         ABSORPTION("absorption"),
         SATURATION("player.saturation"),
         EXHAUSTION("player.exhaustion"),
@@ -97,7 +98,7 @@ class Attribute @JvmOverloads constructor(
 
         companion object {
             private val VALUES = values()
-            fun from(value: String) = VALUES.firstOrNull { it.id == value || it.fullId == value }
+            fun from(value: String) = VALUES.firstOrNull { it.id == value || it.fullId == value } ?: UNKNOWN
         }
     }
 }
