@@ -18,7 +18,7 @@
 package be.zvz.kookie
 
 import java.io.IOException
-import java.util.*
+import java.util.Properties
 
 object VersionInfo {
     const val NAME = "Kookie"

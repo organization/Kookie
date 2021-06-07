@@ -19,7 +19,12 @@ package be.zvz.kookie.network.mcpe.protocol
 
 import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
 import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
-import be.zvz.kookie.network.mcpe.protocol.types.inventory.*
+import be.zvz.kookie.network.mcpe.protocol.types.inventory.InventoryTransactionChangedSlotsHack
+import be.zvz.kookie.network.mcpe.protocol.types.inventory.MismatchTransactionData
+import be.zvz.kookie.network.mcpe.protocol.types.inventory.NormalTransactionData
+import be.zvz.kookie.network.mcpe.protocol.types.inventory.TransactionData
+import be.zvz.kookie.network.mcpe.protocol.types.inventory.UseItemOnEntityTransactionData
+import be.zvz.kookie.network.mcpe.protocol.types.inventory.UseItemTransactionData
 
 @ProtocolIdentify(ProtocolInfo.IDS.INVENTORY_TRANSACTION_PACKET)
 class InventoryTransactionPacket : DataPacket(), ClientboundPacket, ServerboundPacket {

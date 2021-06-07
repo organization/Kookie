@@ -27,11 +27,15 @@ import be.zvz.kookie.math.Vector3
 import be.zvz.kookie.nbt.LittleEndianNbtSerializer
 import be.zvz.kookie.nbt.NBT
 import be.zvz.kookie.nbt.TreeRoot
-import be.zvz.kookie.nbt.tag.*
+import be.zvz.kookie.nbt.tag.CompoundTag
+import be.zvz.kookie.nbt.tag.ListTag
+import be.zvz.kookie.nbt.tag.ShortTag
+import be.zvz.kookie.nbt.tag.StringTag
+import be.zvz.kookie.nbt.tag.Tag
 import be.zvz.kookie.player.Player
 import be.zvz.kookie.utils.Binary
 import com.koloboke.collect.map.hash.HashIntObjMaps
-import java.util.*
+import java.util.Base64
 
 open class Item(
     private val identifier: ItemIdentifier,

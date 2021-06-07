@@ -19,7 +19,7 @@ package be.zvz.kookie.item
 
 import be.zvz.kookie.item.enchantment.VanillaEnchantments
 import be.zvz.kookie.nbt.tag.CompoundTag
-import java.util.*
+import java.util.Random
 import kotlin.math.min
 
 abstract class Durable(identifier: ItemIdentifier) : Item(identifier) {
