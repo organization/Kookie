@@ -20,6 +20,7 @@ package be.zvz.kookie.player
 import be.zvz.kookie.Server
 import be.zvz.kookie.command.CommandSender
 import be.zvz.kookie.entity.Human
+import be.zvz.kookie.entity.Location
 import be.zvz.kookie.lang.Language
 import be.zvz.kookie.lang.TranslationContainer
 import be.zvz.kookie.nbt.tag.CompoundTag
@@ -36,8 +37,9 @@ class Player(
     val playerInfo: PlayerInfo,
     val authenticated: Boolean,
     val spawnLocation: Any, // TODO: Location,
-    val namedTag: CompoundTag
-) : Human(), CommandSender {
+    val namedTag: CompoundTag,
+    location: Location
+) : Human(location), CommandSender {
     override val language: Language
         get() = server.language
     val username = playerInfo.getUsername()
