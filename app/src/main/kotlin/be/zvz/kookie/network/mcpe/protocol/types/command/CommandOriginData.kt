@@ -1,6 +1,6 @@
 package be.zvz.kookie.network.mcpe.protocol.types.command
 
-import java.util.*
+import java.util.UUID
 
 class CommandOriginData {
     var type: Origin = Origin.UNKNOWN

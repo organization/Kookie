@@ -21,7 +21,7 @@ import be.zvz.kookie.network.mcpe.JwtUtils
 import org.whispersystems.curve25519.Curve25519
 import java.security.*
 import java.security.spec.X509EncodedKeySpec
-import java.util.*
+import java.util.Base64
 
 object EncryptionUtils {
     private val cipher = Curve25519.getInstance(Curve25519.BEST)

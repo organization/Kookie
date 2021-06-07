@@ -3,7 +3,7 @@ package be.zvz.kookie.network.mcpe.protocol.types.recipe
 import be.zvz.kookie.network.mcpe.protocol.CraftingDataPacket
 import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 import be.zvz.kookie.network.mcpe.protocol.types.inventory.ItemStackWrapper
-import java.util.*
+import java.util.UUID
 
 class ShapelessRecipe(
     type: CraftingDataPacket.Entry,

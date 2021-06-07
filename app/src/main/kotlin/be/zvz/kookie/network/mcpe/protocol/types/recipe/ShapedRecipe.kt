@@ -4,7 +4,7 @@ import be.zvz.kookie.network.mcpe.protocol.CraftingDataPacket
 import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 import be.zvz.kookie.network.mcpe.protocol.types.inventory.ItemStackWrapper
 import com.koloboke.collect.map.hash.HashIntObjMaps
-import java.util.*
+import java.util.UUID
 
 class ShapedRecipe(
     type: CraftingDataPacket.Entry,

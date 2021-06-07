@@ -2,7 +2,7 @@ package be.zvz.kookie.network.mcpe.protocol.types.recipe
 
 import be.zvz.kookie.network.mcpe.protocol.CraftingDataPacket
 import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
-import java.util.*
+import java.util.UUID
 
 class MultiRecipe(
     type: CraftingDataPacket.Entry,
