@@ -231,7 +231,7 @@ class AvailableCommandsPacket : DataPacket(), ClientboundPacket {
                         throw PacketDecodeException("Deserializing $name parameter ${parameter.paramName}: Expected postfix at $index, but got none")
                     }
                 } else if ((parameter.paramType and ARG_FLAG_VALID) == 0) {
-                    throw PacketDecodeException("deserializing $name parameter $parameter->paramName: Invalid parameter type ${parameter.paramType}")
+                    throw PacketDecodeException("deserializing $name parameter ${parameter.paramName}: Invalid parameter type ${parameter.paramType}")
                 }
                 overloads.getValue(overloadIndex)[paramIndex] = parameter
             }

@@ -90,7 +90,7 @@ open class CommandOutputPacket : DataPacket(), ClientboundPacket {
         return handler.handleCommandOutput(this)
     }
 
-    enum class Type(var id: Int) {
+    enum class Type(val id: Int) {
         LAST(1),
         SILENT(2),
         ALL(3),
@@ -98,9 +98,7 @@ open class CommandOutputPacket : DataPacket(), ClientboundPacket {
         UNKNOWN(-1);
 
         companion object {
-            fun from(findValue: Int): Type = values().firstOrNull { it.id == findValue } ?: UNKNOWN.apply {
-                id = findValue
-            }
+            fun from(findValue: Int): Type = values().firstOrNull { it.id == findValue } ?: UNKNOWN
         }
     }
 }

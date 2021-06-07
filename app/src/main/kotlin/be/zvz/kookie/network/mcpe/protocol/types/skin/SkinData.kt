@@ -17,7 +17,7 @@
  */
 package be.zvz.kookie.network.mcpe.protocol.types.skin
 
-import java.util.*
+import java.util.UUID
 
 class SkinData(
     val skinId: String,

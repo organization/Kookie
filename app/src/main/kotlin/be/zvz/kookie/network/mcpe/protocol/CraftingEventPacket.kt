@@ -20,7 +20,7 @@ package be.zvz.kookie.network.mcpe.protocol
 import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
 import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 import be.zvz.kookie.network.mcpe.protocol.types.inventory.ItemStackWrapper
-import java.util.*
+import java.util.UUID
 
 @ProtocolIdentify(ProtocolInfo.IDS.CRAFTING_EVENT_PACKET)
 class CraftingEventPacket : DataPacket(), ServerboundPacket {
