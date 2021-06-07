@@ -22,8 +22,7 @@ import be.zvz.kookie.nbt.tag.StringTag
 import be.zvz.kookie.world.World
 import com.koloboke.collect.map.hash.HashObjObjMaps
 
-class EntityFactory {
-
+object EntityFactory {
     private val creationFuncs: MutableMap<String, (world: World, nbt: CompoundTag) -> Entity> = HashObjObjMaps.newMutableMap()
 
     private val saveNames: MutableMap<Class<out Entity>, String> = HashObjObjMaps.newMutableMap()
@@ -68,13 +67,5 @@ class EntityFactory {
         saveNames.getValue(clazz)
     } else {
         throw IllegalArgumentException("Entity ${clazz.simpleName} is not registered")
-    }
-
-    companion object {
-        private val instance = EntityFactory()
-
-        fun getInstance(): EntityFactory {
-            return instance
-        }
     }
 }
