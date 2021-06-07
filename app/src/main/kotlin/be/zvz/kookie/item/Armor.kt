@@ -25,7 +25,7 @@ import be.zvz.kookie.math.Vector3
 import be.zvz.kookie.nbt.tag.CompoundTag
 import be.zvz.kookie.player.Player
 import be.zvz.kookie.utils.Binary
-import java.util.*
+import java.util.Random
 
 class Armor(identifier: ItemIdentifier, name: String, val armorInfo: ArmorTypeInfo) : Durable(identifier, name) {
 
