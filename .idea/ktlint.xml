@@ -3,7 +3,6 @@
   <component name="KtlintProjectConfiguration">
     <disabledRules>
       <list>
-        <option value="no-wildcard-imports" />
       </list>
     </disabledRules>
   </component>

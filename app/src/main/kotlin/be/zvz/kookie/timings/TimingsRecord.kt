@@ -17,7 +17,6 @@
  */
 package be.zvz.kookie.timings
 
-import java.util.*
 import kotlin.math.roundToInt
 
 class TimingsRecord(val handler: TimingsHandler) {

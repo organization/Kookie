@@ -23,7 +23,11 @@ import be.zvz.kookie.entity.Entity
 import be.zvz.kookie.item.Item
 import be.zvz.kookie.item.ItemFactory
 import be.zvz.kookie.item.enchantment.VanillaEnchantments
-import be.zvz.kookie.math.*
+import be.zvz.kookie.math.Axis
+import be.zvz.kookie.math.AxisAlignedBB
+import be.zvz.kookie.math.Facing
+import be.zvz.kookie.math.RayTraceResult
+import be.zvz.kookie.math.Vector3
 import be.zvz.kookie.player.Player
 import be.zvz.kookie.world.BlockTransaction
 import be.zvz.kookie.world.Position

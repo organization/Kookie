@@ -17,7 +17,7 @@
  */
 package be.zvz.kookie.timings
 
-import java.util.*
+import java.util.Date
 
 class TimingsHandler(val name: String, private val parent: TimingsHandler? = null) {
     var record: TimingsRecord? = null
