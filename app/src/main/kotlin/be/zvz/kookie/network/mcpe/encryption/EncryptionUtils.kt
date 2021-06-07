@@ -19,7 +19,11 @@ package be.zvz.kookie.network.mcpe.encryption
 
 import be.zvz.kookie.network.mcpe.JwtUtils
 import org.whispersystems.curve25519.Curve25519
-import java.security.*
+import java.security.KeyFactory
+import java.security.KeyPair
+import java.security.MessageDigest
+import java.security.PrivateKey
+import java.security.PublicKey
 import java.security.spec.X509EncodedKeySpec
 import java.util.Base64
 

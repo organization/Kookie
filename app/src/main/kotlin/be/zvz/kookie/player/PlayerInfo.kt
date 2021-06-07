@@ -18,7 +18,7 @@
 package be.zvz.kookie.player
 
 import be.zvz.kookie.entity.Skin
-import java.util.*
+import java.util.UUID
 
 class PlayerInfo(
     private val username: String,

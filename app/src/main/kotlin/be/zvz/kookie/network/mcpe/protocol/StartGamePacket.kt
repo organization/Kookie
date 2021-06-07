@@ -22,7 +22,16 @@ import be.zvz.kookie.nbt.LittleEndianNbtSerializer
 import be.zvz.kookie.nbt.TreeRoot
 import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
 import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
-import be.zvz.kookie.network.mcpe.protocol.types.*
+import be.zvz.kookie.network.mcpe.protocol.types.BlockPaletteEntry
+import be.zvz.kookie.network.mcpe.protocol.types.EducationOffer
+import be.zvz.kookie.network.mcpe.protocol.types.Experiments
+import be.zvz.kookie.network.mcpe.protocol.types.GameRule
+import be.zvz.kookie.network.mcpe.protocol.types.GeneratorType
+import be.zvz.kookie.network.mcpe.protocol.types.ItemTypeEntry
+import be.zvz.kookie.network.mcpe.protocol.types.MultiplayerGameVisibility
+import be.zvz.kookie.network.mcpe.protocol.types.PlayerMovementSettings
+import be.zvz.kookie.network.mcpe.protocol.types.PlayerPermissions
+import be.zvz.kookie.network.mcpe.protocol.types.SpawnSettings
 import com.koloboke.collect.map.hash.HashObjObjMaps
 
 @ProtocolIdentify(ProtocolInfo.IDS.START_GAME_PACKET)
