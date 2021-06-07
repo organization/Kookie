@@ -4,30 +4,30 @@ import be.zvz.kookie.math.Facing
 import be.zvz.kookie.math.Vector3
 
 open class Position @JvmOverloads constructor(
-    x: Float,
-    y: Float = 0F,
-    z: Float = 0F,
+    x: Double,
+    y: Double = 0.0,
+    z: Double = 0.0,
     var world: World? = null
 ) : Vector3(x, y, z) {
     constructor() : this(0.0)
     constructor(x: Int = 0, y: Int = 0, z: Int = 0, world: World? = null) : this(
-        x.toFloat(),
-        y.toFloat(),
-        z.toFloat(),
+        x.toDouble(),
+        y.toDouble(),
+        z.toDouble(),
         world
     )
 
     constructor(x: Long = 0L, y: Long = 0L, z: Long = 0L, world: World? = null) : this(
-        x.toFloat(),
-        y.toFloat(),
-        z.toFloat(),
+        x.toDouble(),
+        y.toDouble(),
+        z.toDouble(),
         world
     )
 
-    constructor(x: Double = 0.0, y: Double = 0.0, z: Double = 0.0, world: World? = null) : this(
-        x.toFloat(),
-        y.toFloat(),
-        z.toFloat(),
+    constructor(x: Float = 0F, y: Float = 0F, z: Float = 0F, world: World? = null) : this(
+        x.toDouble(),
+        y.toDouble(),
+        z.toDouble(),
         world
     )
 
