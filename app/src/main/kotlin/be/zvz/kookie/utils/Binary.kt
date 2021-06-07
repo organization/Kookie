@@ -122,9 +122,9 @@ object Binary {
         return buf.getInt(index)
     }
 
-    fun readTriad(str: String): Int = unpackN("\u0000" + str, 1)
+    fun readTriad(str: String): Int = unpackN("\u0000$str", 1)
     fun writeTriad(value: Int): String = packN(value).substring(1)
-    fun readLTriad(str: String): Int = unpackV(str + "\u0000", 1)
+    fun readLTriad(str: String): Int = unpackV("$str\u0000", 1)
     fun writeLTriad(value: Int): String = packV(value).dropLast(1)
     fun readInt(str: String): Int = signInt(unpackN(str, 1))
     fun writeInt(value: Int): String = packN(value)
