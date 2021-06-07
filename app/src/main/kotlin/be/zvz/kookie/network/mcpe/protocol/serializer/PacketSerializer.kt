@@ -377,9 +377,9 @@ class PacketSerializer(buffer: String = "", offset: AtomicInteger = AtomicIntege
     }
 
     fun putVector3(vector: Vector3) {
-        putLFloat(vector.x)
-        putLFloat(vector.y)
-        putLFloat(vector.z)
+        putLFloat(vector.x.toFloat())
+        putLFloat(vector.y.toFloat())
+        putLFloat(vector.z.toFloat())
     }
 
     fun readGameRule(type: Int): GameRule = when (type) {

@@ -333,18 +333,18 @@ open class Block(val idInfo: BlockIdentifier, val name: String, val breakInfo: B
     }
 
     fun isFullCube(): Boolean {
-        val bb = collisionBoxes!!
-        return bb.size == 1 && bb[0].getAverageEdgeLength() >= 1 && bb[0].isCube()
+        val bb = collisionBoxes
+        return bb !== null && bb.size == 1 && bb[0].getAverageEdgeLength() >= 1 && bb[0].isCube()
     }
 
     fun calculateIntercept(pos1: Vector3, pos2: Vector3): RayTraceResult? {
-        val bbs = collisionBoxes!!
-        if (bbs.isEmpty()) {
+        val bbs = collisionBoxes
+        if (bbs === null || bbs.isEmpty()) {
             return null
         }
 
         var currentHit: RayTraceResult? = null
-        var currentDistance = Float.MAX_VALUE
+        var currentDistance = Double.MAX_VALUE
 
         bbs.forEach {
             val nextHit = it.calculateIntercept(pos1, pos2)
