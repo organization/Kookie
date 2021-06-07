@@ -17,4 +17,7 @@
  */
 package be.zvz.kookie.entity
 
-open class Human : Living()
+open class Human(location: Location) : Living(location) {
+
+    override fun getInitialSizeInfo(): EntitySizeInfo = EntitySizeInfo(1.8F, 0.6F, 1.62F)
+}

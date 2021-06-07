@@ -74,4 +74,6 @@ class Vector2 @JvmOverloads constructor(var x: Double = 0.0, var y: Double = 0.0
     }
 
     fun dot(v: Vector2): Double = x * v.x + y * v.y
+
+    public override fun clone(): Vector2 = super.clone() as Vector2
 }

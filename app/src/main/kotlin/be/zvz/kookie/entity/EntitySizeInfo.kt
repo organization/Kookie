@@ -17,7 +17,15 @@
  */
 package be.zvz.kookie.entity
 
-abstract class Living(location: Location) : Entity(location) {
-    override val gravity: Float = 0.08F
-    override val drag: Float = 0.02F
+import kotlin.math.min
+
+data class EntitySizeInfo(val height: Float, val width: Float, var eyeHeight: Float? = null) {
+
+    init {
+        eyeHeight = eyeHeight ?: min(height / 2 + 0.1F, height)
+    }
+
+    fun scale(newScale: Float): EntitySizeInfo {
+        return EntitySizeInfo(height * newScale, width * newScale, eyeHeight!! * newScale)
+    }
 }

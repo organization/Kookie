@@ -31,7 +31,7 @@ import be.zvz.kookie.permission.PermissionAttachmentInfo
 import be.zvz.kookie.plugin.Plugin
 
 class Player(
-    override val server: Server,
+    override var server: Server,
     val session: NetworkSession,
     val playerInfo: PlayerInfo,
     val authenticated: Boolean,

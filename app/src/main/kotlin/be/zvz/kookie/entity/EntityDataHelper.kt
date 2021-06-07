@@ -31,7 +31,7 @@ object EntityDataHelper {
         val pos = parseVec3(nbt, "pos", false)
 
         val yawPitch = nbt.getTag("Rotation")
-        if (yawPitch !is ListTag<*> || yawPitch.getTagType() != NBT.TagType.FLOAT){
+        if (yawPitch !is ListTag<*> || yawPitch.getTagType() != NBT.TagType.FLOAT) {
             throw IllegalArgumentException("'Rotation' should be List<Float>")
         }
         val values = yawPitch.value
@@ -39,7 +39,6 @@ object EntityDataHelper {
             throw IllegalArgumentException("Expected exactly 2 entries for 'Rotation'")
         }
         return Location.fromObject(pos, world, (values[0] as FloatTag).value, (values[1] as FloatTag).value)
-
     }
 
     fun parseVec3(nbt: CompoundTag, tagName: String, optional: Boolean): Vector3 {
@@ -51,7 +50,7 @@ object EntityDataHelper {
             throw IllegalArgumentException("$tagName should be List<Double>")
         }
         val values = pos.value
-        if(values.size != 3) {
+        if (values.size != 3) {
             throw IllegalArgumentException("Expected exactly 3 entries in '$tagName' tag")
         }
         return Vector3((values[0] as DoubleTag).value, (values[1] as DoubleTag).value, (values[2] as DoubleTag).value)

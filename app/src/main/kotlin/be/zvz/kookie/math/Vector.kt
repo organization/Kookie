@@ -17,4 +17,5 @@
  */
 package be.zvz.kookie.math
 
-interface Vector
+interface Vector : Cloneable
+
