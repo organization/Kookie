@@ -26,7 +26,7 @@ class StringTag(override val value: String) : Tag<String>() {
 
     init {
         if (value.length > 32767) {
-            throw NbtException("StringTag cannot hold more than 32767 bytes, got " + value.length)
+            throw NbtException("StringTag cannot hold more than 32767 bytes, got ${value.length}")
         }
     }
 

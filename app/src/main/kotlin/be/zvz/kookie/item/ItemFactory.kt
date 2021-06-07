@@ -173,7 +173,7 @@ object ItemFactory {
 
     private fun getListOffset(id: Int, variant: Int): Int {
         if (id !in -0x8000..0x7fff) {
-            throw IllegalArgumentException("ID must be in range " + -0x8000 + " - " + 0x7fff)
+            throw IllegalArgumentException("ID must be in range ${0x8000} - ${0x7fff}")
         }
 
         return ((id and 0xffff) shl 16) or (variant and 0xffff)

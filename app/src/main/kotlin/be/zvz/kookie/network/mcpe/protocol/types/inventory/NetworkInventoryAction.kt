@@ -33,13 +33,14 @@ class NetworkInventoryAction {
     lateinit var newItem: ItemStackWrapper
 
     fun read(input: PacketSerializer): NetworkInventoryAction {
-        when (input.getUnsignedVarInt()) {
+        sourceType = input.getUnsignedVarInt()
+        when (sourceType) {
             SOURCE_CONTAINER -> windowId = input.getVarInt()
             SOURCE_WORLD -> sourceFlags = input.getUnsignedVarInt()
             SOURCE_CREATIVE -> {
             }
             SOURCE_TODO -> windowId = input.getVarInt()
-            else -> throw PacketDecodeException("Unknown inventory action source type this.sourceType")
+            else -> throw PacketDecodeException("Unknown inventory action source type $sourceType")
         }
         inventorySlot = input.getUnsignedVarInt()
         oldItem = ItemStackWrapper.read(input)
@@ -57,7 +58,7 @@ class NetworkInventoryAction {
             SOURCE_CREATIVE -> {
             }
             SOURCE_TODO -> output.putVarInt(windowId)
-            else -> throw IllegalArgumentException("Unknown inventory action source type ${this.sourceType}")
+            else -> throw IllegalArgumentException("Unknown inventory action source type $sourceType")
         }
     }
 

@@ -25,7 +25,7 @@ import be.zvz.kookie.network.mcpe.protocol.types.entity.EntityLink
 import be.zvz.kookie.network.mcpe.protocol.types.entity.MetadataProperty
 import be.zvz.kookie.network.mcpe.protocol.types.inventory.ItemStackWrapper
 import com.koloboke.collect.map.hash.HashObjObjMaps
-import java.util.*
+import java.util.UUID
 
 @ProtocolIdentify(ProtocolInfo.IDS.ADD_PLAYER_PACKET)
 class AddPlayerPacket : DataPacket(), ClientboundPacket {

@@ -48,7 +48,7 @@ open class Block(val idInfo: BlockIdentifier, val name: String, val breakInfo: B
     init {
         // TODO: Variant collides with state bitmask
         if ((idInfo.variant and getStateBitmask()) != 0) {
-            throw IllegalArgumentException("Variant 0x" + idInfo.variant.toString(16) + " collides with state bitmask 0x" + getStateBitmask().toString(16))
+            throw IllegalArgumentException("Variant 0x${idInfo.variant.toString(16)} collides with state bitmask 0x${getStateBitmask().toString(16)}")
         }
         pos = Position()
     }

@@ -19,7 +19,7 @@ package be.zvz.kookie.network.mcpe.protocol
 
 import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
 import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
-import java.util.*
+import java.util.UUID
 
 @ProtocolIdentify(ProtocolInfo.IDS.EMOTE_LIST_PACKET)
 class EmoteListPacket : DataPacket(), ClientboundPacket, ServerboundPacket {
