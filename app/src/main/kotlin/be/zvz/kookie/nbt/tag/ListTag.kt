@@ -28,7 +28,7 @@ class ListTag<T>(
 ) : Tag<List<Tag<T>>>() {
 
     override fun getTagType(): NBT.TagType {
-        return NBT.TagType.LIST
+        return tagType
     }
 
     init {
