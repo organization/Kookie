@@ -22,10 +22,13 @@ import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 
 @ProtocolIdentify(ProtocolInfo.IDS.NETWORK_SETTINGS_PACKET)
 class NetworkSettingsPacket : DataPacket(), ClientboundPacket {
-    var compressionThreshold: Compress = Compress.NOTHING
+    var compressionThreshold: Int = NOTHING
 
     companion object {
-        fun create(compressionThreshold: Compress): NetworkSettingsPacket {
+        const val NOTHING = 0
+        const val EVERYTHING = 1
+
+        fun create(compressionThreshold: Int): NetworkSettingsPacket {
             return NetworkSettingsPacket().apply {
                 this.compressionThreshold = compressionThreshold
             }
@@ -33,26 +36,14 @@ class NetworkSettingsPacket : DataPacket(), ClientboundPacket {
     }
 
     override fun decodePayload(input: PacketSerializer) {
-        compressionThreshold = Compress.from(input.getLShort())
+        compressionThreshold = input.getLShort()
     }
 
     override fun encodePayload(output: PacketSerializer) {
-        output.putLShort(compressionThreshold.level)
+        output.putLShort(compressionThreshold)
     }
 
     override fun handle(handler: PacketHandlerInterface): Boolean {
         return handler.handleNetworkSettings(this)
-    }
-
-    enum class Compress(var level: Int) {
-        NOTHING(0),
-        EVERYTHING(1),
-        COMPRESS(-1);
-
-        companion object {
-            fun from(value: Int) = values().firstOrNull { it.level == value } ?: COMPRESS.apply {
-                level = value
-            }
-        }
     }
 }
