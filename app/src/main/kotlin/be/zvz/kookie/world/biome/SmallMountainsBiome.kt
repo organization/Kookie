@@ -18,7 +18,7 @@
 package be.zvz.kookie.world.biome
 
 @BiomeIdentify(id = BiomeIds.SMALL_MOUNTAINS)
-class SmallMountainsBiome : GrassyBiome() {
+class SmallMountainsBiome : MountainsBiome() {
     init {
         setElevation(63, 97)
     }

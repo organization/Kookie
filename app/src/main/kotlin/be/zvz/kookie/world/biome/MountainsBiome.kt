@@ -18,7 +18,7 @@
 package be.zvz.kookie.world.biome
 
 @BiomeIdentify(id = BiomeIds.MOUNTAINS)
-class MountainsBiome : GrassyBiome() {
+open class MountainsBiome : GrassyBiome() {
     init {
         /**
          * TODO: Implements after implemented populator/Tree
