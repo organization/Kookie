@@ -17,22 +17,18 @@
  */
 package be.zvz.kookie.world.biome
 
-enum class BiomeIds(val id: Int, val biomeName: String) {
-    UNKNOWN(-1, "Unknown"),
-    OCEAN(0, "Ocean"),
-    PLAINS(1, "Plains"),
-    DESERT(2, "Desert"),
-    MOUNTAINS(3, "Mountains"),
-    FOREST(4, "Forest"),
-    TAIGA(5, "Taiga"),
-    SWAMP(6, "Swamp"),
-    RIVER(7, "River"),
-
-    HELL(8, "Hell"),
-
-    ICE_PLAINS(12, "Ice Plains"),
-
-    SMALL_MOUNTAINS(20, "Small Mountains"),
-
-    BIRCH_FOREST(27, "Bitch Forest"),
+@BiomeIdentify(id = BiomeIds.UNKNOWN)
+abstract class SnowyBiome : Biome() {
+    init {
+        groundCover.apply {
+            /**
+             * TODO: Implements after implemented VanillaBlocks
+             * add(VanillaBlocks.SNOW_LAYER())
+             * add(VanillaBlocks.GRASS())
+             * add(VanillaBlocks.DIRT())
+             * add(VanillaBlocks.DIRT())
+             * add(VanillaBlocks.DIRT())
+             */
+        }
+    }
 }

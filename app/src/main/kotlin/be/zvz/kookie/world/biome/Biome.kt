@@ -22,9 +22,15 @@ import be.zvz.kookie.world.ChunkManager
 import be.zvz.kookie.world.generator.populator.Populator
 import kotlin.random.Random
 
-abstract class Biome(
-    val id: Int
-) {
+@BiomeIdentify(id = BiomeIds.UNKNOWN)
+abstract class Biome {
+    val identifier = this::class.java.getAnnotation(BiomeIdentify::class.java)!!.id
+
+    var id: Int = identifier.id
+        protected set
+    var name: String = identifier.biomeName
+        protected set
+
     var populators: MutableList<Populator> = mutableListOf()
         private set
 
@@ -42,17 +48,13 @@ abstract class Biome(
 
     fun clearPopulators() = populators.clear()
 
-    fun addPopulator(populator: Populator) {
-        populators.add(populator)
-    }
+    fun addPopulator(populator: Populator) = populators.add(populator)
 
     fun populateChunk(world: ChunkManager, chunkX: Int, chunkZ: Int, random: Random) {
         populators.forEach {
             it.populate(world, chunkX, chunkZ, random)
         }
     }
-
-    abstract fun getName(): String
 
     fun setElevation(min: Int, max: Int) {
         minElevation = min

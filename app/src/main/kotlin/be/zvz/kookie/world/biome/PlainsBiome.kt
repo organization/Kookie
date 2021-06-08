@@ -17,22 +17,16 @@
  */
 package be.zvz.kookie.world.biome
 
-enum class BiomeIds(val id: Int, val biomeName: String) {
-    UNKNOWN(-1, "Unknown"),
-    OCEAN(0, "Ocean"),
-    PLAINS(1, "Plains"),
-    DESERT(2, "Desert"),
-    MOUNTAINS(3, "Mountains"),
-    FOREST(4, "Forest"),
-    TAIGA(5, "Taiga"),
-    SWAMP(6, "Swamp"),
-    RIVER(7, "River"),
+@BiomeIdentify(id = BiomeIds.PLAINS)
+class PlainsBiome : GrassyBiome() {
+    init {
+        /**
+         * TODO: Implements after implemented populator/TallGrass
+         * addPopulator(TallGrass().apply{ baseAmount = 12 });
+         */
 
-    HELL(8, "Hell"),
-
-    ICE_PLAINS(12, "Ice Plains"),
-
-    SMALL_MOUNTAINS(20, "Small Mountains"),
-
-    BIRCH_FOREST(27, "Bitch Forest"),
+        setElevation(63, 68)
+        temperature = 0.48F
+        rainfall = 0.4F
+    }
 }
