@@ -18,7 +18,7 @@
 package be.zvz.kookie.permission
 
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Date
 
 data class BanEntry(
     var name: String
