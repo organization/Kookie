@@ -28,12 +28,11 @@ class SetActorMotionPacket : DataPacket(), ClientboundPacket, ServerboundPacket 
 
     companion object {
         fun create(entityRuntimeId: Long, motion: Vector3): SetActorMotionPacket {
-            val packet = SetActorMotionPacket().apply {
+
+            return SetActorMotionPacket().apply {
                 this.entityRuntimeId = entityRuntimeId
                 this.motion = motion.asVector3()
             }
-
-            return packet
         }
     }
 

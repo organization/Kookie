@@ -198,7 +198,13 @@ class Server(cwd: Path, dataPath: Path, pluginPath: Path) {
 
         memoryManager = MemoryManager(this)
 
-        network.addInterface(RakLibInterface(this, network.getSessionManager(), InetSocketAddress("0.0.0.0", configGroup.getConfigLong("server-port").toInt())))
+        network.addInterface(
+            RakLibInterface(
+                this,
+                network.getSessionManager(),
+                InetSocketAddress("0.0.0.0", configGroup.getConfigLong("server-port").toInt())
+            )
+        )
 
         language.translateString("pocketmine.server.start", listOf(ProtocolInfo.MINECRAFT_VERSION_NETWORK.brightCyan()))
 

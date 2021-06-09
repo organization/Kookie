@@ -19,7 +19,7 @@ package be.zvz.kookie.network.mcpe.protocol.types
 
 import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 
-abstract class GameRule {
+abstract class GameRule(open val playerModifiable: Boolean) {
     abstract val typeId: Int
 
     abstract fun encode(output: PacketSerializer)

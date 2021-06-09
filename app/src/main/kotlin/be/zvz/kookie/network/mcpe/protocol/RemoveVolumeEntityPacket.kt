@@ -20,21 +20,20 @@ package be.zvz.kookie.network.mcpe.protocol
 import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
 import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 
-@ProtocolIdentify(ProtocolInfo.IDS.SCRIPT_CUSTOM_EVENT_PACKET)
-class ScriptCustomEventPacket : DataPacket() {
-    // TODO: this doesn't have handlers in either client or server in the game as of 1.8
-    lateinit var eventName: String
-    lateinit var eventData: String
+@ProtocolIdentify(ProtocolInfo.IDS.REMOVE_VOLUME_ENTITY_PACKET)
+class RemoveVolumeEntityPacket : DataPacket() {
+
+    var entityNetId: Int = 0
 
     override fun decodePayload(input: PacketSerializer) {
-        eventName = input.getString()
-        eventData = input.getString()
+        entityNetId = input.getUnsignedVarInt()
     }
 
     override fun encodePayload(output: PacketSerializer) {
-        output.putString(eventName)
-        output.putString(eventData)
+        output.putUnsignedVarInt(entityNetId)
     }
 
-    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleScriptCustomEvent(this)
+    override fun handle(handler: PacketHandlerInterface): Boolean {
+        return handler.handleRemoveVolumeEntity(this)
+    }
 }

@@ -61,7 +61,9 @@ class Attribute @JvmOverloads constructor(
 
     init {
         if (minValue > maxValue || defaultValue > maxValue || defaultValue < minValue) {
-            throw IllegalArgumentException("Invalid ranges: min value: $minValue, max value: $maxValue, $defaultValue: $defaultValue")
+            throw IllegalArgumentException(
+                "Invalid ranges: min value: $minValue, max value: $maxValue, $defaultValue: $defaultValue"
+            )
         }
         currentValue = defaultValue
     }

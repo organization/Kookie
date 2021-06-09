@@ -405,10 +405,10 @@ class PacketSerializer(buffer: String = "", offset: AtomicInteger = AtomicIntege
         putLFloat(vector.z.toFloat())
     }
 
-    fun readGameRule(type: Int): GameRule = when (type) {
-        GameRuleType.BOOL -> BooleanGameRule.decode(this)
-        GameRuleType.INT -> IntGameRule.decode(this)
-        GameRuleType.FLOAT -> FloatGameRule.decode(this)
+    fun readGameRule(type: Int, playerModifiable: Boolean): GameRule = when (type) {
+        GameRuleType.BOOL -> BooleanGameRule.decode(this, playerModifiable)
+        GameRuleType.INT -> IntGameRule.decode(this, playerModifiable)
+        GameRuleType.FLOAT -> FloatGameRule.decode(this, playerModifiable)
         else -> throw PacketDecodeException("Unknown gamerule type $type")
     }
 
@@ -418,7 +418,8 @@ class PacketSerializer(buffer: String = "", offset: AtomicInteger = AtomicIntege
         for (i in 0 until count) {
             val name = getString()
             val type = getUnsignedVarInt()
-            rules[name] = readGameRule(type)
+            val playerModifiable = getBoolean()
+            rules[name] = readGameRule(type, playerModifiable)
         }
         return rules
     }
@@ -428,6 +429,7 @@ class PacketSerializer(buffer: String = "", offset: AtomicInteger = AtomicIntege
         gameRules.forEach { (name, gameRule) ->
             putString(name)
             putUnsignedVarInt(gameRule.typeId)
+            putBoolean(gameRule.playerModifiable)
             gameRule.encode(this)
         }
     }
