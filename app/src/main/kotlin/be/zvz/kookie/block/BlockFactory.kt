@@ -123,7 +123,7 @@ object BlockFactory {
         return block ?: UnknownBlock(BID(id, meta), BlockBreakInfo.instant())
     }
 
-    fun fromFullBlock(fullState: Int): Block = get(fullState shr 4, fullState and 0xf)
+    fun fromFullBlock(fullState: Long): Block = get((fullState shr 4).toInt(), (fullState and 0xf).toInt())
 
     fun isRegistered(id: Int, meta: Int = 0): Boolean {
         val b = fullList[(id shl 4) or meta]

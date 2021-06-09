@@ -72,7 +72,7 @@ open class Block(val idInfo: BlockIdentifier, val name: String, val breakInfo: B
 
     fun getId(): Int = idInfo.blockId
 
-    fun getFullId(): Int = (getId() shl 4) or getMeta()
+    fun getFullId(): Long = (getId().toLong() shl 4) or getMeta().toLong()
 
     fun asItem(): Item = ItemFactory.get(
         idInfo.itemId!!,
