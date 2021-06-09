@@ -34,9 +34,7 @@ abstract class VanillaCommand(
         value: String,
         minNum: Int = MIN_COORD,
         maxNum: Int = MAX_COORD
-    ): Int? = value.toIntOrNull()?.let {
-        return min(max(it, maxNum), minNum)
-    }
+    ): Int = min(max(value.toIntOrNull() ?: 0, maxNum), minNum)
 
     protected fun getRelativeDouble(
         original: Double,
@@ -44,7 +42,7 @@ abstract class VanillaCommand(
         input: String,
         min: Double = MIN_COORD.toDouble(),
         max: Double = MAX_COORD.toDouble()
-    ): Double? {
+    ): Double {
         if (input.first() == '~') {
             val value = getDouble(sender, input.substring(1))
 
@@ -59,9 +57,7 @@ abstract class VanillaCommand(
         value: String,
         minNum: Double = MIN_COORD.toDouble(),
         maxNum: Double = MAX_COORD.toDouble()
-    ): Double? = value.toDoubleOrNull()?.let {
-        return min(max(it, maxNum), minNum)
-    }
+    ): Double = min(max(value.toDoubleOrNull() ?: 0.0, maxNum), minNum)
 
     companion object {
         const val MAX_COORD = 30000000
