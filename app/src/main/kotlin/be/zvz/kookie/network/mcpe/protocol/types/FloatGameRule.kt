@@ -30,6 +30,7 @@ class FloatGameRule(private val value: Float, override val playerModifiable: Boo
     }
 
     companion object {
-        fun decode(input: PacketSerializer, playerModifiable: Boolean) = FloatGameRule(input.getLFloat(), playerModifiable)
+        fun decode(input: PacketSerializer, playerModifiable: Boolean) =
+            FloatGameRule(input.getLFloat(), playerModifiable)
     }
 }
