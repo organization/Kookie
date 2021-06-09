@@ -53,14 +53,13 @@ class CameraShakePacket : DataPacket(), ClientboundPacket {
         const val ACTION_STOP = 1
 
         fun create(intensity: Float, duration: Float, shakeType: Int, shakeAction: Int): CameraShakePacket {
-            val packet = CameraShakePacket().apply {
+
+            return CameraShakePacket().apply {
                 this.intensity = intensity
                 this.duration = duration
                 this.shakeType = shakeType
                 this.shakeAction = shakeAction
             }
-
-            return packet
         }
     }
 }

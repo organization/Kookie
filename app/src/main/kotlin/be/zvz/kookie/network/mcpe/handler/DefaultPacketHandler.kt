@@ -25,6 +25,7 @@ import be.zvz.kookie.network.mcpe.protocol.AddEntityPacket
 import be.zvz.kookie.network.mcpe.protocol.AddItemActorPacket
 import be.zvz.kookie.network.mcpe.protocol.AddPaintingPacket
 import be.zvz.kookie.network.mcpe.protocol.AddPlayerPacket
+import be.zvz.kookie.network.mcpe.protocol.AddVolumeEntityPacket
 import be.zvz.kookie.network.mcpe.protocol.AdventureSettingsPacket
 import be.zvz.kookie.network.mcpe.protocol.AnimateEntityPacket
 import be.zvz.kookie.network.mcpe.protocol.AnimatePacket
@@ -123,6 +124,7 @@ import be.zvz.kookie.network.mcpe.protocol.PurchaseReceiptPacket
 import be.zvz.kookie.network.mcpe.protocol.RemoveActorPacket
 import be.zvz.kookie.network.mcpe.protocol.RemoveEntityPacket
 import be.zvz.kookie.network.mcpe.protocol.RemoveObjectivePacket
+import be.zvz.kookie.network.mcpe.protocol.RemoveVolumeEntityPacket
 import be.zvz.kookie.network.mcpe.protocol.RequestChunkRadiusPacket
 import be.zvz.kookie.network.mcpe.protocol.ResourcePackChunkDataPacket
 import be.zvz.kookie.network.mcpe.protocol.ResourcePackChunkRequestPacket
@@ -165,6 +167,7 @@ import be.zvz.kookie.network.mcpe.protocol.StructureBlockUpdatePacket
 import be.zvz.kookie.network.mcpe.protocol.StructureTemplateDataRequestPacket
 import be.zvz.kookie.network.mcpe.protocol.StructureTemplateDataResponsePacket
 import be.zvz.kookie.network.mcpe.protocol.SubClientLoginPacket
+import be.zvz.kookie.network.mcpe.protocol.SyncActorPropertyPacket
 import be.zvz.kookie.network.mcpe.protocol.TakeItemActorPacket
 import be.zvz.kookie.network.mcpe.protocol.TextPacket
 import be.zvz.kookie.network.mcpe.protocol.TickSyncPacket
@@ -816,6 +819,18 @@ open class DefaultPacketHandler : PacketHandlerInterface {
     }
 
     override fun handleClientboundDebugRenderer(packet: ClientboundDebugRendererPacket): Boolean {
+        TODO("Not yet implemented")
+    }
+
+    override fun handleSyncActorProperty(packet: SyncActorPropertyPacket): Boolean {
+        TODO("Not yet implemented")
+    }
+
+    override fun handleAddVolumeEntity(packet: AddVolumeEntityPacket): Boolean {
+        TODO("Not yet implemented")
+    }
+
+    override fun handleRemoveVolumeEntity(packet: RemoveVolumeEntityPacket): Boolean {
         TODO("Not yet implemented")
     }
 }

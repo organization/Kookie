@@ -129,7 +129,7 @@ open class Item(
         removeEnchantments()
         val enchantmentsTag = tag.getListTag(TAG_ENCH)
         if (enchantmentsTag != null && enchantmentsTag.getTagType() == NBT.TagType.COMPOUND) {
-            enchantmentsTag.value.forEach { it ->
+            enchantmentsTag.value.forEach {
                 it as CompoundTag
                 val magicNumber = it.getShort("id", -1)
                 val level = it.getShort("lvl", 0)
@@ -255,7 +255,17 @@ open class Item(
 
     open fun getMiningEfficiency(isCorrectTool: Boolean): Float = 1F
 
-    open fun onInteractBlock(player: Player, blockReplace: Block, blockClicked: Block, face: Int, clickVector: Vector3): ItemUseResult = ItemUseResult.NONE
+    open fun onInteractBlock(
+        player: Player,
+        blockReplace: Block,
+        blockClicked: Block,
+        face: Int,
+        clickVector: Vector3
+    ): ItemUseResult = ItemUseResult.NONE
+
+    open fun onClickAir(player: Player, directionVector: Vector3): ItemUseResult = ItemUseResult.NONE
+
+    open fun onReleaseUsing(player: Player): ItemUseResult = ItemUseResult.NONE
 
     open fun onClickAir(player: Player, directionVector: Vector3): ItemUseResult = ItemUseResult.NONE
 
@@ -315,13 +325,15 @@ open class Item(
             is StringTag -> {
                 val id = LegacyStringToItemParser.parseId(idTag.value)
 
-                if (id == null) {
+                if (id === null) {
                     ItemFactory.air()
                 } else {
                     ItemFactory.get(id, meta, count)
                 }
             }
-            else -> throw IllegalArgumentException("Item CompoundTag ID must be an instance of StringTag or ShortTag, ${idTag::class.java.simpleName} given")
+            else -> throw IllegalArgumentException(
+                "Item CompoundTag ID must be an instance of StringTag or ShortTag, ${idTag::class.java.simpleName} given"
+            )
         }
 
         tag.getCompoundTag("tag")?.let {

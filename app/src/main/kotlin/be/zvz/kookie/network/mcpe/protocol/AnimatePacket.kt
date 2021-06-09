@@ -56,12 +56,11 @@ class AnimatePacket : DataPacket(), ClientboundPacket, ServerboundPacket {
         const val ACTION_ROW_LEFT = 129
 
         fun create(entityRuntimeId: Long, actionId: Int): AnimatePacket {
-            val packet = AnimatePacket().apply {
-                this.entityRuntimeId = entityRuntimeId
-                this.action = actionId
-            }
 
-            return packet
+            return AnimatePacket().apply {
+                this.entityRuntimeId = entityRuntimeId
+                action = actionId
+            }
         }
 
         fun boatHack(entityRuntimeId: Long, actionId: Int, data: Float): AnimatePacket {

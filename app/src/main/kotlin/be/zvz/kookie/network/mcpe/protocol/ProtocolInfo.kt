@@ -20,9 +20,9 @@ package be.zvz.kookie.network.mcpe.protocol
 class ProtocolInfo {
 
     companion object {
-        const val CURRENT_PROTOCOL = 428
+        const val CURRENT_PROTOCOL = 440
 
-        const val MINECRAFT_VERSION_NETWORK = "1.16.220"
+        const val MINECRAFT_VERSION_NETWORK = "1.17.0"
     }
 
     enum class IDS(val id: Int) {
@@ -185,6 +185,9 @@ class ProtocolInfo {
         CORRECT_PLAYER_MOVE_PREDICTION_PACKET(161),
         ITEM_COMPONENT_PACKET(162),
         FILTER_TEXT_PACKET(163),
-        CLIENTBOUND_DEBUG_RENDERER_PACKET(164)
+        CLIENTBOUND_DEBUG_RENDERER_PACKET(164),
+        SYNC_ACTOR_PROPERTY_PACKET(165),
+        ADD_VOLUME_ENTITY_PACKET(166),
+        REMOVE_VOLUME_ENTITY_PACKET(167)
     }
 }
