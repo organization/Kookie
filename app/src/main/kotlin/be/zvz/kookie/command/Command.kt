@@ -30,7 +30,7 @@ abstract class Command(
 ) {
     var permission: String = ""
         set(value) {
-            value.split(";").forEach {
+            value.split(';').forEach {
                 if (PermissionManager.getPermission(it) == null) {
                     throw IllegalArgumentException("Cannot use non-existing permission \"$it\"")
                 }
@@ -66,8 +66,8 @@ abstract class Command(
     }
 
     fun testPermissionSilent(target: CommandSender): Boolean {
-        if (permission.trim() != "") {
-            permission.split(";").forEach {
+        if (permission.trim().isNotEmpty()) {
+            permission.split(';').forEach {
                 if (target.hasPermission(it)) {
                     return true
                 }
@@ -81,41 +81,36 @@ abstract class Command(
 
     fun setLabel(name: String): Boolean {
         nextLabel = name
-        if (!isRegistered()) {
+        return if (!isRegistered()) {
             timings = TimingsHandler("${Timings.INCLUDED_BY_OTHER_TIMINGS_PREFIX}Command: $name")
             label = name
 
-            return true
+            true
+        } else {
+            false
         }
-
-        return false
     }
 
-    fun register(newCommandMap: CommandMap): Boolean {
-        if (allowChangesFrom(newCommandMap)) {
-            commandMap = newCommandMap
-
-            return true
-        }
-
-        return false
+    fun register(newCommandMap: CommandMap): Boolean = if (allowChangesFrom(newCommandMap)) {
+        commandMap = newCommandMap
+        true
+    } else {
+        false
     }
 
-    fun unregister(newCommandMap: CommandMap): Boolean {
-        if (allowChangesFrom(newCommandMap)) {
-            commandMap = null
+    fun unregister(newCommandMap: CommandMap): Boolean = if (allowChangesFrom(newCommandMap)) {
+        commandMap = null
 
-            activeAliases.clear()
-            aliases.forEachIndexed { index: Int, s: String ->
-                activeAliases[index] = s
-            }
-
-            label = nextLabel
-
-            return true
+        activeAliases.clear()
+        aliases.forEachIndexed { index: Int, s: String ->
+            activeAliases[index] = s
         }
 
-        return false
+        label = nextLabel
+
+        true
+    } else {
+        false
     }
 
     private fun allowChangesFrom(newCommandMap: CommandMap): Boolean = commandMap == null || commandMap == newCommandMap
