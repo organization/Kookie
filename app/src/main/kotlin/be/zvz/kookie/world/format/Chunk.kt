@@ -57,7 +57,7 @@ class Chunk(
     }
 
     fun getHighestBlockAt(x: Int, z: Int): Int? {
-        for (y in (subChunks.size - 1)..0 step (-1)) {
+        for (y in (subChunks.size - 1) downTo 0) {
             val height = getSubChunk(y).getHighestBlockAt(x, z)
             if (height != null) {
                 return height or (y shl 4)
