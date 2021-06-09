@@ -25,7 +25,9 @@ class SimpleCommandMap : CommandMap {
     val knownCommands: MutableMap<String, Command> = HashObjObjMaps.newMutableMap()
 
     override fun registerAll(fallbackPrefix: String, commands: List<Command>) {
-        TODO("Not yet implemented")
+        commands.forEach {
+            register(fallbackPrefix, it)
+        }
     }
 
     override fun register(fallbackPrefix: String, command: Command, label: String?): Boolean {
