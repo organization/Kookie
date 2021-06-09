@@ -17,7 +17,12 @@
  */
 package be.zvz.kookie.player
 
-enum class GameMode(protected val magicNumber: Int, val modeName: String, val translationKey: String, val aliases: Array<String>) : IGameMode {
+enum class GameMode(
+    protected val magicNumber: Int,
+    val modeName: String,
+    val translationKey: String,
+    val aliases: Array<String>
+) : IGameMode {
     SURVIVAL(0, "Survival", "gameMode.survival", arrayOf("s", "0")) {
         override fun id(): Int = this.magicNumber
     },

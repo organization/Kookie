@@ -33,10 +33,10 @@ class EducationSettingsPacket : DataPacket(), ClientboundPacket {
         codeBuilderDefaultUri = input.getString()
         codeBuilderTitle = input.getString()
         canResizeCodeBuilder = input.getBoolean()
-        if (input.getBoolean()) {
-            codeBuilderOverrideUri = input.getString()
+        codeBuilderOverrideUri = if (input.getBoolean()) {
+            input.getString()
         } else {
-            codeBuilderOverrideUri = null
+            null
         }
         hasQuiz = input.getBoolean()
     }

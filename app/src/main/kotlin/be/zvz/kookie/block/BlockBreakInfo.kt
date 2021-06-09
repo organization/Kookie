@@ -48,7 +48,9 @@ class BlockBreakInfo(
 
         val efficiency = item.getMiningEfficiency(toolType.state and item.blockToolType.state != 0)
         if (efficiency <= 0) {
-            throw IllegalArgumentException("${item::class.simpleName} has invalid mining efficiency: expected >= 0, got $efficiency")
+            throw IllegalArgumentException(
+                "${item::class.simpleName} has invalid mining efficiency: expected >= 0, got $efficiency"
+            )
         }
 
         base /= efficiency

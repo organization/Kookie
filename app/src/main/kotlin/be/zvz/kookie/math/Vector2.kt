@@ -17,11 +17,11 @@
  */
 package be.zvz.kookie.math
 
-import java.lang.Math.sqrt
 import kotlin.math.abs
 import kotlin.math.ceil
 import kotlin.math.floor
 import kotlin.math.pow
+import kotlin.math.sqrt
 
 class Vector2 @JvmOverloads constructor(var x: Double = 0.0, var y: Double = 0.0) : Vector {
     @JvmOverloads

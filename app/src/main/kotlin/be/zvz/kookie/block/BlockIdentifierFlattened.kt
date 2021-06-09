@@ -17,7 +17,13 @@
  */
 package be.zvz.kookie.block
 
-class BlockIdentifierFlattened(blockId: Int, val additionalIds: List<Int>, variant: Int, itemId: Int? = null, tileClass: String? = null) : BlockIdentifier(blockId, variant, itemId, tileClass) {
+class BlockIdentifierFlattened(
+    blockId: Int,
+    val additionalIds: List<Int>,
+    variant: Int,
+    itemId: Int? = null,
+    tileClass: String? = null
+) : BlockIdentifier(blockId, variant, itemId, tileClass) {
 
     init {
         if (additionalIds.isEmpty()) {

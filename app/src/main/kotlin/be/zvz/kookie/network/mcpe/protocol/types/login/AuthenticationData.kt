@@ -25,5 +25,5 @@ class AuthenticationData {
 
     var titleId: String = ""
 
-    var XUID: String = ""
+    var xuid: String = ""
 }

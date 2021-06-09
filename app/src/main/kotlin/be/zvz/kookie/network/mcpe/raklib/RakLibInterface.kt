@@ -35,7 +35,11 @@ import org.slf4j.LoggerFactory
 import java.net.InetSocketAddress
 import java.util.StringJoiner
 
-class RakLibInterface(private val server: Server, private val sessionManager: NetworkSessionManager, private val address: InetSocketAddress) :
+class RakLibInterface(
+    private val server: Server,
+    private val sessionManager: NetworkSessionManager,
+    private val address: InetSocketAddress
+) :
     RakNetServerListener,
     AdvancedNetworkInterface {
     private val logger = LoggerFactory.getLogger(RakLibInterface::class.java)

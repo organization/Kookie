@@ -95,11 +95,10 @@ class PermissibleBase(rootPermissionsMap: Map<String, Boolean>) : Permissible {
             calculateChildPermissions(attachment.permissions, false, attachment, null)
         }
 
-        val diff: MutableMap<String, Boolean> = HashObjObjMaps.newMutableMap()
         // TODO: Timings permissibleCalculationDiff
         // TODO: Timings permissibleCalculationCallback
         // TODO: Timings permissibleCalculation
-        return diff
+        return HashObjObjMaps.newMutableMap()
     }
 
     private fun calculateChildPermissions(
