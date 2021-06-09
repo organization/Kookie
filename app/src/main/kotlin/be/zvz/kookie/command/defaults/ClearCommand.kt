@@ -25,7 +25,7 @@ class ClearCommand(name: String) : VanillaCommand(
         if (args.size > 3) {
             throw InvalidCommandSyntaxException()
         }
-        var target: Player = when {
+        var target = when {
             args.getOrNull(0) != null -> {
                 val target = sender.server.getPlayerByPrefix(args[0])
                 if (target === null) {
@@ -49,19 +49,16 @@ class ClearCommand(name: String) : VanillaCommand(
                 throw InvalidCommandSyntaxException()
             }
         }
-        var item: Item? = null
-        var maxCount: Int? = -1
+        var maxCount = -1
 
-        if (args.getOrNull(1) != null) {
+        val item: Item? = if (args.getOrNull(1) !== null) {
             try {
-                item = LegacyStringToItemParser.parse(args[1])
+                val item = LegacyStringToItemParser.parse(args[1])
                 if (args.getOrNull(2) != null) {
                     maxCount = getInteger(sender, args[2], 0)
-                    if (maxCount == null) {
-                        maxCount = -1
-                    }
                     item.count = maxCount
                 }
+                item
             } catch (e: IllegalArgumentException) {
                 sender.sendMessage(
                     TranslationContainer(
@@ -71,8 +68,12 @@ class ClearCommand(name: String) : VanillaCommand(
                         )
                     )
                 )
+                return true
             }
+        } else {
+            null
         }
+
         if (item !== null && maxCount == 0) {
             var count = 0
         }
