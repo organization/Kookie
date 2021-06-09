@@ -17,6 +17,7 @@
  */
 package be.zvz.kookie.world.format.io
 
+import be.zvz.kookie.block.Block
 import be.zvz.kookie.world.format.BlockArrayContainer
 import be.zvz.kookie.world.format.PalettedBlockArray
 import kotlin.jvm.internal.Ref
@@ -52,9 +53,7 @@ object SubChunkConverter {
         )
     }
 
-    private val mapper: (Int, Int) -> Long = { id: Int, meta: Int ->
-        id.toLong() shl 4 or meta.toLong()
-    }
+    private val mapper: (Int, Int) -> Long = Block.Companion::fullId
 
     private val getIndexSubChunkXZY: (Int, Int, Int, Ref.IntRef, Ref.IntRef, Ref.IntRef, Int) -> Unit = {
         x: Int,

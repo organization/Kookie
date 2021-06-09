@@ -72,7 +72,7 @@ open class Block(val idInfo: BlockIdentifier, val name: String, val breakInfo: B
 
     fun getId(): Int = idInfo.blockId
 
-    fun getFullId(): Long = (getId().toLong() shl 4) or getMeta().toLong()
+    fun getFullId(): Long = fullId(getId(), getMeta())
 
     fun asItem(): Item = ItemFactory.get(
         idInfo.itemId!!,
@@ -114,7 +114,8 @@ open class Block(val idInfo: BlockIdentifier, val name: String, val breakInfo: B
         if (oldTile !== null) {
             try {
                 tileType = Class.forName(idInfo.tileClass)
-            } catch (ignored: ClassNotFoundException) { }
+            } catch (ignored: ClassNotFoundException) {
+            }
 
             if (tileType === null || !tileType.isAssignableFrom(oldTile::class.java)) {
                 oldTile.close()
@@ -394,5 +395,19 @@ open class Block(val idInfo: BlockIdentifier, val name: String, val breakInfo: B
             }
         }
         return currentHit
+    }
+
+    companion object {
+        @JvmStatic
+        fun fullId(id: Long, variant: Int) = id shl 4 or variant.toLong()
+
+        @JvmStatic
+        fun fullId(id: Long, variant: Short) = id shl 4 or variant.toLong()
+
+        @JvmStatic
+        fun fullId(id: Int, variant: Int) = id.toLong() shl 4 or variant.toLong()
+
+        @JvmStatic
+        fun fullId(id: Int, variant: Short) = id.toLong() shl 4 or variant.toLong()
     }
 }

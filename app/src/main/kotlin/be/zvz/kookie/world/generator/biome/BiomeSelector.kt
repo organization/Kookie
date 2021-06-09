@@ -45,7 +45,7 @@ abstract class BiomeSelector(random: Random) {
         val biomeRegistry = BiomeRegistry
         repeat(64) { i ->
             repeat(64) { j ->
-                val biome = biomeRegistry.get(this.lookup(i.toFloat() / 63, j.toFloat() / 63))
+                val biome = biomeRegistry.get(this.lookup(i.toFloat() / 63, j.toFloat() / 63).id)
                 if (biome is UnknownBiome) {
                     throw RuntimeException("Unknown biome returned by selector with ID ${biome.id}")
                 }
