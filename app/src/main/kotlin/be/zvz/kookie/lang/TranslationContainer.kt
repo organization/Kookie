@@ -19,21 +19,17 @@ package be.zvz.kookie.lang
 
 import be.zvz.kookie.utils.Union
 
-class TranslationContainer(
+class TranslationContainer @JvmOverloads constructor(
     val text: String,
-    array: List<Union.U3<String, Float, Int>>,
+    array: List<Union.U3<String, Float, Int>> = listOf(),
 ) {
-    val params: List<String>
-
-    init {
-        params = mutableListOf<String>().apply {
-            array.forEach { raw ->
-                raw.use(
-                    { add(it) },
-                    { add(it.toString()) },
-                    { add(it.toString()) },
-                )
-            }
+    val params: List<String> = mutableListOf<String>().apply {
+        array.forEach { raw ->
+            raw.use(
+                { add(it) },
+                { add(it.toString()) },
+                { add(it.toString()) },
+            )
         }
     }
 
