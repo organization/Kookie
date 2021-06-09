@@ -45,14 +45,14 @@ class SimpleCommandMap : CommandMap {
         val modifiedFallbackPrefix = fallbackPrefix.trim().lowercase()
         val registered = registerAlias(command, false, modifiedFallbackPrefix, modifiedLabel)
 
-        val aliases = command.aliases
-
-        aliases.forEach {
-            if (!registerAlias(command, true, modifiedFallbackPrefix, it)) {
-                aliases.remove(it)
+        command.aliases = command.aliases.toMutableList().apply {
+            val iterate = iterator()
+            while (iterate.hasNext()) {
+                if (!registerAlias(command, true, modifiedFallbackPrefix, iterate.next())) {
+                    iterate.remove()
+                }
             }
         }
-        command.aliases = aliases
 
         if (!registered) {
             command.setLabel("$modifiedFallbackPrefix:$modifiedLabel")
@@ -63,10 +63,11 @@ class SimpleCommandMap : CommandMap {
     }
 
     fun unregister(command: Command) {
-        knownCommands.forEach { (label, cmd) ->
+        val iterate = knownCommands.iterator()
+        while (iterate.hasNext()) {
+            val cmd = iterate.next().value
             if (cmd == command) {
-                // TODO
-                knownCommands.remove(label)
+                iterate.remove()
             }
         }
         command.unregister(this)
@@ -128,7 +129,7 @@ class SimpleCommandMap : CommandMap {
     }
 
     fun matchCommand(commandName: StringBuilder, args: MutableList<String>): Command? {
-        repeat(min(args.size, 255) - 1) {
+        repeat(min(args.size, 255)) {
             commandName.append(args.removeFirst())
             val command = getCommand(commandName.toString())
             if (command !== null) {
