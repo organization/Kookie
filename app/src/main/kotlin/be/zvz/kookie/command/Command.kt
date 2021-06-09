@@ -26,7 +26,7 @@ abstract class Command(
     val name: String,
     val description: String = "",
     val usageMessage: String = "/$name",
-    var aliases: MutableList<String> = mutableListOf(),
+    var aliases: List<String> = mutableListOf(),
 ) {
     var permission: String = ""
         set(value) {
@@ -45,7 +45,8 @@ abstract class Command(
     var label: String = ""
         private set
 
-    private var timings: TimingsHandler? = null
+    var timings: TimingsHandler? = null
+        private set
     private val activeAliases: MutableList<String> = mutableListOf()
     private var commandMap: CommandMap? = null
 
@@ -124,7 +125,7 @@ abstract class Command(
     abstract fun execute(sender: CommandSender, commandLabel: String, args: List<String>): Boolean
 
     companion object {
-        fun broadcastMessage(translationKey: String, params: MutableList<String>): Int {
+        fun broadcastMessage(translationKey: String, params: List<String>): Int {
             return -1 // TODO
         }
     }

@@ -18,11 +18,17 @@
 package be.zvz.kookie.command
 
 import be.zvz.kookie.command.defaults.VanillaCommand
+import be.zvz.kookie.command.utils.InvalidCommandSyntaxException
 import com.koloboke.collect.map.hash.HashObjObjMaps
+import kotlin.math.min
 
 class SimpleCommandMap : CommandMap {
 
-    val knownCommands: MutableMap<String, Command> = HashObjObjMaps.newMutableMap()
+    var knownCommands: MutableMap<String, Command> = HashObjObjMaps.newMutableMap()
+
+    fun setDefaultCommands() {
+        // TODO: register default commands on here
+    }
 
     override fun registerAll(fallbackPrefix: String, commands: List<Command>) {
         commands.forEach {
@@ -32,7 +38,7 @@ class SimpleCommandMap : CommandMap {
 
     override fun register(fallbackPrefix: String, command: Command, label: String?): Boolean {
         var modifiedLabel = label
-        if (modifiedLabel == null) {
+        if (modifiedLabel === null) {
             modifiedLabel = command.name
         }
         modifiedLabel = modifiedLabel.trim()
@@ -56,25 +62,62 @@ class SimpleCommandMap : CommandMap {
         return registered
     }
 
+    fun unregister(command: Command) {
+        knownCommands.forEach { (label, cmd) ->
+            if (cmd == command) {
+                // TODO
+                knownCommands.remove(label)
+            }
+        }
+        command.unregister(this)
+    }
+
     override fun dispatch(sender: CommandSender, cmdLine: String): Boolean {
-        TODO("Not yet implemented")
+        val args = mutableListOf<String>().apply {
+            COMMAND_PARSE_REGEX.matchEntire(cmdLine)?.let { match ->
+                match.groupValues.forEach {
+                    add(it.replace("\\", ""))
+                }
+            }
+        }
+
+        val sentCommandLabel = StringBuilder()
+        val target = matchCommand(sentCommandLabel, args)
+
+        if (target === null) {
+            return false
+        }
+
+        target.timings?.startTiming()
+
+        try {
+            target.execute(sender, sentCommandLabel.toString(), args)
+        } catch (syntaxException: InvalidCommandSyntaxException) {
+            sender.sendMessage(sender.language.translateString("commands.generic.usage", listOf(target.usageMessage)))
+        } finally {
+            target.timings?.stopTiming()
+        }
+
+        return true
     }
 
     override fun clearCommands() {
-        TODO("Not yet implemented")
+        knownCommands.forEach { (_, command) ->
+            command.unregister(this)
+        }
+        knownCommands = HashObjObjMaps.newMutableMap()
+        setDefaultCommands()
     }
 
-    override fun getCommand(name: String): Command? {
-        TODO("Not yet implemented")
-    }
+    override fun getCommand(name: String): Command? = knownCommands[name]
 
     private fun registerAlias(command: Command, isAlias: Boolean, fallbackPrefix: String, label: String): Boolean {
         knownCommands["$fallbackPrefix:$label"] = command
         if ((command is VanillaCommand || isAlias) && knownCommands.containsKey(label)) {
             return false
         }
-        val cmd = knownCommands.getOrDefault(label, null)
-        if (cmd != null && cmd.label == label) {
+        val cmd = knownCommands[label]
+        if (cmd !== null && cmd.label === label) {
             return false
         }
         if (!isAlias) {
@@ -82,5 +125,21 @@ class SimpleCommandMap : CommandMap {
         }
         knownCommands[label] = command
         return true
+    }
+
+    fun matchCommand(commandName: StringBuilder, args: MutableList<String>): Command? {
+        repeat(min(args.size, 255) - 1) {
+            commandName.append(args.removeFirst())
+            val command = getCommand(commandName.toString())
+            if (command !== null) {
+                return command
+            }
+            commandName.append(" ")
+        }
+        return null
+    }
+
+    companion object {
+        private val COMMAND_PARSE_REGEX = Regex("\"((?:\\\\\\\\.|[^\\\\\"])*)\"|(\\S+)")
     }
 }
