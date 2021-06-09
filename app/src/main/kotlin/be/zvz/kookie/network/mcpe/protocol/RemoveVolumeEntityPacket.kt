@@ -15,21 +15,25 @@
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  */
-package be.zvz.kookie.network.mcpe.protocol.types
+package be.zvz.kookie.network.mcpe.protocol
 
+import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
 import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 
-class FloatGameRule(private val value: Float, override val playerModifiable: Boolean) : GameRule(playerModifiable) {
+@ProtocolIdentify(ProtocolInfo.IDS.REMOVE_VOLUME_ENTITY_PACKET)
+class RemoveVolumeEntityPacket : DataPacket() {
 
-    override val typeId = GameRuleType.FLOAT
+    var entityNetId: Int = 0
 
-    fun getValue(): Float = value
-
-    override fun encode(output: PacketSerializer) {
-        output.putLFloat(value)
+    override fun decodePayload(input: PacketSerializer) {
+        entityNetId = input.getUnsignedVarInt()
     }
 
-    companion object {
-        fun decode(input: PacketSerializer, playerModifiable: Boolean) = FloatGameRule(input.getLFloat(), playerModifiable)
+    override fun encodePayload(output: PacketSerializer) {
+        output.putUnsignedVarInt(entityNetId)
+    }
+
+    override fun handle(handler: PacketHandlerInterface): Boolean {
+        return handler.handleRemoveVolumeEntity(this)
     }
 }

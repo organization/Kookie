@@ -19,7 +19,7 @@ package be.zvz.kookie.network.mcpe.protocol.types
 
 import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 
-class BooleanGameRule(private val value: Boolean) : GameRule() {
+class BooleanGameRule(private val value: Boolean, override val playerModifiable: Boolean) : GameRule(playerModifiable) {
 
     override val typeId = GameRuleType.BOOL
 
@@ -30,6 +30,6 @@ class BooleanGameRule(private val value: Boolean) : GameRule() {
     }
 
     companion object {
-        fun decode(input: PacketSerializer) = BooleanGameRule(input.getBoolean())
+        fun decode(input: PacketSerializer, playerModifiable: Boolean) = BooleanGameRule(input.getBoolean(), playerModifiable)
     }
 }

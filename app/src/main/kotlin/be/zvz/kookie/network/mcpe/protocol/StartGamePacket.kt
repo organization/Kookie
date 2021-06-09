@@ -17,6 +17,7 @@
  */
 package be.zvz.kookie.network.mcpe.protocol
 
+import be.zvz.kookie.VersionInfo
 import be.zvz.kookie.math.Vector3
 import be.zvz.kookie.nbt.LittleEndianNbtSerializer
 import be.zvz.kookie.nbt.TreeRoot
@@ -105,6 +106,7 @@ class StartGamePacket : DataPacket(), ClientboundPacket {
 
     var blockPalette: MutableList<BlockPaletteEntry> = mutableListOf()
     var itemTable: MutableList<ItemTypeEntry> = mutableListOf()
+    var serverSoftwareVersion: String = VersionInfo.NAME + " v" + VersionInfo.BASE_VERSION + (if (VersionInfo.IS_DEVELOPMENT_BUILD) "-dev" else "")
 
     override fun decodePayload(input: PacketSerializer) {
         throw PacketDecodeException("Cannot decode StartGamePacket, it is TODO!")
@@ -183,6 +185,7 @@ class StartGamePacket : DataPacket(), ClientboundPacket {
         }
         output.putString(multiplayerCorrelationId)
         output.putBoolean(enableNewInventorySystem)
+        output.putString(serverSoftwareVersion)
     }
 
     override fun handle(handler: PacketHandlerInterface): Boolean {
