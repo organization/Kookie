@@ -40,9 +40,10 @@ class NetworkSessionManager {
     }
 
     fun tick() {
-        updateSessions.forEach {
-            if (!it.tick()) {
-                updateSessions.remove(it)
+        val iterate = updateSessions.iterator()
+        while (iterate.hasNext()) {
+            if (!iterate.next().tick()) {
+                iterate.remove()
             }
         }
     }
