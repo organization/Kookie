@@ -21,6 +21,7 @@ import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
 import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 import be.zvz.kookie.network.mcpe.protocol.types.inventory.ItemStackWrapper
 import java.util.UUID
+import kotlin.math.min
 
 @ProtocolIdentify(ProtocolInfo.IDS.CRAFTING_EVENT_PACKET)
 class CraftingEventPacket : DataPacket(), ServerboundPacket {
@@ -36,10 +37,10 @@ class CraftingEventPacket : DataPacket(), ServerboundPacket {
         type = input.getVarInt()
         id = input.getUUID()
 
-        for (i in 0 until Math.min(input.getUnsignedVarInt(), 128)) {
+        for (i in 0 until min(input.getUnsignedVarInt(), 128)) {
             inputStacks.add(ItemStackWrapper.read(input))
         }
-        for (i in 0 until Math.min(input.getUnsignedVarInt(), 128)) {
+        for (i in 0 until min(input.getUnsignedVarInt(), 128)) {
             outputStacks.add(ItemStackWrapper.read(input))
         }
     }

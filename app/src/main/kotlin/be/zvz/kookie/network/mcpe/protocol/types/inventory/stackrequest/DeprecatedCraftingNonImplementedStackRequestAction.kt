@@ -20,7 +20,7 @@ package be.zvz.kookie.network.mcpe.protocol.types.inventory.stackrequest
 import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 
 @ItemStackRequestIdentify(ItemStackRequestActionType.CRAFTING_NON_IMPLEMENTED_DEPRECATED_ASK_TY_LAING)
-class DeprecatedCraftingNonImplementedStackRequestAction() : ItemStackRequestAction() {
+class DeprecatedCraftingNonImplementedStackRequestAction : ItemStackRequestAction() {
 
     override fun write(out: PacketSerializer) {}
 

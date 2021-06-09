@@ -30,7 +30,9 @@ class Skin(
             throw SkinException("Skin Id must not be empty")
         }
         if (!ACCEPTED_SKIN_SIZE.contains(skinData.length)) {
-            throw SkinException("Invalid skin data size ${skinData.length} bytes (allowed size: ${ACCEPTED_SKIN_SIZE.joinToString(", ")})")
+            throw SkinException(
+                "Invalid skin data size ${skinData.length} bytes (allowed size: ${ACCEPTED_SKIN_SIZE.joinToString(", ")})"
+            )
         }
         if (capeData != "" && capeData.length != 8192) {
             throw SkinException("Invalid cape data size ${capeData.length} (must be exactly 8192 bytes)")

@@ -565,8 +565,16 @@ class PacketSerializer(buffer: String = "", offset: AtomicInteger = AtomicIntege
         putBoolean(structureSettings.ignoreEntities)
         putBoolean(structureSettings.ignoreBlocks)
 
-        putBlockPosition(structureSettings.structureSizeX, structureSettings.structureSizeY, structureSettings.structureSizeZ)
-        putBlockPosition(structureSettings.structureOffsetX, structureSettings.structureOffsetY, structureSettings.structureOffsetZ)
+        putBlockPosition(
+            structureSettings.structureSizeX,
+            structureSettings.structureSizeY,
+            structureSettings.structureSizeZ
+        )
+        putBlockPosition(
+            structureSettings.structureOffsetX,
+            structureSettings.structureOffsetY,
+            structureSettings.structureOffsetZ
+        )
 
         putEntityUniqueId(structureSettings.lastTouchedByPlayerID)
         putByte(structureSettings.rotation)

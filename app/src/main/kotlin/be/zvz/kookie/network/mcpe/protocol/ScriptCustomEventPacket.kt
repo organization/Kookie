@@ -21,7 +21,8 @@ import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
 import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 
 @ProtocolIdentify(ProtocolInfo.IDS.SCRIPT_CUSTOM_EVENT_PACKET)
-class ScriptCustomEventPacket : DataPacket() { // TODO: this doesn't have handlers in either client or server in the game as of 1.8
+class ScriptCustomEventPacket : DataPacket() {
+    // TODO: this doesn't have handlers in either client or server in the game as of 1.8
     lateinit var eventName: String
     lateinit var eventData: String
 

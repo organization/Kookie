@@ -66,7 +66,9 @@ class ItemTranslator(
 
         private fun make(): ItemTranslator {
             val data = JsonBrowser().parse(this::class.java.getResourceAsStream("vanilla/r16_to_current_item_map.json"))
-            val legacyStringToIntMap = JsonBrowser().parse(this::class.java.getResourceAsStream("vanilla/item_id_map.json")).toMap<String, String>()
+            val legacyStringToIntMap = JsonBrowser().parse(
+                this::class.java.getResourceAsStream("vanilla/item_id_map.json")
+            ).toMap<String, String>()
 
             val simpleMappings: MutableMap<String, Int> = HashObjIntMaps.newMutableMap()
             data["simple"].toMap<String, String>().forEach { (oldId, newId) ->

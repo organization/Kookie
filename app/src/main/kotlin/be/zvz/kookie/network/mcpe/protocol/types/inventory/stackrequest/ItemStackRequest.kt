@@ -39,7 +39,8 @@ class ItemStackRequest(
     }
 
     companion object {
-        private fun getType(clazz: Class<out ItemStackRequestAction>) = clazz.getAnnotation(ItemStackRequestIdentify::class.java)!!.typeId.type
+        private fun getType(clazz: Class<out ItemStackRequestAction>) =
+            clazz.getAnnotation(ItemStackRequestIdentify::class.java)!!.typeId.type
         private val actionMap = mapOf(
             getType(TakeStackRequestAction::class.java) to TakeStackRequestAction::read,
             getType(PlaceStackRequestAction::class.java) to PlaceStackRequestAction::read,
@@ -47,7 +48,9 @@ class ItemStackRequest(
             getType(DropStackRequestAction::class.java) to DropStackRequestAction::read,
             getType(DestroyStackRequestAction::class.java) to DestroyStackRequestAction::read,
             getType(CraftingConsumeInputStackRequestAction::class.java) to CraftingConsumeInputStackRequestAction::read,
-            getType(CraftingMarkSecondaryResultStackRequestAction::class.java) to CraftingMarkSecondaryResultStackRequestAction::read,
+            getType(
+                CraftingMarkSecondaryResultStackRequestAction::class.java
+            ) to CraftingMarkSecondaryResultStackRequestAction::read,
             getType(LabTableCombineStackRequestAction::class.java) to LabTableCombineStackRequestAction::read,
             getType(BeaconPaymentStackRequestAction::class.java) to BeaconPaymentStackRequestAction::read,
             getType(MineBlockStackRequestAction::class.java) to MineBlockStackRequestAction::read,
@@ -55,7 +58,9 @@ class ItemStackRequest(
             getType(CraftRecipeAutoStackRequestAction::class.java) to CraftRecipeAutoStackRequestAction::read,
             getType(CreativeCreateStackRequestAction::class.java) to CreativeCreateStackRequestAction::read,
             getType(CraftRecipeOptionalStackRequestAction::class.java) to CraftRecipeOptionalStackRequestAction::read,
-            getType(DeprecatedCraftingNonImplementedStackRequestAction::class.java) to DeprecatedCraftingNonImplementedStackRequestAction::read,
+            getType(
+                DeprecatedCraftingNonImplementedStackRequestAction::class.java
+            ) to DeprecatedCraftingNonImplementedStackRequestAction::read,
             getType(DeprecatedCraftingResultsStackRequestAction::class.java) to DeprecatedCraftingResultsStackRequestAction::read
         )
 

@@ -27,7 +27,9 @@ class MismatchTransactionData : TransactionData() {
 
     override fun decodeData(input: PacketSerializer) {
         if (getActions().size > 0) {
-            throw PacketDecodeException("Mismatch transaction type should not have any actions associated with it, but got ${getActions().size}")
+            throw PacketDecodeException(
+                "Mismatch transaction type should not have any actions associated with it, but got ${getActions().size}"
+            )
         }
     }
 

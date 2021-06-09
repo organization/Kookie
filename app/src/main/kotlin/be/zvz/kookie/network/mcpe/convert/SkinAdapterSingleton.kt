@@ -17,18 +17,12 @@
  */
 package be.zvz.kookie.network.mcpe.convert
 
-class SkinAdapterSingleton {
-
-    companion object {
-        var adapter: SkinAdapter? = null
-            get() {
-                if (field == null) {
-                    field = LegacySkinAdapter()
-                }
-                return field
+object SkinAdapterSingleton {
+    var adapter: SkinAdapter? = null
+        get() {
+            if (field == null) {
+                field = LegacySkinAdapter()
             }
-            set(value: SkinAdapter?) {
-                field = value
-            }
-    }
+            return field
+        }
 }
