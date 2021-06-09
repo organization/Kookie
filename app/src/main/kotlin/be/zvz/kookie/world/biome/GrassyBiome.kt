@@ -18,7 +18,7 @@
 package be.zvz.kookie.world.biome
 
 @BiomeIdentify(id = BiomeIds.UNKNOWN)
-abstract class GrassyBiome() : Biome() {
+abstract class GrassyBiome : Biome() {
     init {
         groundCover.apply {
             /**

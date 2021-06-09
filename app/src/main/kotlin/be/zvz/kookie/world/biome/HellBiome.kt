@@ -18,4 +18,4 @@
 package be.zvz.kookie.world.biome
 
 @BiomeIdentify(id = BiomeIds.HELL)
-class HellBiome() : Biome()
+class HellBiome : Biome()

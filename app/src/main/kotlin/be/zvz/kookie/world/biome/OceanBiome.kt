@@ -18,7 +18,7 @@
 package be.zvz.kookie.world.biome
 
 @BiomeIdentify(id = BiomeIds.OCEAN)
-class OceanBiome() : Biome() {
+class OceanBiome : Biome() {
     init {
         groundCover.apply {
             /**
