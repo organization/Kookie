@@ -23,33 +23,18 @@ import java.util.Date
 data class BanEntry(
     var name: String
 ) {
-    var creationTime: Date
+    var creationTime: Date = Date()
     var source: String = "(Unknown)"
     var expirationDate: Date? = null
     var reason: String = "Banned by operator"
 
-    init {
-        creationTime = Date()
-    }
+    fun hasExpired(): Boolean = expirationDate?.let {
+        Date().time > it.time
+    } ?: false
 
-    fun hasExpired(): Boolean {
-        val now = Date()
-        expirationDate?.let {
-            return now.time > it.time
-        }
-        return false
-    }
-
-    override fun toString(): String {
-        val expires = expirationDate.let {
-            if (it !== null) {
-                DATETIME_FORMAT.format(it)
-            } else {
-                "Forever"
-            }
-        }
-        return "$name|$creationTime|$source|$expires|$reason"
-    }
+    override fun toString(): String = "$name|$creationTime|$source|${expirationDate?.let {
+        DATETIME_FORMAT.format(it)
+    } ?: "Forever"}|$reason"
 
     companion object {
         private val DATETIME_FORMAT = SimpleDateFormat("Y-m-d H:i:s O")
@@ -68,7 +53,7 @@ data class BanEntry(
             }
             if (parts.size > 0) {
                 val expire = parts.removeFirst().trim()
-                if (expire != "" && expire.lowercase() != "forever") {
+                if (expire.isNotEmpty() && "forever".equals(expire, true)) {
                     entry.expirationDate = DATETIME_FORMAT.parse(expire)
                 }
             }
