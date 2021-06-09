@@ -37,10 +37,10 @@ class CraftingEventPacket : DataPacket(), ServerboundPacket {
         type = input.getVarInt()
         id = input.getUUID()
 
-        for (i in 0 until min(input.getUnsignedVarInt(), 128)) {
+        repeat(min(input.getUnsignedVarInt() - 1, 127)) {
             inputStacks.add(ItemStackWrapper.read(input))
         }
-        for (i in 0 until min(input.getUnsignedVarInt(), 128)) {
+        repeat(min(input.getUnsignedVarInt() - 1, 127)) {
             outputStacks.add(ItemStackWrapper.read(input))
         }
     }

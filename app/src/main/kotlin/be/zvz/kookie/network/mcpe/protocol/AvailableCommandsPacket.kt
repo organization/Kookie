@@ -40,31 +40,31 @@ class AvailableCommandsPacket : DataPacket(), ClientboundPacket {
 
     override fun decodePayload(input: PacketSerializer) {
         val enumValues = mutableListOf<String>().apply {
-            for (i in 0 until input.getUnsignedVarInt()) {
+            repeat(input.getUnsignedVarInt() - 1) {
                 add(input.getString())
             }
         }
         val postfixes = mutableListOf<String>().apply {
-            for (i in 0 until input.getUnsignedVarInt()) {
+            repeat(input.getUnsignedVarInt() - 1) {
                 add(input.getString())
             }
         }
         val enums = mutableListOf<CommandEnum>()
-        for (i in 0 until input.getUnsignedVarInt()) {
+        repeat(input.getUnsignedVarInt() - 1) {
             val enum = getEnum(enumValues, input)
             enums.add(enum)
             if (HARDCODED_ENUM_NAMES.containsKey(enum.getEnumName())) {
                 hardCodeEnums.add(enum)
             }
         }
-        for (i in 0 until input.getUnsignedVarInt()) {
+        repeat(input.getUnsignedVarInt() - 1) {
             val command = getCommandData(enums, postfixes, input)
             commandData[command.name] = command
         }
-        for (i in 0 until input.getUnsignedVarInt()) {
+        repeat(input.getUnsignedVarInt() - 1) {
             softEnums.add(getSoftEnum(input))
         }
-        for (i in 0 until input.getUnsignedVarInt()) {
+        repeat(input.getUnsignedVarInt() - 1) {
             enumConstraints.add(getEnumConstraint(enums, enumValues, input))
         }
     }
