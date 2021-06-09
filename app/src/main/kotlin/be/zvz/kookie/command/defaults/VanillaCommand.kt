@@ -26,7 +26,7 @@ abstract class VanillaCommand(
     name: String,
     description: String = "",
     usageMessage: String = "/$name",
-    aliases: MutableList<String> = mutableListOf(),
+    aliases: List<String> = mutableListOf(),
 ) : Command(name, description, usageMessage, aliases) {
 
     protected fun getInteger(
