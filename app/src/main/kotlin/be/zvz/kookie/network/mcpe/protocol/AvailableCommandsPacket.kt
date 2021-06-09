@@ -147,7 +147,7 @@ class AvailableCommandsPacket : DataPacket(), ClientboundPacket {
         val enumValues = mutableListOf<String>()
 
         val listSize = enumList.size
-        for (i in 0 until input.getUnsignedVarInt()) {
+        repeat(input.getUnsignedVarInt() - 1) {
             val index = getEnumValueIndex(listSize, input)
             val enumValue = enumList.getOrNull(index) ?: throw PacketDecodeException("Invalid enum value index $index")
             enumValues.add(enumValue)

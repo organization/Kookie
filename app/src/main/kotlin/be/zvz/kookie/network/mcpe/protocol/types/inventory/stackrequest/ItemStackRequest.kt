@@ -39,8 +39,6 @@ class ItemStackRequest(
     }
 
     companion object {
-        private fun getType(clazz: Class<out ItemStackRequestAction>) =
-            clazz.getAnnotation(ItemStackRequestIdentify::class.java)!!.typeId.type
         private val actionMap = mapOf(
             getType(TakeStackRequestAction::class.java) to TakeStackRequestAction::read,
             getType(PlaceStackRequestAction::class.java) to PlaceStackRequestAction::read,
@@ -63,6 +61,9 @@ class ItemStackRequest(
             ) to DeprecatedCraftingNonImplementedStackRequestAction::read,
             getType(DeprecatedCraftingResultsStackRequestAction::class.java) to DeprecatedCraftingResultsStackRequestAction::read
         )
+
+        private fun getType(clazz: Class<out ItemStackRequestAction>) =
+            clazz.getAnnotation(ItemStackRequestIdentify::class.java)!!.typeId.type
 
         fun readAction(input: PacketSerializer, typeId: Int): ItemStackRequestAction =
             (actionMap[typeId] ?: throw IllegalArgumentException("Unhandled item stack request action type $typeId"))(input)
