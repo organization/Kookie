@@ -24,7 +24,17 @@ class BlockArrayContainer<Block> private constructor(var blockArray: IPalettedBl
 
     constructor(block: Block) : this(InternalPalettedBlockArray(1, block))
     constructor(capacity: Int) : this(blockArrayFromCapacity(capacity))
-    constructor(bitsPerBlock: Int, wordArray: String, paletteEntries: List<Block>) : this(blockArrayFromData(bitsPerBlock, wordArray, paletteEntries))
+    constructor(
+        bitsPerBlock: Int,
+        wordArray: String,
+        paletteEntries: List<Block>
+    ) : this(
+        blockArrayFromData(
+            bitsPerBlock,
+            wordArray,
+            paletteEntries
+        )
+    )
     constructor(other: BlockArrayContainer<Block>) : this(other.blockArray.clone() as IPalettedBlockArray<Block>)
 
     fun getWordArray(): CharArray = blockArray.getWordArray()
@@ -64,7 +74,11 @@ class BlockArrayContainer<Block> private constructor(var blockArray: IPalettedBl
         private val cache8 = InternalPalettedBlockArray<Long>(8)
         private val cache16 = InternalPalettedBlockArray<Long>(16)
 
-        private fun <Block> blockArrayFromData(bitsPerBlock: Int, wordArray: String, paletteEntries: List<Block>): IPalettedBlockArray<Block> =
+        private fun <Block> blockArrayFromData(
+            bitsPerBlock: Int,
+            wordArray: String,
+            paletteEntries: List<Block>
+        ): IPalettedBlockArray<Block> =
             when (bitsPerBlock) {
                 1 -> InternalPalettedBlockArray(1, wordArray, paletteEntries)
                 2 -> InternalPalettedBlockArray(2, wordArray, paletteEntries)

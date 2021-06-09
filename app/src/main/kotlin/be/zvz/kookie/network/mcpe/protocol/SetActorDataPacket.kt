@@ -29,13 +29,12 @@ class SetActorDataPacket : DataPacket(), ClientboundPacket, ServerboundPacket {
 
     companion object {
         fun create(entityRuntimeId: Long, metadata: HashMap<Int, MetadataProperty>, tick: Long): SetActorDataPacket {
-            val packet = SetActorDataPacket().apply {
+
+            return SetActorDataPacket().apply {
                 this.entityRuntimeId = entityRuntimeId
                 this.metadata = metadata
                 this.tick = tick
             }
-
-            return packet
         }
     }
 

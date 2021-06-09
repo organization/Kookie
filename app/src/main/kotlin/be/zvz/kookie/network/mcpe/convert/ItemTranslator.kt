@@ -25,7 +25,11 @@ import com.koloboke.collect.map.hash.HashObjIntMaps
 import com.koloboke.collect.map.hash.HashObjObjMaps
 import java.util.concurrent.atomic.AtomicBoolean
 
-class ItemTranslator(dictionary: ItemTypeDictionary, simpleMappings: Map<String, Int>, complexMappings: Map<String, Pair<Int, Int>>) {
+class ItemTranslator(
+    dictionary: ItemTypeDictionary,
+    simpleMappings: Map<String, Int>,
+    complexMappings: Map<String, Pair<Int, Int>>
+) {
 
     private val simpleCoreToNetMapping: MutableMap<Int, Int> = HashIntIntMaps.newMutableMap()
     private val simpleNetToCoreMapping: MutableMap<Int, Int> = HashIntIntMaps.newMutableMap()
@@ -62,7 +66,9 @@ class ItemTranslator(dictionary: ItemTypeDictionary, simpleMappings: Map<String,
 
         private fun make(): ItemTranslator {
             val data = JsonBrowser().parse(this::class.java.getResourceAsStream("vanilla/r16_to_current_item_map.json"))
-            val legacyStringToIntMap = JsonBrowser().parse(this::class.java.getResourceAsStream("vanilla/item_id_map.json")).toMap<String, String>()
+            val legacyStringToIntMap = JsonBrowser().parse(
+                this::class.java.getResourceAsStream("vanilla/item_id_map.json")
+            ).toMap<String, String>()
 
             val simpleMappings: MutableMap<String, Int> = HashObjIntMaps.newMutableMap()
             data["simple"].toMap<String, String>().forEach { (oldId, newId) ->

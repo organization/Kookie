@@ -25,7 +25,8 @@ class PhotoTransferPacket : DataPacket(), ClientboundPacket {
 
     lateinit var photoName: String
     lateinit var photoData: String
-    lateinit var bookId: String // photos are stored in a sibling directory to the games folder (screenshots/(some UUID)/bookID/example.png)
+    // photos are stored in a sibling directory to the games folder (screenshots/(some UUID)/bookID/example.png)
+    lateinit var bookId: String
 
     override fun decodePayload(input: PacketSerializer) {
         photoName = input.getString()

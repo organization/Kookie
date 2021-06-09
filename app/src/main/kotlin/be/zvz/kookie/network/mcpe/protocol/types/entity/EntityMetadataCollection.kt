@@ -100,8 +100,7 @@ class EntityMetadataCollection {
     }
 
     fun setPlayerFlag(flagId: Int, value: Boolean) {
-        val flagSetProp = properties.getOrDefault(EntityMetadataProperties.PLAYER_FLAGS, null)
-        var flagSet = when (flagSetProp) {
+        var flagSet = when (val flagSetProp = properties.getOrDefault(EntityMetadataProperties.PLAYER_FLAGS, null)) {
             null -> {
                 0
             }
@@ -109,7 +108,9 @@ class EntityMetadataCollection {
                 flagSetProp.value
             }
             else -> {
-                throw AssertionError("Wrong type found for flags, wnat byte, but have ${flagSetProp::class.java.simpleName}")
+                throw AssertionError(
+                    "Wrong type found for flags, want byte, but have ${flagSetProp::class.java.simpleName}"
+                )
             }
         }
         if ((flagSet shl flagId) and 1 != (if (value) 1 else 0)) {

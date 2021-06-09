@@ -58,7 +58,9 @@ object BlockFactory {
                 }
 
                 if (!override && isRegistered(id, m)) {
-                    throw IllegalArgumentException("Block registration ${block::class} has states which conflict with other blocks")
+                    throw IllegalArgumentException(
+                        "Block registration ${block::class} has states which conflict with other blocks"
+                    )
                 }
 
                 val index = id shl 4 or m

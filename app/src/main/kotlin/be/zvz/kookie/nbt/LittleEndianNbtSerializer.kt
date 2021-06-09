@@ -22,7 +22,7 @@ import java.nio.ByteBuffer
 import java.nio.ByteOrder
 import java.nio.charset.StandardCharsets
 
-class LittleEndianNbtSerializer() : BaseNbtSerializer() {
+class LittleEndianNbtSerializer : BaseNbtSerializer() {
     override fun readShort(): Int = buffer.getLShort()
     override fun readSignedShort(): Int = buffer.getSignedLShort()
     override fun readInt(): Int = buffer.getLInt()

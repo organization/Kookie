@@ -81,11 +81,10 @@ class ClientboundDebugRendererPacket : DataPacket(), ClientboundPacket {
         const val TYPE_ADD_CUBE = 2
 
         fun base(type: Int): ClientboundDebugRendererPacket {
-            val packet = ClientboundDebugRendererPacket().apply {
+
+            return ClientboundDebugRendererPacket().apply {
                 this.type = type
             }
-
-            return packet
         }
 
         fun clear(): ClientboundDebugRendererPacket = base(TYPE_CLEAR)
@@ -99,7 +98,8 @@ class ClientboundDebugRendererPacket : DataPacket(), ClientboundPacket {
             alpha: Float,
             durationMillis: Long,
         ): ClientboundDebugRendererPacket {
-            val packet = base(TYPE_ADD_CUBE).apply {
+
+            return base(TYPE_ADD_CUBE).apply {
                 this.text = text
                 this.position = position
                 this.red = red
@@ -108,8 +108,6 @@ class ClientboundDebugRendererPacket : DataPacket(), ClientboundPacket {
                 this.alpha = alpha
                 this.durationMillis = durationMillis
             }
-
-            return packet
         }
     }
 }

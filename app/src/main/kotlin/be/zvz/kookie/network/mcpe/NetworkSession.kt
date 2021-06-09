@@ -34,6 +34,7 @@ import com.nukkitx.network.raknet.RakNetSession
 import com.nukkitx.network.util.DisconnectReason
 import io.netty.buffer.ByteBuf
 import io.netty.buffer.Unpooled
+import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.util.Date
 
@@ -43,7 +44,7 @@ class NetworkSession(
     private val session: RakNetSession,
 ) {
 
-    val logger = LoggerFactory.getLogger(NetworkSession::class.java)
+    val logger: Logger = LoggerFactory.getLogger(NetworkSession::class.java)
     private var ping: Int? = null
     private var player: Player? = null
     private var info: PlayerInfo? = null
