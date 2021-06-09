@@ -20,11 +20,16 @@ package be.zvz.kookie.entity
 import be.zvz.kookie.Server
 import be.zvz.kookie.block.Block
 import be.zvz.kookie.math.AxisAlignedBB
+import be.zvz.kookie.math.Facing
+import be.zvz.kookie.math.Vector2
 import be.zvz.kookie.math.Vector3
 import be.zvz.kookie.nbt.tag.ByteTag
 import be.zvz.kookie.nbt.tag.CompoundTag
 import be.zvz.kookie.nbt.tag.StringTag
+import be.zvz.kookie.network.mcpe.protocol.MoveActorAbsolutePacket
+import be.zvz.kookie.network.mcpe.protocol.SetActorMotionPacket
 import be.zvz.kookie.network.mcpe.protocol.types.entity.EntityMetadataCollection
+import be.zvz.kookie.network.mcpe.protocol.types.entity.EntityMetadataFlags
 import be.zvz.kookie.network.mcpe.protocol.types.entity.EntityMetadataProperties
 import be.zvz.kookie.network.mcpe.protocol.types.entity.MetadataProperty
 import be.zvz.kookie.player.Player
@@ -32,6 +37,12 @@ import be.zvz.kookie.timings.Timings
 import be.zvz.kookie.timings.TimingsHandler
 import be.zvz.kookie.world.World
 import com.koloboke.collect.map.hash.HashLongObjMaps
+import kotlin.math.PI
+import kotlin.math.abs
+import kotlin.math.cos
+import kotlin.math.floor
+import kotlin.math.pow
+import kotlin.math.sin
 
 abstract class Entity @JvmOverloads constructor(var location: Location, nbt: CompoundTag? = null) {
 
@@ -290,33 +301,26 @@ abstract class Entity @JvmOverloads constructor(var location: Location, nbt: Com
     }
 
     fun syncNetworkData(properties: EntityMetadataCollection) {
-        /*
-        $properties->setByte(EntityMetadataProperties::ALWAYS_SHOW_NAMETAG, $this->alwaysShowNameTag ? 1 : 0);
-		$properties->setFloat(EntityMetadataProperties::BOUNDING_BOX_HEIGHT, $this->size->getHeight());
-		$properties->setFloat(EntityMetadataProperties::BOUNDING_BOX_WIDTH, $this->size->getWidth());
-		$properties->setFloat(EntityMetadataProperties::SCALE, $this->scale);
-		$properties->setLong(EntityMetadataProperties::LEAD_HOLDER_EID, -1);
-		$properties->setLong(EntityMetadataProperties::OWNER_EID, $this->ownerId ?? -1);
-		$properties->setLong(EntityMetadataProperties::TARGET_EID, $this->targetId ?? 0);
-		$properties->setString(EntityMetadataProperties::NAMETAG, $this->nameTag);
-		$properties->setString(EntityMetadataProperties::SCORE_TAG, $this->scoreTag);
-		$properties->setByte(EntityMetadataProperties::COLOR, 0);
-
-		$properties->setGenericFlag(EntityMetadataFlags::AFFECTED_BY_GRAVITY, true);
-		$properties->setGenericFlag(EntityMetadataFlags::CAN_CLIMB, $this->canClimb);
-		$properties->setGenericFlag(EntityMetadataFlags::CAN_SHOW_NAMETAG, $this->nameTagVisible);
-		$properties->setGenericFlag(EntityMetadataFlags::HAS_COLLISION, true);
-		$properties->setGenericFlag(EntityMetadataFlags::IMMOBILE, $this->immobile);
-		$properties->setGenericFlag(EntityMetadataFlags::INVISIBLE, $this->invisible);
-		$properties->setGenericFlag(EntityMetadataFlags::SILENT, $this->silent);
-		$properties->setGenericFlag(EntityMetadataFlags::ONFIRE, $this->isOnFire());
-		$properties->setGenericFlag(EntityMetadataFlags::WALLCLIMBING, $this->canClimbWalls);
-         */
-
-        // TODO
         properties.setByte(EntityMetadataProperties.ALWAYS_SHOW_NAMETAG, if (alwaysShowNameTag) 1 else 0)
         properties.setFloat(EntityMetadataProperties.BOUNDING_BOX_HEIGHT, size.height)
         properties.setFloat(EntityMetadataProperties.BOUNDING_BOX_WIDTH, size.width)
+        properties.setFloat(EntityMetadataProperties.SCALE, scale)
+        properties.setLong(EntityMetadataProperties.LEAD_HOLDER_EID, -1)
+        properties.setLong(EntityMetadataProperties.OWNER_EID, -1)
+        properties.setLong(EntityMetadataProperties.TARGET_EID, -1)
+        properties.setString(EntityMetadataProperties.NAMETAG, nameTag)
+        properties.setString(EntityMetadataProperties.SCORE_TAG, scoreTag)
+        properties.setByte(EntityMetadataProperties.COLOR, 0) // Offhand, blame mojang
+
+        properties.setGenericFlag(EntityMetadataFlags.AFFECTED_BY_GRAVITY, true)
+        properties.setGenericFlag(EntityMetadataFlags.CAN_CLIMB, canClimb)
+        properties.setGenericFlag(EntityMetadataFlags.CAN_SHOW_NAMETAG, nameTagVisible)
+        properties.setGenericFlag(EntityMetadataFlags.HAS_COLLISION, true)
+        properties.setGenericFlag(EntityMetadataFlags.IMMOBILE, immobile)
+        properties.setGenericFlag(EntityMetadataFlags.INVISIBLE, invisible)
+        properties.setGenericFlag(EntityMetadataFlags.SILENT, silent)
+        properties.setGenericFlag(EntityMetadataFlags.ONFIRE, isOnFire())
+        properties.setGenericFlag(EntityMetadataFlags.WALLCLIMBING, canClimbWalls)
     }
 
     fun sendData(targets: MutableMap<Long, Player>?, data: MutableMap<Int, MetadataProperty>? = null) {
@@ -386,6 +390,471 @@ abstract class Entity @JvmOverloads constructor(var location: Location, nbt: Com
 
     protected fun dealFireDamage() {
         // TODO: attack(EntityDamageEvent) here
+    }
+
+    fun canCollideWith(entity: Entity): Boolean = !justCreated && entity != this
+
+    fun canBeCollidedWith(): Boolean = isAlive()
+
+    protected fun updateMovement(teleport: Boolean = false) {
+        val diffPosition = location.distanceSquared(lastLocation)
+        val diffRotation = (location.yaw - lastLocation.yaw).pow(2) + (location.pitch - lastLocation.pitch).pow(2)
+
+        val diffMotion = motion.subtract(lastMotion).lengthSquared()
+
+        val still = motion.lengthSquared() == 0.0
+        val wasStill = lastMotion.lengthSquared() == 0.0
+
+        if (wasStill != still) {
+            immobile = still
+        }
+
+        if (teleport || diffPosition > 0.0001 || diffRotation > 1.0 || (!wasStill && still)) {
+            lastLocation = location.asLocation()
+            // TODO: broadcastMovement(teleport)
+        }
+
+        if (diffMotion > 0.0025 || wasStill != still) {
+            lastMotion = motion.clone()
+            // TODO: broadcastMotion()
+        }
+    }
+
+    fun getOffsetPosition(vector: Vector3): Vector3 = vector
+
+    fun broadcastMovement(teleport: Boolean = false) {
+        val packet = MoveActorAbsolutePacket.create(
+            entityRuntimeId,
+            getOffsetPosition(location),
+            location.pitch.toFloat(),
+            location.yaw.toFloat(),
+            location.yaw.toFloat(),
+            if (teleport) {
+                MoveActorAbsolutePacket.FLAG_TELEPORT
+            } else {
+                0
+            } or if (onGround) {
+                MoveActorAbsolutePacket.FLAG_GROUND
+            } else {
+                0
+            }
+        )
+        // TODO: server.broadcastPackets(hasSpawned, listOf(packet))
+    }
+
+    fun broadcastMotion() {
+        val packet = SetActorMotionPacket.create(entityRuntimeId, motion)
+        // TODO: server.broadcastPackets(hasSpawned, listOf(packet))
+    }
+
+    fun hasGravity(): Boolean = gravityEnabled
+
+    fun setHasGravityEnabled(v: Boolean = true) {
+        gravityEnabled = v
+    }
+
+    protected fun applyDragBeforeGravity(): Boolean = false
+
+    protected fun tryChangeMovement() {
+        val friction = 1 - drag
+
+        var mY = motion.y
+
+        if (applyDragBeforeGravity()) {
+            mY *= friction
+        }
+
+        if (gravityEnabled) {
+            mY -= gravity
+        }
+
+        if (!applyDragBeforeGravity()) {
+            mY *= friction
+        }
+
+        if (onGround) {
+            // TODO: friction *= getWorld().getBlockAt(floor(location.x), floor(location.y - 1), floor(location.z)).getFrictionFactor()
+        }
+        motion = Vector3(motion.x * friction, mY, motion.z * friction)
+    }
+
+    fun checkObstruction(x: Float, y: Float, z: Float): Boolean {
+        val world = getWorld()
+        /*
+        TODO:
+        if (world.getCollisionBoxes(this, getBoundingBox(), false).size == 0) {
+            return false
+        }
+         */
+
+        val floorX = floor(x).toInt()
+        val floorY = floor(y).toInt()
+        val floorZ = floor(z).toInt()
+
+        val diffX = x - floorX
+        val diffY = y - floorY
+        val diffZ = z - floorZ
+
+        /*
+        TODO:
+        if (world.getBlockAt(floorX, floorY, floorZ).isSolid()) {
+            val westNonSolid = !world.getBlockAt(floorX - 1, floorY, floorZ).isSolid()
+            val eastNonSolid = !world.getBlockAt(floorX + 1, floorY, floorZ).isSolid()
+            val downNonSolid = !world.getBlockAt(floorX, floorY - 1, floorZ).isSolid()
+            val upNonSolid    = !world.getBlockAt(floorX, floorY + 1, floorZ).isSolid()
+            val northNonSolid = !world.getBlockAt(floorX, floorY, floorZ - 1).isSolid()
+            val southNonSolid = !world.getBlockAt(floorX, floorY, floorZ + 1).isSolid()
+
+            var direction = -1
+            var limit = 9999F
+
+            if (westNonSolid) {
+                limit = diffX
+                direction = Facing.WEST.value
+            }
+
+            if (eastNonSolid && 1 - diffX < limit) {
+                limit = 1 - diffX
+                direction = Facing.EAST.value
+            }
+
+            if (northNonSolid && diffY < limit) {
+                limit = diffY
+                direction = Facing.DOWN.value
+            }
+
+            if (upNonSolid && 1 - diffY < limit) {
+                limit = diffY
+                direction = Facing.DOWN.value
+            }
+
+            if (northNonSolid && diffZ < limit) {
+                limit = diffZ
+                direction = Facing.NORTH.value
+            }
+
+            if (southNonSolid && 1 - diffZ < limit) {
+                direction = Facing.SOUTH
+            }
+
+            val force = Math.random() * 0.2 + 0.1
+
+            if (direction == Facing.WEST.value) {
+                motion = motion.withComponents(-force, null, null)
+                return true
+            }
+
+            if (direction == Facing.EAST.value) {
+                motion = motion.withComponents(force, null, null)
+                return true
+            }
+
+            if (direction == Facing.DOWN.value) {
+                motion = motion.withComponents(null, -force, null)
+                return true
+            }
+            if (direction == Facing.UP.value) {
+                motion = motion.withComponents(null, force, null)
+                return true
+            }
+
+            if (direction == Facing.NORTH.value) {
+                motion = motion.withComponents(null, null, -force)
+                return true
+            }
+            if (direction == Facing.SOUTH.value) {
+                motion = motion.withComponents(null, null, force)
+                return true
+            }
+        }
+         */
+        return false
+    }
+
+    fun getHorizontalFacing(): Facing {
+        var angle = location.yaw.mod(360.0)
+        if (angle < 0) {
+            angle += 360.0
+        }
+        if ((0 <= angle && angle < 45) || (315 <= angle && angle < 360)) {
+            return Facing.SOUTH
+        }
+        if (45 <= angle && angle < 135) {
+            return Facing.WEST
+        }
+        if (135 <= angle && angle < 255) {
+            return Facing.NORTH
+        }
+        return Facing.EAST
+    }
+
+    fun getDirectionVector(): Vector3 {
+        val y = -sin(Math.toRadians(location.pitch))
+        val xz = cos(Math.toRadians(location.pitch))
+        val x = -xz * sin(Math.toRadians(location.yaw))
+        val z = xz * cos(Math.toRadians(location.yaw))
+        return Vector3(x, y, z).normalize()
+    }
+
+    fun getDirectionPlane(): Vector2 {
+        return Vector2(-cos(Math.toRadians(location.yaw) - PI), -sin(Math.toRadians(location.yaw) - PI)).normalize()
+    }
+
+    fun onUpdate(currentTick: Long): Boolean {
+        if (closed) {
+            return false
+        }
+
+        val tickDiff = currentTick - lastUpdate
+        if (tickDiff <= 0) {
+            if (!justCreated) {
+                // TODO: make logger public? 
+                // server.logger.debug("Expected tick difference of at least 1, got $tickDiff for " + this::class.java.simpleName)
+            }
+            return true
+        }
+        lastUpdate = currentTick
+
+        if (isAlive()) {
+            if (onDeathUpdate(tickDiff)) {
+                flagForDespawn()
+            }
+            return true
+        }
+
+        timings.startTiming()
+
+        if (hasMovementUpdate()) {
+            tryChangeMovement()
+            motion = motion.withComponents(
+                if (abs(motion.x) <= MOTION_THRESHOLD) 0 else null,
+                if (abs(motion.y) <= MOTION_THRESHOLD) 0 else null,
+                if (abs(motion.z) <= MOTION_THRESHOLD) 0 else null
+            )
+            if (motion.x != 0.0 || motion.y != 0.0 || motion.z != 0.0) {
+                move(motion.x, motion.y, motion.z)
+            }
+            forceMovementUpdate = false
+        }
+        updateMovement()
+
+        // TODO: Timings.entityBaseTick.startTiming()
+        val hasUpdate = entityBaseTick(tickDiff)
+        // TODO: Timings.entityBaseTick.stopTiming()
+        return hasUpdate
+    }
+
+    fun onNearByBlockChange() {
+        forceMovementUpdate = true
+        scheduleUpdate()
+    }
+
+    fun onRandomUpdate() {
+        scheduleUpdate()
+    }
+
+    fun hasMovementUpdate(): Boolean {
+        return forceMovementUpdate ||
+            motion.x != 0.0 ||
+            motion.y != 0.0 ||
+            motion.z != 0.0 ||
+            !onGround
+    }
+
+    fun resetFallDistance() {
+        fallDistance = 0F
+    }
+
+    protected fun updateFallState(distanceThisTick: Long, onGround: Boolean) {
+        if (onGround) {
+            if (fallDistance > 0) {
+                fall(fallDistance)
+                resetFallDistance()
+            }
+        } else if (distanceThisTick < fallDistance) {
+            fallDistance -= distanceThisTick
+        } else {
+            fallDistance = 0F
+        }
+    }
+
+    fun fall(fallDistance: Float) {
+    }
+
+    fun getEyeHeight(): Float = size.eyeHeight!!
+
+    fun getEyePos(): Vector3 = Vector3(location.x, location.y + getEyeHeight(), location.z)
+
+    fun onCollideWithPlayer(player: Player) {
+    }
+
+    fun isUnderWater(): Boolean {
+        /*
+        TODO:
+        val block = getWorld().getBlockAt(floor(location.x).toInt(), floor(location.y + getEyeHeight()).toInt(), floor(location.z).toInt())
+        return block.isSolid() && !block.isTransparent() && block.collidesWithBB(boundingBox)
+         */
+        return false
+    }
+
+    fun move(dx: Double, dy: Double, dz: Double) {
+        // TODO
+        /*
+        $this->blocksAround = null;
+
+		Timings::$entityMove->startTiming();
+
+		$movX = $dx;
+		$movY = $dy;
+		$movZ = $dz;
+
+		if($this->keepMovement){
+			$this->boundingBox->offset($dx, $dy, $dz);
+		}else{
+			$this->ySize *= self::STEP_CLIP_MULTIPLIER;
+
+			/*
+			if($this->isColliding){ //With cobweb?
+				$this->isColliding = false;
+				$dx *= 0.25;
+				$dy *= 0.05;
+				$dz *= 0.25;
+				$this->motionX = 0;
+				$this->motionY = 0;
+				$this->motionZ = 0;
+			}
+			*/
+
+			$moveBB = clone $this->boundingBox;
+
+			/*$sneakFlag = $this->onGround and $this instanceof Player;
+
+			if($sneakFlag){
+				for($mov = 0.05; $dx != 0.0 and count($this->world->getCollisionCubes($this, $this->boundingBox->getOffsetBoundingBox($dx, -1, 0))) === 0; $movX = $dx){
+					if($dx < $mov and $dx >= -$mov){
+						$dx = 0;
+					}elseif($dx > 0){
+						$dx -= $mov;
+					}else{
+						$dx += $mov;
+					}
+				}
+
+				for(; $dz != 0.0 and count($this->world->getCollisionCubes($this, $this->boundingBox->getOffsetBoundingBox(0, -1, $dz))) === 0; $movZ = $dz){
+					if($dz < $mov and $dz >= -$mov){
+						$dz = 0;
+					}elseif($dz > 0){
+						$dz -= $mov;
+					}else{
+						$dz += $mov;
+					}
+				}
+
+				//TODO: big messy loop
+			}*/
+
+			assert(abs($dx) <= 20 and abs($dy) <= 20 and abs($dz) <= 20, "Movement distance is excessive: dx=$dx, dy=$dy, dz=$dz");
+
+			$list = $this->getWorld()->getCollisionBoxes($this, $moveBB->addCoord($dx, $dy, $dz), false);
+
+			foreach($list as $bb){
+				$dy = $bb->calculateYOffset($moveBB, $dy);
+			}
+
+			$moveBB->offset(0, $dy, 0);
+
+			$fallingFlag = ($this->onGround or ($dy != $movY and $movY < 0));
+
+			foreach($list as $bb){
+				$dx = $bb->calculateXOffset($moveBB, $dx);
+			}
+
+			$moveBB->offset($dx, 0, 0);
+
+			foreach($list as $bb){
+				$dz = $bb->calculateZOffset($moveBB, $dz);
+			}
+
+			$moveBB->offset(0, 0, $dz);
+
+			if($this->stepHeight > 0 and $fallingFlag and ($movX != $dx or $movZ != $dz)){
+				$cx = $dx;
+				$cy = $dy;
+				$cz = $dz;
+				$dx = $movX;
+				$dy = $this->stepHeight;
+				$dz = $movZ;
+
+				$stepBB = clone $this->boundingBox;
+
+				$list = $this->getWorld()->getCollisionBoxes($this, $stepBB->addCoord($dx, $dy, $dz), false);
+				foreach($list as $bb){
+					$dy = $bb->calculateYOffset($stepBB, $dy);
+				}
+
+				$stepBB->offset(0, $dy, 0);
+
+				foreach($list as $bb){
+					$dx = $bb->calculateXOffset($stepBB, $dx);
+				}
+
+				$stepBB->offset($dx, 0, 0);
+
+				foreach($list as $bb){
+					$dz = $bb->calculateZOffset($stepBB, $dz);
+				}
+
+				$stepBB->offset(0, 0, $dz);
+
+				$reverseDY = -$dy;
+				foreach($list as $bb){
+					$reverseDY = $bb->calculateYOffset($stepBB, $reverseDY);
+				}
+				$dy += $reverseDY;
+				$stepBB->offset(0, $reverseDY, 0);
+
+				if(($cx ** 2 + $cz ** 2) >= ($dx ** 2 + $dz ** 2)){
+					$dx = $cx;
+					$dy = $cy;
+					$dz = $cz;
+				}else{
+					$moveBB = $stepBB;
+					$this->ySize += $dy;
+				}
+			}
+
+			$this->boundingBox = $moveBB;
+		}
+
+		$this->location = new Location(
+			($this->boundingBox->minX + $this->boundingBox->maxX) / 2,
+			$this->boundingBox->minY - $this->ySize,
+			($this->boundingBox->minZ + $this->boundingBox->maxZ) / 2,
+			$this->location->yaw,
+			$this->location->pitch,
+			$this->location->world
+		);
+
+		$this->getWorld()->onEntityMoved($this);
+		$this->checkBlockCollision();
+		$this->checkGroundState($movX, $movY, $movZ, $dx, $dy, $dz);
+		$this->updateFallState($dy, $this->onGround);
+
+		$this->motion = $this->motion->withComponents(
+			$movX != $dx ? 0 : null,
+			$movY != $dy ? 0 : null,
+			$movZ != $dz ? 0 : null
+		);
+
+		//TODO: vehicle collision events (first we need to spawn them!)
+
+		Timings::$entityMove->stopTiming();
+         */
+    }
+
+    fun flagForDespawn() {
+        needsDespawn = true
+        scheduleUpdate()
     }
 
     companion object {
