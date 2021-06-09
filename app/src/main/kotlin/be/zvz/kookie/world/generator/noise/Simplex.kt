@@ -50,7 +50,7 @@ class Simplex(
 
         // this dummy call is necessary to produce the same RNG state as before latest refactors to this file
         // previously this value would be used for offsetW
-        // TODO: this really needs to reset the RNG seed to avoid future RNG contamination
+        // this really needs to reset the RNG seed to avoid future RNG contamination
         random.nextInt()
     }
 

@@ -57,7 +57,7 @@ class Chunk(
     }
 
     fun getHighestBlockAt(x: Int, z: Int): Int? {
-        for (y in (subChunks.size - 1) downTo 0) {
+        for (y in subChunks.size - 1 downTo 0) {
             val height = getSubChunk(y).getHighestBlockAt(x, z)
             if (height != null) {
                 return height or (y shl 4)
@@ -121,7 +121,7 @@ class Chunk(
         }
     }
 
-    fun getDirtyFlag(flag: Int) = (dirtyFlags and flag) != 0
+    fun getDirtyFlag(flag: Int) = dirtyFlags and flag != 0
     fun setDirtyFlag(flag: Int, value: Boolean) {
         dirtyFlags = if (value) {
             dirtyFlags or flag
@@ -155,6 +155,6 @@ class Chunk(
         const val MAX_SUBCHUNKS = 16
 
         fun blockHash(pos: Vector3) = blockHash(pos.x.toInt(), pos.y.toInt(), pos.z.toInt())
-        fun blockHash(x: Int, y: Int, z: Int) = (y shl 8) or ((z and 0x0f) shl 4) or (x and 0x0f)
+        fun blockHash(x: Int, y: Int, z: Int) = (y shl 8) or (z and 0x0f shl 4) or (x and 0x0f)
     }
 }

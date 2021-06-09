@@ -40,8 +40,8 @@ class Ore(
         val x2 = x + 8 - offset.x
         val z1 = z + 8 + offset.y
         val z2 = z + 8 - offset.y
-        val y1 = y + (random.nextInt() % 3) + 2
-        val y2 = y + (random.nextInt() % 3) + 2
+        val y1 = y + random.nextInt() % 3 + 2
+        val y2 = y + random.nextInt() % 3 + 2
 
         repeat(clusterSize + 1) { count ->
             val seedX = x1 + (x2 - x1) * count / clusterSize
@@ -61,10 +61,10 @@ class Ore(
                 if (sizeX < 1) {
                     for (yy in startY..endY) {
                         val sizeY = ((yy + 0.5 - seedY) / size).pow(2.0)
-                        if ((yy > 0) and ((sizeX + sizeY) < 1)) {
+                        if ((yy > 0) and (sizeX + sizeY < 1)) {
                             for (zz in startZ..endZ) {
                                 val sizeZ = ((zz + 0.5 - seedZ) / size).pow(2.0)
-                                if (((sizeX + sizeY + sizeZ) < 1) and (world.getBlockAt(xx, yy, zz).isSameType(type.replaces))) {
+                                if ((sizeX + sizeY + sizeZ < 1) and (world.getBlockAt(xx, yy, zz).isSameType(type.replaces))) {
                                     world.setBlockAt(xx, yy, zz, type.material)
                                 }
                             }

@@ -37,4 +37,4 @@ class Ore(vararg val oreTypes: Ore.Type) : Populator {
     }
 }
 
-fun Random.nextRange(start: Int, end: Int) = start + (nextInt() % (end + 1 - start))
+fun Random.nextRange(start: Int, end: Int) = start + nextInt() % (end + 1 - start)

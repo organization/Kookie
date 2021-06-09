@@ -128,7 +128,7 @@ abstract class Noise(
         data class Values(val noise: Int, val next: Int, val d1: Float, val d2: Float)
 
         fun noiseValues(current: Int, samplingRate: Int): Values {
-            val noise = current - (current % samplingRate)
+            val noise = current - current % samplingRate
             val next = noise + samplingRate
             return Values(
                 noise,

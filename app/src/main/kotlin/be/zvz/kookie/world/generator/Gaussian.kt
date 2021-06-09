@@ -28,9 +28,9 @@ class Gaussian(val smoothSize: Int) {
         val bellHeight = 2F * smoothSize
 
         kernel = HashIntObjMaps.newMutableMap()
-        for (sx in (-smoothSize)..smoothSize) {
+        for (sx in -smoothSize..smoothSize) {
             val szMap = HashIntObjMaps.newMutableMap<Float>()
-            for (sz in (-smoothSize)..smoothSize) {
+            for (sz in -smoothSize..smoothSize) {
                 val bx = bellSize * sx
                 val bz = bellSize * sz
                 szMap[sz + smoothSize] = bellHeight * exp((bx * bx + bz * bz) / 2)

@@ -90,8 +90,8 @@ class World(val server: Server, val folderName: String) {
             return Morton3D.encode(
                 x = x and BLOCKHASH_XZ_MASK,
                 y = shiftedY or
-                    ((((x shr MORTON3D_BIT_SIZE) and BLOCKHASH_XZ_EXTRA_MASK) shl BLOCKHASH_X_SHIFT)) or
-                    ((((z shr MORTON3D_BIT_SIZE) and BLOCKHASH_XZ_EXTRA_MASK) shl BLOCKHASH_Z_SHIFT)),
+                    (((x shr MORTON3D_BIT_SIZE and BLOCKHASH_XZ_EXTRA_MASK) shl BLOCKHASH_X_SHIFT)) or
+                    (((z shr MORTON3D_BIT_SIZE and BLOCKHASH_XZ_EXTRA_MASK) shl BLOCKHASH_Z_SHIFT)),
                 z = z and BLOCKHASH_XZ_MASK
             )
         }
@@ -102,13 +102,13 @@ class World(val server: Server, val folderName: String) {
         fun getBlockXYZ(hash: Long): Triple<Int, Int, Int> {
             val (baseX, baseY, baseZ) = Morton3D.decode(hash)
 
-            val extraX = ((baseY shr BLOCKHASH_X_SHIFT) and BLOCKHASH_XZ_EXTRA_MASK) shl MORTON3D_BIT_SIZE
-            val extraZ = ((baseY shr BLOCKHASH_Z_SHIFT) and BLOCKHASH_XZ_EXTRA_MASK) shl MORTON3D_BIT_SIZE
+            val extraX = (baseY shr BLOCKHASH_X_SHIFT and BLOCKHASH_XZ_EXTRA_MASK) shl MORTON3D_BIT_SIZE
+            val extraZ = (baseY shr BLOCKHASH_Z_SHIFT and BLOCKHASH_XZ_EXTRA_MASK) shl MORTON3D_BIT_SIZE
 
             return Triple(
-                ((baseX and BLOCKHASH_XZ_MASK) or extraX) shl BLOCKHASH_XZ_SIGN_SHIFT shr BLOCKHASH_XZ_SIGN_SHIFT,
-                (baseY and BLOCKHASH_Y_MASK) - BLOCKHASH_Y_OFFSET,
-                ((baseZ and BLOCKHASH_XZ_MASK) or extraZ) shl BLOCKHASH_XZ_SIGN_SHIFT shr BLOCKHASH_XZ_SIGN_SHIFT
+                (baseX and BLOCKHASH_XZ_MASK or extraX) shl BLOCKHASH_XZ_SIGN_SHIFT shr BLOCKHASH_XZ_SIGN_SHIFT,
+                baseY and BLOCKHASH_Y_MASK - BLOCKHASH_Y_OFFSET,
+                (baseZ and BLOCKHASH_XZ_MASK or extraZ) shl BLOCKHASH_XZ_SIGN_SHIFT shr BLOCKHASH_XZ_SIGN_SHIFT
             )
         }
 
