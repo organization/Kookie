@@ -66,6 +66,9 @@ class ItemTranslator(dictionary: ItemTypeDictionary, simpleMappings: Map<String,
 
             val simpleMappings: MutableMap<String, Int> = HashObjIntMaps.newMutableMap()
             data["simple"].toMap<String, String>().forEach { (oldId, newId) ->
+                if (!legacyStringToIntMap.containsKey(newId)) {
+                    return@forEach
+                }
                 simpleMappings[newId] = legacyStringToIntMap.getValue(oldId).toInt()
             }
             legacyStringToIntMap.forEach { (stringId, intId) ->
