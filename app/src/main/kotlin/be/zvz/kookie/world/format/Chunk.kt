@@ -155,6 +155,6 @@ class Chunk(
         const val MAX_SUBCHUNKS = 16
 
         fun blockHash(pos: Vector3) = blockHash(pos.x.toInt(), pos.y.toInt(), pos.z.toInt())
-        fun blockHash(x: Int, y: Int, z: Int) = (y shl 8) or (z and 0x0f shl 4) or (x and 0x0f)
+        fun blockHash(x: Int, y: Int, z: Int) = y shl 8 or (z and 0x0f shl 4) or (x and 0x0f)
     }
 }

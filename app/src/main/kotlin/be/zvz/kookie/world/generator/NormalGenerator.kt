@@ -100,8 +100,8 @@ class NormalGenerator(seed: Long, preset: String) : Generator(seed, preset) {
                 val biome = pickBiome(absoluteX, absoluteZ)
                 chunk.setBiomeId(x, z, biome.id)
 
-                for (sx in (-gaussian.smoothSize)..gaussian.smoothSize) {
-                    for (sz in (-gaussian.smoothSize)..gaussian.smoothSize) {
+                for (sx in -gaussian.smoothSize..gaussian.smoothSize) {
+                    for (sz in -gaussian.smoothSize..gaussian.smoothSize) {
                         val weight = gaussian.kernel.getValue(sx + gaussian.smoothSize).getValue(sz + gaussian.smoothSize).toInt()
                         val adjacent = if ((sx == 0) and (sz == 0)) {
                             biome
