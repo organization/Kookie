@@ -126,7 +126,15 @@ open class Block(val idInfo: BlockIdentifier, val name: String, val breakInfo: B
 
     open fun canBePlacedAt(blockReplace: Block, clickVector: Vector3, face: Int, isClickedBlock: Boolean): Boolean = blockReplace.canBeReplaced()
 
-    open fun place(tx: BlockTransaction, item: Item, blockReplace: Block, blockClicked: Block, face: Int, clickVector: Vector3, player: Player? = null): Boolean {
+    open fun place(
+        tx: BlockTransaction,
+        item: Item,
+        blockReplace: Block,
+        blockClicked: Block,
+        face: Int,
+        clickVector: Vector3,
+        player: Player? = null
+    ): Boolean {
         tx.addBlock(blockReplace.pos, this)
         return true
     }

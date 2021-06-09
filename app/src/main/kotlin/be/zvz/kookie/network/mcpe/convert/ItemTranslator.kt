@@ -25,7 +25,11 @@ import com.koloboke.collect.map.hash.HashObjIntMaps
 import com.koloboke.collect.map.hash.HashObjObjMaps
 import java.util.concurrent.atomic.AtomicBoolean
 
-class ItemTranslator(dictionary: ItemTypeDictionary, simpleMappings: Map<String, Int>, complexMappings: Map<String, Pair<Int, Int>>) {
+class ItemTranslator(
+    dictionary: ItemTypeDictionary,
+    simpleMappings: Map<String, Int>,
+    complexMappings: Map<String, Pair<Int, Int>>
+) {
 
     private val simpleCoreToNetMapping: MutableMap<Int, Int> = HashIntIntMaps.newMutableMap()
     private val simpleNetToCoreMapping: MutableMap<Int, Int> = HashIntIntMaps.newMutableMap()
