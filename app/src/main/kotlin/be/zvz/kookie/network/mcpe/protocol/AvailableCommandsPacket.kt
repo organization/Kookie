@@ -270,7 +270,7 @@ class AvailableCommandsPacket : DataPacket(), ClientboundPacket {
             overload.forEach { (_, parameter) ->
                 output.putString(parameter.paramName)
                 val type = parameter.enum?.let {
-                    ARG_FLAG_ENUM or ARG_FLAG_VALID or (enumIndexes.getOrDefault(it.getEnumName(), -1))
+                    ARG_FLAG_ENUM or ARG_FLAG_VALID or enumIndexes.getOrDefault(it.getEnumName(), -1)
                 } ?: parameter.postfix?.let {
                     val key = postFixIndexes.getOrDefault(it, -1)
                     if (key == -1) {
