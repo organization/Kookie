@@ -103,7 +103,8 @@ class ClientboundMapItemDataPacket : DataPacket(), ClientboundPacket {
 
             val count = input.getUnsignedVarInt()
             if (count != width * height) {
-                throw PacketDecodeException("Expected colour count of ${height * width} (height height * width width), got count")
+                val msg = "Expected colour count of ${height * width} (height height * width width), got count"
+                throw PacketDecodeException(msg)
             }
 
             for (y in 0 until height) {
@@ -178,7 +179,8 @@ class ClientboundMapItemDataPacket : DataPacket(), ClientboundPacket {
             output.putVarInt(xOffset)
             output.putVarInt(yOffset)
 
-            output.putUnsignedVarInt(width * height) // list count, but we handle it as a 2D array... thanks for the confusion mojang
+            // list count, but we handle it as a 2D array... thanks for the confusion mojang
+            output.putUnsignedVarInt(width * height)
 
             for (y in 0 until height) {
                 for (x in 0 until width) {

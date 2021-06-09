@@ -58,7 +58,7 @@ class PacketPool {
                 }
                 return field
             }
-            set(value: PacketPool?) {
+            set(value) {
                 if (value == null) {
                     throw RuntimeException("Cannot set instance to null")
                 }

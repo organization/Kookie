@@ -101,12 +101,11 @@ class BossEventPacket : DataPacket(), ClientboundPacket, ServerboundPacket {
         const val TYPE_TEXTURE = 7
 
         fun base(bossEntityUniqueId: Long, eventId: Int): BossEventPacket {
-            val packet = BossEventPacket().apply {
-                this.bossEid = bossEntityUniqueId
-                this.eventType = eventId
-            }
 
-            return packet
+            return BossEventPacket().apply {
+                bossEid = bossEntityUniqueId
+                eventType = eventId
+            }
         }
 
         fun show(

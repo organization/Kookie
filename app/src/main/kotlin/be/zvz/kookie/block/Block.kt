@@ -52,7 +52,14 @@ open class Block(val idInfo: BlockIdentifier, val name: String, val breakInfo: B
     init {
         // TODO: Variant collides with state bitmask
         if ((idInfo.variant and getStateBitmask()) != 0) {
-            throw IllegalArgumentException("Variant 0x${idInfo.variant.toString(16)} collides with state bitmask 0x${getStateBitmask().toString(16)}")
+            throw IllegalArgumentException(
+                "Variant 0x" +
+                    idInfo.variant.toString(16) +
+                    " collides with state bitmask 0x" +
+                    getStateBitmask().toString(
+                        16
+                    )
+            )
         }
         pos = Position()
     }
@@ -93,7 +100,13 @@ open class Block(val idInfo: BlockIdentifier, val name: String, val breakInfo: B
     }
 
     open fun writeStateToWorld() {
-        pos.world?.getOrLoadChunkAtPosition(pos)?.setFullBlock(pos.x.toInt() and 0xf, pos.y.toInt(), pos.z.toInt() and 0xf, getFullId().toLong())
+        pos.world?.getOrLoadChunkAtPosition(pos)
+            ?.setFullBlock(
+                pos.x.toInt() and 0xf,
+                pos.y.toInt(),
+                pos.z.toInt() and 0xf,
+                getFullId().toLong()
+            )
 
         var tileType: Class<*>? = null
         // TODO: Completion of getTile method in World
@@ -111,7 +124,13 @@ open class Block(val idInfo: BlockIdentifier, val name: String, val breakInfo: B
             }
         }
         if (oldTile === null && tileType !== null) {
-            val tile = tileType.getConstructor(World::class.java, Vector3::class.java).newInstance(pos.world, pos.asVector3()) as Tile
+            val tile = tileType.getConstructor(
+                World::class.java,
+                Vector3::class.java
+            ).newInstance(
+                pos.world,
+                pos.asVector3()
+            ) as Tile
             pos.world?.addTile(tile)
         }
     }
@@ -124,9 +143,22 @@ open class Block(val idInfo: BlockIdentifier, val name: String, val breakInfo: B
 
     open fun canBeReplaced(): Boolean = true
 
-    open fun canBePlacedAt(blockReplace: Block, clickVector: Vector3, face: Int, isClickedBlock: Boolean): Boolean = blockReplace.canBeReplaced()
+    open fun canBePlacedAt(
+        blockReplace: Block,
+        clickVector: Vector3,
+        face: Int,
+        isClickedBlock: Boolean
+    ): Boolean = blockReplace.canBeReplaced()
 
-    open fun place(tx: BlockTransaction, item: Item, blockReplace: Block, blockClicked: Block, face: Int, clickVector: Vector3, player: Player? = null): Boolean {
+    open fun place(
+        tx: BlockTransaction,
+        item: Item,
+        blockReplace: Block,
+        blockClicked: Block,
+        face: Int,
+        clickVector: Vector3,
+        player: Player? = null
+    ): Boolean {
         tx.addBlock(blockReplace.pos, this)
         return true
     }

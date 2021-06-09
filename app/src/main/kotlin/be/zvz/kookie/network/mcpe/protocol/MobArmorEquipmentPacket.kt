@@ -56,14 +56,13 @@ class MobArmorEquipmentPacket : DataPacket(), ClientboundPacket, ServerboundPack
             legs: ItemStackWrapper,
             feet: ItemStackWrapper,
         ): MobArmorEquipmentPacket {
-            val packet = MobArmorEquipmentPacket().apply {
+            return MobArmorEquipmentPacket().apply {
                 this.entityRuntimeId = entityRuntimeId
                 this.head = head
                 this.chest = chest
                 this.legs = legs
                 this.feet = feet
             }
-            return packet
         }
     }
 }

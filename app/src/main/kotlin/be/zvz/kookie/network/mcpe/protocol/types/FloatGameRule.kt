@@ -19,7 +19,7 @@ package be.zvz.kookie.network.mcpe.protocol.types
 
 import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 
-class FloatGameRule(private val value: Float) : GameRule() {
+class FloatGameRule(private val value: Float, override val playerModifiable: Boolean) : GameRule(playerModifiable) {
 
     override val typeId = GameRuleType.FLOAT
 
@@ -30,6 +30,7 @@ class FloatGameRule(private val value: Float) : GameRule() {
     }
 
     companion object {
-        fun decode(input: PacketSerializer) = FloatGameRule(input.getLFloat())
+        fun decode(input: PacketSerializer, playerModifiable: Boolean) =
+            FloatGameRule(input.getLFloat(), playerModifiable)
     }
 }

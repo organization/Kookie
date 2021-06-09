@@ -20,7 +20,7 @@ package be.zvz.kookie.network.mcpe.protocol.types.inventory.stackrequest
 import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 
 @ItemStackRequestIdentify(ItemStackRequestActionType.LAB_TABLE_COMBINE)
-class LabTableCombineStackRequestAction() : ItemStackRequestAction() {
+class LabTableCombineStackRequestAction : ItemStackRequestAction() {
     override fun write(out: PacketSerializer) {
     }
 
