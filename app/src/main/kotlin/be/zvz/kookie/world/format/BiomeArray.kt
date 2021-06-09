@@ -38,13 +38,18 @@ class BiomeArray(var payload: String) {
         }
     }
 
-    fun get(x: Int, z: Int): Int = payload[idx(x, z)].code
+    operator fun get(index: Int): Int = payload[index].code
+    operator fun get(x: Int, z: Int): Int = payload[idx(x, z)].code
 
-    fun set(x: Int, z: Int, biomeId: Int) {
+    operator fun set(index: Int, biomeId: Int) {
         if (biomeId !in 0 until 256) {
             throw IllegalArgumentException("Biome ID must be in the range 0-255")
         }
 
-        payload = payload.replaceRange(idx(x, z)..idx(x, z), biomeId.toString())
+        payload = payload.replaceRange(index..index, biomeId.toString())
+    }
+
+    operator fun set(x: Int, z: Int, biomeId: Int) {
+        this[idx(x, z)] = biomeId
     }
 }

@@ -24,9 +24,14 @@ class HeightArray(val values: MutableList<Int> = mutableListOf()) {
         }
     }
 
-    fun get(x: Int, z: Int): Int = values[idx(x, z)]
+    operator fun get(index: Int): Int = values[index]
+    operator fun get(x: Int, z: Int): Int = values[idx(x, z)]
 
-    fun set(x: Int, z: Int, height: Int) {
+    operator fun set(index: Int, height: Int) {
+        values[index] = height
+    }
+
+    operator fun set(x: Int, z: Int, height: Int) {
         values[idx(x, z)] = height
     }
 
