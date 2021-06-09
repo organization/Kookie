@@ -29,7 +29,7 @@ class EntityMetadataCollection {
     private val dirtyProperties: MutableMap<Int, MetadataProperty> = HashIntObjMaps.newMutableMap()
 
     fun set(key: Int, value: MetadataProperty, force: Boolean = false) {
-        val v = properties.getOrDefault(key, null)
+        val v = properties[key]
         if (!force && v === null && !(value::class.java.isInstance(properties[key]))) {
             throw AssertionError("Can't overwrite property with mismatching type (have ${value::class.java.simpleName})")
         }
@@ -82,7 +82,7 @@ class EntityMetadataCollection {
             EntityMetadataProperties.FLAGS
         }
         val realFlagId = flagId % 64
-        var flagSet = when (val flagSetProp = properties.getOrDefault(propertyId, null)) {
+        var flagSet = when (val flagSetProp = properties[propertyId]) {
             null -> {
                 0
             }
@@ -100,7 +100,7 @@ class EntityMetadataCollection {
     }
 
     fun setPlayerFlag(flagId: Int, value: Boolean) {
-        var flagSet = when (val flagSetProp = properties.getOrDefault(EntityMetadataProperties.PLAYER_FLAGS, null)) {
+        var flagSet = when (val flagSetProp = properties[EntityMetadataProperties.PLAYER_FLAGS]) {
             null -> {
                 0
             }
