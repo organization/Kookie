@@ -17,7 +17,11 @@
  */
 package be.zvz.kookie.entity
 
+import be.zvz.kookie.network.mcpe.protocol.types.entity.EntityIds
+
 open class Human(location: Location) : Living(location) {
+
+    override val entityNetworkIdentifier = EntityIds.PLAYER
 
     override fun getInitialSizeInfo(): EntitySizeInfo = EntitySizeInfo(1.8F, 0.6F, 1.62F)
 }

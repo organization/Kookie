@@ -30,6 +30,7 @@ import be.zvz.kookie.nbt.tag.StringTag
 import be.zvz.kookie.network.mcpe.protocol.AddActorPacket
 import be.zvz.kookie.network.mcpe.protocol.MoveActorAbsolutePacket
 import be.zvz.kookie.network.mcpe.protocol.SetActorMotionPacket
+import be.zvz.kookie.network.mcpe.protocol.types.entity.EntityIds
 import be.zvz.kookie.network.mcpe.protocol.types.entity.EntityMetadataCollection
 import be.zvz.kookie.network.mcpe.protocol.types.entity.EntityMetadataFlags
 import be.zvz.kookie.network.mcpe.protocol.types.entity.EntityMetadataProperties
@@ -127,7 +128,7 @@ abstract class Entity @JvmOverloads constructor(var location: Location, nbt: Com
     protected var ownerId: Long? = null
     protected var targetId: Long? = null
 
-    abstract val entityNetworkIdentifier: String
+    abstract val entityNetworkIdentifier: EntityIds
 
     init {
         location = location.asLocation()
@@ -1022,7 +1023,7 @@ abstract class Entity @JvmOverloads constructor(var location: Location, nbt: Com
     fun sendSpawnPacket(player: Player) {
         val pk = AddActorPacket()
         pk.entityRuntimeId = getId()
-        pk.type = entityNetworkIdentifier
+        pk.type = entityNetworkIdentifier.value
         pk.position = location.asVector3()
         pk.motion = motion
         pk.yaw = location.yaw.toFloat()
