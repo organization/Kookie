@@ -55,4 +55,41 @@ object EntityDataHelper {
         }
         return Vector3((values[0] as DoubleTag).value, (values[1] as DoubleTag).value, (values[2] as DoubleTag).value)
     }
+
+    fun createBaseNBT(pos: Vector3, motion: Vector3? = null, yaw: Double = 0.0, pitch: Double = 0.0): CompoundTag {
+        val nbt = CompoundTag.create()
+        nbt.setTag(
+            "Pos",
+            ListTag(
+                listOf(
+                    DoubleTag(pos.x),
+                    DoubleTag(pos.y),
+                    DoubleTag(pos.z)
+                )
+            )
+        )
+        nbt.setTag(
+            "Motion",
+            ListTag(
+                listOf(
+                    DoubleTag(motion?.x ?: 0.0),
+                    DoubleTag(motion?.y ?: 0.0),
+                    DoubleTag(motion?.z ?: 0.0)
+                )
+            )
+        )
+        nbt.setTag(
+            "Rotation",
+            ListTag(
+                listOf(
+                    DoubleTag(yaw),
+                    DoubleTag(pitch)
+                )
+            )
+        )
+        return nbt
+    }
+
+    fun createBaseNBT(location: Location, motion: Vector3? = null): CompoundTag =
+        createBaseNBT(location.asVector3(), motion, location.yaw, location.pitch)
 }

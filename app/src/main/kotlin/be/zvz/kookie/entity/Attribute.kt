@@ -17,6 +17,9 @@
  */
 package be.zvz.kookie.entity
 
+import kotlin.math.max
+import kotlin.math.min
+
 class Attribute @JvmOverloads constructor(
     val id: Identifier,
     minValue: Float,
@@ -70,6 +73,23 @@ class Attribute @JvmOverloads constructor(
 
     fun isSyncable(): Boolean = shouldSend
     fun isDesynchronized(): Boolean = shouldSend && desynchronized
+
+    fun setValue(value: Float, fit: Boolean = false, forceSend: Boolean = false) {
+        var value = value
+        if (value > maxValue || value < minValue) {
+            if (!fit) {
+                throw IllegalArgumentException("Value $value is outside the range $minValue - $maxValue")
+            }
+        }
+        value = min(max(value, minValue), maxValue)
+
+        if (currentValue != value) {
+            desynchronized = true
+            currentValue = value
+        } else if (forceSend) {
+            desynchronized = true
+        }
+    }
 
     @JvmOverloads
     fun markSynchronized(synced: Boolean = true) {

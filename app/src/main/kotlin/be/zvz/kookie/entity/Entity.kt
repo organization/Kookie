@@ -57,10 +57,10 @@ abstract class Entity @JvmOverloads constructor(var location: Location, nbt: Com
 
     private val entityRuntimeId: Long = nextRuntimeId()
 
-    private val networkProperties = EntityMetadataCollection()
+    val networkProperties = EntityMetadataCollection()
 
     // TODO: fill this when event system is implemented
-    private var lastDamageCause: Any? = null
+    var lastDamageCause: Any? = null
 
     protected var blocksAround: MutableList<Block>? = mutableListOf()
 
@@ -76,7 +76,7 @@ abstract class Entity @JvmOverloads constructor(var location: Location, nbt: Com
     private lateinit var size: EntitySizeInfo
 
     private var health: Float = 20F
-    private var maxHealth: Int = 20
+    open var maxHealth: Int = 20
 
     protected var ySize: Float = 0F
     protected var stepHeight: Float = 0F
@@ -141,7 +141,7 @@ abstract class Entity @JvmOverloads constructor(var location: Location, nbt: Com
         boundingBox = AxisAlignedBB(0.0, 0.0, 0.0, 0.0, 0.0, 0.0)
         recalculateBoundingBox()
 
-        motion = if (nbt != null) {
+        motion = if (nbt !== null) {
             EntityDataHelper.parseVec3(nbt, "Motion", true)
         } else {
             Vector3()
@@ -161,11 +161,10 @@ abstract class Entity @JvmOverloads constructor(var location: Location, nbt: Com
         scheduleUpdate()
     }
 
-    fun getWorld(): World {
-        return location.world!!
-    }
+    val world: World
+        get() = location.world ?: throw AssertionError("Position world is null or has been unloaded")
 
-    fun recalculateBoundingBox() {
+    open fun recalculateBoundingBox() {
         val halfWidth = size.width / 2
         boundingBox = AxisAlignedBB(
             location.x - halfWidth,
@@ -177,15 +176,15 @@ abstract class Entity @JvmOverloads constructor(var location: Location, nbt: Com
         )
     }
 
-    fun resetLastMovement() {
+    open fun resetLastMovement() {
         lastLocation = location.asLocation()
         lastMotion = motion.clone()
     }
 
-    fun addAttributes() {
+    open fun addAttributes() {
     }
 
-    protected fun initEntity(nbt: CompoundTag) {
+    protected open fun initEntity(nbt: CompoundTag) {
         // JLS 7 17.5
         timings = Timings.getEntityTimings(this)
         size = getInitialSizeInfo()
@@ -205,17 +204,31 @@ abstract class Entity @JvmOverloads constructor(var location: Location, nbt: Com
         }
     }
 
+    open fun saveNBT(): CompoundTag = EntityDataHelper.createBaseNBT(location, motion).also { compoundTag ->
+        if (this !is Player) {
+            EntityFactory.injectSaveId(this::class.java, nbt)
+
+            if (nameTag != "") {
+                compoundTag.setString("CustomName", nameTag)
+                compoundTag.setByte("CustomNameVisible", if (nameTagVisible) 1 else 0)
+            }
+        }
+        compoundTag.setFloat("FallDistance", fallDistance)
+        compoundTag.setShort("Fire", fireTicks.toInt())
+        compoundTag.setByte("OnGround", if (onGround) 1 else 0)
+    }
+
     abstract fun getInitialSizeInfo(): EntitySizeInfo
 
-    fun attack(source: Any) {
+    open fun attack(source: Any) {
         TODO("Requires event implementation")
     }
 
-    fun heal(source: Any) {
+    open fun heal(source: Any) {
         TODO("Requires event implementation")
     }
 
-    fun kill() {
+    open fun kill() {
         if (isAlive()) {
             health = 0F
             onDeath()
@@ -223,16 +236,16 @@ abstract class Entity @JvmOverloads constructor(var location: Location, nbt: Com
         }
     }
 
-    protected fun onDeath() {
+    protected open fun onDeath() {
     }
 
-    protected fun onDeathUpdate(tickDiff: Long): Boolean {
+    protected open fun onDeathUpdate(tickDiff: Long): Boolean {
         return true
     }
 
     fun getHealth(): Float = health
 
-    fun setHealth(amount: Float) {
+    open fun setHealth(amount: Float) {
         if (amount == health) {
             return
         }
@@ -250,21 +263,7 @@ abstract class Entity @JvmOverloads constructor(var location: Location, nbt: Com
         }
     }
 
-    fun getMaxHealth(): Int = maxHealth
-
-    fun setMaxHealth(amount: Int) {
-        maxHealth = amount
-    }
-
-    fun setLastDamageCause(type: Any) {
-        lastDamageCause = type
-    }
-
-    fun getLastDamageCause(): Any? = lastDamageCause
-
-    fun getNetworkProperties(): EntityMetadataCollection = networkProperties
-
-    protected fun entityBaseTick(tickDiff: Long): Boolean {
+    protected open fun entityBaseTick(tickDiff: Long): Boolean {
         if (justCreated) {
             justCreated = false
             if (!isAlive()) {
@@ -349,13 +348,6 @@ abstract class Entity @JvmOverloads constructor(var location: Location, nbt: Com
     }
 
     fun getAllNetworkData(): MutableMap<Int, MetadataProperty> {
-        /*
-        if($this->networkPropertiesDirty){
-			$this->syncNetworkData($this->networkProperties);
-			$this->networkPropertiesDirty = false;
-		}
-		return $this->networkProperties->getAll();
-         */
         if (networkPropertiesDirty) {
             syncNetworkData(networkProperties)
             networkPropertiesDirty = false
@@ -363,7 +355,7 @@ abstract class Entity @JvmOverloads constructor(var location: Location, nbt: Com
         return networkProperties.getAll()
     }
 
-    fun setOnFire(seconds: Long) {
+    open fun setOnFire(seconds: Long) {
         val ticks = seconds * 20
         if (ticks > fireTicks) {
             fireTicks
@@ -402,15 +394,15 @@ abstract class Entity @JvmOverloads constructor(var location: Location, nbt: Com
         fireTicks = 0
     }
 
-    protected fun dealFireDamage() {
+    protected open fun dealFireDamage() {
         // TODO: attack(EntityDamageEvent) here
     }
 
-    fun canCollideWith(entity: Entity): Boolean = !justCreated && entity != this
+    open fun canCollideWith(entity: Entity): Boolean = !justCreated && entity != this
 
-    fun canBeCollidedWith(): Boolean = isAlive()
+    open fun canBeCollidedWith(): Boolean = isAlive()
 
-    protected fun updateMovement(teleport: Boolean = false) {
+    protected open fun updateMovement(teleport: Boolean = false) {
         val diffPosition = location.distanceSquared(lastLocation)
         val diffRotation = (location.yaw - lastLocation.yaw).pow(2) + (location.pitch - lastLocation.pitch).pow(2)
 
@@ -434,9 +426,9 @@ abstract class Entity @JvmOverloads constructor(var location: Location, nbt: Com
         }
     }
 
-    fun getOffsetPosition(vector: Vector3): Vector3 = vector
+    open fun getOffsetPosition(vector: Vector3): Vector3 = vector
 
-    fun broadcastMovement(teleport: Boolean = false) {
+    open fun broadcastMovement(teleport: Boolean = false) {
         val packet = MoveActorAbsolutePacket.create(
             entityRuntimeId,
             getOffsetPosition(location),
@@ -456,20 +448,20 @@ abstract class Entity @JvmOverloads constructor(var location: Location, nbt: Com
         // TODO: server.broadcastPackets(hasSpawned, listOf(packet))
     }
 
-    fun broadcastMotion() {
+    open fun broadcastMotion() {
         val packet = SetActorMotionPacket.create(entityRuntimeId, motion)
         // TODO: server.broadcastPackets(hasSpawned, listOf(packet))
     }
 
-    fun hasGravity(): Boolean = gravityEnabled
+    open fun hasGravity(): Boolean = gravityEnabled
 
-    fun setHasGravityEnabled(v: Boolean = true) {
+    open fun setHasGravityEnabled(v: Boolean = true) {
         gravityEnabled = v
     }
 
-    protected fun applyDragBeforeGravity(): Boolean = false
+    protected open fun applyDragBeforeGravity(): Boolean = false
 
-    protected fun tryChangeMovement() {
+    protected open fun tryChangeMovement() {
         val friction = 1 - drag
 
         var mY = motion.y
@@ -492,8 +484,8 @@ abstract class Entity @JvmOverloads constructor(var location: Location, nbt: Com
         motion = Vector3(motion.x * friction, mY, motion.z * friction)
     }
 
-    fun checkObstruction(x: Float, y: Float, z: Float): Boolean {
-        val world = getWorld()
+    open fun checkObstruction(x: Float, y: Float, z: Float): Boolean {
+        val worldT = world
         /*
         TODO:
         if (world.getCollisionBoxes(this, getBoundingBox(), false).size == 0) {
@@ -614,7 +606,7 @@ abstract class Entity @JvmOverloads constructor(var location: Location, nbt: Com
         return Vector2(-cos(Math.toRadians(location.yaw) - PI), -sin(Math.toRadians(location.yaw) - PI)).normalize()
     }
 
-    fun onUpdate(currentTick: Long): Boolean {
+    open fun onUpdate(currentTick: Long): Boolean {
         if (closed) {
             return false
         }
@@ -658,16 +650,16 @@ abstract class Entity @JvmOverloads constructor(var location: Location, nbt: Com
         return hasUpdate
     }
 
-    fun onNearByBlockChange() {
+    open fun onNearByBlockChange() {
         forceMovementUpdate = true
         scheduleUpdate()
     }
 
-    fun onRandomUpdate() {
+    open fun onRandomUpdate() {
         scheduleUpdate()
     }
 
-    fun hasMovementUpdate(): Boolean {
+    open fun hasMovementUpdate(): Boolean {
         return forceMovementUpdate ||
             motion.x != 0.0 ||
             motion.y != 0.0 ||
@@ -675,11 +667,11 @@ abstract class Entity @JvmOverloads constructor(var location: Location, nbt: Com
             !onGround
     }
 
-    fun resetFallDistance() {
+    open fun resetFallDistance() {
         fallDistance = 0F
     }
 
-    protected fun updateFallState(distanceThisTick: Long, onGround: Boolean) {
+    protected open fun updateFallState(distanceThisTick: Long, onGround: Boolean) {
         if (onGround) {
             if (fallDistance > 0) {
                 fall(fallDistance)
@@ -692,17 +684,17 @@ abstract class Entity @JvmOverloads constructor(var location: Location, nbt: Com
         }
     }
 
-    fun fall(fallDistance: Float) {
+    open fun fall(fallDistance: Float) {
     }
 
     fun getEyeHeight(): Float = size.eyeHeight!!
 
     fun getEyePos(): Vector3 = Vector3(location.x, location.y + getEyeHeight(), location.z)
 
-    fun onCollideWithPlayer(player: Player) {
+    open fun onCollideWithPlayer(player: Player) {
     }
 
-    fun isInsideOfSolid(): Boolean {
+    open fun isInsideOfSolid(): Boolean {
         /*
         TODO:
         val block = getWorld().getBlockAt(floor(location.x).toInt(), floor(location.y + getEyeHeight()).toInt(), floor(location.z).toInt())
@@ -711,7 +703,7 @@ abstract class Entity @JvmOverloads constructor(var location: Location, nbt: Com
         return false
     }
 
-    fun isUnderWater(): Boolean {
+    open fun isUnderWater(): Boolean {
         /*
         val block = getWorld().getBlockAt(floor(location.x).toInt(), floor(location.y + getEyeHeight()).toInt(), floor(location.z).toInt())
         if (block is Water) {
@@ -724,7 +716,7 @@ abstract class Entity @JvmOverloads constructor(var location: Location, nbt: Com
         return false
     }
 
-    fun move(dx: Double, dy: Double, dz: Double) {
+    open fun move(dx: Double, dy: Double, dz: Double) {
         var dx = dx
         var dy = dy
         var dz = dz
@@ -845,14 +837,14 @@ abstract class Entity @JvmOverloads constructor(var location: Location, nbt: Com
         // Timings.entityMove.stopTiming()
     }
 
-    fun checkGroundState(movX: Double, movY: Double, movZ: Double, dx: Double, dy: Double, dz: Double) {
+    open fun checkGroundState(movX: Double, movY: Double, movZ: Double, dx: Double, dy: Double, dz: Double) {
         isCollidedVertically = movY != dy
         isCollidedHorizontally = (movX != dx || movZ != dz)
         isCollided = isCollidedHorizontally || isCollidedVertically
         onGround = movY != dy && movY < 0
     }
 
-    fun getBlocksAroundWithEntityInsideActions(): MutableList<Block> {
+    open fun getBlocksAroundWithEntityInsideActions(): MutableList<Block> {
         if (blocksAround == null) {
             val inset = 0.001
 
@@ -865,17 +857,17 @@ abstract class Entity @JvmOverloads constructor(var location: Location, nbt: Com
 
             blocksAround = mutableListOf()
 
-            val world = getWorld()
-
-            for (z in minZ until maxZ) {
-                for (x in minX until maxX) {
-                    for (y in minY until maxY) {
-                        /*
-                        val block = world.getBlockAt(x, y, z)
-                        if (block.hasEntityCollision()) {
-                            blocksAround?.add(block)
+            world.let {
+                for (z in minZ until maxZ) {
+                    for (x in minX until maxX) {
+                        for (y in minY until maxY) {
+                            /*
+                            val block = world.getBlockAt(x, y, z)
+                            if (block.hasEntityCollision()) {
+                                blocksAround?.add(block)
+                            }
+                             */
                         }
-                         */
                     }
                 }
             }
@@ -883,9 +875,9 @@ abstract class Entity @JvmOverloads constructor(var location: Location, nbt: Com
         return blocksAround as MutableList<Block>
     }
 
-    fun canBeMovedByCurrents(): Boolean = true
+    open fun canBeMovedByCurrents(): Boolean = true
 
-    fun checkBlockCollision() {
+    open fun checkBlockCollision() {
         val vectors = mutableListOf<Vector3>()
 
         getBlocksAroundWithEntityInsideActions().forEach {
@@ -915,7 +907,7 @@ abstract class Entity @JvmOverloads constructor(var location: Location, nbt: Com
             return false
         }
 
-        val oldWorld = getWorld()
+        val oldWorld = world
 
         val newWorld = if (pos is Position) pos.world else oldWorld
 
@@ -976,7 +968,7 @@ abstract class Entity @JvmOverloads constructor(var location: Location, nbt: Com
         this.motion = motion.add(motion)
     }
 
-    fun teleport(pos: Vector3, yaw: Double? = null, pitch: Double? = null): Boolean {
+    open fun teleport(pos: Vector3, yaw: Double? = null, pitch: Double? = null): Boolean {
         val yaw = if (pos is Location) {
             if (yaw == null) {
                 pos.yaw
@@ -997,7 +989,7 @@ abstract class Entity @JvmOverloads constructor(var location: Location, nbt: Com
         }
 
         val from = location.asPosition()
-        val to = Position.fromObject(pos, if (pos is Position) pos.world else getWorld())
+        val to = Position.fromObject(pos, if (pos is Position) pos.world else world)
         /*
         TODO:
         ev = EntityTeleportEvent(this, from, to)
@@ -1020,7 +1012,7 @@ abstract class Entity @JvmOverloads constructor(var location: Location, nbt: Com
 
     fun getViewers(): MutableMap<Long, Player> = hasSpawned
 
-    fun sendSpawnPacket(player: Player) {
+    open fun sendSpawnPacket(player: Player) {
         val pk = AddActorPacket()
         pk.entityRuntimeId = getId()
         pk.type = entityNetworkIdentifier.value
@@ -1037,7 +1029,7 @@ abstract class Entity @JvmOverloads constructor(var location: Location, nbt: Com
         player.session.sendDataPacket(pk)
     }
 
-    fun spawnTo(player: Player) {
+    open fun spawnTo(player: Player) {
         // TODO
         if (
             !hasSpawned.containsKey(player.getId())
@@ -1048,7 +1040,7 @@ abstract class Entity @JvmOverloads constructor(var location: Location, nbt: Com
         }
     }
 
-    fun spawnToAll() {
+    open fun spawnToAll() {
         if (closed) {
             return
         }
@@ -1060,7 +1052,7 @@ abstract class Entity @JvmOverloads constructor(var location: Location, nbt: Com
          */
     }
 
-    fun respawnToAll() {
+    open fun respawnToAll() {
         hasSpawned.apply {
             val iterator = iterator()
             while (iterator.hasNext()) {
@@ -1071,7 +1063,7 @@ abstract class Entity @JvmOverloads constructor(var location: Location, nbt: Com
         }
     }
 
-    fun despawnFrom(player: Player, send: Boolean = true) {
+    open fun despawnFrom(player: Player, send: Boolean = true) {
         /*
         $id = spl_object_id($player);
 		if(isset($this->hasSpawned[$id])){
@@ -1090,13 +1082,13 @@ abstract class Entity @JvmOverloads constructor(var location: Location, nbt: Com
         }
     }
 
-    fun despawnFromAll() {
+    open fun despawnFromAll() {
         hasSpawned.forEach { (_, player) ->
             despawnFrom(player)
         }
     }
 
-    fun flagForDespawn() {
+    open fun flagForDespawn() {
         needsDespawn = true
         scheduleUpdate()
     }
@@ -1120,14 +1112,14 @@ abstract class Entity @JvmOverloads constructor(var location: Location, nbt: Com
         }
     }
 
-    fun onDispose() {
+    open fun onDispose() {
         despawnFromAll()
         if (location.isValid()) {
             // TODO: getWorld().removeEntity(this)
         }
     }
 
-    fun destroyCycles() {
+    open fun destroyCycles() {
         // FIXME: location = null???
         lastDamageCause = null
     }

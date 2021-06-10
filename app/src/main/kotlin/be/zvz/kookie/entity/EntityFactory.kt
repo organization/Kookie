@@ -55,7 +55,7 @@ object EntityFactory {
         }
     }
 
-    fun injectSaveId(clazz: Class<Entity>, saveData: CompoundTag) {
+    fun injectSaveId(clazz: Class<out Entity>, saveData: CompoundTag) {
         if (saveNames.containsKey(clazz)) {
             saveData.setTag("id", StringTag(saveNames.getValue(clazz)))
         } else {
@@ -63,7 +63,7 @@ object EntityFactory {
         }
     }
 
-    fun getSaveId(clazz: Class<Entity>): String = if (saveNames.containsKey(clazz)) {
+    fun getSaveId(clazz: Class<out Entity>): String = if (saveNames.containsKey(clazz)) {
         saveNames.getValue(clazz)
     } else {
         throw IllegalArgumentException("Entity ${clazz.simpleName} is not registered")
