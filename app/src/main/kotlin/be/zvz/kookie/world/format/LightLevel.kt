@@ -24,6 +24,24 @@ data class LightLevel(val value: Int) {
         }
     }
 
+    operator fun plus(i: LightLevel): LightLevel = LightLevel(value + i.value)
+    operator fun plus(i: Int): LightLevel = LightLevel(value + i)
+
+    operator fun minus(i: LightLevel): LightLevel = LightLevel(value - i.value)
+    operator fun minus(i: Int): LightLevel = LightLevel(value - i)
+
+    operator fun compareTo(newLevel: LightLevel): Int = when {
+        value < newLevel.value -> -1
+        value > newLevel.value -> 1
+        else -> 0
+    }
+
+    operator fun compareTo(newLevel: Int): Int = when {
+        value < newLevel -> -1
+        value > newLevel -> 1
+        else -> 0
+    }
+
     companion object {
         const val MAX = 15
     }
