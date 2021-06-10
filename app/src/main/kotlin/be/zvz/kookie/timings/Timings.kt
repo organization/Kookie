@@ -79,9 +79,13 @@ object Timings {
         var entityType = entity::class.java.simpleName
         if (!entityTimings.containsKey(entityType)) {
             if (entity is Player) {
-                entityTimings[entityType] = TimingsHandler(INCLUDED_BY_OTHER_TIMINGS_PREFIX + "tickEntity - EntityPlayer", tickEntity)
+                entityTimings[entityType] = TimingsHandler(
+                    INCLUDED_BY_OTHER_TIMINGS_PREFIX + "tickEntity - EntityPlayer", tickEntity
+                )
             } else {
-                entityTimings[entityType] = TimingsHandler(INCLUDED_BY_OTHER_TIMINGS_PREFIX + "tickEntity - $entityType", tickEntity)
+                entityTimings[entityType] = TimingsHandler(
+                    INCLUDED_BY_OTHER_TIMINGS_PREFIX + "tickEntity - $entityType", tickEntity
+                )
             }
         }
         return entityTimings[entityType]!!
