@@ -100,7 +100,7 @@ class SkyLightUpdate(
         // setAndUpdateLight() won't bother propagating from nodes that are already what we want to change them to, so we
         // have to avoid filling full light for any subchunk that contains a heightmap Y coordinate
         val highestHeightMapPlusOne = (chunk.heightMap.values.maxOrNull() ?: 0) + 1
-        val lowestClearSubChunk = (highestHeightMapPlusOne shr 4) + (if ((highestHeightMapPlusOne and 0xf) != 0) 1 else 0)
+        val lowestClearSubChunk = (highestHeightMapPlusOne shr 4) + if (highestHeightMapPlusOne and 0xf != 0) 1 else 0
         val chunkHeight = chunk.subChunks.size
 
         var y1 = 0
@@ -180,7 +180,7 @@ class SkyLightUpdate(
                     for (subChunkY in maxSubChunkY downTo 0) {
                         val subHighestBlockY = chunk.getSubChunk(subChunkY).getHighestBlockAt(x, z)
                         if (subHighestBlockY !== null) {
-                            y = (subChunkY * 16) + subHighestBlockY
+                            y = subChunkY * 16 + subHighestBlockY
                             break
                         }
                     }
