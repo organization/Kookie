@@ -19,6 +19,7 @@ package be.zvz.kookie.entity
 
 import be.zvz.kookie.Server
 import be.zvz.kookie.block.Block
+import be.zvz.kookie.entity.animation.Animation
 import be.zvz.kookie.math.AxisAlignedBB
 import be.zvz.kookie.math.Facing
 import be.zvz.kookie.math.Vector2
@@ -26,15 +27,18 @@ import be.zvz.kookie.math.Vector3
 import be.zvz.kookie.nbt.tag.ByteTag
 import be.zvz.kookie.nbt.tag.CompoundTag
 import be.zvz.kookie.nbt.tag.StringTag
+import be.zvz.kookie.network.mcpe.protocol.AddActorPacket
 import be.zvz.kookie.network.mcpe.protocol.MoveActorAbsolutePacket
 import be.zvz.kookie.network.mcpe.protocol.SetActorMotionPacket
 import be.zvz.kookie.network.mcpe.protocol.types.entity.EntityMetadataCollection
 import be.zvz.kookie.network.mcpe.protocol.types.entity.EntityMetadataFlags
 import be.zvz.kookie.network.mcpe.protocol.types.entity.EntityMetadataProperties
 import be.zvz.kookie.network.mcpe.protocol.types.entity.MetadataProperty
+import be.zvz.kookie.network.mcpe.protocol.types.entity.NetworkAttribute
 import be.zvz.kookie.player.Player
 import be.zvz.kookie.timings.Timings
 import be.zvz.kookie.timings.TimingsHandler
+import be.zvz.kookie.world.Position
 import be.zvz.kookie.world.World
 import com.koloboke.collect.map.hash.HashLongObjMaps
 import kotlin.math.PI
@@ -57,7 +61,7 @@ abstract class Entity @JvmOverloads constructor(var location: Location, nbt: Com
     // TODO: fill this when event system is implemented
     private var lastDamageCause: Any? = null
 
-    protected val blocksAround = mutableListOf<Block>()
+    protected var blocksAround: MutableList<Block>? = mutableListOf()
 
     protected var lastLocation: Location = Location()
 
@@ -75,6 +79,7 @@ abstract class Entity @JvmOverloads constructor(var location: Location, nbt: Com
 
     protected var ySize: Float = 0F
     protected var stepHeight: Float = 0F
+    var keepMovement: Boolean = false
     var fallDistance: Float = 0F
     var ticksLived: Long = 0
     var lastUpdate: Long = 0
@@ -121,6 +126,8 @@ abstract class Entity @JvmOverloads constructor(var location: Location, nbt: Com
 
     protected var ownerId: Long? = null
     protected var targetId: Long? = null
+
+    abstract val entityNetworkIdentifier: String
 
     init {
         location = location.asLocation()
@@ -340,13 +347,19 @@ abstract class Entity @JvmOverloads constructor(var location: Location, nbt: Com
         return health > 0
     }
 
-    fun getAllNetworkData(): Any? {
-        // TODO
-        return null
-    }
-
-    fun checkBlockCollision() {
-        // TODO
+    fun getAllNetworkData(): MutableMap<Int, MetadataProperty> {
+        /*
+        if($this->networkPropertiesDirty){
+			$this->syncNetworkData($this->networkProperties);
+			$this->networkPropertiesDirty = false;
+		}
+		return $this->networkProperties->getAll();
+         */
+        if (networkPropertiesDirty) {
+            syncNetworkData(networkProperties)
+            networkPropertiesDirty = false
+        }
+        return networkProperties.getAll()
     }
 
     fun setOnFire(seconds: Long) {
@@ -688,7 +701,7 @@ abstract class Entity @JvmOverloads constructor(var location: Location, nbt: Com
     fun onCollideWithPlayer(player: Player) {
     }
 
-    fun isUnderWater(): Boolean {
+    fun isInsideOfSolid(): Boolean {
         /*
         TODO:
         val block = getWorld().getBlockAt(floor(location.x).toInt(), floor(location.y + getEyeHeight()).toInt(), floor(location.z).toInt())
@@ -697,159 +710,389 @@ abstract class Entity @JvmOverloads constructor(var location: Location, nbt: Com
         return false
     }
 
-    fun move(dx: Double, dy: Double, dz: Double) {
-        // TODO
+    fun isUnderWater(): Boolean {
         /*
-        $this->blocksAround = null;
+        val block = getWorld().getBlockAt(floor(location.x).toInt(), floor(location.y + getEyeHeight()).toInt(), floor(location.z).toInt())
+        if (block is Water) {
+            val y = floor(location.y + getEyeHeight()).toInt()
+            val f = (y + 1) - (block.getFluidHeightPercent() - 0.1111111)
+            return y < f
+        }
 
-		Timings::$entityMove->startTiming();
-
-		$movX = $dx;
-		$movY = $dy;
-		$movZ = $dz;
-
-		if($this->keepMovement){
-			$this->boundingBox->offset($dx, $dy, $dz);
-		}else{
-			$this->ySize *= self::STEP_CLIP_MULTIPLIER;
-
-			/*
-			if($this->isColliding){ //With cobweb?
-				$this->isColliding = false;
-				$dx *= 0.25;
-				$dy *= 0.05;
-				$dz *= 0.25;
-				$this->motionX = 0;
-				$this->motionY = 0;
-				$this->motionZ = 0;
-			}
-			*/
-
-			$moveBB = clone $this->boundingBox;
-
-			/*$sneakFlag = $this->onGround and $this instanceof Player;
-
-			if($sneakFlag){
-				for($mov = 0.05; $dx != 0.0 and count($this->world->getCollisionCubes($this, $this->boundingBox->getOffsetBoundingBox($dx, -1, 0))) === 0; $movX = $dx){
-					if($dx < $mov and $dx >= -$mov){
-						$dx = 0;
-					}elseif($dx > 0){
-						$dx -= $mov;
-					}else{
-						$dx += $mov;
-					}
-				}
-
-				for(; $dz != 0.0 and count($this->world->getCollisionCubes($this, $this->boundingBox->getOffsetBoundingBox(0, -1, $dz))) === 0; $movZ = $dz){
-					if($dz < $mov and $dz >= -$mov){
-						$dz = 0;
-					}elseif($dz > 0){
-						$dz -= $mov;
-					}else{
-						$dz += $mov;
-					}
-				}
-
-				//TODO: big messy loop
-			}*/
-
-			assert(abs($dx) <= 20 and abs($dy) <= 20 and abs($dz) <= 20, "Movement distance is excessive: dx=$dx, dy=$dy, dz=$dz");
-
-			$list = $this->getWorld()->getCollisionBoxes($this, $moveBB->addCoord($dx, $dy, $dz), false);
-
-			foreach($list as $bb){
-				$dy = $bb->calculateYOffset($moveBB, $dy);
-			}
-
-			$moveBB->offset(0, $dy, 0);
-
-			$fallingFlag = ($this->onGround or ($dy != $movY and $movY < 0));
-
-			foreach($list as $bb){
-				$dx = $bb->calculateXOffset($moveBB, $dx);
-			}
-
-			$moveBB->offset($dx, 0, 0);
-
-			foreach($list as $bb){
-				$dz = $bb->calculateZOffset($moveBB, $dz);
-			}
-
-			$moveBB->offset(0, 0, $dz);
-
-			if($this->stepHeight > 0 and $fallingFlag and ($movX != $dx or $movZ != $dz)){
-				$cx = $dx;
-				$cy = $dy;
-				$cz = $dz;
-				$dx = $movX;
-				$dy = $this->stepHeight;
-				$dz = $movZ;
-
-				$stepBB = clone $this->boundingBox;
-
-				$list = $this->getWorld()->getCollisionBoxes($this, $stepBB->addCoord($dx, $dy, $dz), false);
-				foreach($list as $bb){
-					$dy = $bb->calculateYOffset($stepBB, $dy);
-				}
-
-				$stepBB->offset(0, $dy, 0);
-
-				foreach($list as $bb){
-					$dx = $bb->calculateXOffset($stepBB, $dx);
-				}
-
-				$stepBB->offset($dx, 0, 0);
-
-				foreach($list as $bb){
-					$dz = $bb->calculateZOffset($stepBB, $dz);
-				}
-
-				$stepBB->offset(0, 0, $dz);
-
-				$reverseDY = -$dy;
-				foreach($list as $bb){
-					$reverseDY = $bb->calculateYOffset($stepBB, $reverseDY);
-				}
-				$dy += $reverseDY;
-				$stepBB->offset(0, $reverseDY, 0);
-
-				if(($cx ** 2 + $cz ** 2) >= ($dx ** 2 + $dz ** 2)){
-					$dx = $cx;
-					$dy = $cy;
-					$dz = $cz;
-				}else{
-					$moveBB = $stepBB;
-					$this->ySize += $dy;
-				}
-			}
-
-			$this->boundingBox = $moveBB;
-		}
-
-		$this->location = new Location(
-			($this->boundingBox->minX + $this->boundingBox->maxX) / 2,
-			$this->boundingBox->minY - $this->ySize,
-			($this->boundingBox->minZ + $this->boundingBox->maxZ) / 2,
-			$this->location->yaw,
-			$this->location->pitch,
-			$this->location->world
-		);
-
-		$this->getWorld()->onEntityMoved($this);
-		$this->checkBlockCollision();
-		$this->checkGroundState($movX, $movY, $movZ, $dx, $dy, $dz);
-		$this->updateFallState($dy, $this->onGround);
-
-		$this->motion = $this->motion->withComponents(
-			$movX != $dx ? 0 : null,
-			$movY != $dy ? 0 : null,
-			$movZ != $dz ? 0 : null
-		);
-
-		//TODO: vehicle collision events (first we need to spawn them!)
-
-		Timings::$entityMove->stopTiming();
          */
+        return false
+    }
+
+    fun move(dx: Double, dy: Double, dz: Double) {
+        var dx = dx
+        var dy = dy
+        var dz = dz
+        // TODO
+        blocksAround = null
+
+        // TODO: Timings.entityMove.startTiming()
+
+        val movX = dx
+        val movY = dy
+        val movZ = dz
+
+        if (keepMovement) {
+            boundingBox.offset(dx, dy, dz)
+        } else {
+            ySize *= STEP_CLIP_MULTIPLIER
+
+            var moveBB = boundingBox.clone()
+
+            assert(abs(dx) <= 20 && abs(dy) <= 20 && abs(dz) <= 20)
+
+            /*
+            TODO:
+            val list = getWorld().getCollisonBoxes(this, moveBB.addCoord(dx, dy, dz), false)
+            list.forEach {
+                dy = it.calculateYOffset(moveBB, dy)
+            }
+             */
+            moveBB.offset(0.0, dy, 0.0)
+
+            val fallingFlag = onGround || (dy != movY && movY < 0)
+            /*
+            list.forEach {
+                dx = it.calculateXOffset(moveBB, dx)
+            }
+             */
+            moveBB.offset(dx, 0.0, 0.0)
+            /*
+            list.forEach {
+                dz = it.calculateZOffset(moveBB, dz)
+            }
+            */
+
+            moveBB.offset(0.0, 0.0, dz)
+
+            if (stepHeight > 0 && fallingFlag && (movX != dx || movZ != dz)) {
+                val cx = dx
+                val cy = dy
+                val cz = dz
+                dx = movX
+                dy = stepHeight.toDouble()
+                dz = movZ
+
+                val stepBB = boundingBox.clone()
+
+                /*
+                val list = getWorld().getCollisionBoxes(this, stepBB.addCoord(dx, dy, dz), false)
+
+                list.forEach {
+                    dy = it.calculateYOffset(stepBB, dy)
+                }
+
+                stepBB.offset(0.0, dy, 0.0)
+
+                list.forEach {
+                    dx = it.calculateXOffset(stepBB, dx)
+                }
+
+                stepBB.offset(dx, 0.0, 0.0)
+
+                list.forEach {
+                    dz = it.calculateZOffset(stepBB, dz)
+                }
+
+                stepBB.offset(0.0, 0.0, dz)
+
+                var reverseDY = -dy
+
+                list.forEach {
+                    reverseDY = it.calculateYOffset(stepBB, reverseDY)
+                }
+                dy += reverseDY
+                stepBB.offset(0.0, reverseDY, 0.0)
+
+                if ((cx.pow(2) + cz.pow(2)) >= (dx.pow(2) + dz.pow(2))) {
+                    dx = cx
+                    dy = cy
+                    dz = cz
+                } else {
+                    moveBB = stepBB
+                    ySize += dy.toFloat()
+                }
+                
+                 */
+            }
+            boundingBox = moveBB
+        }
+
+        location = Location(
+            (boundingBox.minX + boundingBox.maxX) / 2,
+            boundingBox.minY - ySize,
+            (boundingBox.minZ + boundingBox.maxZ) / 2,
+            location.yaw,
+            location.pitch,
+            location.world
+        )
+
+        // getWorld().onEntityMoved(this)
+        checkBlockCollision()
+        checkGroundState(movX, movY, movZ, dx, dy, dz)
+        updateFallState(dy.toLong(), onGround)
+
+        motion = motion.withComponents(
+            if (movX != dx) 0 else null,
+            if (movY != dy) 0 else null,
+            if (movZ != dz) 0 else null
+        )
+        // Timings.entityMove.stopTiming()
+    }
+
+    fun checkGroundState(movX: Double, movY: Double, movZ: Double, dx: Double, dy: Double, dz: Double) {
+        isCollidedVertically = movY != dy
+        isCollidedHorizontally = (movX != dx || movZ != dz)
+        isCollided = isCollidedHorizontally || isCollidedVertically
+        onGround = movY != dy && movY < 0
+    }
+
+    fun getBlocksAroundWithEntityInsideActions(): MutableList<Block> {
+        if (blocksAround == null) {
+            val inset = 0.001
+
+            val minX = floor(boundingBox.minX + inset).toInt()
+            val minY = floor(boundingBox.minY + inset).toInt()
+            val minZ = floor(boundingBox.minZ + inset).toInt()
+            val maxX = floor(boundingBox.maxX - inset).toInt()
+            val maxY = floor(boundingBox.maxY - inset).toInt()
+            val maxZ = floor(boundingBox.maxZ - inset).toInt()
+
+            blocksAround = mutableListOf()
+
+            val world = getWorld()
+
+            for (z in minZ until maxZ) {
+                for (x in minX until maxX) {
+                    for (y in minY until maxY) {
+                        /*
+                        val block = world.getBlockAt(x, y, z)
+                        if (block.hasEntityCollision()) {
+                            blocksAround?.add(block)
+                        }
+                         */
+                    }
+                }
+            }
+        }
+        return blocksAround as MutableList<Block>
+    }
+
+    fun canBeMovedByCurrents(): Boolean = true
+
+    fun checkBlockCollision() {
+        val vectors = mutableListOf<Vector3>()
+
+        getBlocksAroundWithEntityInsideActions().forEach {
+            if (!it.onEntityInside(this)) {
+                blocksAround = null
+            }
+            val v = it.addVelocityToEntity(this)
+            if (v != null) {
+                vectors.add(v)
+            }
+        }
+        val vector = Vector3()
+        vectors.forEach {
+            vector.sum(it)
+        }
+
+        if (vector.lengthSquared() > 0) {
+            val d = 0.014
+            motion.add(vector.normalize().multiply(d))
+        }
+    }
+
+    fun getPosition(): Position = location.asPosition()
+
+    fun setPosition(pos: Vector3): Boolean {
+        if (!closed) {
+            return false
+        }
+
+        val oldWorld = getWorld()
+
+        val newWorld = if (pos is Position) pos.world else oldWorld
+
+        if (oldWorld != newWorld) {
+            // despawnFromAll()
+            // oldWorld.removeEntity(this)
+        }
+
+        location = Location.fromObject(pos, newWorld, location.yaw, location.pitch)
+        recalculateBoundingBox()
+
+        blocksAround = null
+
+        if (oldWorld != newWorld) {
+            // newWorld.addEntity(this)
+        } else {
+            // newWorld.onEntityMoved(this)
+        }
+        return true
+    }
+
+    fun setRotation(yaw: Double, pitch: Double) {
+        location.yaw = yaw
+        location.pitch = pitch
+        scheduleUpdate()
+    }
+
+    protected fun setPositionAndRotation(pos: Vector3, yaw: Double, pitch: Double): Boolean {
+        if (setPosition(pos)) {
+            setRotation(yaw, pitch)
+            return true
+        }
+        return false
+    }
+
+    fun setMotion(motion: Vector3): Boolean {
+        if (!justCreated) {
+            // TODO:
+            // ev = EntityMotionEvent(this, motion)
+            // ev.call()
+            // if (ev.isCancelled()) {
+            //     return false
+            // }
+        }
+        this.motion = motion.clone()
+
+        if (!justCreated) {
+            updateMovement()
+        }
+        return true
+    }
+
+    fun addMotion(x: Double, y: Double, z: Double) {
+        motion = motion.add(x, y, z)
+    }
+
+    fun addMotion(motion: Vector3) {
+        this.motion = motion.add(motion)
+    }
+
+    fun teleport(pos: Vector3, yaw: Double? = null, pitch: Double? = null): Boolean {
+        val yaw = if (pos is Location) {
+            if (yaw == null) {
+                pos.yaw
+            } else {
+                yaw
+            }
+        } else {
+            location.yaw
+        }
+        val pitch = if (pos is Location) {
+            if (pitch == null) {
+                pos.pitch
+            } else {
+                pitch
+            }
+        } else {
+            location.pitch
+        }
+
+        val from = location.asPosition()
+        val to = Position.fromObject(pos, if (pos is Position) pos.world else getWorld())
+        /*
+        TODO:
+        ev = EntityTeleportEvent(this, from, to)
+        ev.call()
+        if (ev.isCancelled()) {
+            return false
+        }
+         */
+        setMotion(Vector3(0, 0, 0))
+        if (setPositionAndRotation(pos, yaw, pitch)) {
+            resetFallDistance()
+            forceMovementUpdate = true
+            updateMovement(true)
+            return true
+        }
+        return false
+    }
+
+    fun getId(): Long = entityRuntimeId
+
+    fun getViewers(): MutableMap<Long, Player> = hasSpawned
+
+    fun sendSpawnPacket(player: Player) {
+        val pk = AddActorPacket()
+        pk.entityRuntimeId = getId()
+        pk.type = entityNetworkIdentifier
+        pk.position = location.asVector3()
+        pk.motion = motion
+        pk.yaw = location.yaw.toFloat()
+        pk.headYaw = location.yaw.toFloat()
+        pk.pitch = location.pitch.toFloat()
+        attributeMap.getAll().forEach { (_, attr) ->
+            pk.attributes.add(NetworkAttribute(attr.id, attr.minValue, attr.maxValue, attr.currentValue, attr.defaultValue))
+        }
+        pk.metadata = getAllNetworkData()
+
+        player.session.sendDataPacket(pk)
+    }
+
+    fun spawnTo(player: Player) {
+        // TODO
+        if (
+            !hasSpawned.containsKey(player.getId())
+            /* && player.hasReceovedChunk(floor(location.x).toInt() shr 4, floor(location.z).toInt() shr 4)*/
+        ) {
+            hasSpawned[player.getId()] = player
+            sendSpawnPacket(player)
+        }
+    }
+
+    fun spawnToAll() {
+        if (closed) {
+            return
+        }
+        /*
+        TODO:
+        getWorld().getViewersForPosition(location).forEach {
+            spawnTo(it)
+        }
+         */
+    }
+
+    fun respawnToAll() {
+        hasSpawned.apply {
+            val iterator = iterator()
+            while (iterator.hasNext()) {
+                val current = iterator.next()
+                iterator.remove()
+                spawnTo(current.value)
+            }
+        }
+    }
+
+    fun despawnFrom(player: Player, send: Boolean = true) {
+        /*
+        $id = spl_object_id($player);
+		if(isset($this->hasSpawned[$id])){
+			if($send){
+				$player->getNetworkSession()->onEntityRemoved($this);
+			}
+			unset($this->hasSpawned[$id]);
+		}
+         */
+        val id = player.getId()
+        if (hasSpawned.containsKey(id)) {
+            if (send) {
+                // TODO: player.session.onEntityRemoved(this)
+            }
+            hasSpawned.remove(id)
+        }
+    }
+
+    fun despawnFromAll() {
+        hasSpawned.forEach { (_, player) ->
+            despawnFrom(player)
+        }
     }
 
     fun flagForDespawn() {
@@ -857,11 +1100,55 @@ abstract class Entity @JvmOverloads constructor(var location: Location, nbt: Com
         scheduleUpdate()
     }
 
+    fun isFlaggedForDespawn(): Boolean = needsDespawn
+
+    fun isClosed(): Boolean = closed
+
+    fun close() {
+        if (closeInFlight) {
+            return
+        }
+        if (!closed) {
+            closeInFlight = true
+            // TODO: EntityDespawnEvent(this).call()
+
+            onDispose()
+            closed = true
+            destroyCycles()
+            closeInFlight = false
+        }
+    }
+
+    fun onDispose() {
+        despawnFromAll()
+        if (location.isValid()) {
+            // TODO: getWorld().removeEntity(this)
+        }
+    }
+
+    fun destroyCycles() {
+        // FIXME: location = null???
+        lastDamageCause = null
+    }
+
+    fun broadcastAnimation(animation: Animation, targets: List<Player>? = null) {
+        // TODO: server.broadcastPackets(if (targets == null) getViewers() else targets, animation.encode())
+    }
+
+    /**
+     * TODO: Sound
+     */
+    fun broadcastSound(sound: Any, targets: List<Player>? = null) {
+        if (!silent) {
+            // TODO: server.broadcastPackets(if (targets == null) getViewers() else targets, sound.encode(location))
+        }
+    }
+
     companion object {
         var entityId: Long = 0
 
         const val MOTION_THRESHOLD = 0.00001
-        const val STEP_CLIP_MULTIPLIER = 0.4
+        const val STEP_CLIP_MULTIPLIER = 0.4F
 
         fun nextRuntimeId(): Long = ++entityId
     }
