@@ -58,8 +58,7 @@ abstract class LightUpdate(
             Triple(x, y - 1, z),
             Triple(x, y, z + 1),
             Triple(x, y, z - 1),
-        ).forEach lit@{
-            val (x1, y1, z1) = it
+        ).forEach lit@{ (x1, y1, z1) ->
             adjacent = max(adjacent, getEffectiveLight(x1, y1, z1))
             if (adjacent == 15) {
                 return@lit
