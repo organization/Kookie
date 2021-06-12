@@ -25,18 +25,17 @@ class ClearCommand(name: String) : VanillaCommand(
         if (args.size > 3) {
             throw InvalidCommandSyntaxException()
         }
-        var target = when {
+        val target = when {
             args.getOrNull(0) != null -> {
-                val target = sender.server.getPlayerByPrefix(args[0])
-                if (target === null) {
-                    sender.sendMessage(TranslationContainer(TextFormat.RED + "%commands.generic.player.notFound"))
-                    return true
+                sender.server.getPlayerByPrefix(args[0]).apply {
+                    if (this === null) {
+                        sender.sendMessage(TranslationContainer(TextFormat.RED + "%commands.generic.player.notFound"))
+                        return true
+                    } else if (this != sender && !sender.hasPermission("pocketmine.command.clear.other")) {
+                        sender.sendMessage(sender.language.translateString(TextFormat.RED + "%command.generic.permission"))
+                        return true
+                    }
                 }
-                if (target != sender && !sender.hasPermission("pocketmine.command.clear.other")) {
-                    sender.sendMessage(sender.language.translateString(TextFormat.RED + "%command.generic.permission"))
-                    return true
-                }
-                target
             }
             sender is Player -> {
                 if (!sender.hasPermission("pocketmine.command.clear.self")) {
@@ -59,7 +58,7 @@ class ClearCommand(name: String) : VanillaCommand(
                     item.count = maxCount
                 }
                 item
-            } catch (e: IllegalArgumentException) {
+            } catch (_: IllegalArgumentException) {
                 sender.sendMessage(
                     TranslationContainer(
                         TextFormat.RED + "%commands.give.item.notFound",
@@ -75,7 +74,7 @@ class ClearCommand(name: String) : VanillaCommand(
         }
 
         if (item !== null && maxCount == 0) {
-            var count = 0
+            val count = 0
         }
         TODO("Implement this when Entity has been merged")
         /*

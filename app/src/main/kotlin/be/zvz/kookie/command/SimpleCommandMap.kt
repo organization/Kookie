@@ -93,7 +93,7 @@ class SimpleCommandMap : CommandMap {
 
         try {
             target.execute(sender, sentCommandLabel.toString(), args)
-        } catch (syntaxException: InvalidCommandSyntaxException) {
+        } catch (_: InvalidCommandSyntaxException) {
             sender.sendMessage(sender.language.translateString("commands.generic.usage", listOf(target.usageMessage)))
         } finally {
             target.timings?.stopTiming()

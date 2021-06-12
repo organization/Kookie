@@ -28,7 +28,7 @@ import com.koloboke.collect.map.hash.HashObjIntMaps
 import com.koloboke.collect.map.hash.HashObjObjMaps
 
 @ProtocolIdentify(ProtocolInfo.IDS.AVAILABLE_COMMANDS_PACKET)
-class AvailableCommandsPacket : DataPacket(), ClientboundPacket {
+open class AvailableCommandsPacket : DataPacket(), ClientboundPacket {
 
     val commandData: MutableMap<String, CommandData> = HashObjObjMaps.newMutableMap()
 
