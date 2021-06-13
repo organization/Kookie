@@ -4,7 +4,13 @@ import be.zvz.kookie.color.Color
 import be.zvz.kookie.entity.Entity
 import be.zvz.kookie.entity.Living
 
-open class Effect(val internalRuntimeId: Int, val name: String, val color: Color, val isBad: Boolean = false, val hasBubbles: Boolean = true) {
+open class Effect(
+    val internalRuntimeId: Int,
+    val name: String,
+    val color: Color,
+    val isBad: Boolean = false,
+    val hasBubbles: Boolean = true
+) {
 
     open val defaultDuration: Int = 600
 

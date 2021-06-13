@@ -37,33 +37,37 @@ object ItemFactory {
     }
 
     private fun registerArmorItems() {
-        register(Armor(ItemIdentifier(ItemIds.CHAIN_BOOTS.id, 0), "Chainmail Boots", ArmorTypeInfo(1, 196, ArmorInventory.SLOT_FEET)))
-        register(Armor(ItemIdentifier(ItemIds.DIAMOND_BOOTS.id, 0), "Diamond Boots", ArmorTypeInfo(3, 430, ArmorInventory.SLOT_FEET)))
-        register(Armor(ItemIdentifier(ItemIds.GOLDEN_BOOTS.id, 0), "Golden Boots", ArmorTypeInfo(1, 92, ArmorInventory.SLOT_FEET)))
-        register(Armor(ItemIdentifier(ItemIds.IRON_BOOTS.id, 0), "Iron Boots", ArmorTypeInfo(2, 196, ArmorInventory.SLOT_FEET)))
-        register(Armor(ItemIdentifier(ItemIds.LEATHER_BOOTS.id, 0), "Leather Boots", ArmorTypeInfo(1, 66, ArmorInventory.SLOT_FEET)))
-        register(Armor(ItemIdentifier(ItemIds.NETHERITE_BOOTS.id, 0), "Netherite Boots", ArmorTypeInfo(3, 481, ArmorInventory.SLOT_FEET)))
+        val registerArmor = { id: Int, name: String, defencePoints: Int, maxDurability: Int, slot: Int ->
+            register(Armor(ItemIdentifier(id, 0), name, ArmorTypeInfo(defencePoints, maxDurability, slot)))
+        }
 
-        register(Armor(ItemIdentifier(ItemIds.CHAIN_CHESTPLATE.id, 0), "Chainmail Chestplate", ArmorTypeInfo(5, 241, ArmorInventory.SLOT_CHEST)))
-        register(Armor(ItemIdentifier(ItemIds.DIAMOND_CHESTPLATE.id, 0), "Diamond Chestplate", ArmorTypeInfo(8, 529, ArmorInventory.SLOT_CHEST)))
-        register(Armor(ItemIdentifier(ItemIds.GOLDEN_CHESTPLATE.id, 0), "Golden Chestplate", ArmorTypeInfo(5, 113, ArmorInventory.SLOT_CHEST)))
-        register(Armor(ItemIdentifier(ItemIds.IRON_CHESTPLATE.id, 0), "Iron Chestplate", ArmorTypeInfo(6, 241, ArmorInventory.SLOT_CHEST)))
-        register(Armor(ItemIdentifier(ItemIds.LEATHER_CHESTPLATE.id, 0), "Leather Tunic", ArmorTypeInfo(3, 81, ArmorInventory.SLOT_CHEST)))
-        register(Armor(ItemIdentifier(ItemIds.NETHERITE_CHESTPLATE.id, 0), "Netherite Chestplate", ArmorTypeInfo(8, 592, ArmorInventory.SLOT_CHEST)))
+        registerArmor(ItemIds.CHAIN_BOOTS.id, "Chainmail Boots", 1, 196, ArmorInventory.SLOT_FEET)
+        registerArmor(ItemIds.DIAMOND_BOOTS.id, "Diamond Boots", 3, 430, ArmorInventory.SLOT_FEET)
+        registerArmor(ItemIds.GOLDEN_BOOTS.id, "Golden Boots", 1, 92, ArmorInventory.SLOT_FEET)
+        registerArmor(ItemIds.IRON_BOOTS.id, "Iron Boots", 2, 196, ArmorInventory.SLOT_FEET)
+        registerArmor(ItemIds.LEATHER_BOOTS.id, "Leather Boots", 1, 66, ArmorInventory.SLOT_FEET)
+        registerArmor(ItemIds.NETHERITE_BOOTS.id, "Netherite Boots", 3, 481, ArmorInventory.SLOT_FEET)
 
-        register(Armor(ItemIdentifier(ItemIds.CHAIN_HELMET.id, 0), "Chainmail Helmet", ArmorTypeInfo(2, 166, ArmorInventory.SLOT_HEAD)))
-        register(Armor(ItemIdentifier(ItemIds.DIAMOND_HELMET.id, 0), "Diamond Helmet", ArmorTypeInfo(3, 364, ArmorInventory.SLOT_HEAD)))
-        register(Armor(ItemIdentifier(ItemIds.GOLDEN_HELMET.id, 0), "Golden Helmet", ArmorTypeInfo(2, 78, ArmorInventory.SLOT_HEAD)))
-        register(Armor(ItemIdentifier(ItemIds.IRON_HELMET.id, 0), "Iron Helmet", ArmorTypeInfo(2, 166, ArmorInventory.SLOT_HEAD)))
-        register(Armor(ItemIdentifier(ItemIds.LEATHER_HELMET.id, 0), "Leather Cap", ArmorTypeInfo(1, 56, ArmorInventory.SLOT_HEAD)))
-        register(Armor(ItemIdentifier(ItemIds.NETHERITE_HELMET.id, 0), "Netherite Helmet", ArmorTypeInfo(3, 407, ArmorInventory.SLOT_HEAD)))
+        registerArmor(ItemIds.CHAIN_CHESTPLATE.id, "Chainmail Chestplate", 5, 241, ArmorInventory.SLOT_CHEST)
+        registerArmor(ItemIds.DIAMOND_CHESTPLATE.id, "Diamond Chestplate", 8, 529, ArmorInventory.SLOT_CHEST)
+        registerArmor(ItemIds.GOLDEN_CHESTPLATE.id, "Golden Chestplate", 5, 113, ArmorInventory.SLOT_CHEST)
+        registerArmor(ItemIds.IRON_CHESTPLATE.id, "Iron Chestplate", 6, 241, ArmorInventory.SLOT_CHEST)
+        registerArmor(ItemIds.LEATHER_CHESTPLATE.id, "Leather Tunic", 3, 81, ArmorInventory.SLOT_CHEST)
+        registerArmor(ItemIds.NETHERITE_CHESTPLATE.id, "Netherite Chestplate", 8, 592, ArmorInventory.SLOT_CHEST)
 
-        register(Armor(ItemIdentifier(ItemIds.CHAIN_LEGGINGS.id, 0), "Chainmail Leggings", ArmorTypeInfo(4, 226, ArmorInventory.SLOT_LEGS)))
-        register(Armor(ItemIdentifier(ItemIds.DIAMOND_LEGGINGS.id, 0), "Diamond Leggings", ArmorTypeInfo(6, 496, ArmorInventory.SLOT_LEGS)))
-        register(Armor(ItemIdentifier(ItemIds.GOLDEN_LEGGINGS.id, 0), "Golden Leggings", ArmorTypeInfo(3, 106, ArmorInventory.SLOT_LEGS)))
-        register(Armor(ItemIdentifier(ItemIds.IRON_LEGGINGS.id, 0), "Iron Leggings", ArmorTypeInfo(5, 226, ArmorInventory.SLOT_LEGS)))
-        register(Armor(ItemIdentifier(ItemIds.LEATHER_LEGGINGS.id, 0), "Leather Pants", ArmorTypeInfo(2, 76, ArmorInventory.SLOT_LEGS)))
-        register(Armor(ItemIdentifier(ItemIds.NETHERITE_LEGGINGS.id, 0), "Netherite Leggings", ArmorTypeInfo(6, 555, ArmorInventory.SLOT_LEGS)))
+        registerArmor(ItemIds.CHAIN_HELMET.id, "Chainmail Helmet", 2, 166, ArmorInventory.SLOT_HEAD)
+        registerArmor(ItemIds.DIAMOND_HELMET.id, "Diamond Helmet", 3, 364, ArmorInventory.SLOT_HEAD)
+        registerArmor(ItemIds.GOLDEN_HELMET.id, "Golden Helmet", 2, 78, ArmorInventory.SLOT_HEAD)
+        registerArmor(ItemIds.IRON_HELMET.id, "Iron Helmet", 2, 166, ArmorInventory.SLOT_HEAD)
+        registerArmor(ItemIds.LEATHER_HELMET.id, "Leather Cap", 1, 56, ArmorInventory.SLOT_HEAD)
+        registerArmor(ItemIds.NETHERITE_HELMET.id, "Netherite Helmet", 3, 407, ArmorInventory.SLOT_HEAD)
+
+        registerArmor(ItemIds.CHAIN_LEGGINGS.id, "Chainmail Leggings", 4, 226, ArmorInventory.SLOT_LEGS)
+        registerArmor(ItemIds.DIAMOND_LEGGINGS.id, "Diamond Leggings", 6, 496, ArmorInventory.SLOT_LEGS)
+        registerArmor(ItemIds.GOLDEN_LEGGINGS.id, "Golden Leggings", 3, 106, ArmorInventory.SLOT_LEGS)
+        registerArmor(ItemIds.IRON_LEGGINGS.id, "Iron Leggings", 5, 226, ArmorInventory.SLOT_LEGS)
+        registerArmor(ItemIds.LEATHER_LEGGINGS.id, "Leather Pants", 2, 76, ArmorInventory.SLOT_LEGS)
+        registerArmor(ItemIds.NETHERITE_LEGGINGS.id, "Netherite Leggings", 6, 555, ArmorInventory.SLOT_LEGS)
     }
 
     private fun registerSpawnEggs() {
