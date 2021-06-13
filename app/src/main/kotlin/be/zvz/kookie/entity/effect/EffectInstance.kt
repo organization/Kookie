@@ -3,7 +3,14 @@ package be.zvz.kookie.entity.effect
 import be.zvz.kookie.color.Color
 import kotlin.math.max
 
-class EffectInstance(val effectType: Effect, duration: Int = effectType.defaultDuration, amplifier: Int = 0, val visible: Boolean = true, val ambient: Boolean = false, val overrideColor: Color = effectType.color) {
+class EffectInstance(
+    val effectType: Effect,
+    duration: Int = effectType.defaultDuration,
+    amplifier: Int = 0,
+    val visible: Boolean = true,
+    val ambient: Boolean = false,
+    val overrideColor: Color = effectType.color
+) {
 
     var duration: Int = duration
         set(value) {

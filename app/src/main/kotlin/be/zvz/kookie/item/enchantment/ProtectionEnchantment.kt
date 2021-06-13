@@ -44,5 +44,6 @@ class ProtectionEnchantment(
 
     fun getProtectionFactor(level: Int): Int = ((6 + level * level) * typeModifier / 3).toInt()
 
-    fun isApplicable(event: EntityDamageEvent): Boolean = applicableDamageTypes === null || applicableDamageTypes?.containsKey(event.cause) == true
+    fun isApplicable(event: EntityDamageEvent): Boolean =
+        applicableDamageTypes === null || applicableDamageTypes?.containsKey(event.cause) == true
 }
