@@ -59,7 +59,9 @@ class ItemStackRequest(
             getType(
                 DeprecatedCraftingNonImplementedStackRequestAction::class.java
             ) to DeprecatedCraftingNonImplementedStackRequestAction::read,
-            getType(DeprecatedCraftingResultsStackRequestAction::class.java) to DeprecatedCraftingResultsStackRequestAction::read
+            getType(
+                DeprecatedCraftingResultsStackRequestAction::class.java
+            ) to DeprecatedCraftingResultsStackRequestAction::read
         )
 
         private fun getType(clazz: Class<out ItemStackRequestAction>) =

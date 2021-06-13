@@ -305,7 +305,8 @@ open class Item(
                 }
             }
             else -> throw IllegalArgumentException(
-                "Item CompoundTag ID must be an instance of StringTag or ShortTag, ${idTag::class.java.simpleName} given"
+                "Item CompoundTag ID must be an instance of StringTag or ShortTag, " +
+                    "${idTag::class.java.simpleName} given"
             )
         }
 

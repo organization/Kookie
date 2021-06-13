@@ -27,7 +27,8 @@ class PlayerInventory(val holder: Human) : SimpleInventory(36) {
     fun isHotbarSlot(slot: Int): Boolean = slot >= 0 && slot <= getHotbarSize()
     fun throwIfNotHotbarSlot(slot: Int) {
         if (!isHotbarSlot(slot)) {
-            throw IllegalArgumentException("$slot is not a valid hotbar slot index (expected 0 - ${getHotbarSize() - 1})")
+            val max = getHotbarSize() - 1
+            throw IllegalArgumentException("$slot is not a valid hotbar slot index (expected 0 - $max)")
         }
     }
 

@@ -31,7 +31,9 @@ class EntityMetadataCollection {
     fun set(key: Int, value: MetadataProperty, force: Boolean = false) {
         val v = properties[key]
         if (!force && v === null && !(value::class.java.isInstance(properties[key]))) {
-            throw AssertionError("Can't overwrite property with mismatching type (have ${value::class.java.simpleName})")
+            throw AssertionError(
+                "Can't overwrite property with mismatching type " + "(have ${value::class.java.simpleName})"
+            )
         }
         if (v == null || v != value) {
             properties[key] = value
@@ -83,15 +85,11 @@ class EntityMetadataCollection {
         }
         val realFlagId = flagId % 64
         var flagSet = when (val flagSetProp = properties[propertyId]) {
-            null -> {
-                0
-            }
-            is LongMetadataProperty -> {
-                flagSetProp.value
-            }
-            else -> {
-                throw AssertionError("Wrong type found for flags, want long, but have ${flagSetProp::class.java.simpleName}")
-            }
+            null -> 0
+            is LongMetadataProperty -> flagSetProp.value
+            else -> throw AssertionError(
+                "Wrong type found for flags, want long, but have ${flagSetProp::class.java.simpleName}"
+            )
         }
         if ((flagSet shr realFlagId) and 1 != (if (value) 1 else 0)) {
             flagSet = flagSet xor (1 shl realFlagId)
