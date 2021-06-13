@@ -103,7 +103,11 @@ class ItemTranslator(
         throw IllegalArgumentException("Unmapped ID/metadata combination $internalId:$internalMeta")
     }
 
-    fun fromNetworkId(networkId: Int, networkMeta: Int, isComplexMapping: AtomicBoolean = AtomicBoolean(false)): Pair<Int, Int> {
+    fun fromNetworkId(
+        networkId: Int,
+        networkMeta: Int,
+        isComplexMapping: AtomicBoolean = AtomicBoolean(false)
+    ): Pair<Int, Int> {
         if (complexNetToCoreMapping.containsKey(networkId)) {
             if (networkMeta != 0) {
                 throw IllegalArgumentException("Unexpected non-zero network meta on complex item mapping")

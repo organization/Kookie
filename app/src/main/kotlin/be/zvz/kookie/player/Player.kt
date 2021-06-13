@@ -42,10 +42,6 @@ class Player(
         get() = server.language
     val username = playerInfo.getUsername()
     var displayName = username
-        set(name) {
-            // TODO: PlayerDisplayNameChangeEvent
-            field = name
-        }
     override val name: String
         get() = username
 

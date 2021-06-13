@@ -52,6 +52,7 @@ class Config @JvmOverloads constructor(
         ENUM,
         ERROR
     }
+
     private var changed = false
     private var config: ConfigBrowser = ConfigBrowser.NULL_BROWSER
 

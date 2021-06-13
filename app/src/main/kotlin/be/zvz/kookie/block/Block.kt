@@ -114,7 +114,8 @@ open class Block(val idInfo: BlockIdentifier, val name: String, val breakInfo: B
         if (oldTile !== null) {
             try {
                 tileType = Class.forName(idInfo.tileClass)
-            } catch (ignored: ClassNotFoundException) { }
+            } catch (ignored: ClassNotFoundException) {
+            }
 
             if (tileType === null || !tileType.isAssignableFrom(oldTile::class.java)) {
                 oldTile.close()
@@ -135,7 +136,8 @@ open class Block(val idInfo: BlockIdentifier, val name: String, val breakInfo: B
         }
     }
 
-    fun isSameType(other: Block): Boolean = idInfo.blockId == other.idInfo.blockId && idInfo.variant == other.idInfo.variant
+    fun isSameType(other: Block): Boolean =
+        idInfo.blockId == other.idInfo.blockId && idInfo.variant == other.idInfo.variant
 
     fun isSameState(other: Block): Boolean = isSameType(other) && writeStateToMeta() == other.writeStateToMeta()
 

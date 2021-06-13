@@ -20,7 +20,8 @@ package be.zvz.kookie.network.mcpe.protocol.types.inventory.stackrequest
 import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 
 @ItemStackRequestIdentify(ItemStackRequestActionType.MINE_BLOCK)
-class MineBlockStackRequestAction(val unknown1: Int, val predictedDurability: Int, val stackId: Int) : ItemStackRequestAction() {
+class MineBlockStackRequestAction(val unknown1: Int, val predictedDurability: Int, val stackId: Int) :
+    ItemStackRequestAction() {
     override fun write(out: PacketSerializer) {
         out.putVarInt(unknown1)
         out.putVarInt(predictedDurability)

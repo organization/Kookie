@@ -57,7 +57,8 @@ class MemoryManager(private val server: Server) {
             outputFolder: String,
             maxNesting: Int,
             maxStringSize: Int
-        ) {}
+        ) {
+        }
 
         @JvmStatic
         private fun continueDump(

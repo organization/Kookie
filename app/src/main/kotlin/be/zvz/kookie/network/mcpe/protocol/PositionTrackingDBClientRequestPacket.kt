@@ -45,6 +45,7 @@ class PositionTrackingDBClientRequestPacket : DataPacket(), ServerboundPacket {
 
     enum class Action(val id: Int) {
         QUERY(0);
+
         companion object {
             private val VALUES = values()
             fun from(value: Int) = VALUES.first { it.id == value }

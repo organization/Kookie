@@ -108,6 +108,7 @@ enum class VanillaEnchantments(val enchantment: Enchantment) {
             5
         )
     ),
+
     // TODO: smite, bane of arthropods (these don't make sense now because their applicable mobs don't exist yet)
     KNOCKBACK(
         KnockbackEnchantment(

@@ -38,7 +38,7 @@ open class SimpleInventory(size: Int) : BaseInventory() {
         return contents
     }
 
-    protected override fun internalSetContents(items: Map<Int, Item>) {
+    override fun internalSetContents(items: Map<Int, Item>) {
         for (i in 0 until getSize()) {
             if (items.containsKey(i)) {
                 clear(i)
@@ -48,7 +48,7 @@ open class SimpleInventory(size: Int) : BaseInventory() {
         }
     }
 
-    protected override fun internalSetItem(index: Int, item: Item) {
+    override fun internalSetItem(index: Int, item: Item) {
         slots[index] = if (item.isNull()) null else item
     }
 }

@@ -46,6 +46,7 @@ object Binary {
     } else {
         "\u0000"
     }
+
     fun readByte(c: String): Int = c[0].code
     fun readSignedByte(c: String): Int = signByte(c[0].code)
     fun writeByte(c: Int): String = c.toChar().toString()
@@ -56,6 +57,7 @@ object Binary {
             }
         }
     }
+
     fun readSignedShort(str: String): Int = signShort(readShort(str))
     fun writeShort(value: Int): String {
         ByteArrayOutputStream().use { baos ->
@@ -65,6 +67,7 @@ object Binary {
             return baos.toString()
         }
     }
+
     fun readLShort(str: String): Int {
         str.byteInputStream().use { bais ->
             LittleEndianDataInputStream(bais).use {
@@ -72,6 +75,7 @@ object Binary {
             }
         }
     }
+
     fun readSignedLShort(str: String): Int = signShort(readLShort(str))
     fun writeLShort(value: Int): String {
         ByteArrayOutputStream().use { baos ->

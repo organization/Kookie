@@ -29,7 +29,8 @@ class BlockTransaction(val world: ChunkManager) {
         addValidator { world, x, y, z -> world.isInWorld(x, y, z) }
     }
 
-    fun addBlock(pos: Vector3, state: Block): BlockTransaction = addBlockAt(pos.x.toInt(), pos.y.toInt(), pos.z.toInt(), state)
+    fun addBlock(pos: Vector3, state: Block): BlockTransaction =
+        addBlockAt(pos.x.toInt(), pos.y.toInt(), pos.z.toInt(), state)
 
     fun addBlockAt(x: Int, y: Int, z: Int, state: Block): BlockTransaction = this.apply {
         if (!blocks.containsKey(x)) {

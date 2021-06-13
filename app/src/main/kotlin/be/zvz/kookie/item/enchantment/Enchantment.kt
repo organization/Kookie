@@ -39,6 +39,7 @@ open class Enchantment(
         }
         return@let result
     }
+
     fun hasPrimaryItemType(flag: Int): Boolean = (primaryItemFlags and flag) != 0
     fun hasSecondaryItemType(flag: Int): Boolean = (secondaryItemFlags and flag) != 0
 }

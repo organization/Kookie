@@ -38,6 +38,7 @@ class LittleEndianNbtSerializer : BaseNbtSerializer() {
         buf.flip()
         return buf
     }
+
     private fun packVStar(value: IntArray): String {
         val byteBuffer = ByteBuffer.allocate(Int.SIZE_BYTES).apply {
             order(ByteOrder.LITTLE_ENDIAN)
@@ -47,6 +48,7 @@ class LittleEndianNbtSerializer : BaseNbtSerializer() {
         }
         return Binary.toPositiveByteArray(byteBuffer.array()).toString(StandardCharsets.UTF_8)
     }
+
     private fun packVStar(value: LongArray): String {
         val byteBuffer = ByteBuffer.allocate(Long.SIZE_BYTES).apply {
             order(ByteOrder.LITTLE_ENDIAN)
