@@ -61,7 +61,7 @@ import java.util.concurrent.atomic.AtomicInteger
 class PacketSerializer(buffer: String = "", offset: AtomicInteger = AtomicInteger(0)) : BinaryStream(buffer, offset) {
 
     private val shieldItemRuntimeId: Int =
-        GlobalItemTypeDictionary.getInstance().dictionary.fromStringId("minecraft:shield")
+        GlobalItemTypeDictionary.dictionary.fromStringId("minecraft:shield")
 
     fun getString(): String = get(getUnsignedVarInt())
 

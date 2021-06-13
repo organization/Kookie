@@ -29,7 +29,7 @@ object TypeConverter {
     private const val PM_META_TAG = "___Meta___"
 
     private val shieldRuntimeId: Int =
-        GlobalItemTypeDictionary.getInstance().dictionary.fromStringId("minecraft:shield")
+        GlobalItemTypeDictionary.dictionary.fromStringId("minecraft:shield")
 
     fun coreGameModeToProtocol(gameMode: GameMode): Int = when (gameMode) {
         GameMode.SURVIVAL -> ProtocolGameMode.SURVIVAL
