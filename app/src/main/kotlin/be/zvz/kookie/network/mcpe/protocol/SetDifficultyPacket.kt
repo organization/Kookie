@@ -38,6 +38,7 @@ class SetDifficultyPacket : DataPacket(), ClientboundPacket, ServerboundPacket {
     }
 
     companion object {
+        @JvmStatic
         fun create(difficulty: Int) = SetDifficultyPacket().apply {
             this.difficulty = difficulty
         }

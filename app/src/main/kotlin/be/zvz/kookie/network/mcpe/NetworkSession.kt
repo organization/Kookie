@@ -58,6 +58,7 @@ class NetworkSession(
         // TODO: setHandler(LoginPacketHandler) here
     }
 
+    @JvmOverloads
     fun setHandler(handler: PacketHandlerInterface? = null) {
         this.handler = handler
     }
@@ -149,6 +150,7 @@ class NetworkSession(
         }
     }
 
+    @JvmOverloads
     private fun flushSendBuffer(immediate: Boolean = false) {
         try {
             if (sendBuffer.size > 0) {

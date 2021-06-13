@@ -62,6 +62,7 @@ class LevelChunkPacket : DataPacket(), ClientboundPacket {
     }
 
     companion object {
+        @JvmStatic
         fun withoutCache(chunkX: Int, chunkZ: Int, subChunkCount: Int, payload: String) = LevelChunkPacket().apply {
             this.chunkX = chunkX
             this.chunkZ = chunkZ
@@ -71,6 +72,7 @@ class LevelChunkPacket : DataPacket(), ClientboundPacket {
             this.cacheEnabled = false
         }
 
+        @JvmStatic
         fun withCache(
             chunkX: Int,
             chunkZ: Int,

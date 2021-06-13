@@ -37,6 +37,7 @@ class ItemStackResponseSlotInfo(
     }
 
     companion object {
+        @JvmStatic
         fun read(input: PacketSerializer): ItemStackResponseSlotInfo {
             val slot = input.getByte()
             val horbarSlot = input.getByte()

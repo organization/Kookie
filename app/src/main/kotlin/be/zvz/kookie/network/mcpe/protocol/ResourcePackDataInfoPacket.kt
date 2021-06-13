@@ -33,6 +33,7 @@ class ResourcePackDataInfoPacket : DataPacket(), ClientboundPacket {
     var packType: ResourcePackType = ResourcePackType.RESOURCES // TODO: check the values for this
 
     companion object {
+        @JvmStatic
         fun create(
             packId: String,
             maxChunkSize: Int,

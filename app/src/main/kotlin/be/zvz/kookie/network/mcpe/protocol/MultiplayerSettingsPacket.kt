@@ -25,6 +25,7 @@ class MultiplayerSettingsPacket : DataPacket(), ClientboundPacket, ServerboundPa
     lateinit var action: Action
 
     companion object {
+        @JvmStatic
         fun create(action: Action): MultiplayerSettingsPacket = MultiplayerSettingsPacket().apply {
             this.action = action
         }
@@ -49,6 +50,7 @@ class MultiplayerSettingsPacket : DataPacket(), ClientboundPacket, ServerboundPa
 
         companion object {
             private val VALUES = values()
+            @JvmStatic
             fun from(value: Int) = VALUES.first { it.value == value }
         }
     }

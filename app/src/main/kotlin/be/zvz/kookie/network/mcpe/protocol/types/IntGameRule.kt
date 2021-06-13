@@ -30,6 +30,7 @@ class IntGameRule(private val value: Int, override val playerModifiable: Boolean
     }
 
     companion object {
+        @JvmStatic
         fun decode(input: PacketSerializer, playerModifiable: Boolean) =
             IntGameRule(input.getUnsignedVarInt(), playerModifiable)
     }

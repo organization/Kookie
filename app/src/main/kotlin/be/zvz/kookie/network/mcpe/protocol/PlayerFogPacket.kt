@@ -25,6 +25,7 @@ class PlayerFogPacket : DataPacket(), ClientboundPacket {
     lateinit var fogLayers: List<String>
 
     companion object {
+        @JvmStatic
         fun create(fogLayers: List<String>): PlayerFogPacket = PlayerFogPacket().apply {
             this.fogLayers = fogLayers
         }

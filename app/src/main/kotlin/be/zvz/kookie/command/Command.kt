@@ -124,6 +124,7 @@ abstract class Command(
     abstract fun execute(sender: CommandSender, commandLabel: String, args: List<String>): Boolean
 
     companion object {
+        @JvmStatic
         fun broadcastMessage(translationKey: String, params: MutableList<String>): Int {
             return -1 // TODO
         }

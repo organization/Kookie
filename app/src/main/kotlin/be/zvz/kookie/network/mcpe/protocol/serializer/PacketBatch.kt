@@ -18,6 +18,7 @@ class PacketBatch(private val buffer: String = "") {
     fun getBuffer(): String = buffer
 
     companion object {
+        @JvmStatic
         fun fromPackets(vararg packets: Packet): PacketBatch {
             val serializer = PacketSerializer()
             packets.forEach {

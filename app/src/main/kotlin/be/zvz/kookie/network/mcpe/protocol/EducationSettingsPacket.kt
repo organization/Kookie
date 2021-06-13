@@ -55,6 +55,7 @@ class EducationSettingsPacket : DataPacket(), ClientboundPacket {
     }
 
     companion object {
+        @JvmStatic
         fun create(
             codeBuilderDefaultUri: String,
             codeBuilderTitle: String,

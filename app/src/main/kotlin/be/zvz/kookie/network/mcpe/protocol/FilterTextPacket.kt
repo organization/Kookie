@@ -41,6 +41,7 @@ class FilterTextPacket : DataPacket(), ClientboundPacket, ServerboundPacket {
     }
 
     companion object {
+        @JvmStatic
         fun create(text: String, server: Boolean): FilterTextPacket =
             FilterTextPacket().apply {
                 this.text = text

@@ -39,6 +39,7 @@ class AvailableActorIdentifiersPacket : DataPacket(), ClientboundPacket {
     }
 
     companion object {
+        @JvmStatic
         fun create(nbt: CacheableNbt): AvailableActorIdentifiersPacket = AvailableActorIdentifiersPacket().apply {
             this.identifiers = nbt
         }

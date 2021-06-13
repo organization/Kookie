@@ -39,6 +39,7 @@ object Terminal {
 
     const val WHITE = "\u001b[0;37m"
 
+    @JvmOverloads
     fun init(ansi: Boolean = true) {
         enableANSI = ansi
     }

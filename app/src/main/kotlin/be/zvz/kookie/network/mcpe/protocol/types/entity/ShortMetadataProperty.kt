@@ -68,6 +68,7 @@ class ShortMetadataProperty(override var value: Int) : MetadataProperty(), Integ
     }
 
     companion object {
+        @JvmStatic
         fun read(input: PacketSerializer): ShortMetadataProperty {
             return ShortMetadataProperty(input.getSignedLShort())
         }

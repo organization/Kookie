@@ -61,6 +61,7 @@ class LightArray : Cloneable {
         private fun index(x: Int, y: Int, z: Int): Pair<Int, Int> =
             Pair(x shl 7 or (z shl 3) or (y shr 1), y and 1 shl 2)
 
+        @JvmStatic
         fun fill(level: Int): LightArray {
             if (level > LightLevel.MAX) {
                 throw IllegalArgumentException("Light level must be max ${LightLevel.MAX}")

@@ -27,9 +27,11 @@ class ShapedRecipe(
 ) {
 
     companion object {
+        @JvmStatic
         fun decode(type: CraftingDataPacket.Entry, input: PacketSerializer): ShapedRecipe =
             decodeWith(type, input, { decodeInputs(input) }, ::ShapedRecipe)
 
+        @JvmStatic
         fun decodeInputs(input: PacketSerializer): Map<Int, Map<Int, RecipeIngredient>> =
             HashIntObjMaps.newMutableMap<Map<Int, RecipeIngredient>>().apply {
                 for (rowIndex in 0 until input.getUnsignedVarInt()) {

@@ -23,6 +23,7 @@ class PacketDecodeException internal constructor(
 ) : RuntimeException(msg, cause) {
     companion object {
         @JvmStatic
+        @JvmOverloads
         fun wrap(previous: Throwable, prefix: String? = null): PacketDecodeException {
             return PacketDecodeException(
                 if (prefix !== null) {

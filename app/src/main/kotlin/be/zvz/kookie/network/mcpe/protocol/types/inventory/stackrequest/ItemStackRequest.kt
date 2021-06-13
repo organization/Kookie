@@ -67,11 +67,13 @@ class ItemStackRequest(
         private fun getType(clazz: Class<out ItemStackRequestAction>) =
             clazz.getAnnotation(ItemStackRequestIdentify::class.java)!!.typeId.type
 
+        @JvmStatic
         fun readAction(input: PacketSerializer, typeId: Int): ItemStackRequestAction =
             (actionMap[typeId] ?: throw IllegalArgumentException("Unhandled item stack request action type $typeId"))(
                 input
             )
 
+        @JvmStatic
         fun read(input: PacketSerializer): ItemStackRequest {
             val requestId = input.readGenericTypeNetworkId()
             val actions = mutableListOf<ItemStackRequestAction>()

@@ -855,6 +855,7 @@ enum class ItemIds(val id: Int) {
 
     companion object {
         private val VALUES = values()
+        @JvmStatic
         fun from(findValue: Int): ItemIds = VALUES.first { it.id == findValue }
     }
 }

@@ -29,6 +29,7 @@ class ResourcePackChunkDataPacket : DataPacket(), ClientboundPacket {
     lateinit var data: String
 
     companion object {
+        @JvmStatic
         fun create(packId: String, chunkIndex: Int, chunkOffset: Long, data: String): ResourcePackChunkDataPacket =
             ResourcePackChunkDataPacket().apply {
                 this.packId = packId

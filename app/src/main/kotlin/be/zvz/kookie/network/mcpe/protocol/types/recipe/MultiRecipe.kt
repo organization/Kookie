@@ -11,6 +11,7 @@ class MultiRecipe(
 ) : RecipeWithTypeId(type) {
 
     companion object {
+        @JvmStatic
         fun decode(type: CraftingDataPacket.Entry, input: PacketSerializer) =
             MultiRecipe(
                 type = type,

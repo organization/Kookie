@@ -28,11 +28,6 @@ import be.zvz.kookie.utils.Binary
 import java.util.Random
 
 class Armor(identifier: ItemIdentifier, name: String, val armorInfo: ArmorTypeInfo) : Durable(identifier, name) {
-
-    companion object {
-        const val TAG_CUSTOM_COLOR: String = "customColor"
-    }
-
     var customColor: Color? = null
     override val maxDurability: Int = armorInfo.maxDurability
     override val defensePoints: Int = armorInfo.defensePoints
@@ -97,5 +92,9 @@ class Armor(identifier: ItemIdentifier, name: String, val armorInfo: ArmorTypeIn
             tag.setInt(TAG_CUSTOM_COLOR, Binary.signInt(customColor!!.toARGB()))
         else
             tag.removeTag(TAG_CUSTOM_COLOR)
+    }
+
+    companion object {
+        const val TAG_CUSTOM_COLOR: String = "customColor"
     }
 }

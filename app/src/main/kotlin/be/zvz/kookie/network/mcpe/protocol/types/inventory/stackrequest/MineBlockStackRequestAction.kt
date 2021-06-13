@@ -29,6 +29,7 @@ class MineBlockStackRequestAction(val unknown1: Int, val predictedDurability: In
     }
 
     companion object {
+        @JvmStatic
         fun read(input: PacketSerializer): MineBlockStackRequestAction {
             val unknown1 = input.getVarInt()
             val predictedDurability = input.getVarInt()

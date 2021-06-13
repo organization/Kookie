@@ -40,6 +40,7 @@ class BehaviorPackEntry(
     }
 
     companion object {
+        @JvmStatic
         fun read(input: PacketSerializer): BehaviorPackEntry {
             return BehaviorPackEntry(
                 input.getString(),

@@ -262,6 +262,7 @@ open class Block(val idInfo: BlockIdentifier, val name: String, val breakInfo: B
 
     open fun isAffectedBySilkTouch(): Boolean = false
 
+    @JvmOverloads
     open fun getPickedItem(addUserData: Boolean = false): Item {
         val item = asItem()
         if (addUserData) {

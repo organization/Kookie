@@ -52,6 +52,7 @@ class CameraShakePacket : DataPacket(), ClientboundPacket {
         const val ACTION_ADD = 0
         const val ACTION_STOP = 1
 
+        @JvmStatic
         fun create(intensity: Float, duration: Float, shakeType: Int, shakeAction: Int): CameraShakePacket {
 
             return CameraShakePacket().apply {

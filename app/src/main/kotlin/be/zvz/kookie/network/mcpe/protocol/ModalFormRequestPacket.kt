@@ -26,6 +26,7 @@ class ModalFormRequestPacket : DataPacket(), ClientboundPacket {
     lateinit var formData: String // json
 
     companion object {
+        @JvmStatic
         fun create(formId: Int, formData: String): ModalFormRequestPacket = ModalFormRequestPacket().apply {
             this.formId = formId
             this.formData = formData

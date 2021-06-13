@@ -63,6 +63,7 @@ open class Position @JvmOverloads constructor(
     override fun getSide(side: Facing, step: Int) = fromObject(super.getSide(side, step), world)
 
     companion object {
+        @JvmStatic
         fun fromObject(pos: Vector3, world: World?): Position = Position(pos.x, pos.y, pos.z, world)
     }
 }

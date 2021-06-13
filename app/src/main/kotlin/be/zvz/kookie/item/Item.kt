@@ -223,6 +223,7 @@ open class Item(
         }
     }
 
+    @JvmOverloads
     fun pop(count: Int = 1): Item {
         if (count > this.count) {
             throw Exception("Cannot pop $count items from a stack of ${this.count}")
@@ -239,6 +240,7 @@ open class Item(
 
     fun canBePlaced(): Boolean = getBlock().canBePlaced()
 
+    @JvmOverloads
     open fun getBlock(clickedFace: Int? = null): Block = VanillaBlocks.AIR.block
 
     fun getId(): Int = identifier.id

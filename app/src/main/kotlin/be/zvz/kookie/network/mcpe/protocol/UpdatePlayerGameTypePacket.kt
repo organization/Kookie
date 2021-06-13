@@ -41,6 +41,7 @@ class UpdatePlayerGameTypePacket : DataPacket(), ClientboundPacket {
     }
 
     companion object {
+        @JvmStatic
         fun create(gameMode: GameMode, playerEntityUniqueId: Long): UpdatePlayerGameTypePacket =
             UpdatePlayerGameTypePacket().apply {
                 this.gameMode = gameMode

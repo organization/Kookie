@@ -41,6 +41,7 @@ class ResourcePackEntry(
     }
 
     companion object {
+        @JvmStatic
         fun read(input: PacketSerializer): ResourcePackEntry {
             return ResourcePackEntry(
                 input.getString(),

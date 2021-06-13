@@ -63,16 +63,24 @@ open class Location @JvmOverloads constructor(
     fun asLocation(): Location = Location(x, y, z, yaw, pitch, world)
 
     companion object {
-        fun fromObject(pos: Vector3, world: World?, yaw: Int = 0, pitch: Int = 0): Location =
+        @JvmStatic
+        @JvmOverloads
+        fun fromObject(pos: Vector3, world: World?, yaw: Int, pitch: Int = 0): Location =
             fromObject(pos, world, yaw.toDouble(), pitch.toDouble())
 
-        fun fromObject(pos: Vector3, world: World?, yaw: Long = 0L, pitch: Long = 0L): Location =
+        @JvmStatic
+        @JvmOverloads
+        fun fromObject(pos: Vector3, world: World?, yaw: Long, pitch: Long = 0L): Location =
             fromObject(pos, world, yaw.toDouble(), pitch.toDouble())
 
-        fun fromObject(pos: Vector3, world: World?, yaw: Float = 0F, pitch: Float = 0F): Location =
+        @JvmStatic
+        @JvmOverloads
+        fun fromObject(pos: Vector3, world: World?, yaw: Float, pitch: Float = 0F): Location =
             fromObject(pos, world, yaw.toDouble(), pitch.toDouble())
 
-        fun fromObject(pos: Vector3, world: World?, yaw: Double = 0.0, pitch: Double = 0.0): Location =
+        @JvmStatic
+        @JvmOverloads
+        fun fromObject(pos: Vector3, world: World?, yaw: Double, pitch: Double = 0.0): Location =
             Location(pos.x, pos.y, pos.z, yaw, pitch, world ?: if (pos is Position) pos.world else null)
     }
 }

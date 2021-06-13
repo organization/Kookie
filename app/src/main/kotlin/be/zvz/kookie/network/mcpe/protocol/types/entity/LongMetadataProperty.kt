@@ -67,6 +67,7 @@ class LongMetadataProperty(override var value: Int) : MetadataProperty(), Intege
     }
 
     companion object {
+        @JvmStatic
         fun read(input: PacketSerializer): LongMetadataProperty {
             return LongMetadataProperty(input.getVarLong().toInt())
         }

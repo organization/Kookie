@@ -53,6 +53,7 @@ class PacketViolationWarningPacket : DataPacket(), ServerboundPacket {
         const val SEVERITY_FINAL_WARNING = 1
         const val SEVERITY_TERMINATING_CONNECTION = 2
 
+        @JvmStatic
         fun create(type: Int, severity: Int, packetId: Int, message: String) = PacketViolationWarningPacket().apply {
             this.type = type
             this.severity = severity

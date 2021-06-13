@@ -49,6 +49,7 @@ class MobArmorEquipmentPacket : DataPacket(), ClientboundPacket, ServerboundPack
     override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleMobArmorEquipment(this)
 
     companion object {
+        @JvmStatic
         fun create(
             entityRuntimeId: Long,
             head: ItemStackWrapper,

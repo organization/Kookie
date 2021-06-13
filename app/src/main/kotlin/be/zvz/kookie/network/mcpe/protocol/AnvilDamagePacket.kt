@@ -41,12 +41,15 @@ class AnvilDamagePacket : DataPacket(), ServerboundPacket {
     }
 
     companion object {
+        @JvmStatic
         fun create(pos: Vector3, damageAmount: Int): AnvilDamagePacket =
             create(pos.x.toInt(), pos.y.toInt(), pos.z.toInt(), damageAmount)
 
+        @JvmStatic
         fun create(pos: PacketSerializer.BlockPosition, damageAmount: Int): AnvilDamagePacket =
             create(pos.x, pos.y, pos.z, damageAmount)
 
+        @JvmStatic
         fun create(x: Int, y: Int, z: Int, damageAmount: Int): AnvilDamagePacket = AnvilDamagePacket().apply {
             this.pos.x = x
             this.pos.y = y

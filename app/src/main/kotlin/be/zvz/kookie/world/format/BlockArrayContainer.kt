@@ -104,6 +104,7 @@ class BlockArrayContainer<Block> private constructor(var blockArray: IPalettedBl
             else -> throw IllegalArgumentException("invalid capacity specified: $capacity")
         }
 
+        @JvmStatic
         fun getExpectedPayloadSize(bitsPerBlock: Int): Int =
             when (bitsPerBlock) {
                 1 -> cache1.payloadSize

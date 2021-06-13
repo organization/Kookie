@@ -35,6 +35,7 @@ class HeightArray(val values: MutableList<Int> = mutableListOf()) {
     }
 
     companion object {
+        @JvmStatic
         fun fill(value: Int): HeightArray {
             val list = MutableList(255) { value }
             return HeightArray(list)
