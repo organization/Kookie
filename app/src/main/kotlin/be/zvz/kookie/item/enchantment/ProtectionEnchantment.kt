@@ -17,6 +17,9 @@
  */
 package be.zvz.kookie.item.enchantment
 
+import be.zvz.kookie.event.EntityDamageEvent
+import com.koloboke.collect.map.hash.HashIntIntMaps
+
 class ProtectionEnchantment(
     internalRuntimeId: Int,
     name: String,
@@ -25,7 +28,21 @@ class ProtectionEnchantment(
     secondaryItemFlags: Array<ItemFlags>,
     maxLevel: Int,
     val typeModifier: Float,
-    val applicableDamageTypes: MutableList<Int>?,
+    applicableDamageTypes: MutableList<Int>?,
 ) : Enchantment(internalRuntimeId, name, rarity, primaryItemFlags, secondaryItemFlags, maxLevel) {
+    var applicableDamageTypes: MutableMap<Int, Int>? = null
+
+    init {
+        var index = 0
+        applicableDamageTypes?.let { list ->
+            this.applicableDamageTypes = HashIntIntMaps.newMutableMap()
+            list.forEach {
+                this.applicableDamageTypes!![it] = index++
+            }
+        }
+    }
+
     fun getProtectionFactor(level: Int): Int = ((6 + level * level) * typeModifier / 3).toInt()
+
+    fun isApplicable(event: EntityDamageEvent): Boolean = applicableDamageTypes === null || applicableDamageTypes?.containsKey(event.cause) == true
 }
