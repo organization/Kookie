@@ -56,8 +56,7 @@ object SubChunkConverter {
         id.toLong() shl 4 or meta.toLong()
     }
 
-    private val getIndexSubChunkXZY: (Int, Int, Int, Ref.IntRef, Ref.IntRef, Ref.IntRef, Int) -> Unit = {
-        x: Int,
+    private val getIndexSubChunkXZY: (Int, Int, Int, Ref.IntRef, Ref.IntRef, Ref.IntRef, Int) -> Unit = { x: Int,
         y: Int,
         z: Int,
         id1Idx: Ref.IntRef,
@@ -69,8 +68,7 @@ object SubChunkConverter {
         metaIdx.element = id1Idx.element shr 1
     }
 
-    private val getIndexLegacyColumnXZY: (Int, Int, Int, Ref.IntRef, Ref.IntRef, Ref.IntRef, Int) -> Unit = {
-        x: Int,
+    private val getIndexLegacyColumnXZY: (Int, Int, Int, Ref.IntRef, Ref.IntRef, Ref.IntRef, Int) -> Unit = { x: Int,
         y: Int,
         z: Int,
         id1Idx: Ref.IntRef,

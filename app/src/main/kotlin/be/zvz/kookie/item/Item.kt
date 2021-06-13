@@ -76,6 +76,7 @@ open class Item(
         serializeCompoundTag(nbt)
         return nbt
     }
+
     fun setNamedTag(tag: CompoundTag): Item = this.apply {
         if (tag.count() == 0) clearNamedTag()
         else {
@@ -241,6 +242,7 @@ open class Item(
         face: Int,
         clickVector: Vector3
     ): ItemUseResult = ItemUseResult.NONE
+
     fun onClickAir(player: Player, directionVector: Vector3): ItemUseResult = ItemUseResult.NONE
     fun onReleaseUsing(player: Player): ItemUseResult = ItemUseResult.NONE
 
@@ -303,7 +305,8 @@ open class Item(
                 }
             }
             else -> throw IllegalArgumentException(
-                "Item CompoundTag ID must be an instance of StringTag or ShortTag, ${idTag::class.java.simpleName} given"
+                "Item CompoundTag ID must be an instance of StringTag or ShortTag, " +
+                    "${idTag::class.java.simpleName} given"
             )
         }
 

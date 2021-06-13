@@ -70,6 +70,7 @@ class Attribute @JvmOverloads constructor(
 
     fun isSyncable(): Boolean = shouldSend
     fun isDesynchronized(): Boolean = shouldSend && desynchronized
+
     @JvmOverloads
     fun markSynchronized(synced: Boolean = true) {
         desynchronized = !synced

@@ -48,7 +48,12 @@ class CorrectPlayerMovePredictionPacket : DataPacket(), ClientboundPacket {
     }
 
     companion object {
-        fun create(position: Vector3, delta: Vector3, onGround: Boolean, tick: Long): CorrectPlayerMovePredictionPacket =
+        fun create(
+            position: Vector3,
+            delta: Vector3,
+            onGround: Boolean,
+            tick: Long
+        ): CorrectPlayerMovePredictionPacket =
             CorrectPlayerMovePredictionPacket().apply {
                 this.position = position
                 this.delta = delta

@@ -28,6 +28,7 @@ class PermissionAttachment(val plugin: Plugin) {
             throw PluginException("Plugin ${plugin.description.name} is disabled")
         }
     }
+
     var removalCallback: PermissionRemovedExecutor? = null
 
     val permissions: MutableMap<String, Boolean> = HashObjObjMaps.newMutableMap()

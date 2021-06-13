@@ -100,6 +100,7 @@ abstract class BaseNbtSerializer : NbtStreamReader, NbtStreamWriter {
         writeShort(checkWriteStringLength(v.length))
         buffer.put(v)
     }
+
     override fun writeByteArray(v: ByteArray) {
         writeInt(v.size)
         buffer.put(v)
