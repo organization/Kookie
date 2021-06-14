@@ -1,6 +1,6 @@
-[submodule "app\\src\\main\\resources\\vanilla"]
-	path = app\\src\\main\\resources\\vanilla
-	url = https://github.com/pmmp/BedrockData
-[submodule "app\\src\\main\\resources\\locale"]
-	path = app\\src\\main\\resources\\locale
+[submodule "app/src/main/resources/locale"]
+	path = app/src/main/resources/locale
 	url = https://github.com/organization/Language
+[submodule "app/src/main/resources/vanilla"]
+	path = app/src/main/resources/vanilla
+	url = https://github.com/pmmp/BedrockData
