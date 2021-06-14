@@ -22,6 +22,7 @@ import be.zvz.kookie.world.format.PalettedBlockArray
 import kotlin.jvm.internal.Ref
 
 object SubChunkConverter {
+    @JvmStatic
     fun convertSubChunkXZY(idArray: String, metaArray: String): PalettedBlockArray {
         return PalettedBlockArray(
             convert(
@@ -32,6 +33,7 @@ object SubChunkConverter {
         )
     }
 
+    @JvmStatic
     fun convertSubChunkYZX(idArray: String, metaArray: String): PalettedBlockArray {
         return PalettedBlockArray(
             convert(
@@ -42,6 +44,7 @@ object SubChunkConverter {
         )
     }
 
+    @JvmStatic
     fun convertSubChunkFromLegacyColumn(idArray: String, metaArray: String, yOffset: Int): PalettedBlockArray {
         return PalettedBlockArray(
             convert(

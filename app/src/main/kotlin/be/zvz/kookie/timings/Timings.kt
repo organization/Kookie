@@ -28,6 +28,7 @@ object Timings {
 
     private val timings: MutableMap<String, TimingsHandler> = HashObjObjMaps.newMutableMap()
 
+    @JvmStatic
     fun getTileEntityTimings(tile: Tile): TimingsHandler {
         var exist = timings[tile::class.java.simpleName]
         if (exist == null) {
@@ -37,6 +38,7 @@ object Timings {
         return exist
     }
 
+    @JvmStatic
     fun getPacketDecodeTimings(packet: DataPacket): TimingsHandler {
         val protocolIdentify = this::class.java.getAnnotation(ProtocolIdentify::class.java)!!
         val networkId = if (protocolIdentify.networkId == ProtocolInfo.IDS.UNKNOWN && protocolIdentify.customId != -1) {
@@ -53,6 +55,7 @@ object Timings {
         return exist
     }
 
+    @JvmStatic
     fun getPacketSendTimings(packet: DataPacket): TimingsHandler {
         val protocolIdentify = this::class.java.getAnnotation(ProtocolIdentify::class.java)!!
         val networkId = if (protocolIdentify.networkId == ProtocolInfo.IDS.UNKNOWN && protocolIdentify.customId != -1) {

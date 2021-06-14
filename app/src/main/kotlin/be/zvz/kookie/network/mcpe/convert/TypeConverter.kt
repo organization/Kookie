@@ -31,18 +31,21 @@ object TypeConverter {
     private val shieldRuntimeId: Int =
         GlobalItemTypeDictionary.dictionary.fromStringId("minecraft:shield")
 
+    @JvmStatic
     fun coreGameModeToProtocol(gameMode: GameMode): Int = when (gameMode) {
         GameMode.SURVIVAL -> ProtocolGameMode.SURVIVAL
         GameMode.CREATIVE, GameMode.SPECTATOR -> ProtocolGameMode.CREATIVE
         GameMode.ADVENTURE -> ProtocolGameMode.ADVENTURE
     }
 
+    @JvmStatic
     fun protocolGameModeName(gameMode: GameMode): String = when (gameMode) {
         GameMode.SURVIVAL -> "Survival"
         GameMode.ADVENTURE -> "Adventure"
         else -> "Creative"
     }
 
+    @JvmStatic
     fun protocolGameModeToCore(gameMode: Int): GameMode? = when (gameMode) {
         ProtocolGameMode.SURVIVAL -> GameMode.SURVIVAL
         ProtocolGameMode.CREATIVE -> GameMode.CREATIVE
@@ -51,6 +54,7 @@ object TypeConverter {
         else -> null
     }
 
+    @JvmStatic
     fun coreItemStackToRecipeIngredient(itemStack: Item): RecipeIngredient {
         if (itemStack.isNull())
             return RecipeIngredient(0, 0, 0)

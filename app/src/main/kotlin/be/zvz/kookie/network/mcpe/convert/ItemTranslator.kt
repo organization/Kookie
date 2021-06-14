@@ -76,6 +76,7 @@ object ItemTranslator {
         }
     }
 
+    @JvmStatic
     fun toNetworkId(internalId: Int, internalMeta: Int): Pair<Int, Int> {
         if (complexCoreToNetMapping[internalId]?.containsKey(internalMeta) == true) {
             return Pair(complexCoreToNetMapping.getValue(internalId).getValue(internalMeta), 0)
@@ -86,6 +87,7 @@ object ItemTranslator {
         throw IllegalArgumentException("Unmapped ID/metadata combination $internalId:$internalMeta")
     }
 
+    @JvmStatic
     @JvmOverloads
     fun fromNetworkId(
         networkId: Int,
@@ -106,6 +108,7 @@ object ItemTranslator {
         throw IllegalArgumentException("Unmapped network ID/metadata combination $networkId:$networkMeta")
     }
 
+    @JvmStatic
     fun fromNetworkIdWithWildcardHandling(networkId: Int, networkMeta: Int): Pair<Int, Int> {
         val isComplexMapping = AtomicBoolean(false)
         if (networkMeta != 0x7fff)
