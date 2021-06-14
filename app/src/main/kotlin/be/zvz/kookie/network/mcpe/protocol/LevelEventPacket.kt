@@ -109,6 +109,7 @@ class LevelEventPacket : DataPacket(), ClientboundPacket {
         const val PID_MASK = 1023
 
         @JvmStatic
+        @JvmOverloads
         fun create(evid: Int, data: Int, pos: Vector3? = null) = LevelEventPacket().apply {
             this.evid = evid
             this.data = data

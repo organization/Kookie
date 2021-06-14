@@ -19,7 +19,7 @@ package be.zvz.kookie.network.mcpe.protocol.types.resourcepack
 
 import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 
-class BehaviorPackEntry(
+class BehaviorPackEntry @JvmOverloads constructor(
     val packId: String,
     val version: String,
     val sizeBytes: Long,

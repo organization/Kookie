@@ -17,7 +17,7 @@
  */
 package be.zvz.kookie.item.enchantment
 
-class EnchantmentInstance(
+class EnchantmentInstance @JvmOverloads constructor(
     val enchantment: Enchantment,
     val level: Int = 1,
 ) {

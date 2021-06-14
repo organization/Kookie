@@ -19,7 +19,7 @@ package be.zvz.kookie.block
 
 import be.zvz.kookie.item.Item
 
-class BlockBreakInfo(
+class BlockBreakInfo @JvmOverloads constructor(
     val hardness: Float,
     val toolType: BlockToolType = BlockToolType.NONE,
     val toolHarvestLevel: Int = 0,

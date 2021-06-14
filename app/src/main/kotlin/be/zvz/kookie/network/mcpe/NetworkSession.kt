@@ -85,6 +85,7 @@ class NetworkSession(
         return true
     }
 
+    @JvmOverloads
     fun sendDataPacket(packet: DataPacket, immediate: Boolean = false) {
         // TODO: call DataPacketSendEvent on here
         val timings = Timings.getPacketSendTimings(packet)
@@ -150,7 +151,6 @@ class NetworkSession(
         }
     }
 
-    @JvmOverloads
     private fun flushSendBuffer(immediate: Boolean = false) {
         try {
             if (sendBuffer.size > 0) {

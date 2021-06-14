@@ -19,7 +19,7 @@ package be.zvz.kookie.network.mcpe.protocol.types.command
 
 import be.zvz.kookie.network.mcpe.protocol.AvailableCommandsPacket
 
-class CommandParameter(
+class CommandParameter @JvmOverloads constructor(
     var paramName: String = "",
     var paramType: Int = -1,
     var isOptional: Boolean = false,

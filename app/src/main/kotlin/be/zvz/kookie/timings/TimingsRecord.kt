@@ -68,6 +68,7 @@ class TimingsRecord(val handler: TimingsHandler) {
         fun getAll(): MutableList<TimingsRecord> = records
 
         @JvmStatic
+        @JvmOverloads
         fun tick(measure: Boolean = true) {
             if (measure) {
                 records.forEach {

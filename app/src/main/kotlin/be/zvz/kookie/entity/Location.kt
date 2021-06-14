@@ -22,40 +22,21 @@ import be.zvz.kookie.world.Position
 import be.zvz.kookie.world.World
 
 open class Location @JvmOverloads constructor(
-    x: Double,
+    x: Double = 0.0,
     y: Double = 0.0,
     z: Double = 0.0,
     var yaw: Double = 0.0,
     var pitch: Double = 0.0,
     world: World? = null
 ) : Position(x, y, z, world) {
-    constructor() : this(0.0)
-    constructor(
-        x: Int = 0,
-        y: Int = 0,
-        z: Int = 0,
-        yaw: Int = 0,
-        pitch: Int = 0,
-        world: World? = null
-    ) : this(x.toDouble(), y.toDouble(), z.toDouble(), yaw.toDouble(), pitch.toDouble(), world)
+    @JvmOverloads constructor(x: Int, y: Int = 0, z: Int = 0, yaw: Int = 0, pitch: Int = 0, world: World? = null) :
+        this(x.toDouble(), y.toDouble(), z.toDouble(), yaw.toDouble(), pitch.toDouble(), world)
 
-    constructor(
-        x: Long = 0L,
-        y: Long = 0L,
-        z: Long = 0L,
-        yaw: Long = 0L,
-        pitch: Long = 0L,
-        world: World? = null
-    ) : this(x.toDouble(), y.toDouble(), z.toDouble(), yaw.toDouble(), pitch.toDouble(), world)
+    @JvmOverloads constructor(x: Long, y: Long = 0L, z: Long = 0L, yaw: Long = 0L, pitch: Long = 0L, world: World? = null) :
+        this(x.toDouble(), y.toDouble(), z.toDouble(), yaw.toDouble(), pitch.toDouble(), world)
 
-    constructor(
-        x: Float = 0F,
-        y: Float = 0F,
-        z: Float = 0F,
-        yaw: Float = 0F,
-        pitch: Float = 0F,
-        world: World? = null
-    ) : this(x.toDouble(), y.toDouble(), z.toDouble(), yaw.toDouble(), pitch.toDouble(), world)
+    @JvmOverloads constructor(x: Float, y: Float = 0F, z: Float = 0F, yaw: Float = 0F, pitch: Float = 0F, world: World? = null) :
+        this(x.toDouble(), y.toDouble(), z.toDouble(), yaw.toDouble(), pitch.toDouble(), world)
 
     override fun toString(): String =
         "Location (world=${world?.folderName ?: "null"}, x=$x, y=$y, z=$z, yaw=$yaw, pitch=$pitch)"

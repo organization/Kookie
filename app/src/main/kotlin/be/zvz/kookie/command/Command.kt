@@ -22,7 +22,7 @@ import be.zvz.kookie.timings.Timings
 import be.zvz.kookie.timings.TimingsHandler
 import be.zvz.kookie.utils.TextFormat
 
-abstract class Command(
+abstract class Command @JvmOverloads constructor(
     val name: String,
     val description: String = "",
     val usageMessage: String = "/$name",

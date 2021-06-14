@@ -39,6 +39,7 @@ object BlockFactory {
         TODO("Add Blocks")
     }
 
+    @JvmOverloads
     fun register(block: Block, override: Boolean = false) {
         val variant = block.idInfo.variant
 
@@ -125,6 +126,7 @@ object BlockFactory {
 
     fun fromFullBlock(fullState: Int): Block = get(fullState shr 4, fullState and 0xf)
 
+    @JvmOverloads
     fun isRegistered(id: Int, meta: Int = 0): Boolean {
         val b = fullList[(id shl 4) or meta]
         return b !== null && b !is UnknownBlock

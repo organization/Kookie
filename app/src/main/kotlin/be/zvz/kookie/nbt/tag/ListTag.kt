@@ -22,7 +22,7 @@ import be.zvz.kookie.nbt.NbtException
 import be.zvz.kookie.nbt.NbtStreamReader
 import be.zvz.kookie.nbt.NbtStreamWriter
 
-class ListTag<T>(
+class ListTag<T> @JvmOverloads constructor(
     override val value: MutableList<Tag<T>> = mutableListOf(),
     private var tagType: NBT.TagType = NBT.TagType.NOTHING
 ) : Tag<List<Tag<T>>>() {

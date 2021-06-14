@@ -3,7 +3,7 @@ package be.zvz.kookie.entity.effect
 import be.zvz.kookie.color.Color
 import kotlin.math.max
 
-class EffectInstance(
+class EffectInstance @JvmOverloads constructor(
     val effectType: Effect,
     duration: Int = effectType.defaultDuration,
     amplifier: Int = 0,

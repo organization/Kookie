@@ -17,7 +17,7 @@
  */
 package be.zvz.kookie.world.format
 
-class HeightArray(val values: MutableList<Int> = mutableListOf()) {
+class HeightArray @JvmOverloads constructor(val values: MutableList<Int> = mutableListOf()) {
     init {
         if (values.size != 256) {
             throw IllegalArgumentException("Expected exactly 256 values")

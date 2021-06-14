@@ -20,7 +20,7 @@ package be.zvz.kookie.player
 import be.zvz.kookie.entity.Skin
 import java.util.UUID
 
-class PlayerInfo(
+class PlayerInfo @JvmOverloads constructor(
     private val username: String,
     private val uuid: UUID,
     private val skin: Skin,

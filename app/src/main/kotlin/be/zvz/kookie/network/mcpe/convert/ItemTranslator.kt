@@ -86,6 +86,7 @@ object ItemTranslator {
         throw IllegalArgumentException("Unmapped ID/metadata combination $internalId:$internalMeta")
     }
 
+    @JvmOverloads
     fun fromNetworkId(
         networkId: Int,
         networkMeta: Int,
