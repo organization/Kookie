@@ -28,6 +28,7 @@ class CodeBuilderPacket : DataPacket(), ClientboundPacket {
     var openCodeBuilder: Boolean = false
 
     companion object {
+        @JvmStatic
         fun create(url: String, openCodeBuilder: Boolean): CodeBuilderPacket = CodeBuilderPacket().apply {
             this.url = url
             this.openCodeBuilder = openCodeBuilder

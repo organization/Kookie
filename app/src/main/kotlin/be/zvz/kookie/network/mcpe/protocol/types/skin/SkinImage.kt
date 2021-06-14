@@ -37,6 +37,7 @@ class SkinImage(private val height: Int, private val width: Int, private val dat
     fun getData(): String = data
 
     companion object {
+        @JvmStatic
         fun fromLegacy(data: String): SkinImage {
             return when (data.length) {
                 64 * 32 * 4 -> SkinImage(32, 64, data)

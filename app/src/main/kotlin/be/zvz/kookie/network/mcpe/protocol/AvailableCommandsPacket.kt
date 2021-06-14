@@ -227,7 +227,8 @@ open class AvailableCommandsPacket : DataPacket(), ClientboundPacket {
                     parameter.enum = enums.getOrNull(index)
                     if (parameter.enum !is CommandEnum) {
                         throw PacketDecodeException(
-                            "Deserializing $name parameter ${parameter.paramName}: Expected enum at $index, but got none"
+                            "Deserializing $name parameter ${parameter.paramName}: " +
+                                "Expected enum at $index, but got none"
                         )
                     }
                 } else if ((parameter.paramType and ARG_FLAG_POSTFIX) != 0) {
@@ -235,12 +236,14 @@ open class AvailableCommandsPacket : DataPacket(), ClientboundPacket {
                     parameter.postfix = postFixes.getOrNull(index)
                     if (parameter.postfix == null) {
                         throw PacketDecodeException(
-                            "Deserializing $name parameter ${parameter.paramName}: Expected postfix at $index, but got none"
+                            "Deserializing $name parameter ${parameter.paramName}: " +
+                                "Expected postfix at $index, but got none"
                         )
                     }
                 } else if ((parameter.paramType and ARG_FLAG_VALID) == 0) {
                     throw PacketDecodeException(
-                        "deserializing $name parameter ${parameter.paramName}: Invalid parameter type ${parameter.paramType}"
+                        "deserializing $name parameter ${parameter.paramName}: " +
+                            "Invalid parameter type ${parameter.paramType}"
                     )
                 }
                 overloads.getValue(overloadIndex)[paramIndex] = parameter

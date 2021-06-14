@@ -43,6 +43,7 @@ class Vec3MetadataProperty(val value: Vector3) : MetadataProperty() {
     }
 
     companion object {
+        @JvmStatic
         fun read(input: PacketSerializer): Vec3MetadataProperty {
             return Vec3MetadataProperty(input.getVector3())
         }

@@ -49,6 +49,7 @@ class CompoundMetadataProperty(var value: CompoundTag) : MetadataProperty() {
     }
 
     companion object {
+        @JvmStatic
         fun read(input: PacketSerializer): CompoundMetadataProperty {
             return CompoundMetadataProperty(input.getNbtCompoundRoot())
         }

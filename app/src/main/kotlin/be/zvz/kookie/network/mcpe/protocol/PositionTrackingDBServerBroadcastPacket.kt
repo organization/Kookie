@@ -57,6 +57,7 @@ class PositionTrackingDBServerBroadcastPacket : DataPacket(), ClientboundPacket 
 
         companion object {
             private val VALUES = values()
+            @JvmStatic
             fun from(value: Int) = VALUES.first { it.value == value }
         }
     }

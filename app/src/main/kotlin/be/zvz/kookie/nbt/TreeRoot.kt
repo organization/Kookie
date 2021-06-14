@@ -20,7 +20,7 @@ package be.zvz.kookie.nbt
 import be.zvz.kookie.nbt.tag.CompoundTag
 import be.zvz.kookie.nbt.tag.Tag
 
-data class TreeRoot(
+data class TreeRoot @JvmOverloads constructor(
     val tag: Tag<*>,
     val name: String = ""
 ) {

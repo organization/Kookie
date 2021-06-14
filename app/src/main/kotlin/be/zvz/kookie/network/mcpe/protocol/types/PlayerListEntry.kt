@@ -15,10 +15,13 @@ class PlayerListEntry {
     var isHost: Boolean = false
 
     companion object {
+        @JvmStatic
         fun createRemovalEntry(uuid: UUID) = PlayerListEntry().apply {
             this.uuid = uuid
         }
 
+        @JvmStatic
+        @JvmOverloads
         fun createAdditionEntry(
             uuid: UUID,
             entityUniqueId: Long,

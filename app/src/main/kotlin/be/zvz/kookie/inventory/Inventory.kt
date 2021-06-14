@@ -21,8 +21,9 @@ import be.zvz.kookie.item.Item
 import be.zvz.kookie.player.Player
 
 interface Inventory {
-    fun getSize(): Int
-    fun getMaxStackSize(): Int
+    val size: Int
+    val maxStackSize: Int
+
     fun getItem(index: Int): Item
     fun setItem(index: Int, item: Item)
     fun addItem(vararg slots: Item): MutableList<Item>

@@ -34,6 +34,7 @@ class ByteTag(override val value: Int) : Tag<Int>() {
     }
 
     companion object {
+        @JvmStatic
         fun read(reader: NbtStreamReader): ByteTag = ByteTag(reader.readSignedByte())
     }
 }

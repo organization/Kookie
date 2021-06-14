@@ -34,6 +34,7 @@ class FloatTag(override val value: Float) : Tag<Float>() {
     }
 
     companion object {
+        @JvmStatic
         fun read(reader: NbtStreamReader): FloatTag = FloatTag(reader.readFloat())
     }
 }

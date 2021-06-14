@@ -34,6 +34,7 @@ class LongArrayTag(override val value: LongArray) : Tag<LongArray>() {
     }
 
     companion object {
+        @JvmStatic
         fun read(reader: NbtStreamReader): LongArrayTag = LongArrayTag(reader.readLongArray())
     }
 }

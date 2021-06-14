@@ -18,5 +18,6 @@
 package be.zvz.kookie.block.tile
 
 object TileFactory {
+    @JvmStatic
     fun getSaveId(className: String): String = TODO("getSaveId")
 }

@@ -38,6 +38,7 @@ class SetTimePacket : DataPacket(), ClientboundPacket {
     }
 
     companion object {
+        @JvmStatic
         fun create(time: Int): SetTimePacket = SetTimePacket().apply {
             this.time = time and 0xffffffff.toInt()
         }

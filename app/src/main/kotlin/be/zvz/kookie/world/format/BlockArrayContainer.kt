@@ -35,6 +35,7 @@ class BlockArrayContainer<Block> private constructor(var blockArray: IPalettedBl
             paletteEntries
         )
     )
+
     constructor(other: BlockArrayContainer<Block>) : this(other.blockArray.clone() as IPalettedBlockArray<Block>)
 
     fun getWordArray(): CharArray = blockArray.getWordArray()
@@ -90,6 +91,7 @@ class BlockArrayContainer<Block> private constructor(var blockArray: IPalettedBl
                 16 -> InternalPalettedBlockArray(16, wordArray, paletteEntries)
                 else -> throw IllegalArgumentException("invalid bits-per-block: $bitsPerBlock")
             }
+
         private fun <Block> blockArrayFromCapacity(capacity: Int): IPalettedBlockArray<Block> = when {
             capacity <= cache1.maxPaletteSize -> InternalPalettedBlockArray(1)
             capacity <= cache2.maxPaletteSize -> InternalPalettedBlockArray(2)
@@ -102,6 +104,7 @@ class BlockArrayContainer<Block> private constructor(var blockArray: IPalettedBl
             else -> throw IllegalArgumentException("invalid capacity specified: $capacity")
         }
 
+        @JvmStatic
         fun getExpectedPayloadSize(bitsPerBlock: Int): Int =
             when (bitsPerBlock) {
                 1 -> cache1.payloadSize

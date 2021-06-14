@@ -59,6 +59,8 @@ class MoveActorAbsolutePacket : DataPacket(), ClientboundPacket, ServerboundPack
         const val UNKNOWN = 0x03
         const val FLAG_FORCE_MOVE_LOCAL_ENTITY = 0x04
 
+        @JvmStatic
+        @JvmOverloads
         fun create(
             entityRuntimeId: Long,
             pos: Vector3,

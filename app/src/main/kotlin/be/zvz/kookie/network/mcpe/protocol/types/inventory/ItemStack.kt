@@ -30,6 +30,7 @@ data class ItemStack(
     val shieldBlockingTick: Long?
 ) {
     companion object {
+        @JvmStatic
         fun empty(): ItemStack {
             return ItemStack(0, 0, 0, 0, null, listOf(), listOf(), null)
         }

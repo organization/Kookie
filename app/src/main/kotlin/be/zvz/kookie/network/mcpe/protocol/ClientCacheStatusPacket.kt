@@ -26,6 +26,7 @@ class ClientCacheStatusPacket : DataPacket(), ServerboundPacket {
     var enabled: Boolean = false
 
     companion object {
+        @JvmStatic
         fun create(enabled: Boolean): ClientCacheStatusPacket = ClientCacheStatusPacket().apply {
             this.enabled = enabled
         }

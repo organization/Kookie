@@ -44,6 +44,7 @@ class ItemStackResponsePacket : DataPacket(), ClientboundPacket {
     }
 
     companion object {
+        @JvmStatic
         fun create(responses: MutableList<ItemStackResponse>) = ItemStackResponsePacket().apply {
             this.responses = responses
         }

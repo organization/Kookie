@@ -17,4 +17,4 @@
  */
 package be.zvz.kookie.utils
 
-open class ServerException(message: String = "throw exception at kookie") : RuntimeException(message)
+open class ServerException @JvmOverloads constructor(message: String = "throw exception at kookie") : RuntimeException(message)

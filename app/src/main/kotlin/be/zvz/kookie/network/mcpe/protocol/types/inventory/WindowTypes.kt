@@ -57,6 +57,7 @@ enum class WindowTypes(val value: Int) {
 
     companion object {
         private val VALUES = values()
+        @JvmStatic
         fun from(findValue: Int): WindowTypes = VALUES.firstOrNull { it.value == findValue } ?: NONE
     }
 }

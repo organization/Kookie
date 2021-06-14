@@ -34,6 +34,7 @@ class ShortTag(override val value: Int) : Tag<Int>() {
     }
 
     companion object {
+        @JvmStatic
         fun read(reader: NbtStreamReader): ShortTag = ShortTag(reader.readSignedShort())
     }
 }

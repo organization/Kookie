@@ -51,6 +51,7 @@ class ItemComponentPacket : DataPacket(), ClientboundPacket {
     }
 
     companion object {
+        @JvmStatic
         fun create(entries: List<ItemComponentPacketEntry>) =
             ItemComponentPacket().apply {
                 this.entries = entries

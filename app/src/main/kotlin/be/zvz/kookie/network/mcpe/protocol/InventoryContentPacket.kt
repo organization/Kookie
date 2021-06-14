@@ -47,6 +47,7 @@ class InventoryContentPacket : DataPacket(), ClientboundPacket {
     }
 
     companion object {
+        @JvmStatic
         fun create(windowId: Int, items: MutableList<ItemStackWrapper>) = InventoryContentPacket().apply {
             this.windowId = windowId
             this.items = items

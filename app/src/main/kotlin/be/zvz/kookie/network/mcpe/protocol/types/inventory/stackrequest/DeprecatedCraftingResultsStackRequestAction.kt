@@ -33,6 +33,7 @@ class DeprecatedCraftingResultsStackRequestAction(val results: MutableList<ItemS
     }
 
     companion object {
+        @JvmStatic
         fun read(input: PacketSerializer): DeprecatedCraftingResultsStackRequestAction {
             val results = mutableListOf<ItemStack>()
             for (i in 0 until input.getUnsignedVarInt()) {

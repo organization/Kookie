@@ -44,6 +44,7 @@ class ItemStackRequestPacket : DataPacket(), ServerboundPacket {
     }
 
     companion object {
+        @JvmStatic
         fun create(requests: MutableList<ItemStackRequest>) = ItemStackRequestPacket().apply {
             this.requests = requests
         }

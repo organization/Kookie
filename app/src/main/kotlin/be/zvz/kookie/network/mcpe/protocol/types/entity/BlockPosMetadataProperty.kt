@@ -42,6 +42,7 @@ class BlockPosMetadataProperty(val value: PacketSerializer.BlockPosition) : Meta
     }
 
     companion object {
+        @JvmStatic
         fun read(input: PacketSerializer): BlockPosMetadataProperty = BlockPosMetadataProperty(input.getBlockPosition())
     }
 }

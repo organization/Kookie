@@ -41,6 +41,7 @@ class TransferPacket : DataPacket(), ClientboundPacket {
     }
 
     companion object {
+        @JvmStatic
         fun create(address: String, port: Int): TransferPacket {
             return TransferPacket().apply {
                 this.address = address

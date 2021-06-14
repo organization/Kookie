@@ -46,6 +46,7 @@ class TextFormat {
         const val ITALIC = "${ESCAPE}o"
         const val RESET = "${ESCAPE}r"
 
+        @JvmStatic
         fun clean(message: String): String {
             return message.replace(Regex("$ESCAPE[0-9a-fk-or]/u"), "")
         }

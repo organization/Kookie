@@ -27,6 +27,7 @@ class ClientCacheMissResponsePacket : DataPacket(), ClientboundPacket {
     var blobs: MutableList<ChunkCacheBlob> = mutableListOf()
 
     companion object {
+        @JvmStatic
         fun create(blobs: List<ChunkCacheBlob>): ClientCacheMissResponsePacket = ClientCacheMissResponsePacket().apply {
             this.blobs = blobs.toMutableList()
         }

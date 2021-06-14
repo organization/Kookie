@@ -29,35 +29,37 @@ import java.util.concurrent.atomic.AtomicInteger
 import kotlin.math.round
 
 object Binary {
-    fun signByte(value: Int): Int = value shl 56 shr 56
-    fun unsignByte(value: Int): Int = value and 0xff
-    fun signShort(value: Int): Int = value shl 48 shr 48
-    fun unsignShort(value: Int): Int = value and 0xffff
-    fun signInt(value: Int): Int = value shl 32 shr 32
-    fun unsignInt(value: Int): Int = value and -1
+    @JvmStatic fun signByte(value: Int): Int = value shl 56 shr 56
+    @JvmStatic fun unsignByte(value: Int): Int = value and 0xff
+    @JvmStatic fun signShort(value: Int): Int = value shl 48 shr 48
+    @JvmStatic fun unsignShort(value: Int): Int = value and 0xffff
+    @JvmStatic fun signInt(value: Int): Int = value shl 32 shr 32
+    @JvmStatic fun unsignInt(value: Int): Int = value and -1
 
-    fun flipShortEndianness(value: Int): Int = readLShort(writeShort(value))
-    fun flipIntEndianness(value: Int): Int = readLInt(writeInt(value))
-    fun flipLongEndianness(value: Long): Long = readLLong(writeLong(value))
+    @JvmStatic fun flipShortEndianness(value: Int): Int = readLShort(writeShort(value))
+    @JvmStatic fun flipIntEndianness(value: Int): Int = readLInt(writeInt(value))
+    @JvmStatic fun flipLongEndianness(value: Long): Long = readLLong(writeLong(value))
 
-    fun readBoolean(b: String): Boolean = b != "\u0000"
-    fun writeBoolean(b: Boolean): String = if (b) {
+    @JvmStatic fun readBoolean(b: String): Boolean = b != "\u0000"
+    @JvmStatic fun writeBoolean(b: Boolean): String = if (b) {
         "\u0001"
     } else {
         "\u0000"
     }
-    fun readByte(c: String): Int = c[0].code
-    fun readSignedByte(c: String): Int = signByte(c[0].code)
-    fun writeByte(c: Int): String = c.toChar().toString()
-    fun readShort(str: String): Int {
+
+    @JvmStatic fun readByte(c: String): Int = c[0].code
+    @JvmStatic fun readSignedByte(c: String): Int = signByte(c[0].code)
+    @JvmStatic fun writeByte(c: Int): String = c.toChar().toString()
+    @JvmStatic fun readShort(str: String): Int {
         str.byteInputStream().use { bais ->
             DataInputStream(bais).use {
                 return it.readUnsignedShort()
             }
         }
     }
-    fun readSignedShort(str: String): Int = signShort(readShort(str))
-    fun writeShort(value: Int): String {
+
+    @JvmStatic fun readSignedShort(str: String): Int = signShort(readShort(str))
+    @JvmStatic fun writeShort(value: Int): String {
         ByteArrayOutputStream().use { baos ->
             DataOutputStream(baos).use {
                 it.writeShort(value)
@@ -65,15 +67,17 @@ object Binary {
             return baos.toString()
         }
     }
-    fun readLShort(str: String): Int {
+
+    @JvmStatic fun readLShort(str: String): Int {
         str.byteInputStream().use { bais ->
             LittleEndianDataInputStream(bais).use {
                 return it.readUnsignedShort()
             }
         }
     }
-    fun readSignedLShort(str: String): Int = signShort(readLShort(str))
-    fun writeLShort(value: Int): String {
+
+    @JvmStatic fun readSignedLShort(str: String): Int = signShort(readLShort(str))
+    @JvmStatic fun writeLShort(value: Int): String {
         ByteArrayOutputStream().use { baos ->
             LittleEndianDataOutputStream(baos).use {
                 it.writeShort(value)
@@ -82,7 +86,7 @@ object Binary {
         }
     }
 
-    fun toPositiveByteArray(bytes: ByteArray): ByteArray = bytes.map {
+    @JvmStatic fun toPositiveByteArray(bytes: ByteArray): ByteArray = bytes.map {
         if (it < 0) {
             (256 + it).toByte()
         } else {
@@ -122,15 +126,15 @@ object Binary {
         return buf.getInt(index)
     }
 
-    fun readTriad(str: String): Int = unpackN("\u0000$str", 1)
-    fun writeTriad(value: Int): String = packN(value).substring(1)
-    fun readLTriad(str: String): Int = unpackV("$str\u0000", 1)
-    fun writeLTriad(value: Int): String = packV(value).dropLast(1)
-    fun readInt(str: String): Int = signInt(unpackN(str, 1))
-    fun writeInt(value: Int): String = packN(value)
-    fun readLInt(str: String): Int = unpackV(str, 1)
-    fun writeLInt(value: Int): String = packV(value)
-    fun readFloat(str: String): Float {
+    @JvmStatic fun readTriad(str: String): Int = unpackN("\u0000$str", 1)
+    @JvmStatic fun writeTriad(value: Int): String = packN(value).substring(1)
+    @JvmStatic fun readLTriad(str: String): Int = unpackV("$str\u0000", 1)
+    @JvmStatic fun writeLTriad(value: Int): String = packV(value).dropLast(1)
+    @JvmStatic fun readInt(str: String): Int = signInt(unpackN(str, 1))
+    @JvmStatic fun writeInt(value: Int): String = packN(value)
+    @JvmStatic fun readLInt(str: String): Int = unpackV(str, 1)
+    @JvmStatic fun writeLInt(value: Int): String = packV(value)
+    @JvmStatic fun readFloat(str: String): Float {
         str.byteInputStream().use { bais ->
             DataInputStream(bais).use {
                 return it.readFloat()
@@ -138,9 +142,8 @@ object Binary {
         }
     }
 
-    fun readRoundedFloat(str: String): Float = round(readFloat(str))
-
-    fun writeFloat(value: Float): String {
+    @JvmStatic fun readRoundedFloat(str: String): Float = round(readFloat(str))
+    @JvmStatic fun writeFloat(value: Float): String {
         ByteArrayOutputStream().use { baos ->
             DataOutputStream(baos).use {
                 it.writeFloat(value)
@@ -149,7 +152,7 @@ object Binary {
         }
     }
 
-    fun readLFloat(str: String): Float {
+    @JvmStatic fun readLFloat(str: String): Float {
         str.byteInputStream().use { bais ->
             LittleEndianDataInputStream(bais).use {
                 return it.readFloat()
@@ -157,9 +160,7 @@ object Binary {
         }
     }
 
-    fun readRoundedLFloat(str: String): Float = round(readLFloat(str))
-
-    fun writeLFloat(value: Float): String {
+    @JvmStatic fun writeLFloat(value: Float): String {
         ByteArrayOutputStream().use { baos ->
             LittleEndianDataOutputStream(baos).use {
                 it.writeFloat(value)
@@ -168,7 +169,9 @@ object Binary {
         }
     }
 
-    fun readDouble(str: String): Double {
+    @JvmStatic fun readRoundedLFloat(str: String): Float = round(readLFloat(str))
+
+    @JvmStatic fun readDouble(str: String): Double {
         str.byteInputStream().use { bais ->
             DataInputStream(bais).use {
                 return it.readDouble()
@@ -176,7 +179,7 @@ object Binary {
         }
     }
 
-    fun writeDouble(value: Double): String {
+    @JvmStatic fun writeDouble(value: Double): String {
         ByteArrayOutputStream().use { baos ->
             DataOutputStream(baos).use {
                 it.writeDouble(value)
@@ -185,7 +188,7 @@ object Binary {
         }
     }
 
-    fun readLDouble(str: String): Double {
+    @JvmStatic fun readLDouble(str: String): Double {
         str.byteInputStream().use { bais ->
             LittleEndianDataInputStream(bais).use {
                 return it.readDouble()
@@ -193,7 +196,7 @@ object Binary {
         }
     }
 
-    fun writeLDouble(value: Double): String {
+    @JvmStatic fun writeLDouble(value: Double): String {
         ByteArrayOutputStream().use { baos ->
             LittleEndianDataOutputStream(baos).use {
                 it.writeDouble(value)
@@ -202,7 +205,7 @@ object Binary {
         }
     }
 
-    fun readLong(str: String): Long {
+    @JvmStatic fun readLong(str: String): Long {
         str.byteInputStream().use { bais ->
             DataInputStream(bais).use {
                 return it.readLong()
@@ -210,7 +213,7 @@ object Binary {
         }
     }
 
-    fun writeLong(value: Long): String {
+    @JvmStatic fun writeLong(value: Long): String {
         ByteArrayOutputStream().use { baos ->
             DataOutputStream(baos).use {
                 it.writeLong(value)
@@ -219,7 +222,7 @@ object Binary {
         }
     }
 
-    fun readLLong(str: String): Long {
+    @JvmStatic fun readLLong(str: String): Long {
         str.byteInputStream().use { bais ->
             LittleEndianDataInputStream(bais).use {
                 return it.readLong()
@@ -227,7 +230,7 @@ object Binary {
         }
     }
 
-    fun writeLLong(value: Long): String {
+    @JvmStatic fun writeLLong(value: Long): String {
         ByteArrayOutputStream().use { baos ->
             LittleEndianDataOutputStream(baos).use {
                 it.writeLong(value)
@@ -236,13 +239,13 @@ object Binary {
         }
     }
 
-    fun readVarInt(buffer: String, offset: AtomicInteger): Int {
+    @JvmStatic fun readVarInt(buffer: String, offset: AtomicInteger): Int {
         val raw = readUnsignedVarInt(buffer, offset)
         val temp = raw shl 63 shr 63 xor raw shr 1
         return temp xor (raw and (1 shl 63))
     }
 
-    fun readUnsignedVarInt(buffer: String, offset: AtomicInteger): Int {
+    @JvmStatic fun readUnsignedVarInt(buffer: String, offset: AtomicInteger): Int {
         var value = 0
         var i = 0
         while (i <= 28) {
@@ -261,12 +264,12 @@ object Binary {
         throw BinaryDataException("VarInt did not terminate after 5 bytes!")
     }
 
-    fun writeVarInt(v: Int): String {
+    @JvmStatic fun writeVarInt(v: Int): String {
         val x = v shl 32 shr 32
         return writeUnsignedVarInt((x shl 1) xor (x shr 31))
     }
 
-    fun writeUnsignedVarInt(value: Int): String {
+    @JvmStatic fun writeUnsignedVarInt(value: Int): String {
         val buf = StringBuilder()
         var x = value and -1
         for (i in 0 until 5) {
@@ -283,13 +286,13 @@ object Binary {
         throw IllegalArgumentException("Value too large to be encoded as a VarInt")
     }
 
-    fun readVarLong(buffer: String, offset: Int): Long {
+    @JvmStatic fun readVarLong(buffer: String, offset: Int): Long {
         val raw = readUnsignedVarLong(buffer, offset)
         val temp = raw shl 63 shr 63 xor raw shr 1
         return temp xor (raw and (1 shl 63))
     }
 
-    fun readUnsignedVarLong(buffer: String, offset: Int): Long {
+    @JvmStatic fun readUnsignedVarLong(buffer: String, offset: Int): Long {
         var value = 0L
         var i = 0
         while (i <= 63) {
@@ -309,11 +312,11 @@ object Binary {
         throw BinaryDataException("VarInt did not terminate after 5 bytes!")
     }
 
-    fun writeVarLong(v: Long): String {
+    @JvmStatic fun writeVarLong(v: Long): String {
         return writeUnsignedVarLong((v shl 1) xor (v shr 63))
     }
 
-    fun writeUnsignedVarLong(value: Long): String {
+    @JvmStatic fun writeUnsignedVarLong(value: Long): String {
         val buf = StringBuilder()
         var x = value and -1
         for (i in 0 until 10) {

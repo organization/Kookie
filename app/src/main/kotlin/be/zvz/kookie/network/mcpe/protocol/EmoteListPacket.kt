@@ -49,6 +49,7 @@ class EmoteListPacket : DataPacket(), ClientboundPacket, ServerboundPacket {
     }
 
     companion object {
+        @JvmStatic
         fun create(playerEntityRuntimeId: Long, emoteIds: List<UUID>) = EmoteListPacket().apply {
             this.playerEntityRuntimeId = playerEntityRuntimeId
             this.emoteIds = emoteIds

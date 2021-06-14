@@ -61,6 +61,7 @@ class AnimateEntityPacket : DataPacket(), ClientboundPacket {
     }
 
     companion object {
+        @JvmStatic
         fun create(
             animation: String,
             nextState: String,

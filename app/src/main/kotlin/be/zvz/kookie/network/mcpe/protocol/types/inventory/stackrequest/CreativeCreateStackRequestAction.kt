@@ -27,6 +27,7 @@ class CreativeCreateStackRequestAction(val creativeItemId: Int) : ItemStackReque
     }
 
     companion object {
+        @JvmStatic
         fun read(input: PacketSerializer): CreativeCreateStackRequestAction {
             val creativeItemId = input.readGenericTypeNetworkId()
             return CreativeCreateStackRequestAction(creativeItemId)

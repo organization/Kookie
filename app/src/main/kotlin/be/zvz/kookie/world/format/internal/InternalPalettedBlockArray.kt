@@ -18,14 +18,14 @@
 package be.zvz.kookie.world.format.internal
 
 import com.koloboke.collect.set.hash.HashObjSets
-import kotlin.collections.ArrayList
 
 class InternalPalettedBlockArray<Block> internal constructor(private val bitsPerBlock: Int) :
     IPalettedBlockArray<Block> {
     internal val blocksPerWord = Int.SIZE_BITS / bitsPerBlock
     internal val blockMask = (1 shl bitsPerBlock) - 1
     internal val wordCount =
-        IPalettedBlockArray.ARRAY_CAPACITY / blocksPerWord + if (IPalettedBlockArray.ARRAY_CAPACITY % blocksPerWord > 0) 1 else 0
+        IPalettedBlockArray.ARRAY_CAPACITY / blocksPerWord +
+            if (IPalettedBlockArray.ARRAY_CAPACITY % blocksPerWord > 0) 1 else 0
     internal val payloadSize = wordCount * Int.SIZE_BYTES
     internal val maxPaletteSize = if (1 shl bitsPerBlock < IPalettedBlockArray.ARRAY_CAPACITY) {
         1 shl bitsPerBlock

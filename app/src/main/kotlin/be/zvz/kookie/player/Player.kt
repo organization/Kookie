@@ -20,6 +20,8 @@ package be.zvz.kookie.player
 import be.zvz.kookie.Server
 import be.zvz.kookie.command.CommandSender
 import be.zvz.kookie.entity.Human
+import be.zvz.kookie.inventory.ArmorInventory
+import be.zvz.kookie.inventory.PlayerInventory
 import be.zvz.kookie.lang.Language
 import be.zvz.kookie.lang.TranslationContainer
 import be.zvz.kookie.nbt.tag.CompoundTag
@@ -42,15 +44,14 @@ class Player(
         get() = server.language
     val username = playerInfo.getUsername()
     var displayName = username
-        set(name) {
-            // TODO: PlayerDisplayNameChangeEvent
-            field = name
-        }
     override val name: String
         get() = username
 
     override val permissionRecalculationCallbacks: Set<(changedPermissionsOldValues: Map<String, Boolean>) -> Unit>
         get() = TODO("Not yet implemented")
+
+    val inventory: PlayerInventory = TODO("PlayerInventory()")
+    val armorInventory: ArmorInventory = TODO("ArmorInventory()")
 
     fun doChunkRequest() {
         TODO("Not yet implemented")

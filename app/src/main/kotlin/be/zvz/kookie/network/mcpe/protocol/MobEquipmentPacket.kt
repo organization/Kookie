@@ -51,6 +51,7 @@ class MobEquipmentPacket : DataPacket(), ClientboundPacket, ServerboundPacket {
     }
 
     companion object {
+        @JvmStatic
         fun create(
             entityRuntimeId: Long,
             item: ItemStackWrapper,

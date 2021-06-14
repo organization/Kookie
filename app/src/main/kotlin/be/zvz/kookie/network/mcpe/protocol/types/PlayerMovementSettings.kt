@@ -43,6 +43,7 @@ class PlayerMovementSettings(
     }
 
     companion object {
+        @JvmStatic
         fun read(input: PacketSerializer): PlayerMovementSettings {
             return PlayerMovementSettings(
                 input.getVarInt(),

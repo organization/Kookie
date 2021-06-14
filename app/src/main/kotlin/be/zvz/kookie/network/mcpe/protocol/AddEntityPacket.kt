@@ -26,6 +26,7 @@ class AddEntityPacket : DataPacket(), ClientboundPacket {
         private set
 
     companion object {
+        @JvmStatic
         fun create(entityNetId: Int): AddEntityPacket = AddEntityPacket().apply {
             this.entityNetId = entityNetId
         }

@@ -17,7 +17,6 @@
  */
 package be.zvz.kookie.network.mcpe.convert
 
-import be.zvz.kookie.network.mcpe.protocol.serializer.ItemTypeDictionary
 import be.zvz.kookie.utils.config.JsonBrowser
 import com.koloboke.collect.map.hash.HashIntIntMaps
 import com.koloboke.collect.map.hash.HashIntObjMaps
@@ -25,19 +24,38 @@ import com.koloboke.collect.map.hash.HashObjIntMaps
 import com.koloboke.collect.map.hash.HashObjObjMaps
 import java.util.concurrent.atomic.AtomicBoolean
 
-class ItemTranslator(
-    dictionary: ItemTypeDictionary,
-    simpleMappings: Map<String, Int>,
-    complexMappings: Map<String, Pair<Int, Int>>
-) {
-
+object ItemTranslator {
     private val simpleCoreToNetMapping: MutableMap<Int, Int> = HashIntIntMaps.newMutableMap()
     private val simpleNetToCoreMapping: MutableMap<Int, Int> = HashIntIntMaps.newMutableMap()
     private val complexCoreToNetMapping: MutableMap<Int, MutableMap<Int, Int>> = HashIntObjMaps.newMutableMap()
     private val complexNetToCoreMapping: MutableMap<Int, Pair<Int, Int>> = HashIntObjMaps.newMutableMap()
 
     init {
-        dictionary.getEntires().forEach { entry ->
+        val data = JsonBrowser().parse(this::class.java.getResourceAsStream("vanilla/r16_to_current_item_map.json"))
+        val legacyStringToIntMap = JsonBrowser().parse(
+            this::class.java.getResourceAsStream("vanilla/item_id_map.json")
+        ).toMap<String, String>()
+
+        val simpleMappings: MutableMap<String, Int> = HashObjIntMaps.newMutableMap()
+        data["simple"].toMap<String, String>().forEach { (oldId, newId) ->
+            if (!legacyStringToIntMap.containsKey(newId)) {
+                return@forEach
+            }
+            simpleMappings[newId] = legacyStringToIntMap.getValue(oldId).toInt()
+        }
+        legacyStringToIntMap.forEach { (stringId, intId) ->
+            if (simpleMappings.containsKey(stringId)) {
+                throw IllegalArgumentException("Old ID $stringId collides with new ID")
+            }
+            simpleMappings[stringId] = intId.toInt()
+        }
+        val complexMappings: MutableMap<String, Pair<Int, Int>> = HashObjObjMaps.newMutableMap()
+        data["complex"].toMap<String, Map<String, String>>().forEach { (oldId, map) ->
+            map.forEach { (meta, newId) ->
+                complexMappings[newId] = Pair(legacyStringToIntMap.getValue(oldId).toInt(), meta.toInt())
+            }
+        }
+        GlobalItemTypeDictionary.dictionary.getEntires().forEach { entry ->
             val stringId = entry.stringId
             val netId = entry.numericId
 
@@ -58,41 +76,7 @@ class ItemTranslator(
         }
     }
 
-    companion object {
-        private val instance: ItemTranslator = make()
-        fun getInstance(): ItemTranslator {
-            return instance
-        }
-
-        private fun make(): ItemTranslator {
-            val data = JsonBrowser().parse(this::class.java.getResourceAsStream("vanilla/r16_to_current_item_map.json"))
-            val legacyStringToIntMap = JsonBrowser().parse(
-                this::class.java.getResourceAsStream("vanilla/item_id_map.json")
-            ).toMap<String, String>()
-
-            val simpleMappings: MutableMap<String, Int> = HashObjIntMaps.newMutableMap()
-            data["simple"].toMap<String, String>().forEach { (oldId, newId) ->
-                if (!legacyStringToIntMap.containsKey(newId)) {
-                    return@forEach
-                }
-                simpleMappings[newId] = legacyStringToIntMap.getValue(oldId).toInt()
-            }
-            legacyStringToIntMap.forEach { (stringId, intId) ->
-                if (simpleMappings.containsKey(stringId)) {
-                    throw IllegalArgumentException("Old ID $stringId collides with new ID")
-                }
-                simpleMappings[stringId] = intId.toInt()
-            }
-            val complexMappings: MutableMap<String, Pair<Int, Int>> = HashObjObjMaps.newMutableMap()
-            data["complex"].toMap<String, Map<String, String>>().forEach { (oldId, map) ->
-                map.forEach { (meta, newId) ->
-                    complexMappings[newId] = Pair(legacyStringToIntMap.getValue(oldId).toInt(), meta.toInt())
-                }
-            }
-            return ItemTranslator(GlobalItemTypeDictionary.getInstance().dictionary, simpleMappings, complexMappings)
-        }
-    }
-
+    @JvmStatic
     fun toNetworkId(internalId: Int, internalMeta: Int): Pair<Int, Int> {
         if (complexCoreToNetMapping[internalId]?.containsKey(internalMeta) == true) {
             return Pair(complexCoreToNetMapping.getValue(internalId).getValue(internalMeta), 0)
@@ -103,7 +87,13 @@ class ItemTranslator(
         throw IllegalArgumentException("Unmapped ID/metadata combination $internalId:$internalMeta")
     }
 
-    fun fromNetworkId(networkId: Int, networkMeta: Int, isComplexMapping: AtomicBoolean = AtomicBoolean(false)): Pair<Int, Int> {
+    @JvmStatic
+    @JvmOverloads
+    fun fromNetworkId(
+        networkId: Int,
+        networkMeta: Int,
+        isComplexMapping: AtomicBoolean = AtomicBoolean(false)
+    ): Pair<Int, Int> {
         if (complexNetToCoreMapping.containsKey(networkId)) {
             if (networkMeta != 0) {
                 throw IllegalArgumentException("Unexpected non-zero network meta on complex item mapping")
@@ -118,6 +108,7 @@ class ItemTranslator(
         throw IllegalArgumentException("Unmapped network ID/metadata combination $networkId:$networkMeta")
     }
 
+    @JvmStatic
     fun fromNetworkIdWithWildcardHandling(networkId: Int, networkMeta: Int): Pair<Int, Int> {
         val isComplexMapping = AtomicBoolean(false)
         if (networkMeta != 0x7fff)

@@ -34,6 +34,7 @@ class LongTag(override val value: Long) : Tag<Long>() {
     }
 
     companion object {
+        @JvmStatic
         fun read(reader: NbtStreamReader): LongTag = LongTag(reader.readLong())
     }
 }

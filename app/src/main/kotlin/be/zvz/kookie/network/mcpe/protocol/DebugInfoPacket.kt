@@ -41,6 +41,7 @@ class DebugInfoPacket : DataPacket(), ClientboundPacket, ServerboundPacket {
     }
 
     companion object {
+        @JvmStatic
         fun create(entityUniqueId: Long, data: String): DebugInfoPacket =
             DebugInfoPacket().apply {
                 this.entityUniqueId = entityUniqueId

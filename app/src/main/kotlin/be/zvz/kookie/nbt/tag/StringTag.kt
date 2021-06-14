@@ -41,6 +41,7 @@ class StringTag(override val value: String) : Tag<String>() {
     }
 
     companion object {
+        @JvmStatic
         fun read(reader: NbtStreamReader): StringTag = StringTag(reader.readString())
     }
 }

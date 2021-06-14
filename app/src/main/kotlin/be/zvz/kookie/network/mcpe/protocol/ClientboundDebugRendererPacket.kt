@@ -80,6 +80,7 @@ class ClientboundDebugRendererPacket : DataPacket(), ClientboundPacket {
         const val TYPE_CLEAR = 1
         const val TYPE_ADD_CUBE = 2
 
+        @JvmStatic
         fun base(type: Int): ClientboundDebugRendererPacket {
 
             return ClientboundDebugRendererPacket().apply {
@@ -87,8 +88,10 @@ class ClientboundDebugRendererPacket : DataPacket(), ClientboundPacket {
             }
         }
 
+        @JvmStatic
         fun clear(): ClientboundDebugRendererPacket = base(TYPE_CLEAR)
 
+        @JvmStatic
         fun addCube(
             text: String,
             position: Vector3,

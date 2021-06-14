@@ -28,6 +28,7 @@ class RespawnPacket : DataPacket(), ClientboundPacket, ServerboundPacket {
     var entityRuntimeId: Long = 0
 
     companion object {
+        @JvmStatic
         fun create(position: Vector3, respawnStatus: RespawnStatus, entityRuntimeId: Long): RespawnPacket =
             RespawnPacket().apply {
                 this.position = position.asVector3()
@@ -59,6 +60,7 @@ class RespawnPacket : DataPacket(), ClientboundPacket, ServerboundPacket {
 
         companion object {
             private val VALUES = values()
+            @JvmStatic
             fun from(value: Int) = VALUES.first { it.state == value }
         }
     }

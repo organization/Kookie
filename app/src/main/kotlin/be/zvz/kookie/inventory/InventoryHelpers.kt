@@ -72,7 +72,7 @@ interface InventoryHelpers : Inventory {
         val checkTags = item.hasNamedTag()
 
         getContents().forEach { (index, i) ->
-            if (item.equals(i, checkDamage, checkTags) && (i.count == count || (!exact || i.count > count))) {
+            if (item.equals(i, checkDamage, checkTags) && (i.count == count || !exact || i.count > count)) {
                 return index
             }
         }
@@ -94,16 +94,16 @@ interface InventoryHelpers : Inventory {
 
     override fun canAddItem(item: Item): Boolean {
         var count = item.count
-        for (i in 0 until getSize()) {
+        for (i in 0 until size) {
             val slot = getItem(i)
             if (item.equals(slot)) {
-                (min(slot.getMaxStackSize(), item.getMaxStackSize()) - slot.count).let {
+                (min(slot.maxStackSize, item.maxStackSize) - slot.count).let {
                     if (it > 0) {
                         count -= it
                     }
                 }
             } else if (slot.isNull()) {
-                count -= min(getMaxStackSize(), item.getMaxStackSize())
+                count -= min(maxStackSize, item.maxStackSize)
             }
 
             if (count <= 0) {
@@ -123,25 +123,28 @@ interface InventoryHelpers : Inventory {
         }
 
         val emptySlots = mutableListOf<Int>()
-        for (i in 0 until getSize()) {
+        for (i in 0 until size) {
             val item = getItem(i)
             if (item.isNull()) {
                 emptySlots.add(i)
             }
 
-            itemSlots.forEachIndexed { index, slot ->
-                if (slot.equals(item) && item.count < item.getMaxStackSize()) {
-                    val amount = min(item.getMaxStackSize() - item.count, min(slot.count, getMaxStackSize()))
+            val iterate = itemSlots.listIterator()
+            var index = 0
+            while (iterate.hasNext()) {
+                val slot = iterate.next()
+                if (slot.equals(item) && item.count < item.maxStackSize) {
+                    val amount = min(item.maxStackSize - item.count, min(slot.count, maxStackSize))
                     if (amount > 0) {
                         slot.count -= amount
                         item.count += amount
                         setItem(index, item)
                         if (slot.count <= 0) {
-                            itemSlots.removeAt(index)
-                            // TODO: removing while running foreach works?
+                            iterate.remove()
                         }
                     }
                 }
+                index++
             }
 
             if (itemSlots.size == 0) {
@@ -151,17 +154,17 @@ interface InventoryHelpers : Inventory {
 
         if (itemSlots.size > 0 && emptySlots.size > 0) {
             emptySlots.forEach { slotIndex ->
-                itemSlots.forEachIndexed { index, slot ->
-                    val amount = min(slot.getMaxStackSize(), min(slot.count, getMaxStackSize()))
+                val iterate = itemSlots.listIterator()
+                while (iterate.hasNext()) {
+                    val slot = iterate.next()
+                    val amount = min(slot.maxStackSize, min(slot.count, maxStackSize))
                     slot.count -= amount
                     val item = slot.clone()
                     item.count = amount
                     setItem(slotIndex, item)
                     if (slot.count <= 0) {
-                        itemSlots.removeAt(index)
-                        // TODO: removing while running foreach works?
+                        iterate.remove()
                     }
-                    return@forEachIndexed
                 }
             }
         }
@@ -177,13 +180,16 @@ interface InventoryHelpers : Inventory {
             }
         }
 
-        for (i in 0 until getSize()) {
+        for (i in 0 until size) {
             val item = getItem(i)
             if (item.isNull()) {
                 continue
             }
 
-            itemSlots.forEachIndexed { index, slot ->
+            val iterate = itemSlots.listIterator()
+            var index = 0
+            while (iterate.hasNext()) {
+                val slot = iterate.next()
                 if (slot.equals(item, !slot.hasAnyDamageValue(), slot.hasNamedTag())) {
                     val amount = min(item.count, slot.count)
                     if (amount > 0) {
@@ -191,11 +197,11 @@ interface InventoryHelpers : Inventory {
                         item.count -= amount
                         setItem(index, item)
                         if (slot.count <= 0) {
-                            itemSlots.removeAt(index)
-                            // TODO: removing while running foreach works?
+                            iterate.remove()
                         }
                     }
                 }
+                index++
             }
 
             if (itemSlots.size == 0) {

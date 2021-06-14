@@ -23,8 +23,10 @@ object PermissionManager {
     private val permissions: MutableMap<String, Permission> = HashObjObjMaps.newMutableMap()
     val permSubs: MutableMap<String, MutableMap<String, Permissible>> = HashObjObjMaps.newMutableMap()
 
+    @JvmStatic
     fun getPermission(name: String): Permission? = permissions[name]
 
+    @JvmStatic
     fun addPermission(permission: Permission): Boolean = when (permissions[permission.name]) {
         null -> false
         else -> {
@@ -34,11 +36,10 @@ object PermissionManager {
         }
     }
 
-    fun removePermission(permission: Permission) = removePermission(permission.name)
-    fun removePermission(name: String) {
-        permissions.remove(name)
-    }
+    @JvmStatic fun removePermission(permission: Permission) = removePermission(permission.name)
+    @JvmStatic fun removePermission(name: String) = permissions.remove(name)
 
+    @JvmStatic
     fun subscribeToPermission(permission: String, permissible: Permissible) {
         val a = permSubs[permission]
         // ["test"] = permissible
@@ -46,6 +47,7 @@ object PermissionManager {
         a?.set(permissible.toString(), permissible)
     }
 
+    @JvmStatic
     fun unsubscribeFromPermission(permission: String, permissible: Permissible) {
         if (this.permSubs.containsKey(permission)) {
             val perm = this.permSubs.getValue(permission)
@@ -56,6 +58,7 @@ object PermissionManager {
         }
     }
 
+    @JvmStatic
     fun unsubscribeFromAllPermissions(permissible: Permissible) {
         permSubs.forEach { (permission, subs) ->
             subs.remove(permissible.toString())
@@ -65,14 +68,17 @@ object PermissionManager {
         }
     }
 
+    @JvmStatic
     fun getPermissionSubscriptions(permission: String): Map<String, Permissible> {
         return this.permSubs[permission] ?: mapOf()
     }
 
+    @JvmStatic
     fun getPermissions(): Map<String, Permission> {
         return this.permissions
     }
 
+    @JvmStatic
     fun clearPermissions() {
         this.permissions.clear()
     }

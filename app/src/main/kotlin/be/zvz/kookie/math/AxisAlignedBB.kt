@@ -321,6 +321,7 @@ class AxisAlignedBB constructor(
     }
 
     companion object {
+        @JvmStatic
         fun one(): AxisAlignedBB = AxisAlignedBB(0.0, 0.0, 0.0, 1.0, 1.0, 1.0)
     }
 }

@@ -25,6 +25,7 @@ enum class Rarity(val rarity: Int) {
 
     companion object {
         private val VALUES = values()
+        @JvmStatic
         fun from(findValue: Int): Rarity = VALUES.first { it.rarity == findValue }
     }
 }

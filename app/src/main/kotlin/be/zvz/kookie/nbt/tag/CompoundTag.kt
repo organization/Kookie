@@ -81,18 +81,27 @@ class CompoundTag : Tag<Map<String, Tag<*>>>() {
 
     @JvmOverloads
     fun getByte(name: String, default: Int? = null): Int = getTagValue(name, ByteTag::javaClass.name, default) as Int
+
     @JvmOverloads
     fun getShort(name: String, default: Int? = null): Int = getTagValue(name, ShortTag::javaClass.name, default) as Int
+
     @JvmOverloads
     fun getInt(name: String, default: Int? = null): Int = getTagValue(name, IntTag::javaClass.name, default) as Int
+
     @JvmOverloads
     fun getLong(name: String, default: Long? = null): Long = getTagValue(name, LongTag::javaClass.name, default) as Long
+
     @JvmOverloads
-    fun getFloat(name: String, default: Float? = null): Float = getTagValue(name, FloatTag::javaClass.name, default) as Float
+    fun getFloat(name: String, default: Float? = null): Float =
+        getTagValue(name, FloatTag::javaClass.name, default) as Float
+
     @JvmOverloads
-    fun getDouble(name: String, default: Double? = null): Double = getTagValue(name, DoubleTag::javaClass.name, default) as Double
+    fun getDouble(name: String, default: Double? = null): Double =
+        getTagValue(name, DoubleTag::javaClass.name, default) as Double
+
     @JvmOverloads
-    fun getString(name: String, default: String? = null): String = getTagValue(name, StringTag::javaClass.name, default) as String
+    fun getString(name: String, default: String? = null): String =
+        getTagValue(name, StringTag::javaClass.name, default) as String
 
     fun setString(name: String, value: String): CompoundTag = this.apply {
         setTag(name, StringTag(value))
@@ -128,6 +137,7 @@ class CompoundTag : Tag<Map<String, Tag<*>>>() {
             return CompoundTag()
         }
 
+        @JvmStatic
         fun read(reader: NbtStreamReader, tracker: ReaderTracker): CompoundTag {
             val result = CompoundTag()
             tracker.protectDepth {

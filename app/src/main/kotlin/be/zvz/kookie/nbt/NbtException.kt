@@ -17,7 +17,7 @@
  */
 package be.zvz.kookie.nbt
 
-open class NbtException(
+open class NbtException @JvmOverloads constructor(
     message: String?,
     cause: Throwable? = null
 ) : RuntimeException(message, cause)

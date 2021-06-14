@@ -47,9 +47,11 @@ class PalettedBlockArray internal constructor(private val blockArray: BlockArray
     }
 
     companion object {
+        @JvmStatic
         fun fromData(bitsPerBlock: Int, wordArray: String, palette: List<Long>): BlockArrayContainer<Long> =
             BlockArrayContainer(bitsPerBlock, wordArray, palette)
 
+        @JvmStatic
         fun getExpectedWordArraySize(bitsPerBlock: Long): Int {
             if (bitsPerBlock != bitsPerBlock.toUInt().toLong()) {
                 throw IllegalArgumentException("invalid bits-per-block: $bitsPerBlock")
