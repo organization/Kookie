@@ -41,8 +41,8 @@ class Language(langStr: String, path: String? = null, fallback: String = FALLBAC
             Paths.get(path)
         }
 
-        languagePrefs = loadLanguage(pathObj)
-        fallbackLang = loadLanguage(pathObj)
+        languagePrefs = loadLanguage(pathObj, langStr)
+        fallbackLang = loadLanguage(pathObj, fallback)
     }
 
     val name: String
@@ -174,12 +174,12 @@ class Language(langStr: String, path: String? = null, fallback: String = FALLBAC
             return result
         }
 
-        private fun loadLanguage(path: Path): Preferences {
-            if (path.exists()) {
-                val ini = Ini(path.toFile())
-                return IniPreferences(ini)
+        private fun loadLanguage(path: Path, name: String): Preferences {
+            val iniPath = path.resolve("$name.ini")
+            if (iniPath.exists()) {
+                return IniPreferences(Ini(iniPath.toFile()))
             } else {
-                val languageCode = FilenameUtils.removeExtension(path.fileName.toString())
+                val languageCode = FilenameUtils.removeExtension(iniPath.fileName.toString())
                 throw LanguageNotFoundException("Language \"$languageCode\" not found")
             }
         }
