@@ -91,11 +91,13 @@ class PlayerListPacket : DataPacket(), ClientboundPacket {
         const val TYPE_ADD = 0
         const val TYPE_REMOVE = 1
 
+        @JvmStatic
         fun add(entries: List<PlayerListEntry>) = PlayerListPacket().apply {
             this.type = TYPE_ADD
             this.entries = entries
         }
 
+        @JvmStatic
         fun remove(entries: List<PlayerListEntry>) = PlayerListPacket().apply {
             this.type = TYPE_REMOVE
             this.entries = entries

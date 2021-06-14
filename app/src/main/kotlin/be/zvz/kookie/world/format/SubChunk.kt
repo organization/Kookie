@@ -17,7 +17,7 @@
  */
 package be.zvz.kookie.world.format
 
-class SubChunk(
+class SubChunk @JvmOverloads constructor(
     val emptyBlockId: Long,
     var blockLayers: MutableList<PalettedBlockArray>,
     var skyLight: LightArray = LightArray.fill(0),

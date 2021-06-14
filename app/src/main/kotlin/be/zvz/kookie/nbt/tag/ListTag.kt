@@ -73,6 +73,7 @@ class ListTag<T> @JvmOverloads constructor(
     }
 
     companion object {
+        @JvmStatic
         fun read(reader: NbtStreamReader, tracker: ReaderTracker): ListTag<*> {
             var tagType = NBT.TagType.from(reader.readByte())
             val value = mutableListOf<Tag<*>>()

@@ -17,7 +17,7 @@
  */
 package be.zvz.kookie.command.utils
 
-open class CommandException(
+open class CommandException @JvmOverloads constructor(
     message: String? = null,
     cause: Throwable? = null
 ) : RuntimeException(message, cause)

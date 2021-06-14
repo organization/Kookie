@@ -108,6 +108,7 @@ enum class VanillaEnchantments(val enchantment: Enchantment) {
             5
         )
     ),
+
     // TODO: smite, bane of arthropods (these don't make sense now because their applicable mobs don't exist yet)
     KNOCKBACK(
         KnockbackEnchantment(
@@ -222,7 +223,9 @@ enum class VanillaEnchantments(val enchantment: Enchantment) {
 
     companion object {
         private val VALUES = values()
+        @JvmStatic
         fun from(value: String) = VALUES.firstOrNull { it.enchantment.toString().equals(value, true) }
+        @JvmStatic
         fun getAll(): Array<VanillaEnchantments> = VALUES
     }
 }

@@ -22,13 +22,14 @@ import be.zvz.kookie.command.CommandSender
 import kotlin.math.max
 import kotlin.math.min
 
-abstract class VanillaCommand(
+abstract class VanillaCommand @JvmOverloads constructor(
     name: String,
     description: String = "",
     usageMessage: String = "/$name",
     aliases: MutableList<String> = mutableListOf(),
 ) : Command(name, description, usageMessage, aliases) {
 
+    @JvmOverloads
     protected fun getInteger(
         sender: CommandSender,
         value: String,
@@ -38,6 +39,7 @@ abstract class VanillaCommand(
         return min(max(it, maxNum), minNum)
     }
 
+    @JvmOverloads
     protected fun getRelativeDouble(
         original: Double,
         sender: CommandSender,
@@ -54,6 +56,7 @@ abstract class VanillaCommand(
         return getDouble(sender, input, min, max)
     }
 
+    @JvmOverloads
     protected fun getDouble(
         sender: CommandSender,
         value: String,

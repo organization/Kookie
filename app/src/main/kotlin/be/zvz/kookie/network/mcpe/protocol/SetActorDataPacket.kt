@@ -27,17 +27,6 @@ class SetActorDataPacket : DataPacket(), ClientboundPacket, ServerboundPacket {
     lateinit var metadata: MutableMap<Int, MetadataProperty>
     var tick: Long = 0
 
-    companion object {
-        fun create(entityRuntimeId: Long, metadata: HashMap<Int, MetadataProperty>, tick: Long): SetActorDataPacket {
-
-            return SetActorDataPacket().apply {
-                this.entityRuntimeId = entityRuntimeId
-                this.metadata = metadata
-                this.tick = tick
-            }
-        }
-    }
-
     override fun decodePayload(input: PacketSerializer) {
         entityRuntimeId = input.getEntityRuntimeId()
         metadata = input.getEntityMetadataProperty()
@@ -52,5 +41,17 @@ class SetActorDataPacket : DataPacket(), ClientboundPacket, ServerboundPacket {
 
     override fun handle(handler: PacketHandlerInterface): Boolean {
         return handler.handleSetActorData(this)
+    }
+
+    companion object {
+        @JvmStatic
+        fun create(entityRuntimeId: Long, metadata: HashMap<Int, MetadataProperty>, tick: Long): SetActorDataPacket {
+
+            return SetActorDataPacket().apply {
+                this.entityRuntimeId = entityRuntimeId
+                this.metadata = metadata
+                this.tick = tick
+            }
+        }
     }
 }

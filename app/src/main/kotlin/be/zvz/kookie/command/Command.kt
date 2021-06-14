@@ -22,7 +22,7 @@ import be.zvz.kookie.timings.Timings
 import be.zvz.kookie.timings.TimingsHandler
 import be.zvz.kookie.utils.TextFormat
 
-abstract class Command(
+abstract class Command @JvmOverloads constructor(
     val name: String,
     val description: String = "",
     val usageMessage: String = "/$name",
@@ -124,6 +124,7 @@ abstract class Command(
     abstract fun execute(sender: CommandSender, commandLabel: String, args: List<String>): Boolean
 
     companion object {
+        @JvmStatic
         fun broadcastMessage(translationKey: String, params: MutableList<String>): Int {
             return -1 // TODO
         }

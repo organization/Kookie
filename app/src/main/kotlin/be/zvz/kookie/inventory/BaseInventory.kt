@@ -22,11 +22,10 @@ import be.zvz.kookie.item.ItemFactory
 import be.zvz.kookie.player.Player
 
 abstract class BaseInventory : InventoryHelpers {
-    private val maxStackSize: Int = Inventory.MAX_STACK
+    override val maxStackSize: Int = Inventory.MAX_STACK
     private val viewers = mutableListOf<Player>()
     private val listeners = mutableListOf<InventoryListener>()
 
-    override fun getMaxStackSize(): Int = maxStackSize
     protected abstract fun internalSetContents(items: Map<Int, Item>)
     override fun setContents(items: Map<Int, Item>) {
         // TODO: items.size > getSize()
@@ -88,7 +87,7 @@ abstract class BaseInventory : InventoryHelpers {
         }
     }
 
-    override fun slotExists(slot: Int) = slot in 0 until getSize()
+    override fun slotExists(slot: Int) = slot in 0 until size
     override fun getViewers(): MutableList<Player> = viewers
     override fun getListeners(): MutableList<InventoryListener> = listeners
 }

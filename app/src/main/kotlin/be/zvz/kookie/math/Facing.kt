@@ -65,6 +65,7 @@ enum class Facing(val value: Int) {
                 SOUTH to UP
             )
         )
+
         @JvmStatic
         fun axis(direction: Int): Int = direction shr 1
 

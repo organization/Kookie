@@ -29,6 +29,7 @@ class CraftingConsumeInputStackRequestAction(val count: Int, val source: ItemSta
     }
 
     companion object {
+        @JvmStatic
         fun read(input: PacketSerializer): CraftingConsumeInputStackRequestAction {
             val count = input.getByte()
             val source = ItemStackRequestSlotInfo.read(input)

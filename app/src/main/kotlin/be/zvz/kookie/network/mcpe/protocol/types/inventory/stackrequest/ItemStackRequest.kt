@@ -59,15 +59,21 @@ class ItemStackRequest(
             getType(
                 DeprecatedCraftingNonImplementedStackRequestAction::class.java
             ) to DeprecatedCraftingNonImplementedStackRequestAction::read,
-            getType(DeprecatedCraftingResultsStackRequestAction::class.java) to DeprecatedCraftingResultsStackRequestAction::read
+            getType(
+                DeprecatedCraftingResultsStackRequestAction::class.java
+            ) to DeprecatedCraftingResultsStackRequestAction::read
         )
 
         private fun getType(clazz: Class<out ItemStackRequestAction>) =
             clazz.getAnnotation(ItemStackRequestIdentify::class.java)!!.typeId.type
 
+        @JvmStatic
         fun readAction(input: PacketSerializer, typeId: Int): ItemStackRequestAction =
-            (actionMap[typeId] ?: throw IllegalArgumentException("Unhandled item stack request action type $typeId"))(input)
+            (actionMap[typeId] ?: throw IllegalArgumentException("Unhandled item stack request action type $typeId"))(
+                input
+            )
 
+        @JvmStatic
         fun read(input: PacketSerializer): ItemStackRequest {
             val requestId = input.readGenericTypeNetworkId()
             val actions = mutableListOf<ItemStackRequestAction>()

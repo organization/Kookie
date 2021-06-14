@@ -25,6 +25,7 @@ class LabTableCombineStackRequestAction : ItemStackRequestAction() {
     }
 
     companion object {
+        @JvmStatic
         fun read(input: PacketSerializer): LabTableCombineStackRequestAction {
             return LabTableCombineStackRequestAction()
         }

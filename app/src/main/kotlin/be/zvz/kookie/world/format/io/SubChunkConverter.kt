@@ -22,6 +22,7 @@ import be.zvz.kookie.world.format.PalettedBlockArray
 import kotlin.jvm.internal.Ref
 
 object SubChunkConverter {
+    @JvmStatic
     fun convertSubChunkXZY(idArray: String, metaArray: String): PalettedBlockArray {
         return PalettedBlockArray(
             convert(
@@ -32,6 +33,7 @@ object SubChunkConverter {
         )
     }
 
+    @JvmStatic
     fun convertSubChunkYZX(idArray: String, metaArray: String): PalettedBlockArray {
         return PalettedBlockArray(
             convert(
@@ -42,6 +44,7 @@ object SubChunkConverter {
         )
     }
 
+    @JvmStatic
     fun convertSubChunkFromLegacyColumn(idArray: String, metaArray: String, yOffset: Int): PalettedBlockArray {
         return PalettedBlockArray(
             convert(
@@ -56,8 +59,7 @@ object SubChunkConverter {
         id.toLong() shl 4 or meta.toLong()
     }
 
-    private val getIndexSubChunkXZY: (Int, Int, Int, Ref.IntRef, Ref.IntRef, Ref.IntRef, Int) -> Unit = {
-        x: Int,
+    private val getIndexSubChunkXZY: (Int, Int, Int, Ref.IntRef, Ref.IntRef, Ref.IntRef, Int) -> Unit = { x: Int,
         y: Int,
         z: Int,
         id1Idx: Ref.IntRef,
@@ -69,8 +71,7 @@ object SubChunkConverter {
         metaIdx.element = id1Idx.element shr 1
     }
 
-    private val getIndexLegacyColumnXZY: (Int, Int, Int, Ref.IntRef, Ref.IntRef, Ref.IntRef, Int) -> Unit = {
-        x: Int,
+    private val getIndexLegacyColumnXZY: (Int, Int, Int, Ref.IntRef, Ref.IntRef, Ref.IntRef, Int) -> Unit = { x: Int,
         y: Int,
         z: Int,
         id1Idx: Ref.IntRef,

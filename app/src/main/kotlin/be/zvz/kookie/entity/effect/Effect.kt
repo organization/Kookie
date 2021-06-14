@@ -21,15 +21,18 @@ import be.zvz.kookie.color.Color
 import be.zvz.kookie.entity.Entity
 import be.zvz.kookie.entity.Living
 
-open class Effect(
+open class Effect @JvmOverloads constructor(
     val internalRuntimeId: Int,
     val name: String,
     val color: Color,
     val bad: Boolean = false,
     val hasBubbles: Boolean = true
 ) {
+    open val defaultDuration: Int = 600
+
     open fun canTick(instance: EffectInstance): Boolean = false
 
+    @JvmOverloads
     open fun applyEffect(entity: Living, instance: EffectInstance, potency: Float = 1.0F, source: Entity? = null) {
     }
 

@@ -27,6 +27,7 @@ class CraftingMarkSecondaryResultStackRequestAction(val craftingGridSlot: Int) :
     }
 
     companion object {
+        @JvmStatic
         fun read(input: PacketSerializer): CraftingMarkSecondaryResultStackRequestAction {
             val slot = input.getByte()
             return CraftingMarkSecondaryResultStackRequestAction(slot)

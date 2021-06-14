@@ -53,12 +53,13 @@ class PlayStatusPacket : DataPacket(), ClientboundPacket {
 
         companion object {
             private val VALUES = values()
+            @JvmStatic
             fun from(value: Int) = VALUES.first { it.state == value }
         }
     }
 
     companion object {
-
+        @JvmStatic
         fun create(status: PlayStatus): PlayStatusPacket = PlayStatusPacket().apply {
             this.status = status
         }

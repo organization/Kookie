@@ -38,6 +38,7 @@ class InventoryTransactionChangedSlotsHack(
     }
 
     companion object {
+        @JvmStatic
         fun read(input: PacketSerializer): InventoryTransactionChangedSlotsHack {
             val containerId = input.getByte()
             val changedSlotIndexes = mutableListOf<Int>()

@@ -74,6 +74,7 @@ class Attribute @JvmOverloads constructor(
     fun isSyncable(): Boolean = shouldSend
     fun isDesynchronized(): Boolean = shouldSend && desynchronized
 
+    @JvmOverloads
     fun setValue(value: Float, fit: Boolean = false, forceSend: Boolean = false) {
         var value = value
         if (value > maxValue || value < minValue) {

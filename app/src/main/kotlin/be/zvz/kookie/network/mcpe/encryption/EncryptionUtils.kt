@@ -29,6 +29,8 @@ import java.util.Base64
 
 object EncryptionUtils {
     private val cipher = Curve25519.getInstance(Curve25519.BEST)
+
+    @JvmStatic
     fun generateSharedSecret(localPrivateKey: PrivateKey, remotePublicKey: PublicKey): PrivateKey {
         val keyFactory = KeyFactory.getInstance("EC")
         return keyFactory.generatePrivate(
@@ -40,6 +42,7 @@ object EncryptionUtils {
         Integer.toUnsignedString(java.lang.Byte.toUnsignedInt(it), 16).padStart(2, '0')
     }
 
+    @JvmStatic
     fun generateKey(secret: PrivateKey, salt: String): ByteArray {
         val md = MessageDigest.getInstance("SHA-256")
         return md.digest(
@@ -48,6 +51,7 @@ object EncryptionUtils {
         )
     }
 
+    @JvmStatic
     fun generateServerHandshakeJwt(keyPair: KeyPair, salt: String): String {
         return JwtUtils.create(
             mapOf(

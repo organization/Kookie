@@ -38,6 +38,7 @@ class Experiments(
     }
 
     companion object {
+        @JvmStatic
         fun read(input: PacketSerializer): Experiments {
             val experiments: MutableMap<String, Boolean> = HashObjObjMaps.newMutableMap()
             for (i in 0 until input.getLInt()) {

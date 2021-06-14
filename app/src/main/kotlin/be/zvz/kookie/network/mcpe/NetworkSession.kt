@@ -58,6 +58,7 @@ class NetworkSession(
         // TODO: setHandler(LoginPacketHandler) here
     }
 
+    @JvmOverloads
     fun setHandler(handler: PacketHandlerInterface? = null) {
         this.handler = handler
     }
@@ -84,6 +85,7 @@ class NetworkSession(
         return true
     }
 
+    @JvmOverloads
     fun sendDataPacket(packet: DataPacket, immediate: Boolean = false) {
         // TODO: call DataPacketSendEvent on here
         val timings = Timings.getPacketSendTimings(packet)

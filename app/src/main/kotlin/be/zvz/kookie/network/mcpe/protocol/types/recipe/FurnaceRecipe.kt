@@ -22,6 +22,7 @@ class FurnaceRecipe(
     }
 
     companion object {
+        @JvmStatic
         fun decode(type: CraftingDataPacket.Entry, input: PacketSerializer) =
             FurnaceRecipe(
                 type = type,

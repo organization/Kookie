@@ -29,7 +29,7 @@ plugins {
 
     id("com.gorylenko.gradle-git-properties") version "2.3.1"
 
-    id("org.jmailen.kotlinter") version "3.4.4"
+    id("org.jmailen.kotlinter") version "3.4.5"
     id("com.github.johnrengelman.shadow") version "7.0.0"
 }
 
@@ -76,7 +76,7 @@ dependencies {
     implementation(group = "com.fasterxml.jackson.dataformat", name = "jackson-dataformat-properties", version = "2.12.3")
 
     // Apache commons IO
-    implementation(group = "commons-io", name = "commons-io", version = "2.9.0")
+    implementation(group = "commons-io", name = "commons-io", version = "2.10.0")
 
     // ini4j
     implementation(group = "org.ini4j", name = "ini4j", version = "0.5.4")
@@ -87,7 +87,7 @@ dependencies {
     // Logger
     implementation(group = "org.slf4j", name = "slf4j-api", version = "1.7.30")
     implementation(group = "ch.qos.logback", name = "logback-classic", version = "1.2.3")
-    implementation(group = "org.fusesource.jansi", name = "jansi", version = "2.3.2")
+    implementation(group = "org.fusesource.jansi", name = "jansi", version = "2.3.3")
 
     // netty
     implementation(group = "io.netty", name = "netty-all", version = "4.1.65.Final")

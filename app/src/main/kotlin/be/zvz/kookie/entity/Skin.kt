@@ -17,7 +17,7 @@
  */
 package be.zvz.kookie.entity
 
-class Skin(
+class Skin @JvmOverloads constructor(
     val skinId: String,
     val skinData: String,
     val capeData: String = "",
@@ -29,9 +29,10 @@ class Skin(
         if (skinId.trim() == "") {
             throw SkinException("Skin Id must not be empty")
         }
-        if (!ACCEPTED_SKIN_SIZE.contains(skinData.length)) {
+        val length = skinData.length
+        if (!ACCEPTED_SKIN_SIZE.contains(length)) {
             throw SkinException(
-                "Invalid skin data size ${skinData.length} bytes (allowed size: ${ACCEPTED_SKIN_SIZE.joinToString(", ")})"
+                "Invalid skin data size $length bytes (allowed size: ${ACCEPTED_SKIN_SIZE.joinToString(", ")})"
             )
         }
         if (capeData != "" && capeData.length != 8192) {

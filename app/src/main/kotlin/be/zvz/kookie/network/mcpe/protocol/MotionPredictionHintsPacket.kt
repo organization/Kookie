@@ -50,6 +50,7 @@ class MotionPredictionHintsPacket : DataPacket(), ClientboundPacket {
     }
 
     companion object {
+        @JvmStatic
         fun create(entityRuntimeId: Long, motion: Vector3, onGround: Boolean): MotionPredictionHintsPacket =
             MotionPredictionHintsPacket().apply {
                 this.entityRuntimeId = entityRuntimeId

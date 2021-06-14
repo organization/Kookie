@@ -45,6 +45,8 @@ class PlayerHotbarPacket : DataPacket(), ClientboundPacket, ServerboundPacket {
     }
 
     companion object {
+        @JvmStatic
+        @JvmOverloads
         fun create(slot: Int, windowId: Int, selectSlot: Boolean = true) = PlayerHotbarPacket().apply {
             this.selectedHotbarSlot = slot
             this.windowId = windowId

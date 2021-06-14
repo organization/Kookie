@@ -19,4 +19,4 @@ package be.zvz.kookie.inventory
 
 import be.zvz.kookie.entity.Human
 
-class PlayerEnderInventory(val holder: Human, size: Int = 27) : SimpleInventory(size)
+class PlayerEnderInventory @JvmOverloads constructor(val holder: Human, size: Int = 27) : SimpleInventory(size)

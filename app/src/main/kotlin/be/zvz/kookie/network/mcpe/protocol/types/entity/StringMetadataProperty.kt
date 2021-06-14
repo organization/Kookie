@@ -47,6 +47,7 @@ class StringMetadataProperty(val value: String) : MetadataProperty() {
     }
 
     companion object {
+        @JvmStatic
         fun read(input: PacketSerializer): StringMetadataProperty {
             return StringMetadataProperty(input.getString())
         }

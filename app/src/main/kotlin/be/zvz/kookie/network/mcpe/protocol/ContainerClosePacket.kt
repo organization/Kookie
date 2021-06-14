@@ -41,6 +41,7 @@ class ContainerClosePacket : DataPacket(), ClientboundPacket, ServerboundPacket 
     }
 
     companion object {
+        @JvmStatic
         fun create(windowId: Int, server: Boolean): ContainerClosePacket = ContainerClosePacket().apply {
             this.windowId = windowId
             this.server = server

@@ -3,7 +3,7 @@ package be.zvz.kookie.network.mcpe.protocol.serializer
 import be.zvz.kookie.network.mcpe.protocol.Packet
 import be.zvz.kookie.network.mcpe.protocol.PacketPool
 
-class PacketBatch(private val buffer: String = "") {
+class PacketBatch @JvmOverloads constructor(private val buffer: String = "") {
 
     fun getPackets(packetPool: PacketPool, max: Int) = sequence {
         val serializer = PacketSerializer(buffer)
@@ -18,6 +18,7 @@ class PacketBatch(private val buffer: String = "") {
     fun getBuffer(): String = buffer
 
     companion object {
+        @JvmStatic
         fun fromPackets(vararg packets: Packet): PacketBatch {
             val serializer = PacketSerializer()
             packets.forEach {

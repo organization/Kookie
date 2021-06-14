@@ -54,6 +54,8 @@ class LevelSoundEventPacket : DataPacket(), ClientboundPacket, ServerboundPacket
     }
 
     companion object {
+        @JvmStatic
+        @JvmOverloads
         fun create(
             sound: Int,
             pos: Vector3?,

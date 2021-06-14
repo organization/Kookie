@@ -28,12 +28,15 @@ class ArmorInventory(val holder: Living) : SimpleInventory(4) {
     fun setHelmet(helmet: Item) {
         setItem(SLOT_HEAD, helmet)
     }
+
     fun setChestplate(chestplate: Item) {
         setItem(SLOT_CHEST, chestplate)
     }
+
     fun setLeggings(leggings: Item) {
         setItem(SLOT_LEGS, leggings)
     }
+
     fun setBoots(boots: Item) {
         setItem(SLOT_FEET, boots)
     }

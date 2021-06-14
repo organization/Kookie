@@ -34,6 +34,7 @@ class TakeStackRequestAction(
     }
 
     companion object {
+        @JvmStatic
         fun read(input: PacketSerializer): TakeStackRequestAction {
             val count = input.getByte()
             val src = ItemStackRequestSlotInfo.read(input)

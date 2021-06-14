@@ -55,6 +55,7 @@ class AnimatePacket : DataPacket(), ClientboundPacket, ServerboundPacket {
         const val ACTION_ROW_RIGHT = 128
         const val ACTION_ROW_LEFT = 129
 
+        @JvmStatic
         fun create(entityRuntimeId: Long, actionId: Int): AnimatePacket {
 
             return AnimatePacket().apply {
@@ -63,6 +64,7 @@ class AnimatePacket : DataPacket(), ClientboundPacket, ServerboundPacket {
             }
         }
 
+        @JvmStatic
         fun boatHack(entityRuntimeId: Long, actionId: Int, data: Float): AnimatePacket {
             val packet = create(entityRuntimeId, actionId)
             packet.float = data

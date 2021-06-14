@@ -21,6 +21,7 @@ import io.jsonwebtoken.Jwts
 import java.security.KeyPair
 
 object JwtUtils {
+    @JvmStatic
     fun create(header: Map<String, Any>, claims: Map<String, Any>, keyPair: KeyPair): String {
         return Jwts.builder()
             .setHeader(header)

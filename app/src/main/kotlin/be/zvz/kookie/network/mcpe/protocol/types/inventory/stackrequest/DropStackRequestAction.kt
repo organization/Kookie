@@ -33,6 +33,7 @@ class DropStackRequestAction(
     }
 
     companion object {
+        @JvmStatic
         fun read(input: PacketSerializer): DropStackRequestAction {
             val count = input.getByte()
             val source = ItemStackRequestSlotInfo.read(input)

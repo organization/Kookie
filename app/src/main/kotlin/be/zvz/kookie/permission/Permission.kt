@@ -19,7 +19,7 @@ package be.zvz.kookie.permission
 
 import com.koloboke.collect.map.hash.HashObjObjMaps
 
-class Permission(
+class Permission @JvmOverloads constructor(
     val name: String,
     var description: String? = null,
     val children: MutableMap<String, Boolean> = HashObjObjMaps.newMutableMap()

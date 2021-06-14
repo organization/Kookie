@@ -41,11 +41,13 @@ class NetworkStackLatencyPacket : DataPacket(), ClientboundPacket, ServerboundPa
     }
 
     companion object {
+        @JvmStatic
         fun request(timestampNs: Long) = NetworkStackLatencyPacket().apply {
             this.timestamp = timestampNs
             this.needResponse = true
         }
 
+        @JvmStatic
         fun response(timestampNs: Long) = NetworkStackLatencyPacket().apply {
             this.timestamp = timestampNs
             this.needResponse = false

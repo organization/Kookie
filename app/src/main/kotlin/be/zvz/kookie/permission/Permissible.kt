@@ -25,11 +25,13 @@ interface Permissible {
     fun setBasePermission(permission: Permission, grant: Boolean) {
         setBasePermission(permission.name, grant)
     }
+
     fun setBasePermission(name: String, grant: Boolean)
 
     fun unsetBasePermission(permission: Permission) {
         unsetBasePermission(permission.name)
     }
+
     fun unsetBasePermission(name: String)
 
     fun isPermissionSet(permission: Permission): Boolean = isPermissionSet(permission.name)

@@ -41,6 +41,7 @@ class NetworkChunkPublisherUpdatePacket : DataPacket(), ClientboundPacket {
     }
 
     companion object {
+        @JvmStatic
         fun create(x: Int, y: Int, z: Int, blockRadius: Int) = NetworkChunkPublisherUpdatePacket().apply {
             this.position = PacketSerializer.BlockPosition(x, y, z)
             this.radius = blockRadius

@@ -28,6 +28,7 @@ class NetworkSettingsPacket : DataPacket(), ClientboundPacket {
         const val NOTHING = 0
         const val EVERYTHING = 1
 
+        @JvmStatic
         fun create(compressionThreshold: Int): NetworkSettingsPacket {
             return NetworkSettingsPacket().apply {
                 this.compressionThreshold = compressionThreshold

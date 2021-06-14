@@ -29,6 +29,7 @@ class BeaconPaymentStackRequestAction(val primaryEffectId: Int, val secondaryEff
     }
 
     companion object {
+        @JvmStatic
         fun read(input: PacketSerializer): BeaconPaymentStackRequestAction {
             val primary = input.getVarInt()
             val secondary = input.getVarInt()

@@ -27,7 +27,8 @@ object VersionInfo {
     private val gitPrefs = Properties().apply {
         try {
             load(this::class.java.getResourceAsStream("git.properties"))
-        } catch (ignored: IOException) {}
+        } catch (ignored: IOException) {
+        }
     }
     val GIT_HASH = gitPrefs.getProperty("git.commit.id") ?: ""
     val GIT_IS_DIRTY = gitPrefs.getProperty("git.commit.id") ?: true
