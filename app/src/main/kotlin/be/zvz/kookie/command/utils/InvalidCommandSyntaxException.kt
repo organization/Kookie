@@ -17,7 +17,7 @@
  */
 package be.zvz.kookie.command.utils
 
-open class InvalidCommandSyntaxException(
+open class InvalidCommandSyntaxException @JvmOverloads constructor(
     message: String? = null,
     cause: Throwable? = null
 ) : CommandException(message, cause)

@@ -34,6 +34,7 @@ class ItemStackResponse(
     }
 
     companion object {
+        @JvmStatic
         fun read(input: PacketSerializer): ItemStackResponse {
             val result = input.getByte()
             val requestId = input.readGenericTypeNetworkId()

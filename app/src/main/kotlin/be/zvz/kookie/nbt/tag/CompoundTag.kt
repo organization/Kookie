@@ -137,6 +137,7 @@ class CompoundTag : Tag<Map<String, Tag<*>>>() {
             return CompoundTag()
         }
 
+        @JvmStatic
         fun read(reader: NbtStreamReader, tracker: ReaderTracker): CompoundTag {
             val result = CompoundTag()
             tracker.protectDepth {

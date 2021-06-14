@@ -43,6 +43,7 @@ enum class ItemFlags(val flags: Int) {
 
     companion object {
         private val VALUE = values()
+        @JvmStatic
         fun from(findValue: Int): ItemFlags = VALUE.first { it.flags == findValue }
     }
 }

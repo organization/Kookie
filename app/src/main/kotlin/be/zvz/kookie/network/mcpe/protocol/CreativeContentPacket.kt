@@ -27,6 +27,7 @@ class CreativeContentPacket : DataPacket(), ClientboundPacket {
         private set
 
     companion object {
+        @JvmStatic
         fun create(entries: List<CreativeContentEntry>): CreativeContentPacket = CreativeContentPacket().apply {
             this.entries = entries
         }

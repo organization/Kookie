@@ -108,12 +108,15 @@ class LevelEventPacket : DataPacket(), ClientboundPacket {
         const val EVENT_ADD_PARTICLE_MASK = 16384
         const val PID_MASK = 1023
 
+        @JvmStatic
+        @JvmOverloads
         fun create(evid: Int, data: Int, pos: Vector3? = null) = LevelEventPacket().apply {
             this.evid = evid
             this.data = data
             this.position = pos
         }
 
+        @JvmStatic
         fun standardParticle(particleId: Int, data: Int, pos: Vector3) =
             create(EVENT_ADD_PARTICLE_MASK or particleId, data, pos)
     }

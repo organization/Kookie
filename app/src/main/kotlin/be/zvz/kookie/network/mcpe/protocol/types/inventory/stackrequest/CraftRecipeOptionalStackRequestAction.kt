@@ -29,6 +29,7 @@ class CraftRecipeOptionalStackRequestAction(val recipeId: Int, val filterStringI
     }
 
     companion object {
+        @JvmStatic
         fun read(input: PacketSerializer): CraftRecipeOptionalStackRequestAction {
             val recipeId = input.readGenericTypeNetworkId()
             val filterStringIndex = input.getLInt()

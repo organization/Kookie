@@ -32,6 +32,7 @@ data class ItemStackWrapper(val stackId: Int, val itemStack: ItemStack) {
     }
 
     companion object {
+        @JvmStatic
         fun read(input: PacketSerializer): ItemStackWrapper {
             var stackId = 0
             val stack = input.getItemStack {

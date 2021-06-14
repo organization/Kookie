@@ -17,7 +17,7 @@
  */
 package be.zvz.kookie.entity
 
-class Skin(
+class Skin @JvmOverloads constructor(
     val skinId: String,
     val skinData: String,
     val capeData: String = "",

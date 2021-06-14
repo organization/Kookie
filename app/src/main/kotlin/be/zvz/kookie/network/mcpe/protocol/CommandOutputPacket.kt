@@ -98,6 +98,7 @@ open class CommandOutputPacket : DataPacket(), ClientboundPacket {
         UNKNOWN(-1);
 
         companion object {
+            @JvmStatic
             fun from(findValue: Int): Type = values().firstOrNull { it.id == findValue } ?: UNKNOWN
         }
     }

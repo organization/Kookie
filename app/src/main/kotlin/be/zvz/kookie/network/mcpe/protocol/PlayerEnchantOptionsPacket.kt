@@ -46,6 +46,7 @@ class PlayerEnchantOptionsPacket : DataPacket(), ClientboundPacket {
     }
 
     companion object {
+        @JvmStatic
         fun create(options: List<EnchantOption>) = PlayerEnchantOptionsPacket().apply {
             this.options = options
         }

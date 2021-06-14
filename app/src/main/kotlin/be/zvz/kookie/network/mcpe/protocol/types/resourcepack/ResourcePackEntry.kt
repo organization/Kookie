@@ -19,7 +19,7 @@ package be.zvz.kookie.network.mcpe.protocol.types.resourcepack
 
 import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 
-class ResourcePackEntry(
+class ResourcePackEntry @JvmOverloads constructor(
     val packId: String,
     val version: String,
     val sizeBytes: Long,
@@ -41,6 +41,7 @@ class ResourcePackEntry(
     }
 
     companion object {
+        @JvmStatic
         fun read(input: PacketSerializer): ResourcePackEntry {
             return ResourcePackEntry(
                 input.getString(),

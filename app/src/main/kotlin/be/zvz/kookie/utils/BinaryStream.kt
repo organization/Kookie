@@ -20,7 +20,7 @@ package be.zvz.kookie.utils
 import java.nio.charset.StandardCharsets
 import java.util.concurrent.atomic.AtomicInteger
 
-open class BinaryStream(buffer: String = "", val offset: AtomicInteger = AtomicInteger(0)) {
+open class BinaryStream @JvmOverloads constructor(buffer: String = "", val offset: AtomicInteger = AtomicInteger(0)) {
     val buffer = StringBuilder(buffer)
 
     fun rewind() {

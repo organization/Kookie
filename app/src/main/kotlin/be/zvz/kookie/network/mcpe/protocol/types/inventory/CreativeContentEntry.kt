@@ -27,6 +27,7 @@ class CreativeContentEntry(val entryId: Int, val item: ItemStack) {
     }
 
     companion object {
+        @JvmStatic
         fun read(input: PacketSerializer): CreativeContentEntry {
             val entryId = input.readGenericTypeNetworkId()
             val item = input.getItemStackWithoutStackId()

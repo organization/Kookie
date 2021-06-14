@@ -39,6 +39,7 @@ class BiomeDefinitionListPacket : DataPacket(), ClientboundPacket {
     }
 
     companion object {
+        @JvmStatic
         fun create(nbt: CacheableNbt): BiomeDefinitionListPacket = BiomeDefinitionListPacket().apply {
             this.defs = nbt
         }

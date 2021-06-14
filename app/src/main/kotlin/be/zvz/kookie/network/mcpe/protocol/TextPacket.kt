@@ -92,6 +92,7 @@ class TextPacket : DataPacket(), ClientboundPacket, ServerboundPacket {
             this.message = message
         }
 
+        @JvmStatic
         fun raw(message: String): TextPacket {
             return messageOnly(TYPE_CHAT, message)
         }
@@ -103,22 +104,27 @@ class TextPacket : DataPacket(), ClientboundPacket, ServerboundPacket {
             }
         }
 
+        @JvmStatic
         fun translation(key: String, parameters: MutableList<String>): TextPacket {
             return baseTranslation(TYPE_TRANSLATION, key, parameters)
         }
 
+        @JvmStatic
         fun popup(message: String): TextPacket {
             return messageOnly(TYPE_POPUP, message)
         }
 
+        @JvmStatic
         fun translatedPopup(key: String, parameters: MutableList<String>): TextPacket {
             return baseTranslation(TYPE_POPUP, key, parameters)
         }
 
+        @JvmStatic
         fun jukeboxPopup(key: String, parameters: MutableList<String>): TextPacket {
             return baseTranslation(TYPE_JUKEBOX_POPUP, key, parameters)
         }
 
+        @JvmStatic
         fun tip(message: String): TextPacket {
             return messageOnly(TYPE_TIP, message)
         }

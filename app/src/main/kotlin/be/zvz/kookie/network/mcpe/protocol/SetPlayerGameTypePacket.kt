@@ -38,6 +38,7 @@ class SetPlayerGameTypePacket : DataPacket(), ClientboundPacket, ServerboundPack
     }
 
     companion object {
+        @JvmStatic
         fun create(gamemode: Int) = SetPlayerGameTypePacket().apply {
             this.gamemode = gamemode
         }

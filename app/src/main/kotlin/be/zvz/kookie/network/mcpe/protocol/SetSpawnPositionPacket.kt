@@ -50,6 +50,7 @@ class SetSpawnPositionPacket : DataPacket(), ClientboundPacket {
         const val TYPE_PLAYER_SPAWN = 0
         const val TYPE_WORLD_SPAWN = 1
 
+        @JvmStatic
         fun playerSpawn(x: Int, y: Int, z: Int, dimension: Int, x2: Int, y2: Int, z2: Int): SetSpawnPositionPacket {
             return SetSpawnPositionPacket().apply {
                 this.spawnType = TYPE_PLAYER_SPAWN
@@ -59,6 +60,7 @@ class SetSpawnPositionPacket : DataPacket(), ClientboundPacket {
             }
         }
 
+        @JvmStatic
         fun worldSPawn(x: Int, y: Int, z: Int, dimension: Int): SetSpawnPositionPacket {
             return SetSpawnPositionPacket().apply {
                 this.spawnType = TYPE_WORLD_SPAWN

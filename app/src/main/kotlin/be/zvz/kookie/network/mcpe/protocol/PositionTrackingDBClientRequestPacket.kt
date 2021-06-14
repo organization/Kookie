@@ -48,6 +48,7 @@ class PositionTrackingDBClientRequestPacket : DataPacket(), ServerboundPacket {
 
         companion object {
             private val VALUES = values()
+            @JvmStatic
             fun from(value: Int) = VALUES.first { it.id == value }
         }
     }

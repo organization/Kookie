@@ -100,6 +100,7 @@ class BossEventPacket : DataPacket(), ClientboundPacket, ServerboundPacket {
         const val TYPE_UNKNOWN_6 = 6
         const val TYPE_TEXTURE = 7
 
+        @JvmStatic
         fun base(bossEntityUniqueId: Long, eventId: Int): BossEventPacket {
 
             return BossEventPacket().apply {
@@ -108,6 +109,7 @@ class BossEventPacket : DataPacket(), ClientboundPacket, ServerboundPacket {
             }
         }
 
+        @JvmStatic
         fun show(
             bossEntityUniqueId: Long,
             title: String,
@@ -124,16 +126,19 @@ class BossEventPacket : DataPacket(), ClientboundPacket, ServerboundPacket {
             return packet
         }
 
+        @JvmStatic
         fun hide(bossEntityUniqueId: Long): BossEventPacket {
             return base(bossEntityUniqueId, TYPE_HIDE)
         }
 
+        @JvmStatic
         fun registerPlayer(bossEntityUniqueId: Long, playerEntityUniqueId: Long): BossEventPacket {
             val packet = base(bossEntityUniqueId, TYPE_REGISTER_PLAYER)
             packet.playerEid = playerEntityUniqueId
             return packet
         }
 
+        @JvmStatic
         fun unregisterPlayer(bossEntityUniqueId: Long, playerEntityUniqueId: Long): BossEventPacket {
             val packet = base(bossEntityUniqueId, TYPE_UNREGISTER_PLAYER)
             packet.playerEid = playerEntityUniqueId
@@ -141,6 +146,7 @@ class BossEventPacket : DataPacket(), ClientboundPacket, ServerboundPacket {
             return packet
         }
 
+        @JvmStatic
         fun healthPercent(bossEntityUniqueId: Long, healthPercent: Float): BossEventPacket {
             val packet = base(bossEntityUniqueId, TYPE_HEALTH_PERCENT)
             packet.healthPercent = healthPercent
@@ -148,6 +154,7 @@ class BossEventPacket : DataPacket(), ClientboundPacket, ServerboundPacket {
             return packet
         }
 
+        @JvmStatic
         fun title(bossEntityUniqueId: Long, title: String): BossEventPacket {
             val packet = base(bossEntityUniqueId, TYPE_TITLE)
             packet.title = title
@@ -155,6 +162,7 @@ class BossEventPacket : DataPacket(), ClientboundPacket, ServerboundPacket {
             return packet
         }
 
+        @JvmStatic
         fun unknown6(bossEntityUniqueId: Long, unknownShort: Int): BossEventPacket {
             val packet = base(bossEntityUniqueId, TYPE_UNKNOWN_6)
             packet.unknownShort = unknownShort

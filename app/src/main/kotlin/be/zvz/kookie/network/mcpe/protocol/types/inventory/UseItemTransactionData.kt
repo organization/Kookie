@@ -82,6 +82,7 @@ class UseItemTransactionData : TransactionData() {
         const val ACTION_CLICK_AIR = 1
         const val ACTION_BREAK_BLOCK = 2
 
+        @JvmStatic
         fun new(
             actions: MutableList<NetworkInventoryAction>,
             actionType: Int,

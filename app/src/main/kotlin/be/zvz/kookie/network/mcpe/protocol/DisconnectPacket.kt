@@ -50,11 +50,13 @@ class DisconnectPacket : DataPacket(), ClientboundPacket, ServerboundPacket {
     }
 
     companion object {
+        @JvmStatic
         fun silent(): DisconnectPacket =
             DisconnectPacket().apply {
                 this.hideDisconnectionScreen = false
             }
 
+        @JvmStatic
         fun message(message: String): DisconnectPacket =
             DisconnectPacket().apply {
                 this.hideDisconnectionScreen = false

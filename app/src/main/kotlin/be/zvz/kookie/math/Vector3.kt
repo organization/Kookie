@@ -135,6 +135,7 @@ open class Vector3 @JvmOverloads constructor(var x: Double = 0.0, var y: Double 
         return@runBlocking sides(step).toList()
     }
 
+    @JvmOverloads
     fun sidesAroundAxis(axis: Axis, step: Int = 1) = sequence {
         Facing.ALL.forEach {
             if (Facing.axis(it.value) != axis.value) {

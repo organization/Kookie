@@ -48,6 +48,7 @@ class CorrectPlayerMovePredictionPacket : DataPacket(), ClientboundPacket {
     }
 
     companion object {
+        @JvmStatic
         fun create(
             position: Vector3,
             delta: Vector3,

@@ -25,6 +25,7 @@ class RemoveEntityPacket : DataPacket(), ClientboundPacket {
     var uvarInt1: Int = 0
 
     companion object {
+        @JvmStatic
         fun create(uvarInt1: Int): RemoveEntityPacket {
             return RemoveEntityPacket().apply {
                 this.uvarInt1 = uvarInt1

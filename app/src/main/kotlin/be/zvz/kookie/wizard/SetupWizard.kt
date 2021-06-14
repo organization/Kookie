@@ -233,6 +233,7 @@ class SetupWizard(private val dataPath: Path) {
         }
     }
 
+    @JvmOverloads
     fun getInput(msg: String, default: String = "", options: String = ""): String {
         val message = StringBuilder("[?] $msg")
 

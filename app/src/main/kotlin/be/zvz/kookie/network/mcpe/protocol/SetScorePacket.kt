@@ -76,6 +76,7 @@ class SetScorePacket : DataPacket(), ClientboundPacket {
 
         companion object {
             private val VALUES = values()
+            @JvmStatic
             fun from(value: Int) = VALUES.firstOrNull { it.id == value }
                 ?: throw PacketDecodeException("Unhandled set score type $value!")
         }

@@ -46,6 +46,7 @@ class EmotePacket : DataPacket(), ClientboundPacket, ServerboundPacket {
     companion object {
         const val FLAG_SERVER = 1 shl 0
 
+        @JvmStatic
         fun create(entityRuntimeId: Long, emoteId: String, flags: Int): EmotePacket =
             EmotePacket().apply {
                 this.entityRuntimeId = entityRuntimeId

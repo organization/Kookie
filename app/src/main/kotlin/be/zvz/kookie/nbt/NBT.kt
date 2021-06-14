@@ -51,11 +51,13 @@ class NBT {
 
         companion object {
             private val VALUES = values()
+            @JvmStatic
             fun from(value: Int) = VALUES.firstOrNull { it.value == value } ?: NOTHING
         }
     }
 
     companion object {
+        @JvmStatic
         fun createTag(
             type: TagType,
             reader: NbtStreamReader,

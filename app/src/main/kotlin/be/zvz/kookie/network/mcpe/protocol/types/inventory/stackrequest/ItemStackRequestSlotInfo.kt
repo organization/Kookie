@@ -28,6 +28,7 @@ class ItemStackRequestSlotInfo(val containerId: Int, val slotId: Int, val stackI
     }
 
     companion object {
+        @JvmStatic
         fun read(input: PacketSerializer): ItemStackRequestSlotInfo {
             val containerId = input.getByte()
             val slotId = input.getByte()

@@ -30,6 +30,7 @@ class BooleanGameRule(private val value: Boolean, override val playerModifiable:
     }
 
     companion object {
+        @JvmStatic
         fun decode(input: PacketSerializer, playerModifiable: Boolean) =
             BooleanGameRule(input.getBoolean(), playerModifiable)
     }

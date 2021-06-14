@@ -19,7 +19,10 @@ package be.zvz.kookie.timings
 
 import java.util.Date
 
-class TimingsHandler(val name: String, private val parent: TimingsHandler? = null) {
+class TimingsHandler @JvmOverloads constructor(
+    val name: String,
+    private val parent: TimingsHandler? = null
+) {
     var record: TimingsRecord? = null
     var timingsDepth = 0
 

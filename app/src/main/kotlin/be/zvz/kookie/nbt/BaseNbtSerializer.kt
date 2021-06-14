@@ -42,6 +42,7 @@ abstract class BaseNbtSerializer : NbtStreamReader, NbtStreamWriter {
         )
     }
 
+    @JvmOverloads
     fun read(
         buffer: String,
         offset: AtomicInteger = AtomicInteger(0),
@@ -57,6 +58,7 @@ abstract class BaseNbtSerializer : NbtStreamReader, NbtStreamWriter {
         return data
     }
 
+    @JvmOverloads
     fun readMultiple(bufferStr: String, maxDepth: Int = 0): List<TreeRoot> {
         this.buffer = BinaryStream(bufferStr)
 

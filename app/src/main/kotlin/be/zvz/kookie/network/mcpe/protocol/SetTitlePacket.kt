@@ -60,24 +60,32 @@ class SetTitlePacket : DataPacket(), ClientboundPacket {
         const val TYPE_SET_SUBTITLE_JSON = 7
         const val TYPE_SET_ACTIONBAR_MESSAGE_JSON = 8
 
+        @JvmStatic
         fun type(type: Int): SetTitlePacket = SetTitlePacket().apply {
             this.type = type
         }
 
+        @JvmStatic
         fun text(type: Int, text: String): SetTitlePacket = type(type).apply {
             this.text = text
         }
 
+        @JvmStatic
         fun title(text: String): SetTitlePacket = text(TYPE_SET_TITLE, text)
 
+        @JvmStatic
         fun subtitle(text: String): SetTitlePacket = text(TYPE_SET_SUBTITLE, text)
 
+        @JvmStatic
         fun actionBarMessage(text: String): SetTitlePacket = text(TYPE_SET_ACTIONBAR_MESSAGE, text)
 
+        @JvmStatic
         fun clearTitle(): SetTitlePacket = type(TYPE_CLEAR_TITLE)
 
+        @JvmStatic
         fun resetTitleOptions(): SetTitlePacket = type(TYPE_RESET_TITLE)
 
+        @JvmStatic
         fun setAnimationTimes(fadeIn: Int, stay: Int, fadeOut: Int): SetTitlePacket =
             type(TYPE_SET_ANIMATION_TIMES).apply {
                 this.fadeInTime = fadeIn

@@ -34,6 +34,7 @@ class IntArrayTag(override val value: IntArray) : Tag<IntArray>() {
     }
 
     companion object {
+        @JvmStatic
         fun read(reader: NbtStreamReader): IntArrayTag = IntArrayTag(reader.readIntArray())
     }
 }

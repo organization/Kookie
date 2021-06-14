@@ -56,6 +56,7 @@ class ContainerSetDataPacket : DataPacket(), ClientboundPacket {
     }
 
     companion object {
+        @JvmStatic
         fun create(windowId: Int, propertyId: Int, value: Int): ContainerSetDataPacket {
             val result = ContainerSetDataPacket()
             result.property = propertyId

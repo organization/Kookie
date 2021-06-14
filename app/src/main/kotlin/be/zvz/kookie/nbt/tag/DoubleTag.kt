@@ -34,6 +34,7 @@ class DoubleTag(override val value: Double) : Tag<Double>() {
     }
 
     companion object {
+        @JvmStatic
         fun read(reader: NbtStreamReader): DoubleTag = DoubleTag(reader.readDouble())
     }
 }

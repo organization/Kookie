@@ -53,12 +53,16 @@ object EnchantmentIdMap {
         register(EnchantmentIds.VANISHING.id, VanillaEnchantments.VANISHING.enchantment)
     }
 
+    @JvmStatic
     fun register(mcpeId: Int, enchantment: Enchantment) {
         idToEnch[mcpeId] = enchantment
         enchToId[enchantment.internalRuntimeId] = mcpeId
     }
 
+    @JvmStatic
     fun fromId(id: Int): Enchantment? = idToEnch[id]
+
+    @JvmStatic
     fun toId(enchantment: Enchantment): Int {
         if (!enchToId.containsKey(enchantment.internalRuntimeId)) {
             throw Exception("Enchantment does not have a mapped ID")

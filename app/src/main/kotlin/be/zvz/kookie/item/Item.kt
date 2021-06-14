@@ -38,7 +38,7 @@ import com.koloboke.collect.map.hash.HashIntObjMaps
 import com.koloboke.collect.map.hash.HashObjObjMaps
 import java.util.Base64
 
-open class Item(
+open class Item @JvmOverloads constructor(
     private val identifier: ItemIdentifier,
     protected val vanillaName: String = "Unknown",
 ) : Cloneable, ItemEnchantmentHandling {
@@ -223,6 +223,7 @@ open class Item(
         }
     }
 
+    @JvmOverloads
     fun pop(count: Int = 1): Item {
         if (count > this.count) {
             throw Exception("Cannot pop $count items from a stack of ${this.count}")
@@ -239,6 +240,7 @@ open class Item(
 
     fun canBePlaced(): Boolean = getBlock().canBePlaced()
 
+    @JvmOverloads
     open fun getBlock(clickedFace: Int? = null): Block = VanillaBlocks.AIR.block
 
     fun getId(): Int = identifier.id
@@ -271,6 +273,7 @@ open class Item(
 
     open fun onAttackEntity(victim: Entity): Boolean = false
 
+    @JvmOverloads
     fun equals(item: Item, checkDamage: Boolean = true, checkCompound: Boolean = true) =
         getId() == item.getId() &&
             (!checkDamage || getMeta() == item.getMeta()) &&
@@ -289,7 +292,7 @@ open class Item(
         }
 
     // TODO: json/nbt (de)serialize
-
+    @JvmOverloads
     fun nbtSerialize(slot: Int = -1): CompoundTag {
         val result = CompoundTag.create()
             .setShort("id", getId())

@@ -111,6 +111,8 @@ object ItemFactory {
         register(Sword(ItemIdentifier(ItemIds.WOODEN_SWORD.id, 0), "Wooden Sword", ToolTier.WOOD))
     }
 
+    @JvmStatic
+    @JvmOverloads
     fun register(item: Item, override: Boolean = false) {
         val id: Int = item.getId()
         val variant = item.getMeta()
@@ -121,6 +123,8 @@ object ItemFactory {
         list[getListOffset(id, variant)] = item.clone()
     }
 
+    @JvmStatic
+    @JvmOverloads
     fun remap(identifier: ItemIdentifier, item: Item, override: Boolean = false) {
         if (!override && isRegistered(identifier.id, identifier.meta)) {
             throw RuntimeException("Trying to overwrite an already registered item")
@@ -129,6 +133,8 @@ object ItemFactory {
         list[getListOffset(identifier.id, identifier.meta)] = item.clone()
     }
 
+    @JvmStatic
+    @JvmOverloads
     fun get(id: Int, meta: Int = 0, count: Int = 1, tags: CompoundTag? = null): Item {
         val offset = getListOffset(id, meta)
         val zero = getListOffset(id, 0)
@@ -163,10 +169,13 @@ object ItemFactory {
         return item
     }
 
+    @JvmStatic
     fun air(): Item {
         return get(ItemIds.AIR.id, 0, 0)
     }
 
+    @JvmStatic
+    @JvmOverloads
     fun isRegistered(id: Int, variant: Int = 0): Boolean {
         if (id < 256) {
             return BlockFactory.isRegistered(id)

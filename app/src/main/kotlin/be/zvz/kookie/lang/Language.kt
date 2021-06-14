@@ -29,7 +29,7 @@ import kotlin.io.path.exists
 import kotlin.io.path.isDirectory
 import kotlin.io.path.listDirectoryEntries
 
-class Language(langStr: String, path: String? = null, fallback: String = FALLBACK_LANGUAGE) {
+class Language @JvmOverloads constructor(langStr: String, path: String? = null, fallback: String = FALLBACK_LANGUAGE) {
     private val langName: String = langStr.lowercase()
     private val languagePrefs: Preferences
     private val fallbackLang: Preferences
@@ -106,6 +106,7 @@ class Language(langStr: String, path: String? = null, fallback: String = FALLBAC
     private fun internalGet(id: String): String? = languagePrefs.get(id, fallbackLang.get(id, null))
     fun get(id: String): String = internalGet(id) ?: id
 
+    @JvmOverloads
     fun parseTranslation(text: String, onlyPrefix: String? = null): String {
         val newStringBuilder = StringBuilder()
         val replaceString = StringBuilder()
@@ -152,6 +153,7 @@ class Language(langStr: String, path: String? = null, fallback: String = FALLBAC
         const val FALLBACK_LANGUAGE = "eng"
 
         @JvmStatic
+        @JvmOverloads
         fun getLanguageList(pathStr: String = ""): Map<String, String> {
             val path = if (pathStr.isEmpty()) {
                 CorePaths.RESOURCE_PATH

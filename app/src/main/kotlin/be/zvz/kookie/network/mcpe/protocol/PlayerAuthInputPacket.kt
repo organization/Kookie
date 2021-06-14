@@ -75,6 +75,7 @@ class PlayerAuthInputPacket : DataPacket(), ServerboundPacket {
     override fun handle(handler: PacketHandlerInterface): Boolean = handler.handlePlayerAuthInput(this)
 
     companion object {
+        @JvmStatic
         fun create(
             position: Vector3,
             pitch: Float,

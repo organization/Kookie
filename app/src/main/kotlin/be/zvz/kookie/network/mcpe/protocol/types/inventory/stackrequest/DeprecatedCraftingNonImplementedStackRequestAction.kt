@@ -25,6 +25,7 @@ class DeprecatedCraftingNonImplementedStackRequestAction : ItemStackRequestActio
     override fun write(out: PacketSerializer) {}
 
     companion object {
+        @JvmStatic
         fun read(input: PacketSerializer) = DeprecatedCraftingNonImplementedStackRequestAction()
     }
 }

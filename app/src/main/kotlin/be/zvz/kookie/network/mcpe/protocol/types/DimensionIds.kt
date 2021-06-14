@@ -23,6 +23,7 @@ enum class DimensionIds(val id: Int) {
     THE_END(2);
 
     companion object {
+        @JvmStatic
         fun fromInt(id: Int) = values().first { it.id == id }
     }
 }

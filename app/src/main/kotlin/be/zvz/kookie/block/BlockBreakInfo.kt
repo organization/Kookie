@@ -19,7 +19,7 @@ package be.zvz.kookie.block
 
 import be.zvz.kookie.item.Item
 
-class BlockBreakInfo(
+class BlockBreakInfo @JvmOverloads constructor(
     val hardness: Float,
     val toolType: BlockToolType = BlockToolType.NONE,
     val toolHarvestLevel: Int = 0,
@@ -59,10 +59,14 @@ class BlockBreakInfo(
     }
 
     companion object {
+        @JvmStatic
+        @JvmOverloads
         fun instant(toolType: BlockToolType = BlockToolType.NONE, toolHarvestLevel: Int = 0): BlockBreakInfo {
             return BlockBreakInfo(0f, toolType, toolHarvestLevel, 0f)
         }
 
+        @JvmStatic
+        @JvmOverloads
         fun indestructible(blastResistance: Float = 18000000f): BlockBreakInfo {
             return BlockBreakInfo(-1f, BlockToolType.NONE, 0, blastResistance)
         }

@@ -26,16 +26,6 @@ class SetActorMotionPacket : DataPacket(), ClientboundPacket, ServerboundPacket 
     var entityRuntimeId: Long = 0
     lateinit var motion: Vector3
 
-    companion object {
-        fun create(entityRuntimeId: Long, motion: Vector3): SetActorMotionPacket {
-
-            return SetActorMotionPacket().apply {
-                this.entityRuntimeId = entityRuntimeId
-                this.motion = motion.asVector3()
-            }
-        }
-    }
-
     override fun decodePayload(input: PacketSerializer) {
         entityRuntimeId = input.getEntityRuntimeId()
         motion = input.getVector3()
@@ -48,5 +38,16 @@ class SetActorMotionPacket : DataPacket(), ClientboundPacket, ServerboundPacket 
 
     override fun handle(handler: PacketHandlerInterface): Boolean {
         return handler.handleSetActorMotion(this)
+    }
+
+    companion object {
+        @JvmStatic
+        fun create(entityRuntimeId: Long, motion: Vector3): SetActorMotionPacket {
+
+            return SetActorMotionPacket().apply {
+                this.entityRuntimeId = entityRuntimeId
+                this.motion = motion.asVector3()
+            }
+        }
     }
 }

@@ -56,6 +56,7 @@ class ReleaseItemTransactionData : TransactionData() {
     }
 
     companion object {
+        @JvmStatic
         fun new(
             actions: MutableList<NetworkInventoryAction>,
             actionType: Int,

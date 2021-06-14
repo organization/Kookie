@@ -28,6 +28,7 @@ class EntityMetadataCollection {
 
     private val dirtyProperties: MutableMap<Int, MetadataProperty> = HashIntObjMaps.newMutableMap()
 
+    @JvmOverloads
     fun set(key: Int, value: MetadataProperty, force: Boolean = false) {
         val v = properties[key]
         if (!force && v === null && !(value::class.java.isInstance(properties[key]))) {
@@ -41,38 +42,47 @@ class EntityMetadataCollection {
         }
     }
 
+    @JvmOverloads
     fun setByte(key: Int, value: Int, force: Boolean = false) {
         set(key, ByteMetadataProperty(value), force)
     }
 
+    @JvmOverloads
     fun setShort(key: Int, value: Int, force: Boolean = false) {
         set(key, ShortMetadataProperty(value), force)
     }
 
+    @JvmOverloads
     fun setInt(key: Int, value: Int, force: Boolean = false) {
         set(key, IntMetadataProperty(value), force)
     }
 
+    @JvmOverloads
     fun setFloat(key: Int, value: Float, force: Boolean = false) {
         set(key, FloatMetadataProperty(value), force)
     }
 
+    @JvmOverloads
     fun setString(key: Int, value: String, force: Boolean = false) {
         set(key, StringMetadataProperty(value), force)
     }
 
+    @JvmOverloads
     fun setCompoundTag(key: Int, value: CompoundTag, force: Boolean = false) {
         set(key, CompoundMetadataProperty(value), force)
     }
 
+    @JvmOverloads
     fun setBlockPos(key: Int, value: PacketSerializer.BlockPosition?, force: Boolean = false) {
         set(key, BlockPosMetadataProperty(value ?: PacketSerializer.BlockPosition()), force)
     }
 
+    @JvmOverloads
     fun setLong(key: Int, value: Int, force: Boolean = false) {
         set(key, LongMetadataProperty(value), force)
     }
 
+    @JvmOverloads
     fun setVector3(key: Int, value: Vector3?, force: Boolean = false) {
         set(key, Vec3MetadataProperty(value ?: Vector3()), force)
     }

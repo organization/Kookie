@@ -14,7 +14,7 @@ class Color @JvmOverloads constructor(r: Int, g: Int, b: Int, a: Int = 0xff) : A
     }
 
     companion object {
-
+        @JvmStatic
         fun mix(color1: Color, vararg colors: Color): Color {
             val colorList = colors.toMutableList()
             colorList.add(color1)
@@ -31,14 +31,17 @@ class Color @JvmOverloads constructor(r: Int, g: Int, b: Int, a: Int = 0xff) : A
             return Color(r / count, g / count, b / count, a / count)
         }
 
+        @JvmStatic
         fun fromRGB(code: Int): Color {
             return Color((code shr 16) and 0xff, (code shr 8) and 0xff, code and 0xff)
         }
 
+        @JvmStatic
         fun fromARGB(code: Int): Color {
             return Color((code shr 16) and 0xff, (code shr 8) and 0xff, code and 0xff, (code shr 24) and 0xff)
         }
 
+        @JvmStatic
         fun fromRGBA(c: Int): Color {
             return Color((c shr 24) and 0xff, (c shr 16) and 0xff, (c shr 8) and 0xff, c and 0xff)
         }
