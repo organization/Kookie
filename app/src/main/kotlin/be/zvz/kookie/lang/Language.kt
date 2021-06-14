@@ -166,7 +166,7 @@ class Language @JvmOverloads constructor(langStr: String, path: String? = null, 
             if (path.isDirectory()) {
                 path.listDirectoryEntries("*.ini").forEach {
                     val code = FilenameUtils.removeExtension(path.fileName.toString())
-                    val prefs = loadLanguage(it)
+                    val prefs = loadLanguage(it, code)
                     if (prefs.nodeExists("language.name")) {
                         result[code] = prefs.get("language.name", null) // if the node does not exist, throw NPE
                     }
