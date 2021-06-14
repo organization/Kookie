@@ -46,6 +46,7 @@ class FloatMetadataProperty(val value: Float) : MetadataProperty() {
     }
 
     companion object {
+        @JvmStatic
         fun read(input: PacketSerializer): FloatMetadataProperty {
             return FloatMetadataProperty(input.getLFloat())
         }

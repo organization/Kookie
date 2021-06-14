@@ -34,6 +34,7 @@ class IntTag(override val value: Int) : Tag<Int>() {
     }
 
     companion object {
+        @JvmStatic
         fun read(reader: NbtStreamReader): IntTag = IntTag(reader.readInt())
     }
 }

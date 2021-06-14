@@ -17,7 +17,7 @@
  */
 package be.zvz.kookie.world.format
 
-class HeightArray(var values: MutableList<Int> = mutableListOf()) {
+class HeightArray @JvmOverloads constructor(val values: MutableList<Int> = mutableListOf()) {
     init {
         if (values.size != 256) {
             throw IllegalArgumentException("Expected exactly 256 values")
@@ -40,6 +40,7 @@ class HeightArray(var values: MutableList<Int> = mutableListOf()) {
     }
 
     companion object {
+        @JvmStatic
         fun fill(value: Int): HeightArray {
             val list = MutableList(255) { value }
             return HeightArray(list)

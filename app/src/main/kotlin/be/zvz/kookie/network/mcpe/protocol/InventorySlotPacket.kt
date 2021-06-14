@@ -46,6 +46,7 @@ class InventorySlotPacket : DataPacket(), ClientboundPacket {
     }
 
     companion object {
+        @JvmStatic
         fun create(windowId: Int, slot: Int, item: ItemStackWrapper) =
             InventorySlotPacket().apply {
                 this.inventorySlot = slot

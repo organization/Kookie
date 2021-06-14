@@ -29,6 +29,7 @@ class DestroyStackRequestAction(val count: Int, val source: ItemStackRequestSlot
     }
 
     companion object {
+        @JvmStatic
         fun read(input: PacketSerializer): CraftingConsumeInputStackRequestAction {
             val count = input.getByte()
             val source = ItemStackRequestSlotInfo.read(input)

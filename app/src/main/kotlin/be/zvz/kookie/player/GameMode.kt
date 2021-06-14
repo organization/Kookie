@@ -37,6 +37,7 @@ enum class GameMode(
     };
 
     companion object {
+        @JvmStatic
         fun from(findValue: Int): GameMode = values().firstOrNull { it.magicNumber == findValue } ?: SURVIVAL
     }
 }

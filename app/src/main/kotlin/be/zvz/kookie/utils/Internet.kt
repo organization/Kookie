@@ -24,6 +24,7 @@ object Internet {
     var ip = ""
     var online = true
 
+    @JvmStatic
     @JvmOverloads
     fun getIP(force: Boolean = false): String {
         if (!online) {

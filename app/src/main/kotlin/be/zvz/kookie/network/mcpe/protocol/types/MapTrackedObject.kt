@@ -17,7 +17,7 @@
  */
 package be.zvz.kookie.network.mcpe.protocol.types
 
-data class MapTrackedObject(
+data class MapTrackedObject @JvmOverloads constructor(
     var type: Int = 0,
     var entityUniqueId: Long = 0,
     var x: Int = 0,

@@ -24,8 +24,9 @@ import com.koloboke.collect.map.hash.HashObjObjMaps
 import com.koloboke.collect.set.hash.HashObjSets
 
 class PermissibleBase(rootPermissionsMap: Map<String, Boolean>) : Permissible {
-    override val permissionRecalculationCallbacks: MutableSet<(changedPermissionsOldValues: Map<String, Boolean>) -> Unit> =
-        HashObjSets.newMutableSet()
+    override val permissionRecalculationCallbacks:
+        MutableSet<(changedPermissionsOldValues: Map<String, Boolean>) -> Unit> =
+            HashObjSets.newMutableSet()
 
     private val rootPermissions: MutableMap<String, Boolean> = HashMap(rootPermissionsMap)
 

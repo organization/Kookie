@@ -25,7 +25,7 @@ import be.zvz.kookie.player.Player
 import be.zvz.kookie.world.biome.BiomeIds
 import com.koloboke.collect.map.hash.HashIntObjMaps
 
-class Chunk(
+class Chunk @JvmOverloads constructor(
     val subChunks: MutableList<SubChunk> = MutableList(MAX_SUBCHUNKS) {
         SubChunk(BlockLegacyIds.AIR.id.toLong() shl 4, mutableListOf())
     },

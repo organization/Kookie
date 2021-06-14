@@ -19,7 +19,7 @@ package be.zvz.kookie.network.mcpe.protocol.types.command
 
 import be.zvz.kookie.network.mcpe.protocol.AvailableCommandsPacket
 
-class CommandParameter(
+class CommandParameter @JvmOverloads constructor(
     var paramName: String = "",
     var paramType: Int = -1,
     var isOptional: Boolean = false,
@@ -35,9 +35,11 @@ class CommandParameter(
         private fun baseline(name: String, type: Int, flags: Int, optional: Boolean): CommandParameter =
             CommandParameter(name, type, optional, flags, null, null)
 
+        @JvmStatic
         fun standard(name: String, type: Int, flags: Int, optional: Boolean = false): CommandParameter =
             baseline(name, AvailableCommandsPacket.ARG_FLAG_VALID or type, flags, optional)
 
+        @JvmStatic
         fun postfixed(name: String, postfix: String, flags: Int, optional: Boolean = false): CommandParameter =
             baseline(name, AvailableCommandsPacket.ARG_FLAG_POSTFIX, flags, optional).apply {
                 this.postfix = postfix

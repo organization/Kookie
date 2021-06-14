@@ -18,6 +18,7 @@ data class ScorePacketEntry @JvmOverloads constructor(
 
         companion object {
             private val VALUES = values()
+            @JvmStatic
             fun from(value: Int) = VALUES.firstOrNull { it.id == value }
                 ?: throw PacketDecodeException("Unhandled set score entry type $value!")
         }

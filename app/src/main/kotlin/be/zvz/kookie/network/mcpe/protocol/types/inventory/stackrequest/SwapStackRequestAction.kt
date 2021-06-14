@@ -32,6 +32,7 @@ class SwapStackRequestAction(
     }
 
     companion object {
+        @JvmStatic
         fun read(input: PacketSerializer): SwapStackRequestAction {
             val slot1 = ItemStackRequestSlotInfo.read(input)
             val slot2 = ItemStackRequestSlotInfo.read(input)

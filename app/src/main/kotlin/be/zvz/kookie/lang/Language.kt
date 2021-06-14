@@ -29,7 +29,7 @@ import kotlin.io.path.exists
 import kotlin.io.path.isDirectory
 import kotlin.io.path.listDirectoryEntries
 
-class Language(langStr: String, path: String? = null, fallback: String = FALLBACK_LANGUAGE) {
+class Language @JvmOverloads constructor(langStr: String, path: String? = null, fallback: String = FALLBACK_LANGUAGE) {
     private val langName: String = langStr.lowercase()
     private val languagePrefs: Preferences
     private val fallbackLang: Preferences
@@ -41,8 +41,8 @@ class Language(langStr: String, path: String? = null, fallback: String = FALLBAC
             Paths.get(path)
         }
 
-        languagePrefs = loadLanguage(pathObj)
-        fallbackLang = loadLanguage(pathObj)
+        languagePrefs = loadLanguage(pathObj, langStr)
+        fallbackLang = loadLanguage(pathObj, fallback)
     }
 
     val name: String
@@ -106,6 +106,7 @@ class Language(langStr: String, path: String? = null, fallback: String = FALLBAC
     private fun internalGet(id: String): String? = languagePrefs.get(id, fallbackLang.get(id, null))
     fun get(id: String): String = internalGet(id) ?: id
 
+    @JvmOverloads
     fun parseTranslation(text: String, onlyPrefix: String? = null): String {
         val newStringBuilder = StringBuilder()
         val replaceString = StringBuilder()
@@ -152,6 +153,7 @@ class Language(langStr: String, path: String? = null, fallback: String = FALLBAC
         const val FALLBACK_LANGUAGE = "eng"
 
         @JvmStatic
+        @JvmOverloads
         fun getLanguageList(pathStr: String = ""): Map<String, String> {
             val path = if (pathStr.isEmpty()) {
                 CorePaths.RESOURCE_PATH
@@ -164,7 +166,7 @@ class Language(langStr: String, path: String? = null, fallback: String = FALLBAC
             if (path.isDirectory()) {
                 path.listDirectoryEntries("*.ini").forEach {
                     val code = FilenameUtils.removeExtension(path.fileName.toString())
-                    val prefs = loadLanguage(it)
+                    val prefs = loadLanguage(it, code)
                     if (prefs.nodeExists("language.name")) {
                         result[code] = prefs.get("language.name", null) // if the node does not exist, throw NPE
                     }
@@ -174,12 +176,12 @@ class Language(langStr: String, path: String? = null, fallback: String = FALLBAC
             return result
         }
 
-        private fun loadLanguage(path: Path): Preferences {
-            if (path.exists()) {
-                val ini = Ini(path.toFile())
-                return IniPreferences(ini)
+        private fun loadLanguage(path: Path, name: String): Preferences {
+            val iniPath = path.resolve("$name.ini")
+            if (iniPath.exists()) {
+                return IniPreferences(Ini(iniPath.toFile()))
             } else {
-                val languageCode = FilenameUtils.removeExtension(path.fileName.toString())
+                val languageCode = FilenameUtils.removeExtension(iniPath.fileName.toString())
                 throw LanguageNotFoundException("Language \"$languageCode\" not found")
             }
         }

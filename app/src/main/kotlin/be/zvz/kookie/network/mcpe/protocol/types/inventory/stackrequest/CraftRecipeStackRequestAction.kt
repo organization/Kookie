@@ -27,6 +27,7 @@ class CraftRecipeStackRequestAction(val recipeId: Int) : ItemStackRequestAction(
     }
 
     companion object {
+        @JvmStatic
         fun read(input: PacketSerializer): CraftRecipeStackRequestAction {
             val recipeId = input.readGenericTypeNetworkId()
             return CraftRecipeStackRequestAction(recipeId)

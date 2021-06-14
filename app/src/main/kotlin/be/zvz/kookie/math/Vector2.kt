@@ -24,8 +24,7 @@ import kotlin.math.pow
 import kotlin.math.sqrt
 
 class Vector2 @JvmOverloads constructor(var x: Double = 0.0, var y: Double = 0.0) : Vector {
-    @JvmOverloads
-    constructor(x: Int, y: Int = 0) : this(x.toDouble(), y.toDouble())
+    @JvmOverloads constructor(x: Int, y: Int = 0) : this(x.toDouble(), y.toDouble())
 
     override fun equals(other: Any?): Boolean = other is Vector2 && other.x == x && other.y == y
 

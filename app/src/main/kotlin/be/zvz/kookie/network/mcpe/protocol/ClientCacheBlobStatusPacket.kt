@@ -27,6 +27,7 @@ class ClientCacheBlobStatusPacket : DataPacket(), ServerboundPacket {
     lateinit var missHashes: MutableList<Long>
 
     companion object {
+        @JvmStatic
         fun create(hitHashes: List<Long>, missHashes: List<Long>): ClientCacheBlobStatusPacket =
             ClientCacheBlobStatusPacket().apply {
                 this.hitHashes = hitHashes.toMutableList()

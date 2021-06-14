@@ -17,7 +17,7 @@
  */
 package be.zvz.kookie.block
 
-class BlockIdentifierFlattened(
+class BlockIdentifierFlattened @JvmOverloads constructor(
     blockId: Int,
     val additionalIds: List<Int>,
     variant: Int,

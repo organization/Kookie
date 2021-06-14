@@ -28,6 +28,7 @@ class Enchant(val id: Int, val level: Int) {
     }
 
     companion object {
+        @JvmStatic
         fun read(input: PacketSerializer): Enchant {
             val id = input.getByte()
             val level = input.getByte()

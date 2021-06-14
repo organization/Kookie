@@ -136,7 +136,8 @@ open class Block(val idInfo: BlockIdentifier, val name: String, val breakInfo: B
         }
     }
 
-    fun isSameType(other: Block): Boolean = idInfo.blockId == other.idInfo.blockId && idInfo.variant == other.idInfo.variant
+    fun isSameType(other: Block): Boolean =
+        idInfo.blockId == other.idInfo.blockId && idInfo.variant == other.idInfo.variant
 
     fun isSameState(other: Block): Boolean = isSameType(other) && writeStateToMeta() == other.writeStateToMeta()
 
@@ -151,6 +152,7 @@ open class Block(val idInfo: BlockIdentifier, val name: String, val breakInfo: B
         isClickedBlock: Boolean
     ): Boolean = blockReplace.canBeReplaced()
 
+    @JvmOverloads
     open fun place(
         tx: BlockTransaction,
         item: Item,
@@ -167,6 +169,7 @@ open class Block(val idInfo: BlockIdentifier, val name: String, val breakInfo: B
     open fun onPostPlace() {
     }
 
+    @JvmOverloads
     open fun onBreak(item: Item, player: Player? = null): Boolean {
         val t = pos.world?.getTile(pos)
         if (t !== null) {
@@ -191,8 +194,10 @@ open class Block(val idInfo: BlockIdentifier, val name: String, val breakInfo: B
     open fun onScheduledUpdate() {
     }
 
+    @JvmOverloads
     open fun onInteract(item: Item, face: Int, clickVector: Vector3, player: Player? = null): Boolean = false
 
+    @JvmOverloads
     open fun onAttack(item: Item, face: Int, player: Player? = null): Boolean = false
 
     open fun getFrictionFactor(): Float = 0.6f
@@ -261,6 +266,7 @@ open class Block(val idInfo: BlockIdentifier, val name: String, val breakInfo: B
 
     open fun isAffectedBySilkTouch(): Boolean = false
 
+    @JvmOverloads
     open fun getPickedItem(addUserData: Boolean = false): Item {
         val item = asItem()
         if (addUserData) {
@@ -289,6 +295,7 @@ open class Block(val idInfo: BlockIdentifier, val name: String, val breakInfo: B
     open fun onIncinerate() {
     }
 
+    @JvmOverloads
     fun getSide(side: Facing, step: Int = 1): Block {
         if (pos.isValid()) {
             return pos.world!!.getBlock(pos.getSide(side, step))

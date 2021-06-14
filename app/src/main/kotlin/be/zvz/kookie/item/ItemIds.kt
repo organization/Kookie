@@ -839,10 +839,23 @@ enum class ItemIds(val id: Int) {
     RECORD_11(510),
     RECORD_WAIT(511),
 
-    SHIELD(513);
+    SHIELD(513),
+
+    NETHERITE_INGOT(742),
+    NETHERITE_SWORD(743),
+    NETHERITE_SHOVEL(744),
+    NETHERITE_PICKAXE(745),
+    NETHERITE_AXE(746),
+    NETHERITE_HOE(747),
+    NETHERITE_HELMET(748),
+    NETHERITE_CHESTPLATE(749),
+    NETHERITE_LEGGINGS(750),
+    NETHERITE_BOOTS(751),
+    NETHERITE_SCARP(752);
 
     companion object {
         private val VALUES = values()
+        @JvmStatic
         fun from(findValue: Int): ItemIds = VALUES.first { it.id == findValue }
     }
 }

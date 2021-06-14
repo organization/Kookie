@@ -38,6 +38,7 @@ class SetCommandsEnabledPacket : DataPacket(), ClientboundPacket {
     }
 
     companion object {
+        @JvmStatic
         fun create(enabled: Boolean) = SetCommandsEnabledPacket().apply {
             this.enabled = enabled
         }

@@ -69,6 +69,7 @@ class UseItemOnEntityTransactionData : TransactionData() {
         const val ACTION_INTERACT = 0
         const val ACTION_ATTACK = 1
 
+        @JvmStatic
         fun new(
             actions: MutableList<NetworkInventoryAction>,
             entityRuntimeId: Long,

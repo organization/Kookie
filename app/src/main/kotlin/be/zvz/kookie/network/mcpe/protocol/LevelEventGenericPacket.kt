@@ -43,6 +43,7 @@ class LevelEventGenericPacket : DataPacket(), ClientboundPacket {
     }
 
     companion object {
+        @JvmStatic
         fun create(eventId: Int, data: CompoundTag) = LevelEventGenericPacket().apply {
             this.eventId = eventId
             this.eventData = CacheableNbt(data)

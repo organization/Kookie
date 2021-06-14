@@ -23,8 +23,8 @@ import com.koloboke.collect.map.hash.HashIntObjMaps
 
 open class SimpleInventory(size: Int) : BaseInventory() {
     private var slots: Array<Item?> = Array(size) { null }
+    override val size: Int = slots.size
 
-    override fun getSize(): Int = slots.size
     override fun getItem(index: Int): Item = slots[index]?.clone() ?: ItemFactory.air()
     override fun getContents(includeEmpty: Boolean): Map<Int, Item> {
         val contents = HashIntObjMaps.newMutableMap<Item>()
@@ -38,8 +38,8 @@ open class SimpleInventory(size: Int) : BaseInventory() {
         return contents
     }
 
-    protected override fun internalSetContents(items: Map<Int, Item>) {
-        for (i in 0 until getSize()) {
+    override fun internalSetContents(items: Map<Int, Item>) {
+        for (i in 0 until size) {
             if (items.containsKey(i)) {
                 clear(i)
             } else {
@@ -48,7 +48,7 @@ open class SimpleInventory(size: Int) : BaseInventory() {
         }
     }
 
-    protected override fun internalSetItem(index: Int, item: Item) {
+    override fun internalSetItem(index: Int, item: Item) {
         slots[index] = if (item.isNull()) null else item
     }
 }

@@ -17,7 +17,12 @@
  */
 package be.zvz.kookie.block
 
-open class BlockIdentifier(val blockId: Int, val variant: Int, itemId: Int? = null, val tileClass: String? = null) {
+open class BlockIdentifier @JvmOverloads constructor(
+    val blockId: Int,
+    val variant: Int,
+    itemId: Int? = null,
+    val tileClass: String? = null
+) {
     val itemId: Int? = itemId
         get() = field ?: if (blockId > 255) 255 - blockId else blockId
 

@@ -51,6 +51,7 @@ class PlayerSkinPacket : DataPacket(), ClientboundPacket, ServerboundPacket {
     }
 
     companion object {
+        @JvmStatic
         fun create(uuid: UUID, skinData: SkinData) = PlayerSkinPacket().apply {
             this.uuid = uuid
             this.skin = skinData

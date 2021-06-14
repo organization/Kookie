@@ -37,6 +37,8 @@ object BlockFactory {
         TODO("Add Blocks")
     }
 
+    @JvmStatic
+    @JvmOverloads
     fun register(block: Block, override: Boolean = false) {
         val variant = block.idInfo.variant
 
@@ -79,6 +81,7 @@ object BlockFactory {
         }
     }
 
+    @JvmStatic
     fun remap(id: Int, meta: Int, block: Block) {
         val fullId = Block.fullId(id, meta)
         if (isRegistered(id, meta)) {
@@ -107,7 +110,9 @@ object BlockFactory {
      *
      * Deserializes a block from the provided legacy ID and legacy meta.
      */
-    fun get(id: Int, meta: Int): Block {
+    @JvmStatic
+    @JvmOverloads
+    fun get(id: Int, meta: Int = 0): Block {
         if (meta !in 0..0xf) {
             throw IllegalArgumentException("Block meta value meta is out of bounds")
         }
@@ -122,14 +127,13 @@ object BlockFactory {
 
     fun fromFullBlock(fullState: Long): Block = get((fullState shr 4).toInt(), (fullState and 0xf).toInt())
 
+    @JvmStatic
+    @JvmOverloads
     fun isRegistered(id: Int, meta: Int = 0): Boolean {
         val b = fullList[Block.fullId(id, meta)]
         return b !== null && b !is UnknownBlock
     }
 
-    /**
-     *  @deprecated
-     *  In PUMP, it is used to fetch only blocks without null
-     * */
+    @Deprecated("In PMMP, it is used to fetch only blocks without null ")
     fun getAllKnownStates() = fullList.toList()
 }

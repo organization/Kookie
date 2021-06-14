@@ -53,6 +53,7 @@ class UpdateSoftEnumPacket : DataPacket(), ClientboundPacket {
         SET(2);
 
         companion object {
+            @JvmStatic
             fun from(findValue: Int): Type = values().firstOrNull { it.id == findValue } ?: ADD
         }
     }

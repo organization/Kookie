@@ -26,9 +26,11 @@ class ShapelessRecipe(
 ) {
 
     companion object {
+        @JvmStatic
         fun decode(type: CraftingDataPacket.Entry, input: PacketSerializer): ShapelessRecipe =
             decodeWith(type, input, { decodeInputs(input) }, ::ShapelessRecipe)
 
+        @JvmStatic
         fun decodeInputs(input: PacketSerializer): List<RecipeIngredient> = mutableListOf<RecipeIngredient>().apply {
             for (i in 0 until input.getUnsignedVarInt()) {
                 add(input.getRecipeIngredient())

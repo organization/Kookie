@@ -68,6 +68,7 @@ class IntMetadataProperty(override var value: Int) : MetadataProperty(), Integer
     }
 
     companion object {
+        @JvmStatic
         fun read(input: PacketSerializer): IntMetadataProperty {
             return IntMetadataProperty(input.getVarInt())
         }

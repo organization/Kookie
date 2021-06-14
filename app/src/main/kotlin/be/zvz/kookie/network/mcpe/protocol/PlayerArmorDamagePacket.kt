@@ -78,6 +78,7 @@ class PlayerArmorDamagePacket : DataPacket(), ClientboundPacket {
         const val FLAG_LEGS = 2
         const val FLAG_FEET = 3
 
+        @JvmStatic
         fun create(headSlotDamage: Int?, chestSlotDamage: Int?, legsSlotDamage: Int?, feetSlotDamage: Int?) =
             PlayerArmorDamagePacket().apply {
                 this.headSlotDamage = headSlotDamage

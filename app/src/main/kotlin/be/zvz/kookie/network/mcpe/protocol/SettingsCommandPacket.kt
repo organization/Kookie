@@ -39,6 +39,7 @@ class SettingsCommandPacket : DataPacket(), ServerboundPacket {
     override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleSettingsCommand(this)
 
     companion object {
+        @JvmStatic
         fun create(command: String, supressOutput: Boolean): SettingsCommandPacket = SettingsCommandPacket().apply {
             this.command = command
             this.suppressOutput = supressOutput

@@ -39,10 +39,13 @@ object Terminal {
 
     const val WHITE = "\u001b[0;37m"
 
+    @JvmStatic
+    @JvmOverloads
     fun init(ansi: Boolean = true) {
         enableANSI = ansi
     }
 
+    @JvmStatic
     fun toANSI(message: String): String {
         val regex = "§[0-9a-fgoi]"
         return message

@@ -24,17 +24,21 @@ import java.lang.NumberFormatException
 object LegacyStringToItemParser {
 
     private val map: MutableMap<String, Int>
+
     init {
         val mappingRaw = this::class.java.getResourceAsStream("item_from_string_bc_map.json")
         map = Json.jsonMapper.readValue(mappingRaw, object : TypeReference<MutableMap<String, Int>>() {})
     }
 
+    @JvmStatic
     fun addMapping(alias: String, id: Int) {
         map[alias] = id
     }
 
+    @JvmStatic
     fun parseId(input: String): Int? = map[reprocess(input).lowercase()]
 
+    @JvmStatic
     fun parse(input: String): Item {
         val key = reprocess(input)
         val b = key.split(":")
@@ -59,5 +63,6 @@ object LegacyStringToItemParser {
         throw IllegalArgumentException("Unable to resolve \"$input\" to a valid item")
     }
 
+    @JvmStatic
     fun reprocess(input: String): String = input.trim().replace(" ", "_").replace("minecraft:", "")
 }

@@ -59,12 +59,16 @@ class TimingsRecord(val handler: TimingsHandler) {
     companion object {
         private val records: MutableList<TimingsRecord> = mutableListOf()
 
+        @JvmStatic
         fun clearRecords() {
             records.clear()
         }
 
+        @JvmStatic
         fun getAll(): MutableList<TimingsRecord> = records
 
+        @JvmStatic
+        @JvmOverloads
         fun tick(measure: Boolean = true) {
             if (measure) {
                 records.forEach {

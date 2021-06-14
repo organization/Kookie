@@ -42,12 +42,15 @@ class BlockActorDataPacket : DataPacket(), ClientboundPacket, ServerboundPacket 
     }
 
     companion object {
+        @JvmStatic
         fun create(pos: Vector3, nbt: CacheableNbt): BlockActorDataPacket =
             create(pos.x.toInt(), pos.y.toInt(), pos.z.toInt(), nbt)
 
+        @JvmStatic
         fun create(pos: PacketSerializer.BlockPosition, nbt: CacheableNbt): BlockActorDataPacket =
             create(pos.x, pos.y, pos.z, nbt)
 
+        @JvmStatic
         fun create(x: Int, y: Int, z: Int, nbt: CacheableNbt): BlockActorDataPacket = BlockActorDataPacket().apply {
             this.pos.x = x
             this.pos.y = y

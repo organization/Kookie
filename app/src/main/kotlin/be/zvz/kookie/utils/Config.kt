@@ -52,6 +52,7 @@ class Config @JvmOverloads constructor(
         ENUM,
         ERROR
     }
+
     private var changed = false
     private var config: ConfigBrowser = ConfigBrowser.NULL_BROWSER
 
@@ -80,7 +81,9 @@ class Config @JvmOverloads constructor(
                     Type.JSON -> JsonBrowser()
                     Type.YAML -> YAMLBrowser()
                     Type.ENUM -> PropertiesBrowser() // TODO: EnumBrowser
-                    Type.DETECT, Type.ERROR -> throw IllegalArgumentException("Cannot detect config type of ${path.fileName}")
+                    Type.DETECT, Type.ERROR -> throw IllegalArgumentException(
+                        "Cannot detect config type of ${path.fileName}"
+                    )
                 }
             }
             save()

@@ -24,10 +24,6 @@ import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 class ChunkRadiusUpdatedPacket : DataPacket(), ClientboundPacket {
     var radius: Int = 0
 
-    companion object {
-        fun create(radius: Int): ChunkRadiusUpdatedPacket = ChunkRadiusUpdatedPacket().apply { this.radius = radius }
-    }
-
     override fun decodePayload(input: PacketSerializer) {
         radius = input.getVarInt()
     }
@@ -38,5 +34,10 @@ class ChunkRadiusUpdatedPacket : DataPacket(), ClientboundPacket {
 
     override fun handle(handler: PacketHandlerInterface): Boolean {
         return handler.handleChunkRadiusUpdated(this)
+    }
+
+    companion object {
+        @JvmStatic
+        fun create(radius: Int): ChunkRadiusUpdatedPacket = ChunkRadiusUpdatedPacket().apply { this.radius = radius }
     }
 }

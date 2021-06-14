@@ -40,6 +40,7 @@ class MemoryManager(private val server: Server) {
         return 0
     }
 
+    @JvmOverloads
     fun trigger(memory: Int, limit: Int, global: Boolean = false, triggerCount: Int = 0) {}
 
     fun check() {}
@@ -57,7 +58,8 @@ class MemoryManager(private val server: Server) {
             outputFolder: String,
             maxNesting: Int,
             maxStringSize: Int
-        ) {}
+        ) {
+        }
 
         @JvmStatic
         private fun continueDump(

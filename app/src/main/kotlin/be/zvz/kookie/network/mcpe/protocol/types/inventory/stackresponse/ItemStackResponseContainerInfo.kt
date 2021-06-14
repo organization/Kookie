@@ -32,6 +32,7 @@ class ItemStackResponseContainerInfo(
     }
 
     companion object {
+        @JvmStatic
         fun read(input: PacketSerializer): ItemStackResponseContainerInfo {
             val containerId = input.getByte()
             val slots = mutableListOf<ItemStackResponseSlotInfo>()

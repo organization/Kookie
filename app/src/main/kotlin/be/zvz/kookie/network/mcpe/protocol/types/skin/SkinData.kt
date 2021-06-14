@@ -19,7 +19,7 @@ package be.zvz.kookie.network.mcpe.protocol.types.skin
 
 import java.util.UUID
 
-class SkinData(
+class SkinData @JvmOverloads constructor(
     val skinId: String,
     val playFabId: String,
     val resourcePatch: String,
