@@ -339,7 +339,7 @@ open class Item @JvmOverloads constructor(
 
     public override fun clone(): Item = (super.clone() as Item).also {
         it.nbt = nbt.clone() as CompoundTag
-        it.blockEntityTag = blockEntityTag?.clone() as CompoundTag?
+        it.blockEntityTag = blockEntityTag?.clone() as? CompoundTag
     }
 
     companion object {
