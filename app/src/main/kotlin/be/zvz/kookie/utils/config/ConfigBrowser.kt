@@ -47,6 +47,11 @@ abstract class ConfigBrowser protected constructor(private val node: JsonNode?) 
 
     abstract val mapper: ObjectMapper
 
+    /**
+     * @return The value of the element as text
+     */
+    val isNull: Boolean get() = node == null || node.isNull
+
     abstract fun create(node: JsonNode?): ConfigBrowser
 
     /**
@@ -215,11 +220,6 @@ abstract class ConfigBrowser protected constructor(private val node: JsonNode?) 
             null
         }
     }
-
-    /**
-     * @return The value of the element as text
-     */
-    val isNull: Boolean get() = node == null || node.isNull
 
     companion object {
         val NULL_BROWSER = NullBrowser.NULL_BROWSER
