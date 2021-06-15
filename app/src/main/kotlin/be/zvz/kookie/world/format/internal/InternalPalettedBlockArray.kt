@@ -113,10 +113,7 @@ class InternalPalettedBlockArray<Block> internal constructor(private val bitsPer
         return hasFound.size
     }
 
-    override fun get(x: Int, y: Int, z: Int): Block {
-        val offset = internalGetPaletteOffset(x, y, z)
-        return palette[offset]
-    }
+    override fun get(x: Int, y: Int, z: Int): Block = palette[internalGetPaletteOffset(x, y, z)]
 
     override fun set(x: Int, y: Int, z: Int, v: Block): Boolean {
         var offset = -1
@@ -139,9 +136,7 @@ class InternalPalettedBlockArray<Block> internal constructor(private val bitsPer
         return true
     }
 
-    override fun getPaletteOffset(x: Int, y: Int, z: Int): Int {
-        return internalGetPaletteOffset(x, y, z)
-    }
+    override fun getPaletteOffset(x: Int, y: Int, z: Int): Int = internalGetPaletteOffset(x, y, z)
 
     override fun replace(offset: Int, value: Block) {
         if (offset >= nextPaletteIndex) {

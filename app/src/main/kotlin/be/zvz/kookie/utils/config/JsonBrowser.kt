@@ -27,9 +27,7 @@ class JsonBrowser private constructor(node: JsonNode?) : ConfigBrowser(node) {
 
     override val mapper = staticMapper
 
-    override fun create(node: JsonNode?): ConfigBrowser {
-        return JsonBrowser(node)
-    }
+    override fun create(node: JsonNode?): ConfigBrowser = JsonBrowser(node)
 
     companion object {
         private val staticMapper = ObjectMapper(

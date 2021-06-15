@@ -56,9 +56,7 @@ abstract class ConfigBrowser protected constructor(private val node: JsonNode?) 
      * @throws IOException When parsing the JSON failed
      */
     @Throws(IOException::class)
-    fun parse(json: String?): ConfigBrowser {
-        return create(mapper.readTree(json))
-    }
+    fun parse(json: String?): ConfigBrowser = create(mapper.readTree(json))
 
     /**
      * Parse from string.
@@ -67,57 +65,47 @@ abstract class ConfigBrowser protected constructor(private val node: JsonNode?) 
      * @throws IOException When parsing the JSON failed
      */
     @Throws(IOException::class)
-    fun parse(stream: InputStream?): ConfigBrowser {
-        return create(mapper.readTree(stream))
-    }
+    fun parse(stream: InputStream?): ConfigBrowser = create(mapper.readTree(stream))
 
     @Throws(IOException::class)
-    fun newMap(): ConfigBrowser {
-        return create(mapper.createObjectNode())
-    }
+    fun newMap(): ConfigBrowser = create(mapper.createObjectNode())
 
     @Throws(IllegalArgumentException::class)
-    fun <K, V> toMap(): Map<K, V> {
-        return mapper.convertValue(node, object : TypeReference<Map<K, V>>() {})
-    }
+    fun <K, V> toMap(): Map<K, V> = mapper.convertValue(node, object : TypeReference<Map<K, V>>() {})
 
     /**
      * @return True if the value represents a list.
      */
-    val isList: Boolean
-        get() = node is ArrayNode
+    val isList: Boolean get() = node is ArrayNode
 
     /**
      * @return True if the value represents a map.
      */
-    val isMap: Boolean
-        get() = node is ObjectNode
+    val isMap: Boolean get() = node is ObjectNode
 
     /**
      * Get an element at an index for a list value
      * @param index List index
      * @return JsonBrowser instance which wraps the value at the specified index
      */
-    fun index(index: Int): ConfigBrowser {
-        return if (node !== null && isList && index >= 0 && index < node.size()) {
+    fun index(index: Int): ConfigBrowser =
+        if (node !== null && isList && index in 0 until node.size()) {
             create(node.get(index))
         } else {
             NULL_BROWSER
         }
-    }
 
     /**
      * Get an element by key from a map value
      * @param key Map key
      * @return JsonBrowser instance which wraps the value with the specified key
      */
-    operator fun get(key: String?): ConfigBrowser {
-        return if (node !== null && isMap) {
+    operator fun get(key: String?): ConfigBrowser =
+        if (node !== null && isMap) {
             create(node.get(key))
         } else {
             NULL_BROWSER
         }
-    }
 
     /**
      * Put a value into the map if this instance contains a map.
@@ -136,21 +124,19 @@ abstract class ConfigBrowser protected constructor(private val node: JsonNode?) 
         }
     }
 
-    fun exists(key: String): Boolean {
+    fun exists(key: String): Boolean =
         if (node is ObjectNode) {
-            return node.findValue(key) !== null
+            node.findValue(key) !== null
         } else {
             throw IllegalStateException("Exists only works on a map")
         }
-    }
 
-    fun remove(key: String): Boolean {
+    fun remove(key: String): Boolean =
         if (node is ObjectNode) {
-            return node.remove(key) !== null
+            node.remove(key) !== null
         } else {
             throw IllegalStateException("Remove only works on a map")
         }
-    }
 
     /**
      * Returns a list of all the values in this element
@@ -163,9 +149,7 @@ abstract class ConfigBrowser protected constructor(private val node: JsonNode?) 
     }
 
     fun keys(): List<String> = mutableListOf<String>().apply {
-        node?.fieldNames()?.forEachRemaining {
-            add(it)
-        }
+        node?.fieldNames()?.forEachRemaining(this::add)
     }
 
     /**
@@ -174,87 +158,59 @@ abstract class ConfigBrowser protected constructor(private val node: JsonNode?) 
      * @return The value as an instance of the specified class
      * @throws IllegalArgumentException If conversion is impossible
      */
-    fun <T> `as`(klass: Class<T>?): T {
-        return try {
+    fun <T> `as`(klass: Class<T>?): T =
+        try {
             mapper.treeToValue(node, klass)
         } catch (e: Exception) {
             throw RuntimeException(e)
         }
-    }
 
-    fun <T> `as`(type: TypeReference<T>?): T {
-        return try {
+    fun <T> `as`(type: TypeReference<T>?): T =
+        try {
             mapper.readValue(mapper.treeAsTokens(node), type)
         } catch (e: Exception) {
             throw RuntimeException(e)
         }
-    }
 
-    /**
-     * @return The value of the element as text
-     */
-    fun text(): String? {
-        return if (node !== null) {
-            when {
-                node.isNull -> {
-                    null
-                }
-                node.isTextual -> {
-                    node.textValue()
-                }
-                node.isIntegralNumber -> {
-                    node.longValue().toString()
-                }
-                node.isNumber -> {
-                    node.numberValue().toString()
-                }
-                node.isBoolean -> {
-                    node.booleanValue().toString()
-                }
-                else -> {
-                    node.toString()
-                }
-            }
-        } else null
-    }
-
-    fun asBoolean(defaultValue: Boolean): Boolean {
-        if (node !== null) {
-            if (node.isBoolean) {
-                return node.booleanValue()
-            } else if (node.isTextual) {
-                return when (node.textValue().lowercase()) {
-                    "true", "on", "1", "yes" -> true
-                    else -> false
-                }
-            }
+    fun text(): String? = node?.let {
+        when {
+            it.isNull -> null
+            it.isTextual -> it.textValue()
+            it.isIntegralNumber -> it.longValue().toString()
+            it.isNumber -> it.numberValue().toString()
+            it.isBoolean -> it.booleanValue().toString()
+            else -> it.toString()
         }
-        return defaultValue
     }
 
-    fun asLong(defaultValue: Long): Long {
-        if (node !== null) {
-            if (node.isNumber) {
-                return node.numberValue().toLong()
-            } else if (node.isTextual) {
-                try {
-                    return node.textValue().toLong()
-                } catch (ignored: NumberFormatException) {
-                    // Fall through to default value.
-                }
+    fun asBoolean(defaultValue: Boolean): Boolean = node?.let {
+        when {
+            it.isBoolean -> it.booleanValue()
+            it.isTextual -> when (it.textValue().lowercase()) {
+                "true", "on", "1", "yes" -> true
+                else -> false
             }
+            else -> null
         }
-        return defaultValue
-    }
+    } ?: defaultValue
 
-    fun safeText(): String {
-        val text = text()
-        return text ?: ""
-    }
+    fun asLong(defaultValue: Long): Long = node?.let {
+        when {
+            it.isNumber -> it.numberValue().toLong()
+            it.isTextual -> try {
+                node.textValue().toLong()
+            } catch (ignored: NumberFormatException) {
+                null // Fall through to default value.
+            }
+            else -> null
+        }
+    } ?: defaultValue
 
-    fun format(): String? {
-        return try {
-            if (node !== null) mapper.writeValueAsString(node) else null
+    fun safeText(): String = text() ?: ""
+
+    fun format(): String? = node?.let {
+        try {
+            mapper.writeValueAsString(node)
         } catch (e: Exception) {
             null
         }
@@ -263,8 +219,7 @@ abstract class ConfigBrowser protected constructor(private val node: JsonNode?) 
     /**
      * @return The value of the element as text
      */
-    val isNull: Boolean
-        get() = node == null || node.isNull
+    val isNull: Boolean get() = node == null || node.isNull
 
     companion object {
         val NULL_BROWSER = NullBrowser.NULL_BROWSER

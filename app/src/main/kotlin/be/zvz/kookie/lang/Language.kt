@@ -45,10 +45,8 @@ class Language @JvmOverloads constructor(langStr: String, path: String? = null, 
         fallbackLang = loadLanguage(pathObj, fallback)
     }
 
-    val name: String
-        get() = languagePrefs.get("language.name", null)
-    val lang: String
-        get() = langName
+    val name: String get() = languagePrefs.get("language.name", null)
+    val lang: String get() = langName
 
     private fun getBaseText(str: String, onlyPrefix: String? = null): String = get(str).apply {
         parseTranslation(

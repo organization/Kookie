@@ -41,11 +41,7 @@ object Binary {
     @JvmStatic fun flipLongEndianness(value: Long): Long = readLLong(writeLong(value))
 
     @JvmStatic fun readBoolean(b: String): Boolean = b != "\u0000"
-    @JvmStatic fun writeBoolean(b: Boolean): String = if (b) {
-        "\u0001"
-    } else {
-        "\u0000"
-    }
+    @JvmStatic fun writeBoolean(b: Boolean): String = if (b) "\u0001" else "\u0000"
 
     @JvmStatic fun readByte(c: String): Int = c[0].code
     @JvmStatic fun readSignedByte(c: String): Int = signByte(c[0].code)

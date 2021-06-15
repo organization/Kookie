@@ -23,37 +23,34 @@ import kotlin.jvm.internal.Ref
 
 object SubChunkConverter {
     @JvmStatic
-    fun convertSubChunkXZY(idArray: String, metaArray: String): PalettedBlockArray {
-        return PalettedBlockArray(
+    fun convertSubChunkXZY(idArray: String, metaArray: String): PalettedBlockArray =
+        PalettedBlockArray(
             convert(
                 idArray, metaArray, 0, getIndexSubChunkXZY,
                 mapper,
                 false
             )
         )
-    }
 
     @JvmStatic
-    fun convertSubChunkYZX(idArray: String, metaArray: String): PalettedBlockArray {
-        return PalettedBlockArray(
+    fun convertSubChunkYZX(idArray: String, metaArray: String): PalettedBlockArray =
+        PalettedBlockArray(
             convert(
                 idArray, metaArray, 0, getIndexSubChunkXZY,
                 mapper,
                 true
             )
         )
-    }
 
     @JvmStatic
-    fun convertSubChunkFromLegacyColumn(idArray: String, metaArray: String, yOffset: Int): PalettedBlockArray {
-        return PalettedBlockArray(
+    fun convertSubChunkFromLegacyColumn(idArray: String, metaArray: String, yOffset: Int): PalettedBlockArray =
+        PalettedBlockArray(
             convert(
                 idArray, metaArray, yOffset, getIndexLegacyColumnXZY,
                 mapper,
                 true
             )
         )
-    }
 
     private val mapper: (Int, Int) -> Long = { id: Int, meta: Int ->
         id.toLong() shl 4 or meta.toLong()

@@ -37,16 +37,13 @@ open class Block(val idInfo: BlockIdentifier, val name: String, val breakInfo: B
     var pos: Position
 
     protected var collisionBoxes: List<AxisAlignedBB>? = null
-        get() {
-            if (field === null) {
-                field = recalculateCollisionBoxes()
-                val extraOffset = getPosOffset()
-                val offset = if (extraOffset !== null) pos.add(extraOffset) else pos
-                field?.forEach {
-                    it.offset(offset.x, offset.y, offset.z)
-                }
+        get() = field ?: run {
+            val offset = getPosOffset()?.let(pos::add) ?: pos
+            recalculateCollisionBoxes().let { boxes ->
+                boxes.forEach { it.offset(offset.x, offset.y, offset.z) }
+                field = boxes
             }
-            return field
+            field
         }
 
     init {
@@ -56,19 +53,13 @@ open class Block(val idInfo: BlockIdentifier, val name: String, val breakInfo: B
                 "Variant 0x" +
                     idInfo.variant.toString(16) +
                     " collides with state bitmask 0x" +
-                    getStateBitmask().toString(
-                        16
-                    )
+                    getStateBitmask().toString(16)
             )
         }
         pos = Position()
     }
 
-    fun clone(): Block {
-        val block = Block(idInfo, name, breakInfo)
-        block.pos = pos.asPosition()
-        return block
-    }
+    fun clone(): Block = Block(idInfo, name, breakInfo).also { it.pos = pos.asPosition() }
 
     fun getId(): Int = idInfo.blockId
 
@@ -108,31 +99,27 @@ open class Block(val idInfo: BlockIdentifier, val name: String, val breakInfo: B
                 getFullId().toLong()
             )
 
-        var tileType: Class<*>? = null
-        // TODO: Completion of getTile method in World
-        var oldTile = pos.world?.getTile(pos)
-        if (oldTile !== null) {
-            try {
-                tileType = Class.forName(idInfo.tileClass)
-            } catch (ignored: ClassNotFoundException) {
-            }
-
-            if (tileType === null || !tileType.isAssignableFrom(oldTile::class.java)) {
-                oldTile.close()
-                oldTile = null
-            } else if (oldTile is Spawnable) {
-                oldTile.dirty = true // destroy old network cache
-            }
+        val tileType: Class<*>? = try {
+            Class.forName(idInfo.tileClass)
+        } catch (_: ClassNotFoundException) {
+            null
         }
-        if (oldTile === null && tileType !== null) {
-            val tile = tileType.getConstructor(
-                World::class.java,
-                Vector3::class.java
-            ).newInstance(
-                pos.world,
-                pos.asVector3()
-            ) as Tile
-            pos.world?.addTile(tile)
+        pos.world?.getTile(pos)?.let { oldTile ->
+            if (tileType?.takeIf { it.isAssignableFrom(oldTile::class.java) } === null) {
+                oldTile.close()
+                null
+            } else {
+                if (oldTile is Spawnable) {
+                    oldTile.dirty = true // destroy old network cache
+                }
+                oldTile
+            }
+        } ?: tileType?.let {
+            pos.world?.addTile(
+                it.getConstructor(World::class.java, Vector3::class.java)
+                    .newInstance(pos.world, pos.asVector3())
+                    as Tile
+            )
         }
     }
 
@@ -171,10 +158,7 @@ open class Block(val idInfo: BlockIdentifier, val name: String, val breakInfo: B
 
     @JvmOverloads
     open fun onBreak(item: Item, player: Player? = null): Boolean {
-        val t = pos.world?.getTile(pos)
-        if (t !== null) {
-            t.onBlockDestroyed()
-        }
+        pos.world?.getTile(pos)?.onBlockDestroyed()
         pos.world?.setBlock(pos, VanillaBlocks.AIR.block)
         return true
     }
@@ -243,15 +227,12 @@ open class Block(val idInfo: BlockIdentifier, val name: String, val breakInfo: B
         pos = Position(x, y, z, world)
     }
 
-    open fun getDrops(item: Item): List<Item> {
-        if (breakInfo.isToolCompatible(item)) {
-            if (isAffectedBySilkTouch() && item.hasEnchantment(VanillaEnchantments.SILK_TOUCH.enchantment)) {
-                return getSilkTouchDrops(item)
-            }
-            return getDropsForCompatibleTool(item)
-        }
-        return listOf()
-    }
+    open fun getDrops(item: Item): List<Item> =
+        if (breakInfo.isToolCompatible(item))
+            if (isAffectedBySilkTouch() && item.hasEnchantment(VanillaEnchantments.SILK_TOUCH.enchantment))
+                getSilkTouchDrops(item)
+            else getDropsForCompatibleTool(item)
+        else listOf()
 
     open fun getDropsForCompatibleTool(item: Item): List<Item> = listOf(asItem())
 
@@ -270,10 +251,8 @@ open class Block(val idInfo: BlockIdentifier, val name: String, val breakInfo: B
     open fun getPickedItem(addUserData: Boolean = false): Item {
         val item = asItem()
         if (addUserData) {
-            val tile = pos.world?.getTile(pos)
-            if (tile !== null) {
-                val nbt = tile.getCleanedNBT()
-                if (nbt !== null) {
+            pos.world?.getTile(pos)?.let { tile ->
+                tile.getCleanedNBT()?.let { nbt ->
                     item.setCustomBlockData(nbt)
                     item.lore = mutableListOf("+(DATA)")
                 }
@@ -296,13 +275,8 @@ open class Block(val idInfo: BlockIdentifier, val name: String, val breakInfo: B
     }
 
     @JvmOverloads
-    fun getSide(side: Facing, step: Int = 1): Block {
-        if (pos.isValid()) {
-            return pos.world!!.getBlock(pos.getSide(side, step))
-        }
-
-        throw IllegalStateException("Block does not have a valid world")
-    }
+    fun getSide(side: Facing, step: Int = 1): Block = pos.takeIf { it.isValid() }?.world?.getBlock(pos.getSide(side, step))
+        ?: throw IllegalStateException("Block does not have a valid world")
 
     fun getHorizontalSides() = sequence {
         pos.sidesAroundAxis(Axis.Y).forEach {
@@ -330,25 +304,12 @@ open class Block(val idInfo: BlockIdentifier, val name: String, val breakInfo: B
      *
      * @return Block[]
      */
-    open fun getAffectedBlocks(): List<Block> {
-        return listOf(this)
-    }
+    open fun getAffectedBlocks(): List<Block> = listOf(this)
 
-    override fun toString(): String {
-        return "Block[$name] (${getId()}:${getMeta()})"
-    }
+    override fun toString(): String = "Block[$name] (${getId()}:${getMeta()})"
 
-    /**
-     * Checks for collision against an AxisAlignedBB
-     */
-    fun collidesWithBB(bb: AxisAlignedBB): Boolean {
-        collisionBoxes?.forEach {
-            if (bb.intersectsWith(it))
-                return true
-        }
-
-        return false
-    }
+    /** Checks for collision against an AxisAlignedBB */
+    fun collidesWithBB(bb: AxisAlignedBB): Boolean = collisionBoxes?.find { bb.intersectsWith(it) } !== null
 
     /**
      * Called when an entity's bounding box clips inside this block's cell. Note that the entity may not be intersecting
@@ -357,50 +318,36 @@ open class Block(val idInfo: BlockIdentifier, val name: String, val breakInfo: B
      * @return Boolean Whether the block is still the same after the intersection. If it changed (e.g. due to an explosive
      * being ignited), this should return false.
      */
-    open fun onEntityInside(entity: Entity): Boolean {
-        return true
-    }
+    open fun onEntityInside(entity: Entity): Boolean = true
 
     /**
      * Returns an additional fractional vector to shift the block's effective position by based on the current position.
      * Used to randomize position of things like bamboo canes and tall grass.
      */
-    open fun getPosOffset(): Vector3? {
-        return null
-    }
+    open fun getPosOffset(): Vector3? = null
 
     /**
      * @return AxisAlignedBB[]
      */
-    protected open fun recalculateCollisionBoxes(): List<AxisAlignedBB> {
-        return listOf(AxisAlignedBB.one())
-    }
+    protected open fun recalculateCollisionBoxes(): List<AxisAlignedBB> = listOf(AxisAlignedBB.one())
 
-    fun isFullCube(): Boolean {
-        val bb = collisionBoxes
-        return bb !== null && bb.size == 1 && bb[0].getAverageEdgeLength() >= 1 && bb[0].isCube()
-    }
+    fun isFullCube(): Boolean =
+        collisionBoxes?.takeIf { it.size == 1 && it[0].getAverageEdgeLength() >= 1 && it[0].isCube() } !== null
 
     fun calculateIntercept(pos1: Vector3, pos2: Vector3): RayTraceResult? {
-        val bbs = collisionBoxes
-        if (bbs === null || bbs.isEmpty()) {
-            return null
-        }
-
         var currentHit: RayTraceResult? = null
         var currentDistance = Double.MAX_VALUE
 
-        bbs.forEach {
-            val nextHit = it.calculateIntercept(pos1, pos2)
-            if (nextHit === null) {
-                return@forEach
+        collisionBoxes
+            ?.takeIf { it.isNotEmpty() }
+            ?.forEach {
+                val nextHit = it.calculateIntercept(pos1, pos2) ?: return@forEach
+                val nextDistance = nextHit.hitVector.distanceSquared(pos1)
+                if (nextDistance < currentDistance) {
+                    currentHit = nextHit
+                    currentDistance = nextDistance
+                }
             }
-            val nextDistance = nextHit.hitVector.distanceSquared(pos1)
-            if (nextDistance < currentDistance) {
-                currentHit = nextHit
-                currentDistance = nextDistance
-            }
-        }
         return currentHit
     }
 }

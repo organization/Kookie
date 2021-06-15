@@ -195,12 +195,10 @@ open class Item @JvmOverloads constructor(
             tag.removeTag(TAG_ENCH)
         }
 
-        getCustomBlockData().let {
-            if (it == null) {
-                tag.removeTag(TAG_BLOCK_ENTITY_TAG)
-            } else {
-                tag.setTag(TAG_BLOCK_ENTITY_TAG, it.clone())
-            }
+        getCustomBlockData()?.let {
+            tag.setTag(TAG_BLOCK_ENTITY_TAG, it.clone())
+        } ?: run {
+            tag.removeTag(TAG_BLOCK_ENTITY_TAG)
         }
 
         if (this.canPlaceOn.isNotEmpty()) {
@@ -249,11 +247,7 @@ open class Item @JvmOverloads constructor(
 
     fun hasAnyDamageValue(): Boolean = identifier.meta == -1
 
-    open fun getFuelResidue(): Item {
-        val item = clone()
-        item.pop()
-        return item
-    }
+    open fun getFuelResidue(): Item = clone().apply { pop() }
 
     open fun getMiningEfficiency(isCorrectTool: Boolean): Float = 1F
 
@@ -343,11 +337,9 @@ open class Item @JvmOverloads constructor(
         return item
     }
 
-    public override fun clone(): Item {
-        val clonedItem = super.clone() as Item
-        clonedItem.nbt = nbt.clone() as CompoundTag
-        blockEntityTag = blockEntityTag?.clone() as CompoundTag?
-        return clonedItem
+    public override fun clone(): Item = (super.clone() as Item).also {
+        it.nbt = nbt.clone() as CompoundTag
+        it.blockEntityTag = blockEntityTag?.clone() as CompoundTag?
     }
 
     companion object {

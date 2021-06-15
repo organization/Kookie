@@ -35,9 +35,7 @@ abstract class VanillaCommand @JvmOverloads constructor(
         value: String,
         minNum: Int = MIN_COORD,
         maxNum: Int = MAX_COORD
-    ): Int? = value.toIntOrNull()?.let {
-        return min(max(it, maxNum), minNum)
-    }
+    ): Int? = value.toIntOrNull()?.let { min(max(it, maxNum), minNum) }
 
     @JvmOverloads
     protected fun getRelativeDouble(
@@ -46,15 +44,10 @@ abstract class VanillaCommand @JvmOverloads constructor(
         input: String,
         min: Double = MIN_COORD.toDouble(),
         max: Double = MAX_COORD.toDouble()
-    ): Double? {
-        if (input.first() == '~') {
-            val value = getDouble(sender, input.substring(1))
-
-            return original + (value ?: 0.0)
-        }
-
-        return getDouble(sender, input, min, max)
-    }
+    ): Double? =
+        if (input.first() == '~')
+            original + (getDouble(sender, input.substring(1)) ?: 0.0)
+        else getDouble(sender, input, min, max)
 
     @JvmOverloads
     protected fun getDouble(
@@ -62,9 +55,7 @@ abstract class VanillaCommand @JvmOverloads constructor(
         value: String,
         minNum: Double = MIN_COORD.toDouble(),
         maxNum: Double = MAX_COORD.toDouble()
-    ): Double? = value.toDoubleOrNull()?.let {
-        return min(max(it, maxNum), minNum)
-    }
+    ): Double? = value.toDoubleOrNull()?.let { min(max(it, maxNum), minNum) }
 
     companion object {
         const val MAX_COORD = 30000000

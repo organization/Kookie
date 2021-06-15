@@ -27,9 +27,7 @@ class YAMLBrowser private constructor(node: JsonNode?) : ConfigBrowser(node) {
 
     override val mapper = staticMapper
 
-    override fun create(node: JsonNode?): ConfigBrowser {
-        return YAMLBrowser(node)
-    }
+    override fun create(node: JsonNode?): ConfigBrowser = YAMLBrowser(node)
 
     companion object {
         private val staticMapper = ObjectMapper(

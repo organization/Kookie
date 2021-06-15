@@ -25,7 +25,6 @@ import be.zvz.kookie.block.BlockIdentifier as BID
 import be.zvz.kookie.block.BlockLegacyIds as Ids
 
 object BlockFactory {
-
     private val fullList: MutableMap<Int, Block> = HashIntObjMaps.newMutableMap()
     var light: MutableMap<Int, Int> = HashIntIntMaps.newMutableMap()
     var lightFilter: MutableMap<Int, Int> = HashIntIntMaps.newMutableMap()
@@ -86,8 +85,8 @@ object BlockFactory {
 
     @JvmStatic
     fun remap(id: Int, meta: Int, block: Block) {
-        val index = id shl 4 or meta
         if (isRegistered(id, meta)) {
+            val index = id shl 4 or meta
             val existing = fullList[index]
             if (existing !== null && existing.getFullId() == index) {
                 throw IllegalArgumentException("$id:$meta is already mapped")
@@ -132,10 +131,7 @@ object BlockFactory {
 
     @JvmStatic
     @JvmOverloads
-    fun isRegistered(id: Int, meta: Int = 0): Boolean {
-        val b = fullList[(id shl 4) or meta]
-        return b !== null && b !is UnknownBlock
-    }
+    fun isRegistered(id: Int, meta: Int = 0): Boolean = fullList[(id shl 4) or meta]?.takeIf { it !is UnknownBlock } !== null
 
     @Deprecated("In PMMP, it is used to fetch only blocks without null ")
     fun getAllKnownStates() = fullList.toList()

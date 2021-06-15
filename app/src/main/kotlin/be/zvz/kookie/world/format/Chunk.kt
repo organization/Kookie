@@ -35,17 +35,11 @@ class Chunk @JvmOverloads constructor(
 
     fun getHeight(): Int = subChunks.size
 
-    fun getFullBlock(x: Int, y: Int, z: Int): Long {
-        return getSubChunk(y shr 4).getFullBlock(x, y and 0xf, z)
-    }
+    fun getFullBlock(x: Int, y: Int, z: Int): Long = getSubChunk(y shr 4).getFullBlock(x, y and 0xf, z)
 
-    fun getSubChunk(y: Int): SubChunk {
-        if (y !in 0 until subChunks.size) {
-            throw IllegalArgumentException("Invalid subchunk Y coordinate $y")
-        }
-
-        return subChunks[y]
-    }
+    fun getSubChunk(y: Int): SubChunk =
+        if (y in 0 until subChunks.size) subChunks[y]
+        else throw IllegalArgumentException("Invalid subchunk Y coordinate $y")
 
     fun setFullBlock(x: Int, y: Int, z: Int, block: Long) {
         getSubChunk(y shr 4).setFullBlock(x, y and 0xf, z, block)

@@ -77,14 +77,13 @@ object ItemTranslator {
     }
 
     @JvmStatic
-    fun toNetworkId(internalId: Int, internalMeta: Int): Pair<Int, Int> {
-        if (complexCoreToNetMapping[internalId]?.containsKey(internalMeta) == true) {
-            return Pair(complexCoreToNetMapping.getValue(internalId).getValue(internalMeta), 0)
-        }
-        if (simpleCoreToNetMapping.containsKey(internalId)) {
-            return Pair(simpleCoreToNetMapping.getValue(internalId), internalMeta)
-        }
-        throw IllegalArgumentException("Unmapped ID/metadata combination $internalId:$internalMeta")
+    fun toNetworkId(internalId: Int, internalMeta: Int): Pair<Int, Int> = when {
+        complexCoreToNetMapping[internalId]?.containsKey(internalMeta) == true ->
+            Pair(complexCoreToNetMapping.getValue(internalId).getValue(internalMeta), 0)
+        simpleCoreToNetMapping.containsKey(internalId) ->
+            Pair(simpleCoreToNetMapping.getValue(internalId), internalMeta)
+        else ->
+            throw IllegalArgumentException("Unmapped ID/metadata combination $internalId:$internalMeta")
     }
 
     @JvmStatic
