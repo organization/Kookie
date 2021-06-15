@@ -63,9 +63,10 @@ class LightArray : Cloneable {
 
         @JvmStatic
         fun fill(level: Int): LightArray =
-            if (level <= LightLevel.MAX)
+            if (level <= LightLevel.MAX) {
                 LightArray(level)
-            else
+            } else {
                 throw IllegalArgumentException("Light level must be max ${LightLevel.MAX}")
+            }
     }
 }

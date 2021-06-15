@@ -53,9 +53,10 @@ class PalettedBlockArray internal constructor(private val blockArray: BlockArray
 
         @JvmStatic
         fun getExpectedWordArraySize(bitsPerBlock: Long): Int =
-            if (bitsPerBlock == bitsPerBlock.toUInt().toLong())
+            if (bitsPerBlock == bitsPerBlock.toUInt().toLong()) {
                 BlockArrayContainer.getExpectedPayloadSize(bitsPerBlock.toInt())
-            else
+            } else {
                 throw IllegalArgumentException("invalid bits-per-block: $bitsPerBlock")
+            }
     }
 }

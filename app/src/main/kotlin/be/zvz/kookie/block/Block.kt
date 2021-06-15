@@ -228,11 +228,15 @@ open class Block(val idInfo: BlockIdentifier, val name: String, val breakInfo: B
     }
 
     open fun getDrops(item: Item): List<Item> =
-        if (breakInfo.isToolCompatible(item))
-            if (isAffectedBySilkTouch() && item.hasEnchantment(VanillaEnchantments.SILK_TOUCH.enchantment))
+        if (breakInfo.isToolCompatible(item)) {
+            if (isAffectedBySilkTouch() && item.hasEnchantment(VanillaEnchantments.SILK_TOUCH.enchantment)) {
                 getSilkTouchDrops(item)
-            else getDropsForCompatibleTool(item)
-        else listOf()
+            } else {
+                getDropsForCompatibleTool(item)
+            }
+        } else {
+            listOf()
+        }
 
     open fun getDropsForCompatibleTool(item: Item): List<Item> = listOf(asItem())
 

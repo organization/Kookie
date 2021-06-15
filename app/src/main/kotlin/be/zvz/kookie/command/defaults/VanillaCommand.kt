@@ -45,9 +45,11 @@ abstract class VanillaCommand @JvmOverloads constructor(
         min: Double = MIN_COORD.toDouble(),
         max: Double = MAX_COORD.toDouble()
     ): Double? =
-        if (input.first() == '~')
+        if (input.first() == '~') {
             original + (getDouble(sender, input.substring(1)) ?: 0.0)
-        else getDouble(sender, input, min, max)
+        } else {
+            getDouble(sender, input, min, max)
+        }
 
     @JvmOverloads
     protected fun getDouble(
