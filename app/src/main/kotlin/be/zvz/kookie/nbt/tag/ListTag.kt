@@ -27,10 +27,6 @@ class ListTag<T> @JvmOverloads constructor(
     private var tagType: NBT.TagType = NBT.TagType.NOTHING
 ) : Tag<List<Tag<T>>>() {
 
-    override fun getTagType(): NBT.TagType {
-        return NBT.TagType.LIST
-    }
-
     init {
         value.forEach { tag ->
             if (tagType === NBT.TagType.NOTHING) {
@@ -41,6 +37,10 @@ class ListTag<T> @JvmOverloads constructor(
                 }
             }
         }
+    }
+
+    override fun getTagType(): NBT.TagType {
+        return NBT.TagType.LIST
     }
 
     fun push(tag: Tag<T>) {
