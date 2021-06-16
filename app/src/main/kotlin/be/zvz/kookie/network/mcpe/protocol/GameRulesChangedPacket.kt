@@ -34,7 +34,5 @@ class GameRulesChangedPacket : DataPacket(), ClientboundPacket {
         output.putGameRules(gameRules)
     }
 
-    override fun handle(handler: PacketHandlerInterface): Boolean {
-        return handler.handleGameRulesChanged(this)
-    }
+    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleGameRulesChanged(this)
 }

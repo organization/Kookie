@@ -33,13 +33,15 @@ class ItemStackResponseContainerInfo(
 
     companion object {
         @JvmStatic
-        fun read(input: PacketSerializer): ItemStackResponseContainerInfo {
-            val containerId = input.getByte()
-            val slots = mutableListOf<ItemStackResponseSlotInfo>()
-            for (i in 0 until input.getUnsignedVarInt()) {
-                slots.add(ItemStackResponseSlotInfo.read(input))
+        fun read(input: PacketSerializer) = ItemStackResponseContainerInfo(
+            containerId = input.getByte(),
+            slots = run {
+                val list = mutableListOf<ItemStackResponseSlotInfo>()
+                repeat(input.getUnsignedVarInt()) {
+                    list.add(ItemStackResponseSlotInfo.read(input))
+                }
+                list
             }
-            return ItemStackResponseContainerInfo(containerId, slots)
-        }
+        )
     }
 }

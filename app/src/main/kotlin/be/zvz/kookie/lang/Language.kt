@@ -45,10 +45,8 @@ class Language @JvmOverloads constructor(langStr: String, path: String? = null, 
         fallbackLang = loadLanguage(pathObj, fallback)
     }
 
-    val name: String
-        get() = languagePrefs.get("language.name", null)
-    val lang: String
-        get() = langName
+    val name: String get() = languagePrefs.get("language.name", null)
+    val lang: String get() = langName
 
     private fun getBaseText(str: String, onlyPrefix: String? = null): String = get(str).apply {
         parseTranslation(
@@ -117,7 +115,7 @@ class Language @JvmOverloads constructor(langStr: String, path: String? = null, 
                     ord in 0x30..0x39 || // 0-9
                     ord in 0x41..0x5a || // A-Z
                     ord in 0x61..0x7a || // a-z
-                    it == '.' || it == '-'
+                    it in arrayOf('.', '-')
                 ) {
                     replaceString.append(it)
                 } else {

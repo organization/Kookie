@@ -28,23 +28,13 @@ class PlayerInfo @JvmOverloads constructor(
     private val extraData: Nothing? = null
 ) {
 
-    fun getUsername(): String {
-        return username
-    }
+    fun getUsername(): String = username
 
-    fun getUUID(): UUID {
-        return uuid
-    }
+    fun getUUID(): UUID = uuid
 
-    fun getSkin(): Skin {
-        return skin // TODO: change this to its own class when it is possible
-    }
+    fun getSkin(): Skin = skin // TODO: change this to its own class when it is possible
 
-    fun getLocale(): String {
-        return locale
-    }
+    fun getLocale(): String = locale
 
-    fun getExtraData(): Nothing? {
-        return extraData // TODO: change this to extra data class
-    }
+    fun getExtraData(): Nothing? = extraData // TODO: change this to extra data class
 }

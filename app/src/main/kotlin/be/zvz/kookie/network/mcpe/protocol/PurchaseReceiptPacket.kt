@@ -25,8 +25,7 @@ class PurchaseReceiptPacket : DataPacket(), ServerboundPacket {
     val entries = mutableListOf<String>()
 
     override fun decodePayload(input: PacketSerializer) {
-        val count = input.getUnsignedVarInt()
-        for (i in 0 until count) {
+        repeat(input.getUnsignedVarInt()) {
             entries.add(input.getString())
         }
     }

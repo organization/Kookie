@@ -35,7 +35,5 @@ class HurtArmorPacket : DataPacket(), ClientboundPacket {
         output.putVarInt(health)
     }
 
-    override fun handle(handler: PacketHandlerInterface): Boolean {
-        return handler.handleHurtArmor(this)
-    }
+    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleHurtArmor(this)
 }

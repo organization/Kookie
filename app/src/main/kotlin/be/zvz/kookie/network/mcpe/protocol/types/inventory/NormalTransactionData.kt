@@ -31,7 +31,7 @@ class NormalTransactionData : TransactionData() {
 
     companion object {
         @JvmStatic
-        fun new(actions: MutableList<NetworkInventoryAction>): NormalTransactionData = NormalTransactionData().apply {
+        fun new(actions: MutableList<NetworkInventoryAction>) = NormalTransactionData().apply {
             this.setActions(actions)
         }
     }

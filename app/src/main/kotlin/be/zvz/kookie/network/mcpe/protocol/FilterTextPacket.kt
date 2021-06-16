@@ -36,9 +36,7 @@ class FilterTextPacket : DataPacket(), ClientboundPacket, ServerboundPacket {
         output.putBoolean(fromServer)
     }
 
-    override fun handle(handler: PacketHandlerInterface): Boolean {
-        return handler.handleFilterText(this)
-    }
+    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleFilterText(this)
 
     companion object {
         @JvmStatic

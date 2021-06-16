@@ -33,7 +33,5 @@ class ItemFrameDropItemPacket : DataPacket(), ServerboundPacket {
         output.putBlockPosition(position)
     }
 
-    override fun handle(handler: PacketHandlerInterface): Boolean {
-        return handler.handleItemFrameDropItem(this)
-    }
+    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleItemFrameDropItem(this)
 }

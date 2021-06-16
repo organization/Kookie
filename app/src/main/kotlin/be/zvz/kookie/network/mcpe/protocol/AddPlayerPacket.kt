@@ -79,7 +79,7 @@ class AddPlayerPacket : DataPacket(), ClientboundPacket {
 
         long1 = input.getLong().toInt()
 
-        for (i in 0 until input.getUnsignedVarInt()) {
+        repeat(input.getUnsignedVarInt()) {
             links.add(input.getEntityLink())
         }
         deviceId = input.getString()
@@ -115,7 +115,5 @@ class AddPlayerPacket : DataPacket(), ClientboundPacket {
         output.putLInt(buildPlatform.id)
     }
 
-    override fun handle(handler: PacketHandlerInterface): Boolean {
-        return handler.handleAddPlayer(this)
-    }
+    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleAddPlayer(this)
 }

@@ -115,11 +115,9 @@ open class Item @JvmOverloads constructor(
         customName = ""
         lore.clear()
 
-        val display = tag.getCompoundTag(TAG_DISPLAY)
-        if (display != null) {
+        tag.getCompoundTag(TAG_DISPLAY)?.let { display ->
             customName = display.getString(TAG_DISPLAY_NAME, customName)
-            val loreTag = display.getListTag(TAG_DISPLAY_LORE)
-            if (loreTag != null && loreTag.getTagType() == NBT.TagType.STRING) {
+            display.getListTag(TAG_DISPLAY_LORE)?.takeIf { it.getTagType() == NBT.TagType.STRING }?.let { loreTag ->
                 loreTag.value.forEach {
                     lore.add(it.value.toString())
                 }
@@ -127,19 +125,17 @@ open class Item @JvmOverloads constructor(
         }
 
         removeEnchantments()
-        val enchantmentsTag = tag.getListTag(TAG_ENCH)
-        if (enchantmentsTag != null && enchantmentsTag.getTagType() == NBT.TagType.COMPOUND) {
-            enchantmentsTag.value.forEach {
-                it as CompoundTag
-                val magicNumber = it.getShort("id", -1)
-                val level = it.getShort("lvl", 0)
+        val enchantmentsTag = tag.getListTag(TAG_ENCH)?.takeIf { it.getTagType() == NBT.TagType.COMPOUND }
+        enchantmentsTag?.let {
+            it.value.forEach { value ->
+                value as CompoundTag
+                val magicNumber = value.getShort("id", -1)
+                val level = value.getShort("lvl", 0)
                 if (level <= 0) {
                     return
                 }
-                EnchantmentIdMap.fromId(magicNumber).let { type ->
-                    if (type != null) {
-                        addEnchantment(EnchantmentInstance(type, level))
-                    }
+                EnchantmentIdMap.fromId(magicNumber)?.let { type ->
+                    addEnchantment(EnchantmentInstance(type, level))
                 }
             }
         }
@@ -159,68 +155,43 @@ open class Item @JvmOverloads constructor(
     protected open fun serializeCompoundTag(tag: CompoundTag) {
         val display = tag.getCompoundTag(TAG_DISPLAY) ?: CompoundTag()
 
-        if (customName.isEmpty()) {
-            display.removeTag(TAG_DISPLAY_NAME)
-        } else {
-            display.setString(TAG_DISPLAY_NAME, customName)
-        }
+        display.setStringIf(TAG_DISPLAY_NAME, customName) { it.isNotEmpty() }
 
-        if (lore.isNotEmpty()) {
-            val loreTag = ListTag<String>()
+        val loreTag = ListTag<String>().apply {
             lore.forEach {
-                loreTag.push(StringTag(it))
+                push(StringTag(it))
             }
-            display.setTag(TAG_DISPLAY_LORE, loreTag)
-        } else {
-            display.removeTag(TAG_DISPLAY_LORE)
         }
+        display.setTagIf(TAG_DISPLAY_LORE, loreTag) { it.isNotEmpty() }
 
-        if (display.count() > 0) {
-            tag.setTag(TAG_DISPLAY, display)
-        } else {
-            tag.removeTag(TAG_DISPLAY)
-        }
+        tag.setTagIf(TAG_DISPLAY, display) { it.isNotEmpty() }
 
-        if (hasEnchantments()) {
-            val ench = ListTag<Map<String, Tag<*>>>()
+        val enchTag = ListTag<Map<String, Tag<*>>>().apply {
             enchantments.forEach {
-                ench.push(
+                push(
                     CompoundTag.create()
                         .setShort("id", EnchantmentIdMap.toId(it.value.getType()))
                         .setShort("lvl", it.value.level)
                 )
             }
-            tag.setTag(TAG_ENCH, ench)
-        } else {
-            tag.removeTag(TAG_ENCH)
         }
+        tag.setTagIf(TAG_ENCH, enchTag) { it.isNotEmpty() }
 
-        getCustomBlockData().let {
-            if (it == null) {
-                tag.removeTag(TAG_BLOCK_ENTITY_TAG)
-            } else {
-                tag.setTag(TAG_BLOCK_ENTITY_TAG, it.clone())
-            }
-        }
+        tag.setTagIf(TAG_BLOCK_ENTITY_TAG, getCustomBlockData()?.clone())
 
-        if (this.canPlaceOn.isNotEmpty()) {
-            val canPlaceOnTag = ListTag<String>()
+        val canPlaceOnTag = ListTag<String>().apply {
             canPlaceOn.forEach { (_, value) ->
-                canPlaceOnTag.push(StringTag(value))
+                push(StringTag(value))
             }
-            tag.setTag("CanPlaceOn", canPlaceOnTag)
-        } else {
-            tag.removeTag("CanPlaceOn")
         }
-        if (this.canDestroy.isNotEmpty()) {
-            val canDestroyTag = ListTag<String>()
+        tag.setTagIf("CanPlaceOn", canPlaceOnTag) { it.isNotEmpty() }
+
+        val canDestroyTag = ListTag<String>().apply {
             canDestroy.forEach { (_, value) ->
-                canDestroyTag.push(StringTag(value))
+                push(StringTag(value))
             }
-            tag.setTag("canDestroy", canDestroyTag)
-        } else {
-            tag.removeTag("canDestroy")
         }
+        tag.setTagIf("canDestroy", canDestroyTag) { it.isNotEmpty() }
     }
 
     @JvmOverloads
@@ -249,11 +220,7 @@ open class Item @JvmOverloads constructor(
 
     fun hasAnyDamageValue(): Boolean = identifier.meta == -1
 
-    open fun getFuelResidue(): Item {
-        val item = clone()
-        item.pop()
-        return item
-    }
+    open fun getFuelResidue(): Item = clone().apply { pop() }
 
     open fun getMiningEfficiency(isCorrectTool: Boolean): Float = 1F
 
@@ -343,11 +310,9 @@ open class Item @JvmOverloads constructor(
         return item
     }
 
-    public override fun clone(): Item {
-        val clonedItem = super.clone() as Item
-        clonedItem.nbt = nbt.clone() as CompoundTag
-        blockEntityTag = blockEntityTag?.clone() as CompoundTag?
-        return clonedItem
+    public override fun clone(): Item = (super.clone() as Item).also {
+        it.nbt = nbt.clone() as CompoundTag
+        it.blockEntityTag = blockEntityTag?.clone() as? CompoundTag
     }
 
     companion object {

@@ -42,9 +42,7 @@ abstract class Biome(
 
     fun clearPopulators() = populators.clear()
 
-    fun addPopulator(populator: Populator) {
-        populators.add(populator)
-    }
+    fun addPopulator(populator: Populator) = populators.add(populator)
 
     fun populateChunk(world: ChunkManager, chunkX: Int, chunkZ: Int, random: Random) {
         populators.forEach {

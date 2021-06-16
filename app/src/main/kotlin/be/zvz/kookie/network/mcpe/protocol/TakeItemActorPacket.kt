@@ -36,7 +36,5 @@ class TakeItemActorPacket : DataPacket(), ClientboundPacket {
         output.putEntityRuntimeId(eid)
     }
 
-    override fun handle(handler: PacketHandlerInterface): Boolean {
-        return handler.handleTakeItemActor(this)
-    }
+    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleTakeItemActor(this)
 }

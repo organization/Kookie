@@ -33,7 +33,5 @@ class RemoveActorPacket : DataPacket(), ClientboundPacket {
         output.putEntityUniqueId(entityUniqueId)
     }
 
-    override fun handle(handler: PacketHandlerInterface): Boolean {
-        return handler.handleRemoveActor(this)
-    }
+    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleRemoveActor(this)
 }

@@ -39,19 +39,15 @@ class SetActorDataPacket : DataPacket(), ClientboundPacket, ServerboundPacket {
         output.putUnsignedVarLong(tick)
     }
 
-    override fun handle(handler: PacketHandlerInterface): Boolean {
-        return handler.handleSetActorData(this)
-    }
+    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleSetActorData(this)
 
     companion object {
         @JvmStatic
-        fun create(entityRuntimeId: Long, metadata: HashMap<Int, MetadataProperty>, tick: Long): SetActorDataPacket {
-
-            return SetActorDataPacket().apply {
+        fun create(entityRuntimeId: Long, metadata: HashMap<Int, MetadataProperty>, tick: Long) =
+            SetActorDataPacket().apply {
                 this.entityRuntimeId = entityRuntimeId
                 this.metadata = metadata
                 this.tick = tick
             }
-        }
     }
 }

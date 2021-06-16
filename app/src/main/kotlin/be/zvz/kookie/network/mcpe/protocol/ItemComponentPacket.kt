@@ -30,7 +30,7 @@ class ItemComponentPacket : DataPacket(), ClientboundPacket {
 
     override fun decodePayload(input: PacketSerializer) {
         entries = mutableListOf<ItemComponentPacketEntry>().apply {
-            for (i in 0 until input.getUnsignedVarInt()) {
+            repeat(input.getUnsignedVarInt()) {
                 val name = input.getString()
                 val nbt = input.getNbtCompoundRoot()
                 add(ItemComponentPacketEntry(name, nbt))
@@ -46,9 +46,7 @@ class ItemComponentPacket : DataPacket(), ClientboundPacket {
         }
     }
 
-    override fun handle(handler: PacketHandlerInterface): Boolean {
-        return handler.handleItemComponent(this)
-    }
+    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleItemComponent(this)
 
     companion object {
         @JvmStatic

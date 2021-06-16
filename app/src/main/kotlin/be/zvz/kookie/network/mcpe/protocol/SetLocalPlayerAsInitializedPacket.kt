@@ -33,7 +33,5 @@ class SetLocalPlayerAsInitializedPacket : DataPacket(), ServerboundPacket {
         output.putEntityRuntimeId(entityRuntimeId)
     }
 
-    override fun handle(handler: PacketHandlerInterface): Boolean {
-        return handler.handleSetLocalPlayerAsInitialized(this)
-    }
+    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleSetLocalPlayerAsInitialized(this)
 }

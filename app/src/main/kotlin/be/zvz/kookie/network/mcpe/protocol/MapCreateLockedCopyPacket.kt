@@ -36,7 +36,5 @@ class MapCreateLockedCopyPacket : DataPacket(), ServerboundPacket {
         output.putEntityUniqueId(newMapId)
     }
 
-    override fun handle(handler: PacketHandlerInterface): Boolean {
-        return handler.handleMapCreateLockedCopy(this)
-    }
+    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleMapCreateLockedCopy(this)
 }

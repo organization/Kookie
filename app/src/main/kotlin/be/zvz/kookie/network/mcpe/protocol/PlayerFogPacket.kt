@@ -33,7 +33,7 @@ class PlayerFogPacket : DataPacket(), ClientboundPacket {
 
     override fun decodePayload(input: PacketSerializer) {
         fogLayers = mutableListOf<String>().apply {
-            for (i in 0 until input.getUnsignedVarInt()) {
+            repeat(input.getUnsignedVarInt()) {
                 add(input.getString())
             }
         }

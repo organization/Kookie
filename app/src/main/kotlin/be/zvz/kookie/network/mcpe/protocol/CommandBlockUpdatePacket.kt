@@ -83,7 +83,5 @@ class CommandBlockUpdatePacket : DataPacket(), ServerboundPacket {
         output.putBoolean(executeOnFirstTick)
     }
 
-    override fun handle(handler: PacketHandlerInterface): Boolean {
-        return handler.handleCommandBlockUpdate(this)
-    }
+    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleCommandBlockUpdate(this)
 }

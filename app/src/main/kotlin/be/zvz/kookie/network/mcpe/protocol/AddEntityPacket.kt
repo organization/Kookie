@@ -40,7 +40,5 @@ class AddEntityPacket : DataPacket(), ClientboundPacket {
         output.putUnsignedVarInt(entityNetId)
     }
 
-    override fun handle(handler: PacketHandlerInterface): Boolean {
-        return handler.handleAddEntity(this)
-    }
+    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleAddEntity(this)
 }

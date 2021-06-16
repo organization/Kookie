@@ -40,9 +40,7 @@ class PlayerHotbarPacket : DataPacket(), ClientboundPacket, ServerboundPacket {
         output.putBoolean(selectHotbarSlot)
     }
 
-    override fun handle(handler: PacketHandlerInterface): Boolean {
-        return handler.handlePlayerHotbar(this)
-    }
+    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handlePlayerHotbar(this)
 
     companion object {
         @JvmStatic

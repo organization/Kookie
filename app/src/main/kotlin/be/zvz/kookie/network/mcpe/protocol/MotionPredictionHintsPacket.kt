@@ -29,9 +29,7 @@ class MotionPredictionHintsPacket : DataPacket(), ClientboundPacket {
     lateinit var motion: Vector3
     var onGround: Boolean = false
 
-    fun isOnGround(): Boolean {
-        return onGround
-    }
+    fun isOnGround(): Boolean = onGround
 
     override fun decodePayload(input: PacketSerializer) {
         entityRuntimeId = input.getEntityRuntimeId()
@@ -45,13 +43,11 @@ class MotionPredictionHintsPacket : DataPacket(), ClientboundPacket {
         output.putBoolean(onGround)
     }
 
-    override fun handle(handler: PacketHandlerInterface): Boolean {
-        return handler.handleMotionPredictionHints(this)
-    }
+    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleMotionPredictionHints(this)
 
     companion object {
         @JvmStatic
-        fun create(entityRuntimeId: Long, motion: Vector3, onGround: Boolean): MotionPredictionHintsPacket =
+        fun create(entityRuntimeId: Long, motion: Vector3, onGround: Boolean) =
             MotionPredictionHintsPacket().apply {
                 this.entityRuntimeId = entityRuntimeId
                 this.motion = motion

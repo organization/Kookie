@@ -28,17 +28,6 @@ class ResourcePackChunkDataPacket : DataPacket(), ClientboundPacket {
     var progress: Long = 0
     lateinit var data: String
 
-    companion object {
-        @JvmStatic
-        fun create(packId: String, chunkIndex: Int, chunkOffset: Long, data: String): ResourcePackChunkDataPacket =
-            ResourcePackChunkDataPacket().apply {
-                this.packId = packId
-                this.chunkIndex = chunkIndex
-                this.progress = chunkOffset
-                this.data = data
-            }
-    }
-
     override fun decodePayload(input: PacketSerializer) {
         packId = input.getString()
         chunkIndex = input.getLInt()
@@ -53,7 +42,16 @@ class ResourcePackChunkDataPacket : DataPacket(), ClientboundPacket {
         output.putString(data)
     }
 
-    override fun handle(handler: PacketHandlerInterface): Boolean {
-        return handler.handleResourcePackChunkData(this)
+    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleResourcePackChunkData(this)
+
+    companion object {
+        @JvmStatic
+        fun create(packId: String, chunkIndex: Int, chunkOffset: Long, data: String): ResourcePackChunkDataPacket =
+            ResourcePackChunkDataPacket().apply {
+                this.packId = packId
+                this.chunkIndex = chunkIndex
+                this.progress = chunkOffset
+                this.data = data
+            }
     }
 }

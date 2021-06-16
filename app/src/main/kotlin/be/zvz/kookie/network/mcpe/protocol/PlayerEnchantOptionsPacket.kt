@@ -28,7 +28,7 @@ class PlayerEnchantOptionsPacket : DataPacket(), ClientboundPacket {
 
     override fun decodePayload(input: PacketSerializer) {
         options = mutableListOf<EnchantOption>().apply {
-            for (i in 0 until input.getUnsignedVarInt()) {
+            repeat(input.getUnsignedVarInt()) {
                 add(EnchantOption.read(input))
             }
         }
@@ -41,9 +41,7 @@ class PlayerEnchantOptionsPacket : DataPacket(), ClientboundPacket {
         }
     }
 
-    override fun handle(handler: PacketHandlerInterface): Boolean {
-        return handler.handlePlayerEnchantOptions(this)
-    }
+    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handlePlayerEnchantOptions(this)
 
     companion object {
         @JvmStatic

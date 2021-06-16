@@ -21,13 +21,10 @@ import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 
 @ItemStackRequestIdentify(ItemStackRequestActionType.LAB_TABLE_COMBINE)
 class LabTableCombineStackRequestAction : ItemStackRequestAction() {
-    override fun write(out: PacketSerializer) {
-    }
+    override fun write(out: PacketSerializer) {}
 
     companion object {
         @JvmStatic
-        fun read(input: PacketSerializer): LabTableCombineStackRequestAction {
-            return LabTableCombineStackRequestAction()
-        }
+        fun read(input: PacketSerializer) = LabTableCombineStackRequestAction()
     }
 }

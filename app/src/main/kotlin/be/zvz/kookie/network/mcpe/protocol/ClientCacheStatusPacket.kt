@@ -25,13 +25,6 @@ class ClientCacheStatusPacket : DataPacket(), ServerboundPacket {
 
     var enabled: Boolean = false
 
-    companion object {
-        @JvmStatic
-        fun create(enabled: Boolean): ClientCacheStatusPacket = ClientCacheStatusPacket().apply {
-            this.enabled = enabled
-        }
-    }
-
     override fun decodePayload(input: PacketSerializer) {
         enabled = input.getBoolean()
     }
@@ -40,7 +33,13 @@ class ClientCacheStatusPacket : DataPacket(), ServerboundPacket {
         output.putBoolean(enabled)
     }
 
-    override fun handle(handler: PacketHandlerInterface): Boolean {
-        return handler.handleClientCacheStatus(this)
+    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleClientCacheStatus(this)
+
+    companion object {
+        @JvmStatic
+        fun create(enabled: Boolean) =
+            ClientCacheStatusPacket().apply {
+                this.enabled = enabled
+            }
     }
 }

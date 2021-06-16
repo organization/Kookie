@@ -31,13 +31,16 @@ class ShortMetadataProperty(override var value: Int) : MetadataProperty(), Integ
         output.putLShort(value)
     }
 
-    override fun min(): Int {
-        return Short.MIN_VALUE.toInt()
-    }
+    override fun equals(other: Any?): Boolean = this === other ||
+        javaClass == other?.javaClass &&
+        value == (other as IntMetadataProperty).value &&
+        id == other.id
 
-    override fun max(): Int {
-        return Short.MAX_VALUE.toInt()
-    }
+    override fun hashCode(): Int = super.hashCode().let { 31 * it + id }
+
+    override fun min(): Int = Short.MIN_VALUE.toInt()
+
+    override fun max(): Int = Short.MAX_VALUE.toInt()
 
     override fun buildFromFlags(flags: Map<Int, Boolean>): IntegerishMetadataProperty {
         var value = 0
@@ -49,28 +52,8 @@ class ShortMetadataProperty(override var value: Int) : MetadataProperty(), Integ
         return LongMetadataProperty(value)
     }
 
-    override fun hashCode(): Int {
-        var result = value
-        result = 31 * result + id
-        return result
-    }
-
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (javaClass != other?.javaClass) return false
-
-        other as ShortMetadataProperty
-
-        if (value != other.value) return false
-        if (id != other.id) return false
-
-        return true
-    }
-
     companion object {
         @JvmStatic
-        fun read(input: PacketSerializer): ShortMetadataProperty {
-            return ShortMetadataProperty(input.getSignedLShort())
-        }
+        fun read(input: PacketSerializer) = ShortMetadataProperty(input.getSignedLShort())
     }
 }

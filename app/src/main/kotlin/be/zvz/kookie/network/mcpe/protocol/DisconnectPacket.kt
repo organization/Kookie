@@ -27,9 +27,7 @@ class DisconnectPacket : DataPacket(), ClientboundPacket, ServerboundPacket {
 
     var message: String = ""
 
-    override fun canBeSentBeforeLogin(): Boolean {
-        return true
-    }
+    override fun canBeSentBeforeLogin(): Boolean = true
 
     override fun decodePayload(input: PacketSerializer) {
         hideDisconnectionScreen = input.getBoolean()
@@ -45,22 +43,18 @@ class DisconnectPacket : DataPacket(), ClientboundPacket, ServerboundPacket {
         }
     }
 
-    override fun handle(handler: PacketHandlerInterface): Boolean {
-        return handler.handleDisconnect(this)
-    }
+    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleDisconnect(this)
 
     companion object {
         @JvmStatic
-        fun silent(): DisconnectPacket =
-            DisconnectPacket().apply {
-                this.hideDisconnectionScreen = false
-            }
+        fun silent() = DisconnectPacket().apply {
+            this.hideDisconnectionScreen = false
+        }
 
         @JvmStatic
-        fun message(message: String): DisconnectPacket =
-            DisconnectPacket().apply {
-                this.hideDisconnectionScreen = false
-                this.message = message
-            }
+        fun message(message: String) = DisconnectPacket().apply {
+            this.hideDisconnectionScreen = false
+            this.message = message
+        }
     }
 }

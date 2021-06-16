@@ -43,7 +43,7 @@ abstract class CraftRecipe<I>(
             val recipeId = input.getString()
             val inputs = inputsDecoder()
             val outputs = mutableListOf<ItemStackWrapper>()
-            for (i in 0 until input.getUnsignedVarInt()) {
+            repeat(input.getUnsignedVarInt()) {
                 outputs.add(ItemStackWrapper.read(input))
             }
             val uuid = input.getUUID()

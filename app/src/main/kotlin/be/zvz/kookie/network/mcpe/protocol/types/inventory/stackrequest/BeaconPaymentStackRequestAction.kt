@@ -20,8 +20,10 @@ package be.zvz.kookie.network.mcpe.protocol.types.inventory.stackrequest
 import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 
 @ItemStackRequestIdentify(ItemStackRequestActionType.BEACON_PAYMENT)
-class BeaconPaymentStackRequestAction(val primaryEffectId: Int, val secondaryEffectId: Int) :
-    ItemStackRequestAction() {
+class BeaconPaymentStackRequestAction(
+    val primaryEffectId: Int,
+    val secondaryEffectId: Int
+) : ItemStackRequestAction() {
 
     override fun write(out: PacketSerializer) {
         out.putVarInt(primaryEffectId)
@@ -30,10 +32,9 @@ class BeaconPaymentStackRequestAction(val primaryEffectId: Int, val secondaryEff
 
     companion object {
         @JvmStatic
-        fun read(input: PacketSerializer): BeaconPaymentStackRequestAction {
-            val primary = input.getVarInt()
-            val secondary = input.getVarInt()
-            return BeaconPaymentStackRequestAction(primary, secondary)
-        }
+        fun read(input: PacketSerializer) = BeaconPaymentStackRequestAction(
+            primaryEffectId = input.getVarInt(),
+            secondaryEffectId = input.getVarInt()
+        )
     }
 }

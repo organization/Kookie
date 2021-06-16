@@ -38,9 +38,7 @@ class UpdateBlockSyncedPacket : UpdateBlockPacket() {
         output.putUnsignedVarLong(updateType)
     }
 
-    override fun handle(handler: PacketHandlerInterface): Boolean {
-        return handler.handleUpdateBlockSynced(this)
-    }
+    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleUpdateBlockSynced(this)
 
     companion object {
         const val NONE = 0

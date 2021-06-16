@@ -38,11 +38,10 @@ class SpawnSettings(private val biomeType: Int, private val biomeName: String, p
         const val BIOME_TYPE_USER_DEFINED = 1
 
         @JvmStatic
-        fun read(input: PacketSerializer): SpawnSettings {
-            val biomeType = input.getLShort()
-            val biomeName = input.getString()
-            val dimension = input.getVarInt()
-            return SpawnSettings(biomeType, biomeName, dimension)
-        }
+        fun read(input: PacketSerializer) = SpawnSettings(
+            biomeType = input.getLShort(),
+            biomeName = input.getString(),
+            dimension = input.getVarInt()
+        )
     }
 }
