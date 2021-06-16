@@ -80,10 +80,6 @@ abstract class Durable(identifier: ItemIdentifier, name: String) : Item(identifi
 
     override fun serializeCompoundTag(tag: CompoundTag) {
         super.serializeCompoundTag(tag)
-        if (unbreakable) {
-            tag.setByte("Unbreakable", 1)
-        } else {
-            tag.removeTag("Unbreakable")
-        }
+        tag.setByteIf("Unbreakable", 1) { unbreakable }
     }
 }

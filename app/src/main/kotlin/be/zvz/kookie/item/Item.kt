@@ -155,73 +155,43 @@ open class Item @JvmOverloads constructor(
     protected open fun serializeCompoundTag(tag: CompoundTag) {
         val display = tag.getCompoundTag(TAG_DISPLAY) ?: CompoundTag()
 
-        if (customName.isEmpty()) {
-            display.removeTag(TAG_DISPLAY_NAME)
-        } else {
-            display.setString(TAG_DISPLAY_NAME, customName)
-        }
+        display.setStringIf(TAG_DISPLAY_NAME, customName) { it.isNotEmpty() }
 
-        if (lore.isNotEmpty()) {
-            val loreTag = ListTag<String>()
+        val loreTag = ListTag<String>().apply {
             lore.forEach {
-                loreTag.push(StringTag(it))
+                push(StringTag(it))
             }
-            display.setTag(TAG_DISPLAY_LORE, loreTag)
-        } else {
-            display.removeTag(TAG_DISPLAY_LORE)
         }
+        display.setTagIf(TAG_DISPLAY_LORE, loreTag) { it.isNotEmpty() }
 
-        if (display.count() > 0) {
-            tag.setTag(TAG_DISPLAY, display)
-        } else {
-            tag.removeTag(TAG_DISPLAY)
-        }
+        tag.setTagIf(TAG_DISPLAY, display) { it.isNotEmpty() }
 
-        if (hasEnchantments()) {
-            val ench = ListTag<Map<String, Tag<*>>>()
+        val enchTag = ListTag<Map<String, Tag<*>>>().apply {
             enchantments.forEach {
-                ench.push(
+                push(
                     CompoundTag.create()
                         .setShort("id", EnchantmentIdMap.toId(it.value.getType()))
                         .setShort("lvl", it.value.level)
                 )
             }
-            tag.setTag(TAG_ENCH, ench)
-        } else {
-            tag.removeTag(TAG_ENCH)
         }
+        tag.setTagIf(TAG_ENCH, enchTag) { it.isNotEmpty() }
 
-        getCustomBlockData()?.let {
-            tag.setTag(TAG_BLOCK_ENTITY_TAG, it.clone())
-        } ?: run {
-            tag.removeTag(TAG_BLOCK_ENTITY_TAG)
-        }
+        tag.setTagIf(TAG_BLOCK_ENTITY_TAG, getCustomBlockData()?.clone())
 
-        if (this.canPlaceOn.isNotEmpty()) {
-            tag.setTag(
-                "CanPlaceOn",
-                ListTag<String>().apply {
-                    canPlaceOn.forEach { (_, value) ->
-                        push(StringTag(value))
-                    }
-                }
+        val canPlaceOnTag = ListTag<String>().apply {
+            canPlaceOn.forEach { (_, value) ->
+                push(StringTag(value))
+            }
+        }
+        tag.setTagIf("CanPlaceOn", canPlaceOnTag) { it.isNotEmpty() }
 
-            )
-        } else {
-            tag.removeTag("CanPlaceOn")
+        val canDestroyTag = ListTag<String>().apply {
+            canDestroy.forEach { (_, value) ->
+                push(StringTag(value))
+            }
         }
-        if (this.canDestroy.isNotEmpty()) {
-            tag.setTag(
-                "canDestroy",
-                ListTag<String>().apply {
-                    canDestroy.forEach { (_, value) ->
-                        push(StringTag(value))
-                    }
-                }
-            )
-        } else {
-            tag.removeTag("canDestroy")
-        }
+        tag.setTagIf("canDestroy", canDestroyTag) { it.isNotEmpty() }
     }
 
     @JvmOverloads
