@@ -17,7 +17,6 @@
  */
 package be.zvz.kookie.block
 
-import be.zvz.kookie.block.util.IllegalBlockStateException
 import com.koloboke.collect.map.hash.HashLongFloatMaps
 import com.koloboke.collect.map.hash.HashLongIntMaps
 import com.koloboke.collect.map.hash.HashLongObjMaps
