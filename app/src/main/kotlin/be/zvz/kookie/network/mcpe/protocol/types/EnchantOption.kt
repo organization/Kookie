@@ -44,33 +44,23 @@ class EnchantOption(
     companion object {
         @JvmStatic
         fun readEnchantList(input: PacketSerializer): List<Enchant> = mutableListOf<Enchant>().apply {
-            for (i in 0 until input.getUnsignedVarInt()) {
+            repeat(input.getUnsignedVarInt()) {
                 add(Enchant.read(input))
             }
         }
 
         @JvmStatic
-        fun read(input: PacketSerializer): EnchantOption {
-            val cost = input.getUnsignedVarInt()
+        fun read(input: PacketSerializer) = EnchantOption(
+            cost = input.getUnsignedVarInt(),
+            slotFlags = input.getLInt(),
 
-            val slotFlags = input.getLInt()
-            val equipActivatedEnchants = readEnchantList(input)
-            val heldActivatedEnchants = readEnchantList(input)
-            val selfActivatedEnchants = readEnchantList(input)
+            equipActivatedEnchantments = readEnchantList(input),
+            heldActivatedEnchantments = readEnchantList(input),
+            selfActivatedEnchantments = readEnchantList(input),
 
-            val name = input.getString()
-            val optionId = input.readGenericTypeNetworkId()
-
-            return EnchantOption(
-                cost,
-                slotFlags,
-                equipActivatedEnchants,
-                heldActivatedEnchants,
-                selfActivatedEnchants,
-                name,
-                optionId
-            )
-        }
+            name = input.getString(),
+            optionId = input.readGenericTypeNetworkId()
+        )
 
         @JvmStatic
         fun writeEnchantList(output: PacketSerializer, list: List<Enchant>) {

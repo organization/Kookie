@@ -86,9 +86,7 @@ class BossEventPacket : DataPacket(), ClientboundPacket, ServerboundPacket {
         }
     }
 
-    override fun handle(handler: PacketHandlerInterface): Boolean {
-        return handler.handleBossEvent(this)
-    }
+    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleBossEvent(this)
 
     companion object {
         const val TYPE_SHOW = 0
@@ -101,12 +99,9 @@ class BossEventPacket : DataPacket(), ClientboundPacket, ServerboundPacket {
         const val TYPE_TEXTURE = 7
 
         @JvmStatic
-        fun base(bossEntityUniqueId: Long, eventId: Int): BossEventPacket {
-
-            return BossEventPacket().apply {
-                bossEid = bossEntityUniqueId
-                eventType = eventId
-            }
+        fun base(bossEntityUniqueId: Long, eventId: Int) = BossEventPacket().apply {
+            bossEid = bossEntityUniqueId
+            eventType = eventId
         }
 
         @JvmStatic
@@ -115,61 +110,49 @@ class BossEventPacket : DataPacket(), ClientboundPacket, ServerboundPacket {
             title: String,
             healthPercent: Float,
             unknownShort: Int = 0
-        ): BossEventPacket {
-            val packet = base(bossEntityUniqueId, TYPE_SHOW)
-            packet.title = title
-            packet.healthPercent = healthPercent
-            packet.unknownShort = unknownShort
-            packet.color = 0
-            packet.overlay = 0
-
-            return packet
-        }
+        ): BossEventPacket =
+            base(bossEntityUniqueId, TYPE_SHOW).apply {
+                this.title = title
+                this.healthPercent = healthPercent
+                this.unknownShort = unknownShort
+                this.color = 0
+                this.overlay = 0
+            }
 
         @JvmStatic
-        fun hide(bossEntityUniqueId: Long): BossEventPacket {
-            return base(bossEntityUniqueId, TYPE_HIDE)
-        }
+        fun hide(bossEntityUniqueId: Long): BossEventPacket =
+            base(bossEntityUniqueId, TYPE_HIDE)
 
         @JvmStatic
-        fun registerPlayer(bossEntityUniqueId: Long, playerEntityUniqueId: Long): BossEventPacket {
-            val packet = base(bossEntityUniqueId, TYPE_REGISTER_PLAYER)
-            packet.playerEid = playerEntityUniqueId
-            return packet
-        }
+        fun registerPlayer(bossEntityUniqueId: Long, playerEntityUniqueId: Long) =
+            base(bossEntityUniqueId, TYPE_REGISTER_PLAYER).apply {
+                this.playerEid = playerEntityUniqueId
+            }
 
         @JvmStatic
-        fun unregisterPlayer(bossEntityUniqueId: Long, playerEntityUniqueId: Long): BossEventPacket {
-            val packet = base(bossEntityUniqueId, TYPE_UNREGISTER_PLAYER)
-            packet.playerEid = playerEntityUniqueId
-
-            return packet
-        }
+        fun unregisterPlayer(bossEntityUniqueId: Long, playerEntityUniqueId: Long) =
+            base(bossEntityUniqueId, TYPE_UNREGISTER_PLAYER).apply {
+                this.playerEid = playerEntityUniqueId
+            }
 
         @JvmStatic
-        fun healthPercent(bossEntityUniqueId: Long, healthPercent: Float): BossEventPacket {
-            val packet = base(bossEntityUniqueId, TYPE_HEALTH_PERCENT)
-            packet.healthPercent = healthPercent
-
-            return packet
-        }
+        fun healthPercent(bossEntityUniqueId: Long, healthPercent: Float) =
+            base(bossEntityUniqueId, TYPE_HEALTH_PERCENT).apply {
+                this.healthPercent = healthPercent
+            }
 
         @JvmStatic
-        fun title(bossEntityUniqueId: Long, title: String): BossEventPacket {
-            val packet = base(bossEntityUniqueId, TYPE_TITLE)
-            packet.title = title
-
-            return packet
-        }
+        fun title(bossEntityUniqueId: Long, title: String) =
+            base(bossEntityUniqueId, TYPE_TITLE).apply {
+                this.title = title
+            }
 
         @JvmStatic
-        fun unknown6(bossEntityUniqueId: Long, unknownShort: Int): BossEventPacket {
-            val packet = base(bossEntityUniqueId, TYPE_UNKNOWN_6)
-            packet.unknownShort = unknownShort
-            packet.color = 0
-            packet.overlay = 0
-
-            return packet
-        }
+        fun unknown6(bossEntityUniqueId: Long, unknownShort: Int) =
+            base(bossEntityUniqueId, TYPE_UNKNOWN_6).apply {
+                this.unknownShort = unknownShort
+                this.color = 0
+                this.overlay = 0
+            }
     }
 }

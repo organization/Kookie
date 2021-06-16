@@ -42,9 +42,7 @@ class PacketViolationWarningPacket : DataPacket(), ServerboundPacket {
         output.putString(message)
     }
 
-    override fun handle(handler: PacketHandlerInterface): Boolean {
-        return handler.handlePacketViolationWarning(this)
-    }
+    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handlePacketViolationWarning(this)
 
     companion object {
         const val TYPE_MALFORMED = 0
@@ -54,11 +52,12 @@ class PacketViolationWarningPacket : DataPacket(), ServerboundPacket {
         const val SEVERITY_TERMINATING_CONNECTION = 2
 
         @JvmStatic
-        fun create(type: Int, severity: Int, packetId: Int, message: String) = PacketViolationWarningPacket().apply {
-            this.type = type
-            this.severity = severity
-            this.packetId = packetId
-            this.message = message
-        }
+        fun create(type: Int, severity: Int, packetId: Int, message: String) =
+            PacketViolationWarningPacket().apply {
+                this.type = type
+                this.severity = severity
+                this.packetId = packetId
+                this.message = message
+            }
     }
 }

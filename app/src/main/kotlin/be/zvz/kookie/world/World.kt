@@ -42,6 +42,10 @@ class World(val server: Server, val folderName: String) {
         private set
 
     companion object {
+        const val DIFFICULTY_PEACEFUL = 0
+        const val DIFFICULTY_EASY = 1
+        const val DIFFICULTY_NORMAL = 2
+        const val DIFFICULTY_HARD = 3
 
         const val Y_MAX = 256
         const val Y_MIN = 0
@@ -53,16 +57,46 @@ class World(val server: Server, val folderName: String) {
         const val TIME_MIDNIGHT = 18000
         const val TIME_SUNRISE = 23000
 
-        const val TIME_FULL = 24000
+        private var worldIdCounter = 0
+    }
 
+    fun getOrLoadChunkAtPosition(pos: Vector3): Chunk? {
+        TODO("Chunk not yet implemented")
+    }
+
+    fun getTile(pos: Vector3): Tile? {
+        TODO("World not yet implemented")
+    }
+
+    fun addTile(tile: Tile) {
+        TODO("World not yet implemented")
+    }
+
+    fun getBlock(pos: Vector3): Block {
+        TODO("Chunk not yet implemented")
+    }
+
+    fun setBlock(pos: Vector3, block: Block): Any {
+        TODO("Chunk not yet implemented")
+    }
+
+    companion object {
         const val DIFFICULTY_PEACEFUL = 0
         const val DIFFICULTY_EASY = 1
         const val DIFFICULTY_NORMAL = 2
         const val DIFFICULTY_HARD = 3
 
-        const val DEFAULT_TICKED_BLOCKS_PER_SUBCHUNK_PER_TICK = 3
+        const val Y_MAX = 256
+        const val Y_MIN = 0
 
-        private var worldIdCounter = 1
+        const val TIME_DAY = 1000
+        const val TIME_NOON = 6000
+        const val TIME_SUNSET = 12000
+        const val TIME_NIGHT = 13000
+        const val TIME_MIDNIGHT = 18000
+        const val TIME_SUNRISE = 23000
+
+        private var worldIdCounter = 0
 
         fun chunkHash(x: Int, z: Int): Long = Morton2D.encode(x, z)
 
@@ -121,25 +155,5 @@ class World(val server: Server, val folderName: String) {
             "3", "hard", "h" -> DIFFICULTY_HARD
             else -> -1
         }
-    }
-
-    fun getOrLoadChunkAtPosition(pos: Vector3): Chunk? {
-        TODO("Chunk not yet implemented")
-    }
-
-    fun getTile(pos: Vector3): Tile? {
-        TODO("World not yet implemented")
-    }
-
-    fun addTile(tile: Tile) {
-        TODO("World not yet implemented")
-    }
-
-    fun getBlock(pos: Vector3): Block {
-        TODO("Chunk not yet implemented")
-    }
-
-    fun setBlock(pos: Vector3, block: Block): Any {
-        TODO("Chunk not yet implemented")
     }
 }

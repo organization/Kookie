@@ -34,13 +34,11 @@ class BiomeDefinitionListPacket : DataPacket(), ClientboundPacket {
         output.put(defs.encodedNbt)
     }
 
-    override fun handle(handler: PacketHandlerInterface): Boolean {
-        return handler.handleBiomeDefinitionList(this)
-    }
+    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleBiomeDefinitionList(this)
 
     companion object {
         @JvmStatic
-        fun create(nbt: CacheableNbt): BiomeDefinitionListPacket = BiomeDefinitionListPacket().apply {
+        fun create(nbt: CacheableNbt) = BiomeDefinitionListPacket().apply {
             this.defs = nbt
         }
     }

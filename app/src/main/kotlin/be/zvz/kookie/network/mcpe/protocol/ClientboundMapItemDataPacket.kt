@@ -57,8 +57,8 @@ class ClientboundMapItemDataPacket : DataPacket(), ClientboundPacket {
         isLocked = input.getBoolean()
 
         if (type and 0x08 != 0) {
-            for (i in 0 until input.getUnsignedVarInt()) {
-                eids[i] = input.getEntityUniqueId()
+            repeat(input.getUnsignedVarInt()) {
+                eids[it] = input.getEntityUniqueId()
             }
         }
 
@@ -67,7 +67,7 @@ class ClientboundMapItemDataPacket : DataPacket(), ClientboundPacket {
         }
 
         if (type and BITFLAG_DECORATION_UPDATE != 0) {
-            for (i in 0 until input.getUnsignedVarInt()) {
+            repeat(input.getUnsignedVarInt()) {
                 val obj = MapTrackedObject()
                 obj.type = input.getLInt()
 
@@ -84,7 +84,7 @@ class ClientboundMapItemDataPacket : DataPacket(), ClientboundPacket {
 
                 trackedEntities.add(obj)
             }
-            for (i in 0 until input.getUnsignedVarInt()) {
+            repeat(input.getUnsignedVarInt()) {
                 val icon = input.getByte()
                 val rotation = input.getByte()
                 val xOffset = input.getByte()
@@ -107,8 +107,8 @@ class ClientboundMapItemDataPacket : DataPacket(), ClientboundPacket {
                 throw PacketDecodeException(msg)
             }
 
-            for (y in 0 until height) {
-                for (x in 0 until width) {
+            repeat(height) { y ->
+                repeat(width) { x ->
                     colors.getValue(y)[x] = Color.fromRGBA(Binary.flipIntEndianness(input.getUnsignedVarInt()))
                 }
             }
@@ -182,8 +182,8 @@ class ClientboundMapItemDataPacket : DataPacket(), ClientboundPacket {
             // list count, but we handle it as a 2D array... thanks for the confusion mojang
             output.putUnsignedVarInt(width * height)
 
-            for (y in 0 until height) {
-                for (x in 0 until width) {
+            repeat(height) { y ->
+                repeat(width) { x ->
                     // if mojang had any sense this would just be a regular LE Int
                     output.putUnsignedVarInt(Binary.flipIntEndianness(colors.getValue(y).getValue(x).toRGBA()))
                 }
@@ -191,9 +191,7 @@ class ClientboundMapItemDataPacket : DataPacket(), ClientboundPacket {
         }
     }
 
-    override fun handle(handler: PacketHandlerInterface): Boolean {
-        return handler.handleClientboundMapItemData(this)
-    }
+    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleClientboundMapItemData(this)
 
     companion object {
         const val BITFLAG_TEXTURE_UPDATE = 0x02

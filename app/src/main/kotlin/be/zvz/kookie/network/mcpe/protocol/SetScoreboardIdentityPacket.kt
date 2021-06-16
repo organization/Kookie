@@ -29,7 +29,7 @@ class SetScoreboardIdentityPacket : DataPacket(), ClientboundPacket {
 
     override fun decodePayload(input: PacketSerializer) {
         type = Type.from(input.getByte())
-        for (i in 0 until input.getUnsignedVarInt()) {
+        repeat(input.getUnsignedVarInt()) {
             entries.add(
                 ScoreboardIdentityPacketEntry(
                     scoreboardId = input.getVarLong(),
@@ -50,7 +50,5 @@ class SetScoreboardIdentityPacket : DataPacket(), ClientboundPacket {
         }
     }
 
-    override fun handle(handler: PacketHandlerInterface): Boolean {
-        return handler.handleSetScoreboardIdentity(this)
-    }
+    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleSetScoreboardIdentity(this)
 }

@@ -36,13 +36,11 @@ class DebugInfoPacket : DataPacket(), ClientboundPacket, ServerboundPacket {
         output.putString(data)
     }
 
-    override fun handle(handler: PacketHandlerInterface): Boolean {
-        return handler.handleDebugInfo(this)
-    }
+    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleDebugInfo(this)
 
     companion object {
         @JvmStatic
-        fun create(entityUniqueId: Long, data: String): DebugInfoPacket =
+        fun create(entityUniqueId: Long, data: String) =
             DebugInfoPacket().apply {
                 this.entityUniqueId = entityUniqueId
                 this.data = data

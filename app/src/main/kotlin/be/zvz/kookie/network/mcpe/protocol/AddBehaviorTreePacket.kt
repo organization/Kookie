@@ -32,7 +32,5 @@ class AddBehaviorTreePacket : DataPacket(), ClientboundPacket {
         output.putString(behaviorTreeJson)
     }
 
-    override fun handle(handler: PacketHandlerInterface): Boolean {
-        return handler.handleAddBehaviorTree(this)
-    }
+    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleAddBehaviorTree(this)
 }

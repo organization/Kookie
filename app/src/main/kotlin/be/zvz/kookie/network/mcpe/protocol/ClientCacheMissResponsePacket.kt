@@ -28,16 +28,20 @@ class ClientCacheMissResponsePacket : DataPacket(), ClientboundPacket {
 
     companion object {
         @JvmStatic
-        fun create(blobs: List<ChunkCacheBlob>): ClientCacheMissResponsePacket = ClientCacheMissResponsePacket().apply {
-            this.blobs = blobs.toMutableList()
-        }
+        fun create(blobs: List<ChunkCacheBlob>) =
+            ClientCacheMissResponsePacket().apply {
+                this.blobs = blobs.toMutableList()
+            }
     }
 
     override fun decodePayload(input: PacketSerializer) {
-        for (i in 0 until input.getUnsignedVarInt()) {
-            val hash = input.getLLong()
-            val payload = input.getString()
-            blobs.add(ChunkCacheBlob(hash, payload))
+        repeat(input.getUnsignedVarInt()) {
+            blobs.add(
+                ChunkCacheBlob(
+                    hash = input.getLLong(),
+                    payload = input.getString()
+                )
+            )
         }
     }
 
@@ -49,7 +53,5 @@ class ClientCacheMissResponsePacket : DataPacket(), ClientboundPacket {
         }
     }
 
-    override fun handle(handler: PacketHandlerInterface): Boolean {
-        return handler.handleClientCacheMissResponse(this)
-    }
+    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleClientCacheMissResponse(this)
 }

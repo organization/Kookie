@@ -37,7 +37,5 @@ class ServerToClientHandshakePacket : DataPacket(), ClientboundPacket {
         output.putString(jwt)
     }
 
-    override fun handle(handler: PacketHandlerInterface): Boolean {
-        return handler.handleServerToClientHandshake(this)
-    }
+    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleServerToClientHandshake(this)
 }

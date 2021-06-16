@@ -33,7 +33,5 @@ class RiderJumpPacket : DataPacket(), ServerboundPacket {
         output.putVarInt(jumpLength)
     }
 
-    override fun handle(handler: PacketHandlerInterface): Boolean {
-        return handler.handleRiderJump(this)
-    }
+    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleRiderJump(this)
 }

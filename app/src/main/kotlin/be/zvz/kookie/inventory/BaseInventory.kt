@@ -30,19 +30,16 @@ abstract class BaseInventory : InventoryHelpers {
     override fun setContents(items: Map<Int, Item>) {
         // TODO: items.size > getSize()
         val oldContents = getContents(true)
+
         val listeners = listeners.toTypedArray()
         this.listeners.clear()
+        listeners.forEach(this.listeners::add)
+
         val viewers = viewers.toTypedArray()
         this.viewers.clear()
+        viewers.forEach(this.viewers::add)
 
         internalSetContents(items)
-
-        listeners.forEach {
-            this.listeners.add(it)
-        }
-        viewers.forEach {
-            this.viewers.add(it)
-        }
 
         onContentChange(oldContents)
     }

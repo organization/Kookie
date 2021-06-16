@@ -36,7 +36,5 @@ class ModalFormResponsePacket : DataPacket(), ServerboundPacket {
         output.putString(formData)
     }
 
-    override fun handle(handler: PacketHandlerInterface): Boolean {
-        return handler.handleModalFormResponse(this)
-    }
+    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleModalFormResponse(this)
 }

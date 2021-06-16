@@ -20,8 +20,10 @@ package be.zvz.kookie.network.mcpe.protocol.types.inventory.stackrequest
 import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 
 @ItemStackRequestIdentify(ItemStackRequestActionType.DESTROY)
-class DestroyStackRequestAction(val count: Int, val source: ItemStackRequestSlotInfo) :
-    ItemStackRequestAction() {
+class DestroyStackRequestAction(
+    val count: Int,
+    val source: ItemStackRequestSlotInfo
+) : ItemStackRequestAction() {
 
     override fun write(out: PacketSerializer) {
         out.putByte(count)
@@ -30,10 +32,9 @@ class DestroyStackRequestAction(val count: Int, val source: ItemStackRequestSlot
 
     companion object {
         @JvmStatic
-        fun read(input: PacketSerializer): CraftingConsumeInputStackRequestAction {
-            val count = input.getByte()
-            val source = ItemStackRequestSlotInfo.read(input)
-            return CraftingConsumeInputStackRequestAction(count, source)
-        }
+        fun read(input: PacketSerializer) = CraftingConsumeInputStackRequestAction(
+            count = input.getByte(),
+            source = ItemStackRequestSlotInfo.read(input)
+        )
     }
 }

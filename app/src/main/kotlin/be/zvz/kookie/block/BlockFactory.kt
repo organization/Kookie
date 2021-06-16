@@ -18,17 +18,18 @@
 package be.zvz.kookie.block
 
 import be.zvz.kookie.block.util.IllegalBlockStateException
+import com.koloboke.collect.map.hash.HashLongFloatMaps
+import com.koloboke.collect.map.hash.HashLongIntMaps
 import com.koloboke.collect.map.hash.HashLongObjMaps
 import be.zvz.kookie.block.BlockIdentifier as BID
 import be.zvz.kookie.block.BlockLegacyIds as Ids
 
 object BlockFactory {
-
     private val fullList: MutableMap<Long, Block> = HashLongObjMaps.newMutableMap()
-    var light: MutableMap<Long, Int> = HashLongObjMaps.newMutableMap()
-    var lightFilter: MutableMap<Long, Int> = HashLongObjMaps.newMutableMap()
+    var light: MutableMap<Long, Int> = HashLongIntMaps.newMutableMap()
+    var lightFilter: MutableMap<Long, Int> = HashLongIntMaps.newMutableMap()
     var blocksDirectSkyLight: MutableMap<Long, Boolean> = HashLongObjMaps.newMutableMap()
-    var blastResistance: MutableMap<Long, Float> = HashLongObjMaps.newMutableMap()
+    var blastResistance: MutableMap<Long, Float> = HashLongFloatMaps.newMutableMap()
 
     init {
         /*val railBreakInfo = BlockBreakInfo(0.7f)
@@ -56,6 +57,7 @@ object BlockFactory {
                 if (meta and stateMask.inv() != variant) {
                     continue
                 }
+                if (!override) assertRegisterValid(block, id, meta)
 
                 if (!override && isRegistered(id, meta)) {
                     throw IllegalArgumentException(
@@ -64,27 +66,29 @@ object BlockFactory {
                 }
 
                 val fullId = Block.fullId(id, meta)
-                val v = block.clone()
-                try {
-                    v.readStateFromData(id, meta)
-                    if (v.getFullId() != fullId) {
-                        // if the fullID comes back different, this is a broken state that we can't rely on; map it to default
-                        throw IllegalBlockStateException("Corrupted state")
-                    }
-                } catch (e: IllegalBlockStateException) { // invalid property combination, fill the default state
+                val v = block.clone().apply { readStateFromData(id, meta) }
+                if (v.getFullId() != fullId) {
+                    // if the fullID comes back different, this is a broken state that we can't rely on; map it to default
                     fillStaticArrays(fullId, block)
-                    continue
+                } else {
+                    fillStaticArrays(fullId, v)
                 }
-
-                fillStaticArrays(fullId, block)
             }
+        }
+    }
+
+    private fun assertRegisterValid(block: Block, id: Int, variant: Int) {
+        if (isRegistered(id, variant)) {
+            throw IllegalArgumentException(
+                "Block registration ${block::class} has states which conflict with other blocks"
+            )
         }
     }
 
     @JvmStatic
     fun remap(id: Int, meta: Int, block: Block) {
-        val fullId = Block.fullId(id, meta)
         if (isRegistered(id, meta)) {
+            val fullId = Block.fullId(id, meta)
             val existing = fullList[fullId]
             if (existing !== null && existing.getFullId() == fullId) {
                 throw IllegalArgumentException("$id:$meta is already mapped")
@@ -129,10 +133,7 @@ object BlockFactory {
 
     @JvmStatic
     @JvmOverloads
-    fun isRegistered(id: Int, meta: Int = 0): Boolean {
-        val b = fullList[Block.fullId(id, meta)]
-        return b !== null && b !is UnknownBlock
-    }
+    fun isRegistered(id: Int, meta: Int = 0): Boolean = fullList[id shl 4 or meta]?.takeIf { it !is UnknownBlock } !== null
 
     @Deprecated("In PMMP, it is used to fetch only blocks without null ")
     fun getAllKnownStates() = fullList.toList()

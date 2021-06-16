@@ -36,18 +36,15 @@ class BiomeArray(var payload: String) {
 
     companion object {
         @JvmStatic
-        fun fill(biomeId: Int): BiomeArray {
-            return BiomeArray(biomeId.toString().repeat(256))
-        }
+        fun fill(biomeId: Int): BiomeArray = BiomeArray(biomeId.toString().repeat(256))
 
         @JvmStatic
-        fun idx(x: Int, z: Int): Int {
-            if (x !in 0..15 || z !in 0..15) {
+        fun idx(x: Int, z: Int): Int =
+            if (x in 0..15 && z in 0..15) {
+                z shl 4 or x
+            } else {
                 throw IllegalArgumentException("x and z must be in the range 0-15")
             }
-
-            return (z shl 4) or x
-        }
     }
 
     operator fun get(index: Int): Int = payload[index].code

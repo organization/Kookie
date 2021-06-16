@@ -94,10 +94,8 @@ class NetworkSession(
             if (packet !is ClientboundPacket) {
                 throw InvalidPacketException("Cannot send non-clientbound packet to ${getDisplayName()}")
             }
-            if (info == null) {
-                if (!packet.canBeSentBeforeLogin()) {
-                    throw InvalidPacketException("Cannot send ${packet.getName()} to ${getDisplayName()} before login")
-                }
+            if (info == null && !packet.canBeSentBeforeLogin()) {
+                throw InvalidPacketException("Cannot send ${packet.getName()} to ${getDisplayName()} before login")
             }
 
             sendBuffer.add(packet)
@@ -162,8 +160,9 @@ class NetworkSession(
                         session.send(Unpooled.copiedBuffer(serializer.buffer.toString().toByteArray()))
                     }
                     return
+                } else {
+                    TODO("non-immediate buffer, should compressed with zlib")
                 }
-                // TODO: non-immediate buffer, should compressed with zlib
             }
         } finally {
             sendBuffer.clear()

@@ -40,7 +40,5 @@ class StructureBlockUpdatePacket : DataPacket(), ServerboundPacket {
         output.putBoolean(isPowered)
     }
 
-    override fun handle(handler: PacketHandlerInterface): Boolean {
-        return handler.handleStructureBlockUpdate(this)
-    }
+    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleStructureBlockUpdate(this)
 }

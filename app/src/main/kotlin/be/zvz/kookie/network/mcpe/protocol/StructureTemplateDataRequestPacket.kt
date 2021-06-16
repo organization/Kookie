@@ -45,9 +45,7 @@ class StructureTemplateDataRequestPacket : DataPacket(), ServerboundPacket {
         output.putByte(structureTemplateResponseType)
     }
 
-    override fun handle(handler: PacketHandlerInterface): Boolean {
-        return handler.handleStructureTemplateDataRequest(this)
-    }
+    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleStructureTemplateDataRequest(this)
 
     enum class Type(val value: Int) {
         ALWAYS_LOAD(1),

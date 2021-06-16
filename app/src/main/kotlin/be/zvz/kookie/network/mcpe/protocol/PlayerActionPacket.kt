@@ -41,9 +41,7 @@ class PlayerActionPacket : DataPacket(), ServerboundPacket {
         output.putVarInt(face)
     }
 
-    override fun handle(handler: PacketHandlerInterface): Boolean {
-        return handler.handlePlayerAction(this)
-    }
+    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handlePlayerAction(this)
 
     companion object {
         const val ACTION_START_BREAK = 0

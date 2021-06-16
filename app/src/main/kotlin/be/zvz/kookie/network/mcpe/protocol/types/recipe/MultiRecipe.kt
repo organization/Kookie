@@ -10,6 +10,11 @@ class MultiRecipe(
     val recipeNetId: Int
 ) : RecipeWithTypeId(type) {
 
+    override fun encode(output: PacketSerializer) {
+        output.putUUID(recipeId)
+        output.writeGenericTypeNetworkId(recipeNetId)
+    }
+
     companion object {
         @JvmStatic
         fun decode(type: CraftingDataPacket.Entry, input: PacketSerializer) =
@@ -33,10 +38,5 @@ class MultiRecipe(
             FIREWORKS("00000000-0000-0000-0000-000000000002"),
             MAP_LOCKING_CARTOGRAPH("602234E4-CAC1-4353-8BB7-B1EBFF70024B")
         }
-    }
-
-    override fun encode(output: PacketSerializer) {
-        output.putUUID(recipeId)
-        output.writeGenericTypeNetworkId(recipeNetId)
     }
 }

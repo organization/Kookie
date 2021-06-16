@@ -44,9 +44,7 @@ class PlayerArmorDamagePacket : DataPacket(), ClientboundPacket {
         feetSlotDamage = maybeReadDamage(flags, FLAG_FEET, input)
     }
 
-    fun composeFlag(field: Int?, flag: Int): Int {
-        return field?.let { 1 shl flag } ?: 0
-    }
+    fun composeFlag(field: Int?, flag: Int): Int = field?.let { 1 shl flag } ?: 0
 
     fun maybeWriteDamage(field: Int?, output: PacketSerializer) {
         if (field !== null) {
@@ -68,9 +66,7 @@ class PlayerArmorDamagePacket : DataPacket(), ClientboundPacket {
         maybeWriteDamage(feetSlotDamage, output)
     }
 
-    override fun handle(handler: PacketHandlerInterface): Boolean {
-        return handler.handlePlayerArmorDamage(this)
-    }
+    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handlePlayerArmorDamage(this)
 
     companion object {
         const val FLAG_HEAD = 0

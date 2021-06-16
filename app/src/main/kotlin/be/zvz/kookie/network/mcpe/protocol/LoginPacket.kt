@@ -42,7 +42,7 @@ class LoginPacket : DataPacket(), ServerboundPacket {
         decodeConnectionRequest(input.getString())
     }
 
-    protected fun decodeConnectionRequest(binary: String) {
+    private fun decodeConnectionRequest(binary: String) {
         val connectionReqReader = BinaryStream(binary)
 
         val chainData: JwtChain
@@ -61,7 +61,7 @@ class LoginPacket : DataPacket(), ServerboundPacket {
         output.putString(encodeConnectionRequest())
     }
 
-    protected fun encodeConnectionRequest(): String {
+    private fun encodeConnectionRequest(): String {
         val connectionReqWriter = BinaryStream()
         val chainDataJson: String
         try {
@@ -77,7 +77,5 @@ class LoginPacket : DataPacket(), ServerboundPacket {
         return connectionReqWriter.buffer.toString()
     }
 
-    override fun handle(handler: PacketHandlerInterface): Boolean {
-        return handler.handleLogin(this)
-    }
+    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleLogin(this)
 }

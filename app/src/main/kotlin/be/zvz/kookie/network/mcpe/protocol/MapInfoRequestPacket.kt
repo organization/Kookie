@@ -33,7 +33,5 @@ class MapInfoRequestPacket : DataPacket(), ServerboundPacket {
         output.putEntityUniqueId(mapId)
     }
 
-    override fun handle(handler: PacketHandlerInterface): Boolean {
-        return handler.handleMapInfoRequest(this)
-    }
+    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleMapInfoRequest(this)
 }

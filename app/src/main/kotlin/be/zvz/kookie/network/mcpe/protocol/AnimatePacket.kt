@@ -42,9 +42,7 @@ class AnimatePacket : DataPacket(), ClientboundPacket, ServerboundPacket {
         }
     }
 
-    override fun handle(handler: PacketHandlerInterface): Boolean {
-        return handler.handleAnimate(this)
-    }
+    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleAnimate(this)
 
     companion object {
         const val ACTION_SWING_ARM = 1
@@ -56,20 +54,15 @@ class AnimatePacket : DataPacket(), ClientboundPacket, ServerboundPacket {
         const val ACTION_ROW_LEFT = 129
 
         @JvmStatic
-        fun create(entityRuntimeId: Long, actionId: Int): AnimatePacket {
-
-            return AnimatePacket().apply {
-                this.entityRuntimeId = entityRuntimeId
-                action = actionId
-            }
+        fun create(entityRuntimeId: Long, actionId: Int) = AnimatePacket().apply {
+            this.entityRuntimeId = entityRuntimeId
+            action = actionId
         }
 
         @JvmStatic
-        fun boatHack(entityRuntimeId: Long, actionId: Int, data: Float): AnimatePacket {
-            val packet = create(entityRuntimeId, actionId)
-            packet.float = data
-
-            return packet
-        }
+        fun boatHack(entityRuntimeId: Long, actionId: Int, data: Float) =
+            create(entityRuntimeId, actionId).apply {
+                this.float = data
+            }
     }
 }

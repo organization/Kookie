@@ -33,11 +33,5 @@ class BlockIdentifierFlattened @JvmOverloads constructor(
 
     fun getSecondId(): Int = additionalIds[0]
 
-    override fun getAllBlockIds(): List<Int> {
-        val list: MutableList<Int> = mutableListOf(blockId)
-        additionalIds.forEach {
-            list.add(it)
-        }
-        return list.toList()
-    }
+    override fun getAllBlockIds(): List<Int> = mutableListOf(blockId).apply { additionalIds.forEach(this::add) }.toList()
 }

@@ -33,7 +33,5 @@ class OnScreenTextureAnimationPacket : DataPacket(), ClientboundPacket {
         output.putLInt(effectId)
     }
 
-    override fun handle(handler: PacketHandlerInterface): Boolean {
-        return handler.handleOnScreenTextureAnimation(this)
-    }
+    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleOnScreenTextureAnimation(this)
 }

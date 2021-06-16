@@ -41,9 +41,7 @@ class InventorySlotPacket : DataPacket(), ClientboundPacket {
         item.write(output)
     }
 
-    override fun handle(handler: PacketHandlerInterface): Boolean {
-        return handler.handleInventorySlot(this)
-    }
+    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleInventorySlot(this)
 
     companion object {
         @JvmStatic

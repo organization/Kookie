@@ -36,7 +36,7 @@ class LevelChunkPacket : DataPacket(), ClientboundPacket {
         subChunkCount = input.getUnsignedVarInt()
         cacheEnabled = input.getBoolean()
         if (cacheEnabled) {
-            for (i in 0 until input.getUnsignedVarInt()) {
+            repeat(input.getUnsignedVarInt()) {
                 usedBlobHashes.add(input.getLLong())
             }
         }
@@ -57,9 +57,7 @@ class LevelChunkPacket : DataPacket(), ClientboundPacket {
         output.putString(extraPayload)
     }
 
-    override fun handle(handler: PacketHandlerInterface): Boolean {
-        return handler.handleLevelChunk(this)
-    }
+    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleLevelChunk(this)
 
     companion object {
         @JvmStatic

@@ -33,8 +33,8 @@ class CallbackInventoryListener(
 
     companion object {
         @JvmStatic
-        fun onAnyChange(onChange: (inventory: Inventory) -> Unit): CallbackInventoryListener {
-            return CallbackInventoryListener(
+        fun onAnyChange(onChange: (inventory: Inventory) -> Unit): CallbackInventoryListener =
+            CallbackInventoryListener(
                 fun(inventory: Inventory, _: Int, _: Item) {
                     onChange(inventory)
                 },
@@ -42,6 +42,5 @@ class CallbackInventoryListener(
                     onChange(inventory)
                 }
             )
-        }
     }
 }

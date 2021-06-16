@@ -34,7 +34,5 @@ class SetActorLinkPacket : DataPacket(), ClientboundPacket {
         output.putEntityLink(link)
     }
 
-    override fun handle(handler: PacketHandlerInterface): Boolean {
-        return handler.handleSetActorLink(this)
-    }
+    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleSetActorLink(this)
 }

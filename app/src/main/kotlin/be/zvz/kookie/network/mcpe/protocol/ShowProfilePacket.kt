@@ -33,7 +33,5 @@ class ShowProfilePacket : DataPacket(), ClientboundPacket {
         output.putString(xuid)
     }
 
-    override fun handle(handler: PacketHandlerInterface): Boolean {
-        return handler.handleShowProfile(this)
-    }
+    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleShowProfile(this)
 }

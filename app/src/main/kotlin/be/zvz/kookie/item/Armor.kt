@@ -52,7 +52,7 @@ class Armor(identifier: ItemIdentifier, name: String, val armorInfo: ArmorTypeIn
         if (unbreakingLevel > 0) {
             var negated = 0
             val chance = 1f / (unbreakingLevel + 1)
-            for (i in 0 until amount) {
+            repeat(amount) {
                 if (Random().nextFloat() >= 0.6f && Random().nextFloat() > chance) {
                     ++negated
                 }
@@ -88,10 +88,11 @@ class Armor(identifier: ItemIdentifier, name: String, val armorInfo: ArmorTypeIn
 
     override fun serializeCompoundTag(tag: CompoundTag) {
         super.serializeCompoundTag(tag)
-        if (customColor !== null)
-            tag.setInt(TAG_CUSTOM_COLOR, Binary.signInt(customColor!!.toARGB()))
-        else
+        customColor?.let {
+            tag.setInt(TAG_CUSTOM_COLOR, Binary.signInt(it.toARGB()))
+        } ?: run {
             tag.removeTag(TAG_CUSTOM_COLOR)
+        }
     }
 
     companion object {

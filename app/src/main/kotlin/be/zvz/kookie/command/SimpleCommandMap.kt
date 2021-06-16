@@ -37,14 +37,7 @@ class SimpleCommandMap : CommandMap {
         val modifiedFallbackPrefix = fallbackPrefix.trim().lowercase()
         val registered = registerAlias(command, false, modifiedFallbackPrefix, modifiedLabel)
 
-        val aliases = command.aliases
-
-        aliases.forEach {
-            if (!registerAlias(command, true, modifiedFallbackPrefix, it)) {
-                aliases.remove(it)
-            }
-        }
-        command.aliases = aliases
+        command.aliases = command.aliases.filter { registerAlias(command, true, modifiedFallbackPrefix, it) }.toMutableList()
 
         if (!registered) {
             command.setLabel("$modifiedFallbackPrefix:$modifiedLabel")

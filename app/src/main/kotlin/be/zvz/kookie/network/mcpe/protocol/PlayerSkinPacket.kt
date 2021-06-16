@@ -46,9 +46,7 @@ class PlayerSkinPacket : DataPacket(), ClientboundPacket, ServerboundPacket {
         output.putBoolean(skin.isVerified)
     }
 
-    override fun handle(handler: PacketHandlerInterface): Boolean {
-        return handler.handlePlayerSkin(this)
-    }
+    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handlePlayerSkin(this)
 
     companion object {
         @JvmStatic

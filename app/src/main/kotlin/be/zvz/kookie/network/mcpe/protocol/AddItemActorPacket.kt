@@ -57,7 +57,5 @@ class AddItemActorPacket : DataPacket(), ClientboundPacket {
         output.putBoolean(isFromFishing)
     }
 
-    override fun handle(handler: PacketHandlerInterface): Boolean {
-        return handler.handleAddItemActor(this)
-    }
+    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleAddItemActor(this)
 }
