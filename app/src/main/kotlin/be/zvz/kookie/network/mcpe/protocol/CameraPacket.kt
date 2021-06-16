@@ -35,7 +35,6 @@ class CameraPacket : DataPacket(), ClientboundPacket {
         output.putEntityUniqueId(playerUniqueId)
     }
 
-    override fun handle(handler: PacketHandlerInterface): Boolean {
-        return handler.handleCamera(this)
-    }
+    override fun handle(handler: PacketHandlerInterface) =
+        handler.handleCamera(this)
 }

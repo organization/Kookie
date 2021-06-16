@@ -36,7 +36,5 @@ class ShowStoreOfferPacket : DataPacket(), ClientboundPacket {
         output.putBoolean(showAll)
     }
 
-    override fun handle(handler: PacketHandlerInterface): Boolean {
-        return handler.handleShowStoreOffer(this)
-    }
+    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleShowStoreOffer(this)
 }

@@ -46,9 +46,7 @@ open class UpdateBlockPacket : DataPacket(), ClientboundPacket {
         output.putUnsignedVarInt(dataLayerId)
     }
 
-    override fun handle(handler: PacketHandlerInterface): Boolean {
-        return handler.handleUpdateBlock(this)
-    }
+    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleUpdateBlock(this)
 
     companion object {
         const val DATA_LAYER_NORMAL = 0

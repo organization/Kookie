@@ -43,27 +43,37 @@ class ContainerOpenPacket : DataPacket(), ClientboundPacket {
         output.putEntityUniqueId(entityUniqueId)
     }
 
-    override fun handle(handler: PacketHandlerInterface): Boolean {
-        return handler.handleContainerOpen(this)
-    }
+    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleContainerOpen(this)
 
     companion object {
         @JvmStatic
-        fun blockInv(windowId: Int, windowType: Int, x: Int, y: Int, z: Int): ContainerOpenPacket {
-            val result = ContainerOpenPacket()
-            result.windowId = windowId
-            result.type = windowType
-            result.pos = PacketSerializer.BlockPosition(x, y, z)
-            return result
-        }
+        fun blockInv(
+            windowId: Int,
+            windowType: Int,
+            x: Int,
+            y: Int,
+            z: Int
+        ) =
+            ContainerOpenPacket().apply {
+                this.windowId = windowId
+                this.type = windowType
+                this.pos = PacketSerializer.BlockPosition(x, y, z)
+            }
 
         @JvmStatic
-        fun blockInvVec3(windowId: Int, windowType: Int, vector3: Vector3): ContainerOpenPacket {
-            return blockInv(windowId, windowType, vector3.x.toInt(), vector3.y.toInt(), vector3.z.toInt())
-        }
+        fun blockInvVec3(
+            windowId: Int,
+            windowType: Int,
+            vector3: Vector3
+        ): ContainerOpenPacket =
+            blockInv(windowId, windowType, vector3.x.toInt(), vector3.y.toInt(), vector3.z.toInt())
 
         @JvmStatic
-        fun entityInv(windowId: Int, windowType: Int, entityUniqueId: Long): ContainerOpenPacket =
+        fun entityInv(
+            windowId: Int,
+            windowType: Int,
+            entityUniqueId: Long
+        ) =
             ContainerOpenPacket().apply {
                 this.windowId = windowId
                 this.type = windowType

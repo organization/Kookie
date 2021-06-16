@@ -93,9 +93,9 @@ object SubChunkConverter {
         val id2Idx = Ref.IntRef()
         val metaIdx = Ref.IntRef()
         var unique = 0
-        for (x in 0 until 16) {
-            for (z in 0 until 16) {
-                for (y in 0 until 8) {
+        repeat(16) { x ->
+            repeat(16) { z ->
+                repeat(8) { y ->
                     getIndex(x, y, z, id1Idx, id2Idx, metaIdx, extraArg)
                     val metaByte = metaArray[metaIdx.element].code
                     val id1 = idArray[id1Idx.element].code shl 4 or (metaByte and 0xf)
@@ -115,9 +115,9 @@ object SubChunkConverter {
         var rX: Int
         var rZ: Int
         var rY: Int
-        for (x in 0 until 16) {
-            for (z in 0 until 16) {
-                for (y in 0 until 8) {
+        repeat(16) { x ->
+            repeat(16) { z ->
+                repeat(8) { y ->
                     getIndex(x, y, z, id1Idx, id2Idx, metaIdx, extraArg)
                     val metaByte = metaArray[metaIdx.element].code
                     if (isYZX) {

@@ -46,9 +46,7 @@ class MobEquipmentPacket : DataPacket(), ClientboundPacket, ServerboundPacket {
         output.putByte(windowId)
     }
 
-    override fun handle(handler: PacketHandlerInterface): Boolean {
-        return handler.handleMobEquipment(this)
-    }
+    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleMobEquipment(this)
 
     companion object {
         @JvmStatic
@@ -58,14 +56,12 @@ class MobEquipmentPacket : DataPacket(), ClientboundPacket, ServerboundPacket {
             inventorySlot: Int,
             hotbarSlot: Int,
             windowId: Int
-        ): MobEquipmentPacket {
-            return MobEquipmentPacket().apply {
-                this.entityRuntimeId = entityRuntimeId
-                this.item = item
-                this.inventorySlot = inventorySlot
-                this.hotbarSlot = hotbarSlot
-                this.windowId = windowId
-            }
+        ) = MobEquipmentPacket().apply {
+            this.entityRuntimeId = entityRuntimeId
+            this.item = item
+            this.inventorySlot = inventorySlot
+            this.hotbarSlot = hotbarSlot
+            this.windowId = windowId
         }
     }
 }

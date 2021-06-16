@@ -26,23 +26,15 @@ class BlockPosMetadataProperty(val value: PacketSerializer.BlockPosition) : Meta
         output.putBlockPosition(value)
     }
 
-    override fun equals(other: Any?): Boolean {
-        if (other != null) {
-            other as BlockPosMetadataProperty
-            return other.javaClass == this.javaClass && other.hashCode() == hashCode() && other.value == value
-        }
-        return false
-    }
+    override fun equals(other: Any?): Boolean =
+        (other as? BlockPosMetadataProperty)?.let {
+            it.javaClass == this.javaClass && it.hashCode() == hashCode() && it.value == value
+        } ?: false
 
-    override fun hashCode(): Int {
-        var result = super.hashCode()
-        result = 31 * result + value.hashCode()
-        result = 31 * result + id
-        return result
-    }
+    override fun hashCode(): Int = super.hashCode().let { 31 * it + value.hashCode() }.let { 31 * it + id }
 
     companion object {
         @JvmStatic
-        fun read(input: PacketSerializer): BlockPosMetadataProperty = BlockPosMetadataProperty(input.getBlockPosition())
+        fun read(input: PacketSerializer) = BlockPosMetadataProperty(input.getBlockPosition())
     }
 }

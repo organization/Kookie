@@ -30,7 +30,5 @@ class ClientToServerHandshakePacket : DataPacket(), ServerboundPacket {
         // NO PAYLOAD
     }
 
-    override fun handle(handler: PacketHandlerInterface): Boolean {
-        return handler.handleClientToServerHandshake(this)
-    }
+    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleClientToServerHandshake(this)
 }

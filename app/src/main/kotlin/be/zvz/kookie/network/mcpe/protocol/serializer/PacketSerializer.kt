@@ -124,15 +124,13 @@ class PacketSerializer @JvmOverloads constructor(
     }
 
     // TODO: SkinData
-
     fun getSkin(): SkinData {
         val skinId = getString()
         val playFabId = getString()
         val skinResourcePatch = getString()
         val skinData = getSkinImage()
         val animations = mutableListOf<SkinAnimation>().apply {
-            val animationCount = getLInt()
-            for (i in 0 until animationCount) {
+            repeat(getLInt()) {
                 val skinImage = getSkinImage()
                 val animationType = getLInt()
                 val animationFrames = getLFloat()
@@ -151,8 +149,7 @@ class PacketSerializer @JvmOverloads constructor(
         val armSize = getString()
         val skinColor = getString()
         val personaPieces = mutableListOf<PersonaSkinPiece>().apply {
-            val personaPieceCount = getLInt()
-            for (i in 0 until personaPieceCount) {
+            repeat(getLInt()) {
                 val pieceId = getString()
                 val pieceType = getString()
                 val packId = getString()
@@ -164,14 +161,14 @@ class PacketSerializer @JvmOverloads constructor(
 
         val pieceTintColors = mutableListOf<PersonaPieceTintColor>().apply {
             val pieceTintColorCount = getLInt()
-            for (i in 0 until pieceTintColorCount) {
+            repeat(pieceTintColorCount) {
                 val pieceType = getString()
                 add(
                     PersonaPieceTintColor(
                         pieceType,
                         mutableListOf<String>().apply {
                             val colorCount = getLInt()
-                            for (j in 0 until colorCount) {
+                            repeat(colorCount) {
                                 add(getString())
                             }
                         }
@@ -341,12 +338,12 @@ class PacketSerializer @JvmOverloads constructor(
                 throw PacketDecodeException("Unexpected fake NBT length $nbtLen")
             }
             val canPlaceOn = mutableListOf<String>()
-            for (i in 0 until extraData.getLInt()) {
+            repeat(extraData.getLInt()) {
                 canPlaceOn.add(extraData.get(extraData.getLShort()))
             }
 
             val canDestroy = mutableListOf<String>()
-            for (i in 0 until extraData.getLInt()) {
+            repeat(extraData.getLInt()) {
                 canDestroy.add(extraData.get(extraData.getLShort()))
             }
 
@@ -417,7 +414,7 @@ class PacketSerializer @JvmOverloads constructor(
     fun getGameRules(): Map<String, GameRule> {
         val count = getUnsignedVarInt()
         val rules = HashObjObjMaps.newMutableMap<String, GameRule>()
-        for (i in 0 until count) {
+        repeat(count) {
             val name = getString()
             val type = getUnsignedVarInt()
             val playerModifiable = getBoolean()
@@ -491,7 +488,7 @@ class PacketSerializer @JvmOverloads constructor(
 
     fun getEntityMetadataProperty(): MutableMap<Int, MetadataProperty> {
         val properties: MutableMap<Int, MetadataProperty> = HashIntObjMaps.newMutableMap()
-        for (i in 0 until getUnsignedVarInt()) {
+        repeat(getUnsignedVarInt()) {
             val key = getUnsignedVarInt()
             val type = getUnsignedVarInt()
             properties[key] = readMetadataProperty(type)
@@ -633,7 +630,7 @@ class PacketSerializer @JvmOverloads constructor(
 
     fun getAttributeList(): MutableList<NetworkAttribute> {
         val list: MutableList<NetworkAttribute> = mutableListOf()
-        for (i in 0 until getUnsignedVarInt()) {
+        repeat(getUnsignedVarInt()) {
             val min = getLFloat()
             val max = getLFloat()
             val current = getLFloat()

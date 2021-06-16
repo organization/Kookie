@@ -29,29 +29,15 @@ class CompoundMetadataProperty(var value: CompoundTag) : MetadataProperty() {
         output.put((LittleEndianNbtSerializer()).write(TreeRoot(value)))
     }
 
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (javaClass != other?.javaClass) return false
+    override fun equals(other: Any?): Boolean = this === other ||
+        javaClass == other?.javaClass &&
+        value == (other as CompoundMetadataProperty).value &&
+        id == other.id
 
-        other as CompoundMetadataProperty
-
-        if (value != other.value) return false
-        if (id != other.id) return false
-
-        return true
-    }
-
-    override fun hashCode(): Int {
-        var result = super.hashCode()
-        result = 31 * result + value.hashCode()
-        result = 31 * result + id
-        return result
-    }
+    override fun hashCode(): Int = super.hashCode().let { 31 * it + value.hashCode() }.let { 31 * it + id }
 
     companion object {
         @JvmStatic
-        fun read(input: PacketSerializer): CompoundMetadataProperty {
-            return CompoundMetadataProperty(input.getNbtCompoundRoot())
-        }
+        fun read(input: PacketSerializer) = CompoundMetadataProperty(input.getNbtCompoundRoot())
     }
 }

@@ -36,7 +36,5 @@ class SyncActorPropertyPacket : DataPacket() {
         output.put(NetworkNbtSerializer().write(TreeRoot(data)))
     }
 
-    override fun handle(handler: PacketHandlerInterface): Boolean {
-        return handler.handleSyncActorProperty(this)
-    }
+    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleSyncActorProperty(this)
 }

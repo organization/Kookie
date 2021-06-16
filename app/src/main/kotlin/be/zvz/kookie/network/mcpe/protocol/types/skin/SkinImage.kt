@@ -38,13 +38,11 @@ class SkinImage(private val height: Int, private val width: Int, private val dat
 
     companion object {
         @JvmStatic
-        fun fromLegacy(data: String): SkinImage {
-            return when (data.length) {
-                64 * 32 * 4 -> SkinImage(32, 64, data)
-                64 * 64 * 4 -> SkinImage(64, 64, data)
-                128 * 128 * 4 -> SkinImage(128, 128, data)
-                else -> throw SkinImageException("Unknown size")
-            }
+        fun fromLegacy(data: String) = when (data.length) {
+            64 * 32 * 4 -> SkinImage(32, 64, data)
+            64 * 64 * 4 -> SkinImage(64, 64, data)
+            128 * 128 * 4 -> SkinImage(128, 128, data)
+            else -> throw SkinImageException("Unknown size")
         }
     }
 

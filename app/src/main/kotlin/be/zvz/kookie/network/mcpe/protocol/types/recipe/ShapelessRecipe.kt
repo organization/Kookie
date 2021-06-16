@@ -32,7 +32,7 @@ class ShapelessRecipe(
 
         @JvmStatic
         fun decodeInputs(input: PacketSerializer): List<RecipeIngredient> = mutableListOf<RecipeIngredient>().apply {
-            for (i in 0 until input.getUnsignedVarInt()) {
+            repeat(input.getUnsignedVarInt()) {
                 add(input.getRecipeIngredient())
             }
         }

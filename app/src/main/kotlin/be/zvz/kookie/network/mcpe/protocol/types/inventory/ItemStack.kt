@@ -31,8 +31,6 @@ data class ItemStack(
 ) {
     companion object {
         @JvmStatic
-        fun empty(): ItemStack {
-            return ItemStack(0, 0, 0, 0, null, listOf(), listOf(), null)
-        }
+        fun empty() = ItemStack(0, 0, 0, 0, null, listOf(), listOf(), null)
     }
 }

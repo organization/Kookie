@@ -28,24 +28,12 @@ class Vec3MetadataProperty(val value: Vector3) : MetadataProperty() {
         output.putVector3(value)
     }
 
-    override fun equals(other: Any?): Boolean {
-        if (javaClass != other?.javaClass) return false
+    override fun equals(other: Any?): Boolean = javaClass == other?.javaClass && (other as Vector3) == value
 
-        other as Vector3
-        return other == value
-    }
-
-    override fun hashCode(): Int {
-        var result = super.hashCode()
-        result = 31 * result + value.hashCode()
-        result = 31 * result + id
-        return result
-    }
+    override fun hashCode(): Int = super.hashCode().let { 31 * it + value.hashCode() }.let { 31 * it + id }
 
     companion object {
         @JvmStatic
-        fun read(input: PacketSerializer): Vec3MetadataProperty {
-            return Vec3MetadataProperty(input.getVector3())
-        }
+        fun read(input: PacketSerializer) = Vec3MetadataProperty(input.getVector3())
     }
 }

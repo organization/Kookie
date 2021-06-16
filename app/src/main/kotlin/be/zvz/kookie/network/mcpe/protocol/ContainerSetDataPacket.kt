@@ -39,9 +39,7 @@ class ContainerSetDataPacket : DataPacket(), ClientboundPacket {
         output.putVarInt(value)
     }
 
-    override fun handle(handler: PacketHandlerInterface): Boolean {
-        return handler.handleContainerSetData(this)
-    }
+    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleContainerSetData(this)
 
     enum class PROPERTY(value: Int) {
         FURNACE_SMELT_PROGRESS(0),
@@ -57,12 +55,11 @@ class ContainerSetDataPacket : DataPacket(), ClientboundPacket {
 
     companion object {
         @JvmStatic
-        fun create(windowId: Int, propertyId: Int, value: Int): ContainerSetDataPacket {
-            val result = ContainerSetDataPacket()
-            result.property = propertyId
-            result.value = value
-            result.windowId = windowId
-            return result
-        }
+        fun create(windowId: Int, propertyId: Int, value: Int) =
+            ContainerSetDataPacket().apply {
+                this.property = propertyId
+                this.value = value
+                this.windowId = windowId
+            }
     }
 }

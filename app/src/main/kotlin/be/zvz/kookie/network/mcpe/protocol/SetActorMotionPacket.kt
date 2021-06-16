@@ -36,18 +36,13 @@ class SetActorMotionPacket : DataPacket(), ClientboundPacket, ServerboundPacket 
         output.putVector3(motion)
     }
 
-    override fun handle(handler: PacketHandlerInterface): Boolean {
-        return handler.handleSetActorMotion(this)
-    }
+    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleSetActorMotion(this)
 
     companion object {
         @JvmStatic
-        fun create(entityRuntimeId: Long, motion: Vector3): SetActorMotionPacket {
-
-            return SetActorMotionPacket().apply {
-                this.entityRuntimeId = entityRuntimeId
-                this.motion = motion.asVector3()
-            }
+        fun create(entityRuntimeId: Long, motion: Vector3) = SetActorMotionPacket().apply {
+            this.entityRuntimeId = entityRuntimeId
+            this.motion = motion.asVector3()
         }
     }
 }

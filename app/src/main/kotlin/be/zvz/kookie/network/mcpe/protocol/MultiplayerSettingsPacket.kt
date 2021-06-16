@@ -26,7 +26,7 @@ class MultiplayerSettingsPacket : DataPacket(), ClientboundPacket, ServerboundPa
 
     companion object {
         @JvmStatic
-        fun create(action: Action): MultiplayerSettingsPacket = MultiplayerSettingsPacket().apply {
+        fun create(action: Action) = MultiplayerSettingsPacket().apply {
             this.action = action
         }
     }
@@ -39,9 +39,7 @@ class MultiplayerSettingsPacket : DataPacket(), ClientboundPacket, ServerboundPa
         output.putVarInt(action.value)
     }
 
-    override fun handle(handler: PacketHandlerInterface): Boolean {
-        return handler.handleMultiplayerSettings(this)
-    }
+    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleMultiplayerSettings(this)
 
     enum class Action(val value: Int) {
         ENABLE_MULTIPLAYER(0),
@@ -50,6 +48,7 @@ class MultiplayerSettingsPacket : DataPacket(), ClientboundPacket, ServerboundPa
 
         companion object {
             private val VALUES = values()
+
             @JvmStatic
             fun from(value: Int) = VALUES.first { it.value == value }
         }

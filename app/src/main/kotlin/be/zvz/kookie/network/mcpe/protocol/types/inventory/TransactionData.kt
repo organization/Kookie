@@ -25,16 +25,14 @@ abstract class TransactionData {
 
     abstract val typeId: Int
 
-    fun getActions(): MutableList<NetworkInventoryAction> {
-        return actions
-    }
+    fun getActions(): MutableList<NetworkInventoryAction> = actions
 
     protected fun setActions(actions: MutableList<NetworkInventoryAction>) {
         this.actions = actions
     }
 
     fun decode(input: PacketSerializer) {
-        for (i in 0 until input.getUnsignedVarInt()) {
+        repeat(input.getUnsignedVarInt()) {
             actions.add(NetworkInventoryAction().read(input))
         }
         decodeData(input)

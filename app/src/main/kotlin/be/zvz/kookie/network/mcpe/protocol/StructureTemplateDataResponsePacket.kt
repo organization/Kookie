@@ -43,7 +43,5 @@ class StructureTemplateDataResponsePacket : DataPacket(), ClientboundPacket {
         }
     }
 
-    override fun handle(handler: PacketHandlerInterface): Boolean {
-        return handler.handleStructureTemplateDataResponse(this)
-    }
+    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleStructureTemplateDataResponse(this)
 }

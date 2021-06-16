@@ -34,11 +34,10 @@ class DropStackRequestAction(
 
     companion object {
         @JvmStatic
-        fun read(input: PacketSerializer): DropStackRequestAction {
-            val count = input.getByte()
-            val source = ItemStackRequestSlotInfo.read(input)
-            val random = input.getBoolean()
-            return DropStackRequestAction(count, source, random)
-        }
+        fun read(input: PacketSerializer) = DropStackRequestAction(
+            count = input.getByte(),
+            source = ItemStackRequestSlotInfo.read(input),
+            randomly = input.getBoolean()
+        )
     }
 }

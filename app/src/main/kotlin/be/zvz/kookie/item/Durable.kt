@@ -55,7 +55,7 @@ abstract class Durable(identifier: ItemIdentifier, name: String) : Item(identifi
         if (unbreakingLevel > 0) {
             var negated = 0
             val chance = 1f / (unbreakingLevel + 1)
-            for (i in 0 until amount) {
+            repeat(amount) {
                 if (Random().nextFloat() > chance) {
                     ++negated
                 }

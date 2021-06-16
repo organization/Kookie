@@ -52,7 +52,7 @@ class Armor(identifier: ItemIdentifier, name: String, val armorInfo: ArmorTypeIn
         if (unbreakingLevel > 0) {
             var negated = 0
             val chance = 1f / (unbreakingLevel + 1)
-            for (i in 0 until amount) {
+            repeat(amount) {
                 if (Random().nextFloat() >= 0.6f && Random().nextFloat() > chance) {
                     ++negated
                 }

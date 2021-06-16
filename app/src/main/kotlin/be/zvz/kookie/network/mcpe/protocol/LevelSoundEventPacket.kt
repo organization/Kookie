@@ -49,9 +49,7 @@ class LevelSoundEventPacket : DataPacket(), ClientboundPacket, ServerboundPacket
         output.putBoolean(disableRelativeVolume)
     }
 
-    override fun handle(handler: PacketHandlerInterface): Boolean {
-        return handler.handleLevelSoundEvent(this)
-    }
+    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleLevelSoundEvent(this)
 
     companion object {
         @JvmStatic

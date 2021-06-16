@@ -85,9 +85,7 @@ class BookEditPacket : DataPacket(), ServerboundPacket {
         }
     }
 
-    override fun handle(handler: PacketHandlerInterface): Boolean {
-        return handler.handleBookEdit(this)
-    }
+    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleBookEdit(this)
 
     companion object {
         const val TYPE_REPLACE_PAGE = 0

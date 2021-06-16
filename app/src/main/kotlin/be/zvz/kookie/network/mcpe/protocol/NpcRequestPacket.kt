@@ -42,9 +42,7 @@ class NpcRequestPacket : DataPacket(), ServerboundPacket {
         output.putByte(actionType)
     }
 
-    override fun handle(handler: PacketHandlerInterface): Boolean {
-        return handler.handleNpcRequest(this)
-    }
+    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleNpcRequest(this)
 
     companion object {
         const val REQUEST_SET_ACTIONS = 0

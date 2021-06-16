@@ -34,11 +34,11 @@ class ShapedRecipe(
         @JvmStatic
         fun decodeInputs(input: PacketSerializer): Map<Int, Map<Int, RecipeIngredient>> =
             HashIntObjMaps.newMutableMap<Map<Int, RecipeIngredient>>().apply {
-                for (rowIndex in 0 until input.getUnsignedVarInt()) {
+                repeat(input.getUnsignedVarInt()) { rowIndex ->
                     put(
                         rowIndex,
                         HashIntObjMaps.newMutableMap<RecipeIngredient>().apply {
-                            for (columnIndex in 0 until input.getUnsignedVarInt()) {
+                            repeat(input.getUnsignedVarInt()) { columnIndex ->
                                 put(columnIndex, input.getRecipeIngredient())
                             }
                         }

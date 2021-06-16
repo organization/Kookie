@@ -94,7 +94,7 @@ interface InventoryHelpers : Inventory {
 
     override fun canAddItem(item: Item): Boolean {
         var count = item.count
-        for (i in 0 until size) {
+        repeat(size) { i ->
             val slot = getItem(i)
             if (item.equals(slot)) {
                 (min(slot.maxStackSize, item.maxStackSize) - slot.count).let {

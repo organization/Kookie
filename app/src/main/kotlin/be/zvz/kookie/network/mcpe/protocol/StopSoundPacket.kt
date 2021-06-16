@@ -36,7 +36,5 @@ class StopSoundPacket : DataPacket(), ClientboundPacket {
         output.putBoolean(stopAll)
     }
 
-    override fun handle(handler: PacketHandlerInterface): Boolean {
-        return handler.handleStopSound(this)
-    }
+    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleStopSound(this)
 }

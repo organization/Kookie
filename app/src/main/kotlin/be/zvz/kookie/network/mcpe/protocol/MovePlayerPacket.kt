@@ -68,9 +68,7 @@ class MovePlayerPacket : DataPacket(), ClientboundPacket, ServerboundPacket {
         output.putUnsignedVarLong(tick)
     }
 
-    override fun handle(handler: PacketHandlerInterface): Boolean {
-        return handler.handleMovePlayer(this)
-    }
+    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleMovePlayer(this)
 
     companion object {
         const val MODE_NORMAL = 0

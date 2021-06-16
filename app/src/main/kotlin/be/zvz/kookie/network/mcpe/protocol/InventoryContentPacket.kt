@@ -29,7 +29,7 @@ class InventoryContentPacket : DataPacket(), ClientboundPacket {
 
     override fun decodePayload(input: PacketSerializer) {
         windowId = input.getUnsignedVarInt()
-        for (i in 0 until input.getUnsignedVarInt()) {
+        repeat(input.getUnsignedVarInt()) {
             items.add(ItemStackWrapper.read(input))
         }
     }
@@ -42,15 +42,14 @@ class InventoryContentPacket : DataPacket(), ClientboundPacket {
         }
     }
 
-    override fun handle(handler: PacketHandlerInterface): Boolean {
-        return handler.handleInventoryContent(this)
-    }
+    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleInventoryContent(this)
 
     companion object {
         @JvmStatic
-        fun create(windowId: Int, items: MutableList<ItemStackWrapper>) = InventoryContentPacket().apply {
-            this.windowId = windowId
-            this.items = items
-        }
+        fun create(windowId: Int, items: MutableList<ItemStackWrapper>) =
+            InventoryContentPacket().apply {
+                this.windowId = windowId
+                this.items = items
+            }
     }
 }

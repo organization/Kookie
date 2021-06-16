@@ -36,17 +36,13 @@ class TransferPacket : DataPacket(), ClientboundPacket {
         output.putLShort(port)
     }
 
-    override fun handle(handler: PacketHandlerInterface): Boolean {
-        return handler.handleTransfer(this)
-    }
+    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleTransfer(this)
 
     companion object {
         @JvmStatic
-        fun create(address: String, port: Int): TransferPacket {
-            return TransferPacket().apply {
-                this.address = address
-                this.port = port
-            }
+        fun create(address: String, port: Int) = TransferPacket().apply {
+            this.address = address
+            this.port = port
         }
     }
 }

@@ -138,11 +138,9 @@ class AvailableCommandsPacket : DataPacket(), ClientboundPacket {
         }
     }
 
-    override fun handle(handler: PacketHandlerInterface): Boolean {
-        return false
-    }
+    override fun handle(handler: PacketHandlerInterface): Boolean = false
 
-    protected fun getEnum(enumList: MutableList<String>, input: PacketSerializer): CommandEnum {
+    private fun getEnum(enumList: MutableList<String>, input: PacketSerializer): CommandEnum {
         val enumName = input.getString()
         val enumValues = mutableListOf<String>()
 
@@ -155,7 +153,7 @@ class AvailableCommandsPacket : DataPacket(), ClientboundPacket {
         return CommandEnum(enumName, enumValues)
     }
 
-    protected fun putEnum(enum: CommandEnum, enumValueMap: MutableMap<String, Int>, output: PacketSerializer) {
+    private fun putEnum(enum: CommandEnum, enumValueMap: MutableMap<String, Int>, output: PacketSerializer) {
         output.putString(enum.getEnumName())
 
         val values = enum.getEnumValues()
@@ -170,7 +168,7 @@ class AvailableCommandsPacket : DataPacket(), ClientboundPacket {
         }
     }
 
-    protected fun getEnumValueIndex(valueCount: Int, input: PacketSerializer): Int = when {
+    private fun getEnumValueIndex(valueCount: Int, input: PacketSerializer): Int = when {
         valueCount < 256 -> {
             input.getByte()
         }
@@ -182,7 +180,7 @@ class AvailableCommandsPacket : DataPacket(), ClientboundPacket {
         }
     }
 
-    protected fun putEnumValueIndex(index: Int, valueCount: Int, output: PacketSerializer) {
+    private fun putEnumValueIndex(index: Int, valueCount: Int, output: PacketSerializer) {
         when {
             valueCount < 256 -> {
                 output.putByte(index)
@@ -196,7 +194,7 @@ class AvailableCommandsPacket : DataPacket(), ClientboundPacket {
         }
     }
 
-    protected fun getCommandData(
+    private fun getCommandData(
         enums: MutableList<CommandEnum>,
         postFixes: MutableList<String>,
         input: PacketSerializer
@@ -210,12 +208,12 @@ class AvailableCommandsPacket : DataPacket(), ClientboundPacket {
 
         val overloadCount = input.getUnsignedVarInt()
 
-        for (overloadIndex in 0 until overloadCount) {
+        repeat(overloadCount) { overloadIndex ->
             if (!overloads.containsKey(overloadIndex)) {
                 overloads[overloadIndex] = HashIntObjMaps.newMutableMap()
             }
             val paramCount = input.getUnsignedVarInt()
-            for (paramIndex in 0 until paramCount) {
+            repeat(paramCount) { paramIndex ->
                 val parameter = CommandParameter()
                 parameter.paramName = input.getString()
                 parameter.paramType = input.getLInt()
@@ -252,7 +250,7 @@ class AvailableCommandsPacket : DataPacket(), ClientboundPacket {
         return CommandData(name, description, flags, permission, aliases, overloads)
     }
 
-    protected fun putCommandData(
+    private fun putCommandData(
         data: CommandData,
         enumIndexes: Map<String, Int>,
         postFixIndexes: Map<String, Int>,
@@ -289,18 +287,16 @@ class AvailableCommandsPacket : DataPacket(), ClientboundPacket {
         }
     }
 
-    protected fun getSoftEnum(input: PacketSerializer): CommandEnum {
-        return CommandEnum(
-            enumName = input.getString(),
-            enumValues = mutableListOf<String>().apply {
-                for (i in 0 until input.getUnsignedVarInt()) {
-                    add(input.getString())
-                }
+    private fun getSoftEnum(input: PacketSerializer) = CommandEnum(
+        enumName = input.getString(),
+        enumValues = mutableListOf<String>().apply {
+            repeat(input.getUnsignedVarInt()) {
+                add(input.getString())
             }
-        )
-    }
+        }
+    )
 
-    protected fun putSoftEnum(enum: CommandEnum, output: PacketSerializer) {
+    private fun putSoftEnum(enum: CommandEnum, output: PacketSerializer) {
         output.putString(enum.getEnumName())
 
         val values = enum.getEnumValues()
@@ -310,7 +306,7 @@ class AvailableCommandsPacket : DataPacket(), ClientboundPacket {
         }
     }
 
-    protected fun getEnumConstraint(
+    private fun getEnumConstraint(
         enums: List<CommandEnum>,
         enumValues: List<String>,
         input: PacketSerializer
@@ -330,14 +326,14 @@ class AvailableCommandsPacket : DataPacket(), ClientboundPacket {
         }
 
         val constraintIds = mutableListOf<Int>().apply {
-            for (i in 0 until input.getUnsignedVarInt()) {
+            repeat(input.getUnsignedVarInt()) {
                 add(input.getByte())
             }
         }
         return CommandEnumConstraint(enum, valueOffset, constraintIds)
     }
 
-    protected fun putEnumConstraint(
+    private fun putEnumConstraint(
         constraint: CommandEnumConstraint,
         enumIndexes: Map<String, Int>,
         enumValues: Map<String, Int>,
