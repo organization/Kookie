@@ -17,7 +17,7 @@
  */
 package be.zvz.kookie.world.light
 
-import be.zvz.kookie.world.SubChunkExplorer
+import be.zvz.kookie.world.utils.SubChunkExplorer
 import be.zvz.kookie.world.format.LightArray
 import be.zvz.kookie.world.format.LightLevel
 import be.zvz.kookie.world.format.SubChunk

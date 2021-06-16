@@ -15,8 +15,9 @@
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  */
-package be.zvz.kookie.world
+package be.zvz.kookie.world.utils
 
+import be.zvz.kookie.world.ChunkManager
 import be.zvz.kookie.world.format.Chunk
 import be.zvz.kookie.world.format.SubChunk
 
