@@ -89,7 +89,7 @@ data class EffectManager(val entity: Living) {
             oldEffect = effects.getValue(index)
             if (
                 abs(effect.amplifier) < oldEffect.amplifier ||
-                (abs(effect.amplifier) == abs(oldEffect.amplifier)) && effect.duration!! < oldEffect.duration!!
+                (abs(effect.amplifier) == abs(oldEffect.amplifier)) && effect.duration < oldEffect.duration
             ) {
                 cancelled = true
             }
@@ -123,7 +123,7 @@ data class EffectManager(val entity: Living) {
             if (type.canTick(effectInstance)) {
                 type.applyEffect(entity, effectInstance)
             }
-            effectInstance.decreaseDuration(tickDiff)
+            effectInstance.decreaseDuration(tickDiff.toInt())
             if (effectInstance.hasExpired()) {
                 remove(effectInstance.effectType)
             }

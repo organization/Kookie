@@ -49,6 +49,7 @@ class EffectInstance @JvmOverloads constructor(
 
     init {
         color = overrideColor ?: effectType.color
+        this.duration = if (duration < 0) effectType.defaultDuration else duration // FIXME: duration should be null on PMMP (if null, fill it with default duration)
     }
 
     fun resetColor() {

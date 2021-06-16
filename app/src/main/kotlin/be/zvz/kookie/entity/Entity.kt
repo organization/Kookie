@@ -66,7 +66,8 @@ abstract class Entity @JvmOverloads constructor(var location: Location, nbt: Com
 
     protected var lastLocation: Location = Location()
 
-    protected var motion: Vector3 = Vector3(0, 0, 0)
+    var motion: Vector3 = Vector3(0, 0, 0)
+        private set
     protected var lastMotion: Vector3 = Vector3(0, 0, 0)
     protected var forceMovementUpdate: Boolean = false
 
@@ -119,14 +120,34 @@ abstract class Entity @JvmOverloads constructor(var location: Location, nbt: Com
     var scoreTag: String = ""
     var scale: Float = 1F
 
-    protected var canClimb: Boolean = false
+    var canClimb: Boolean = false
+        set(value) {
+            networkProperties.setGenericFlag(EntityMetadataFlags.CAN_CLIMB, value)
+            networkPropertiesDirty = true
+            field = value
+        }
     protected var canClimbWalls: Boolean = false
-    protected var immobile: Boolean = false
-    protected var invisible: Boolean = false
-    protected var silent: Boolean = false
+    var immobile: Boolean = false
+        set(value) {
+            networkProperties.setGenericFlag(EntityMetadataFlags.IMMOBILE, value)
+            networkPropertiesDirty = true
+            field = value
+        }
+    var invisible: Boolean = false
+        set(value) {
+            networkProperties.setGenericFlag(EntityMetadataFlags.INVISIBLE, value)
+            networkPropertiesDirty = true
+            field = value
+        }
+    var silent: Boolean = false
+        set(value) {
+            networkProperties.setGenericFlag(EntityMetadataFlags.SILENT, value)
+            networkPropertiesDirty = true
+            field = value
+        }
 
-    protected var ownerId: Long? = null
-    protected var targetId: Long? = null
+    private var ownerId: Long = -1
+    private var targetId: Long = -1
 
     abstract val entityNetworkIdentifier: EntityIds
 
@@ -216,6 +237,14 @@ abstract class Entity @JvmOverloads constructor(var location: Location, nbt: Com
         compoundTag.setFloat("FallDistance", fallDistance)
         compoundTag.setShort("Fire", fireTicks.toInt())
         compoundTag.setByte("OnGround", if (onGround) 1 else 0)
+    }
+
+    fun getOwningEntity(): Entity? {
+        TODO("Should be implemented with World")
+    }
+
+    fun getTargetEntity(): Entity? {
+        TODO("Should be implemented with world")
     }
 
     abstract fun getInitialSizeInfo(): EntitySizeInfo
