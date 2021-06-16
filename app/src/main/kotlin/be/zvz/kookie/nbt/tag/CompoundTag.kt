@@ -131,6 +131,22 @@ class CompoundTag : Tag<Map<String, Tag<*>>>() {
         setTag(name, DoubleTag(value))
     }
 
+    override fun write(writer: NbtStreamWriter) {
+        value.forEach { (name, tag) ->
+            writer.writeByte(tag.getTagType().value)
+            writer.writeString(name)
+            tag.write(writer)
+        }
+        writer.writeByte(NBT.TagType.NOTHING.value)
+    }
+
+    override fun makeCopy(): CompoundTag = CompoundTag().let {
+        it.value.forEach { (name, tag) ->
+            value[name] = tag
+        }
+        it
+    }
+
     companion object {
         @JvmStatic
         fun create(): CompoundTag {
@@ -154,21 +170,5 @@ class CompoundTag : Tag<Map<String, Tag<*>>>() {
             }
             return result
         }
-    }
-
-    override fun write(writer: NbtStreamWriter) {
-        value.forEach { (name, tag) ->
-            writer.writeByte(tag.getTagType().value)
-            writer.writeString(name)
-            tag.write(writer)
-        }
-        writer.writeByte(NBT.TagType.NOTHING.value)
-    }
-
-    override fun makeCopy(): CompoundTag = CompoundTag().let {
-        it.value.forEach { (name, tag) ->
-            value[name] = tag
-        }
-        it
     }
 }
