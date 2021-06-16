@@ -42,10 +42,7 @@ class PacketPool {
         pool[protocolIdentify.networkId.id] = packet
     }
 
-    fun getPacketByPid(pid: Int): Packet {
-        val packet = pool[pid] ?: UnknownPacket()
-        return packet.clone()
-    }
+    fun getPacketByPid(pid: Int): Packet = (pool[pid] ?: UnknownPacket()).clone()
 
     fun getPacket(buffer: String): Packet =
         getPacketByPid(PacketSerializer(buffer).getUnsignedVarInt() and DataPacket.PID_MASK)

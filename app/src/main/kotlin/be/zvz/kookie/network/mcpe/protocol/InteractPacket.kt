@@ -51,9 +51,7 @@ class InteractPacket : DataPacket(), ServerboundPacket {
         }
     }
 
-    override fun handle(handler: PacketHandlerInterface): Boolean {
-        return handler.handleInteract(this)
-    }
+    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleInteract(this)
 
     companion object {
         const val ACTION_LEAVE_VEHICLE = 3

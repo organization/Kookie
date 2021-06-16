@@ -45,9 +45,7 @@ class SetTitlePacket : DataPacket(), ClientboundPacket {
         output.putVarInt(fadeOutTime)
     }
 
-    override fun handle(handler: PacketHandlerInterface): Boolean {
-        return handler.handleSetTitle(this)
-    }
+    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleSetTitle(this)
 
     companion object {
         const val TYPE_CLEAR_TITLE = 0

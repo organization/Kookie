@@ -26,18 +26,14 @@ object Internet {
 
     @JvmStatic
     @JvmOverloads
-    fun getIP(force: Boolean = false): String {
-        if (!online) {
-            return ""
-        } else if (ip.isNotEmpty() && !force) {
-            return ip
-        }
-
-        val connection = URL("https://checkip.amazonaws.com")
-            .openConnection()
-        connection.getInputStream().use {
+    fun getIP(force: Boolean = false): String = when {
+        !online -> ""
+        ip.isNotEmpty() && !force -> ip
+        else -> run {
+            val connection = URL("https://checkip.amazonaws.com")
+                .openConnection()
             val encoding = connection.contentEncoding ?: "UTF-8"
-            return IOUtils.toString(it, encoding).trim()
+            IOUtils.toString(connection.getInputStream(), encoding).trim()
         }
     }
 }

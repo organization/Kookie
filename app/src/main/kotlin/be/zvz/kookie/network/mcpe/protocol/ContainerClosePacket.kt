@@ -36,15 +36,14 @@ class ContainerClosePacket : DataPacket(), ClientboundPacket, ServerboundPacket 
         output.putBoolean(server)
     }
 
-    override fun handle(handler: PacketHandlerInterface): Boolean {
-        return handler.handleContainerClose(this)
-    }
+    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleContainerClose(this)
 
     companion object {
         @JvmStatic
-        fun create(windowId: Int, server: Boolean): ContainerClosePacket = ContainerClosePacket().apply {
-            this.windowId = windowId
-            this.server = server
-        }
+        fun create(windowId: Int, server: Boolean) =
+            ContainerClosePacket().apply {
+                this.windowId = windowId
+                this.server = server
+            }
     }
 }

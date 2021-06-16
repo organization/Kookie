@@ -39,7 +39,5 @@ class GuiDataPickItemPacket : DataPacket(), ClientboundPacket {
         output.putLInt(hotbarSlot)
     }
 
-    override fun handle(handler: PacketHandlerInterface): Boolean {
-        return handler.handleGuiDataPickItem(this)
-    }
+    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleGuiDataPickItem(this)
 }

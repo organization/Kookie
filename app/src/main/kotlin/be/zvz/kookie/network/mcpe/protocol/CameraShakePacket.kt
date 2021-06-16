@@ -41,9 +41,8 @@ class CameraShakePacket : DataPacket(), ClientboundPacket {
         output.putByte(shakeAction)
     }
 
-    override fun handle(handler: PacketHandlerInterface): Boolean {
-        return handler.handleCameraShake(this)
-    }
+    override fun handle(handler: PacketHandlerInterface) =
+        handler.handleCameraShake(this)
 
     companion object {
         const val TYPE_POSITIONAL = 0
@@ -53,14 +52,12 @@ class CameraShakePacket : DataPacket(), ClientboundPacket {
         const val ACTION_STOP = 1
 
         @JvmStatic
-        fun create(intensity: Float, duration: Float, shakeType: Int, shakeAction: Int): CameraShakePacket {
-
-            return CameraShakePacket().apply {
+        fun create(intensity: Float, duration: Float, shakeType: Int, shakeAction: Int) =
+            CameraShakePacket().apply {
                 this.intensity = intensity
                 this.duration = duration
                 this.shakeType = shakeType
                 this.shakeAction = shakeAction
             }
-        }
     }
 }

@@ -30,9 +30,7 @@ interface IPalettedBlockArray<Block> : Cloneable {
     fun replaceAll(from: Block, to: Block)
     fun convertFrom(otherArray: IPalettedBlockArray<Block>)
     fun fastUpsize(otherArray: IPalettedBlockArray<Block>)
-    public override fun clone(): IPalettedBlockArray<*> {
-        return super.clone() as IPalettedBlockArray<*>
-    }
+    public override fun clone(): IPalettedBlockArray<*> = super.clone() as IPalettedBlockArray<*>
 
     companion object {
         const val COORD_BIT_SIZE = 4

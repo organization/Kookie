@@ -42,7 +42,7 @@ class TextPacket : DataPacket(), ClientboundPacket, ServerboundPacket {
         }
         if (type in TYPE_TRANSLATION..TYPE_JUKEBOX_POPUP) {
             message = input.getString()
-            for (i in 0 until input.getUnsignedVarInt()) {
+            repeat(input.getUnsignedVarInt()) {
                 parameters.add(input.getString())
             }
         }
@@ -70,9 +70,7 @@ class TextPacket : DataPacket(), ClientboundPacket, ServerboundPacket {
         output.putString(platformChatId)
     }
 
-    override fun handle(handler: PacketHandlerInterface): Boolean {
-        return handler.handleText(this)
-    }
+    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleText(this)
 
     companion object {
         const val TYPE_RAW = 0
@@ -87,46 +85,33 @@ class TextPacket : DataPacket(), ClientboundPacket, ServerboundPacket {
         const val TYPE_JSON_WHISPER = 9
         const val TYPE_JSON = 10
 
-        private fun messageOnly(type: Int, message: String): TextPacket = TextPacket().apply {
+        private fun messageOnly(type: Int, message: String) = TextPacket().apply {
             this.type = type
             this.message = message
         }
 
-        @JvmStatic
-        fun raw(message: String): TextPacket {
-            return messageOnly(TYPE_CHAT, message)
-        }
-
-        private fun baseTranslation(type: Int, key: String, parameters: MutableList<String>): TextPacket {
-            return messageOnly(type, key).apply {
+        private fun baseTranslation(type: Int, key: String, parameters: MutableList<String>): TextPacket =
+            messageOnly(type, key).apply {
                 this.needTranslation = true
                 this.parameters = parameters
             }
-        }
 
-        @JvmStatic
-        fun translation(key: String, parameters: MutableList<String>): TextPacket {
-            return baseTranslation(TYPE_TRANSLATION, key, parameters)
-        }
+        @JvmStatic fun raw(message: String): TextPacket =
+            messageOnly(TYPE_CHAT, message)
 
-        @JvmStatic
-        fun popup(message: String): TextPacket {
-            return messageOnly(TYPE_POPUP, message)
-        }
+        @JvmStatic fun translation(key: String, parameters: MutableList<String>): TextPacket =
+            baseTranslation(TYPE_TRANSLATION, key, parameters)
 
-        @JvmStatic
-        fun translatedPopup(key: String, parameters: MutableList<String>): TextPacket {
-            return baseTranslation(TYPE_POPUP, key, parameters)
-        }
+        @JvmStatic fun popup(message: String): TextPacket =
+            messageOnly(TYPE_POPUP, message)
 
-        @JvmStatic
-        fun jukeboxPopup(key: String, parameters: MutableList<String>): TextPacket {
-            return baseTranslation(TYPE_JUKEBOX_POPUP, key, parameters)
-        }
+        @JvmStatic fun translatedPopup(key: String, parameters: MutableList<String>): TextPacket =
+            baseTranslation(TYPE_POPUP, key, parameters)
 
-        @JvmStatic
-        fun tip(message: String): TextPacket {
-            return messageOnly(TYPE_TIP, message)
-        }
+        @JvmStatic fun jukeboxPopup(key: String, parameters: MutableList<String>): TextPacket =
+            baseTranslation(TYPE_JUKEBOX_POPUP, key, parameters)
+
+        @JvmStatic fun tip(message: String): TextPacket =
+            messageOnly(TYPE_TIP, message)
     }
 }

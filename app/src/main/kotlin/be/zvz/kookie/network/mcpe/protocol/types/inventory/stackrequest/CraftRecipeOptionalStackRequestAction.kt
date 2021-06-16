@@ -20,8 +20,10 @@ package be.zvz.kookie.network.mcpe.protocol.types.inventory.stackrequest
 import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 
 @ItemStackRequestIdentify(ItemStackRequestActionType.CRAFTING_RECIPE_OPTIONAL)
-class CraftRecipeOptionalStackRequestAction(val recipeId: Int, val filterStringIndex: Int) :
-    ItemStackRequestAction() {
+class CraftRecipeOptionalStackRequestAction(
+    val recipeId: Int,
+    val filterStringIndex: Int
+) : ItemStackRequestAction() {
 
     override fun write(out: PacketSerializer) {
         out.writeGenericTypeNetworkId(recipeId)
@@ -30,10 +32,9 @@ class CraftRecipeOptionalStackRequestAction(val recipeId: Int, val filterStringI
 
     companion object {
         @JvmStatic
-        fun read(input: PacketSerializer): CraftRecipeOptionalStackRequestAction {
-            val recipeId = input.readGenericTypeNetworkId()
-            val filterStringIndex = input.getLInt()
-            return CraftRecipeOptionalStackRequestAction(recipeId, filterStringIndex)
-        }
+        fun read(input: PacketSerializer) = CraftRecipeOptionalStackRequestAction(
+            recipeId = input.readGenericTypeNetworkId(),
+            filterStringIndex = input.getLInt()
+        )
     }
 }

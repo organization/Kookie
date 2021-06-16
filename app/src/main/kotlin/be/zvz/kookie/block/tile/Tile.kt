@@ -48,19 +48,9 @@ abstract class Tile(world: World, pos: Vector3) {
         return nbt
     }
 
-    fun getCleanedNBT(): CompoundTag? {
-        val tag = CompoundTag()
+    fun getCleanedNBT(): CompoundTag? = CompoundTag().apply(this::writeSaveData).takeIf { it.count() > 0 }
 
-        writeSaveData(tag)
-
-        return if (tag.count() > 0) tag else null
-    }
-
-    fun copyDataFromItem(item: Item) {
-        item.getCustomBlockData()?.let {
-            readSaveData(it)
-        }
-    }
+    fun copyDataFromItem(item: Item) = item.getCustomBlockData()?.let(this::readSaveData)
 
     fun getBlock(): Block = TODO("get block from world")
 

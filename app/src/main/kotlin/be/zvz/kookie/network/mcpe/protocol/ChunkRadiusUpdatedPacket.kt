@@ -32,12 +32,11 @@ class ChunkRadiusUpdatedPacket : DataPacket(), ClientboundPacket {
         output.putVarInt(radius)
     }
 
-    override fun handle(handler: PacketHandlerInterface): Boolean {
-        return handler.handleChunkRadiusUpdated(this)
-    }
+    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleChunkRadiusUpdated(this)
 
     companion object {
         @JvmStatic
-        fun create(radius: Int): ChunkRadiusUpdatedPacket = ChunkRadiusUpdatedPacket().apply { this.radius = radius }
+        fun create(radius: Int): ChunkRadiusUpdatedPacket =
+            ChunkRadiusUpdatedPacket().apply { this.radius = radius }
     }
 }

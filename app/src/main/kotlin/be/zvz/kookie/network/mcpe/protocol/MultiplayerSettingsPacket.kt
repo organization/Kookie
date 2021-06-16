@@ -24,13 +24,6 @@ import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 class MultiplayerSettingsPacket : DataPacket(), ClientboundPacket, ServerboundPacket {
     lateinit var action: Action
 
-    companion object {
-        @JvmStatic
-        fun create(action: Action): MultiplayerSettingsPacket = MultiplayerSettingsPacket().apply {
-            this.action = action
-        }
-    }
-
     override fun decodePayload(input: PacketSerializer) {
         action = Action.from(input.getVarInt())
     }
@@ -39,9 +32,7 @@ class MultiplayerSettingsPacket : DataPacket(), ClientboundPacket, ServerboundPa
         output.putVarInt(action.value)
     }
 
-    override fun handle(handler: PacketHandlerInterface): Boolean {
-        return handler.handleMultiplayerSettings(this)
-    }
+    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleMultiplayerSettings(this)
 
     enum class Action(val value: Int) {
         ENABLE_MULTIPLAYER(0),
@@ -50,8 +41,16 @@ class MultiplayerSettingsPacket : DataPacket(), ClientboundPacket, ServerboundPa
 
         companion object {
             private val VALUES = values()
+
             @JvmStatic
             fun from(value: Int) = VALUES.first { it.value == value }
+        }
+    }
+
+    companion object {
+        @JvmStatic
+        fun create(action: Action) = MultiplayerSettingsPacket().apply {
+            this.action = action
         }
     }
 }

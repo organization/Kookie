@@ -66,18 +66,6 @@ sealed class Union {
      * Union of 2 types.
      */
     sealed class U2<out A, out B> : Union() {
-        companion object {
-            /**
-             * Create a [Union.U2] using the provided value with the first type of the Union (A).
-             */
-            fun <A> ofA(a: A) = U2_1(a)
-
-            /**
-             * Create a [Union.U2] using the provided value with the second type of the Union (B).
-             */
-            fun <B> ofB(b: B) = U2_2(b)
-        }
-
         override fun rotate(): U2<B, A> = when (this) {
             is U2_1<A> -> U2_2(this.value)
             is U2_2<B> -> U2_1(this.value)
@@ -114,29 +102,24 @@ sealed class Union {
             override fun asU2(): U2<Nothing, B> = this
             override fun asInstance() = this
         }
+
+        companion object {
+            /**
+             * Create a [Union.U2] using the provided value with the first type of the Union (A).
+             */
+            fun <A> ofA(a: A) = U2_1(a)
+
+            /**
+             * Create a [Union.U2] using the provided value with the second type of the Union (B).
+             */
+            fun <B> ofB(b: B) = U2_2(b)
+        }
     }
 
     /**
      * Union of 3 types.
      */
     sealed class U3<out A, out B, out C> : Union() {
-        companion object {
-            /**
-             * Create a [Union.U3] using the provided value with the first type of the Union (A).
-             */
-            fun <A> ofA(a: A) = U3_1(a)
-
-            /**
-             * Create a [Union.U3] using the provided value with the second type of the Union (B).
-             */
-            fun <B> ofB(b: B) = U3_2(b)
-
-            /**
-             * Create a [Union.U3] using the provided value with the third type of the Union (C).
-             */
-            fun <C> ofC(c: C) = U3_3(c)
-        }
-
         override fun rotate(): U3<C, A, B> = when (this) {
             is U3_1<A> -> U3_2(this.value)
             is U3_2<B> -> U3_3(this.value)
@@ -181,34 +164,29 @@ sealed class Union {
             override fun asU2(): U2<Nothing, U2<Nothing, C>> = U2.U2_2(U2.U2_2(value))
             override fun asInstance() = this
         }
+
+        companion object {
+            /**
+             * Create a [Union.U3] using the provided value with the first type of the Union (A).
+             */
+            fun <A> ofA(a: A) = U3_1(a)
+
+            /**
+             * Create a [Union.U3] using the provided value with the second type of the Union (B).
+             */
+            fun <B> ofB(b: B) = U3_2(b)
+
+            /**
+             * Create a [Union.U3] using the provided value with the third type of the Union (C).
+             */
+            fun <C> ofC(c: C) = U3_3(c)
+        }
     }
 
     /**
      * Union of 4 types.
      */
     sealed class U4<out A, out B, out C, out D> : Union() {
-        companion object {
-            /**
-             * Create a [Union.U4] using the provided value with the first type of the Union (A).
-             */
-            fun <A> ofA(a: A) = U4_1(a)
-
-            /**
-             * Create a [Union.U4] using the provided value with the second type of the Union (B).
-             */
-            fun <B> ofB(b: B) = U4_2(b)
-
-            /**
-             * Create a [Union.U4] using the provided value with the third type of the Union (C).
-             */
-            fun <C> ofC(c: C) = U4_3(c)
-
-            /**
-             * Create a [Union.U4] using the provided value with the fourth type of the Union (D).
-             */
-            fun <D> ofD(d: D) = U4_4(d)
-        }
-
         override fun rotate(): U4<D, A, B, C> = when (this) {
             is U4_1<A> -> U4_2(this.value)
             is U4_2<B> -> U4_3(this.value)
@@ -260,6 +238,28 @@ sealed class Union {
         class U4_4<out D>(override val value: D) : U4<Nothing, Nothing, Nothing, D>(), Instance<D> {
             override fun asU2(): U2<Nothing, U3<Nothing, Nothing, D>> = U2.U2_2(U3.U3_3(value))
             override fun asInstance() = this
+        }
+
+        companion object {
+            /**
+             * Create a [Union.U4] using the provided value with the first type of the Union (A).
+             */
+            fun <A> ofA(a: A) = U4_1(a)
+
+            /**
+             * Create a [Union.U4] using the provided value with the second type of the Union (B).
+             */
+            fun <B> ofB(b: B) = U4_2(b)
+
+            /**
+             * Create a [Union.U4] using the provided value with the third type of the Union (C).
+             */
+            fun <C> ofC(c: C) = U4_3(c)
+
+            /**
+             * Create a [Union.U4] using the provided value with the fourth type of the Union (D).
+             */
+            fun <D> ofD(d: D) = U4_4(d)
         }
     }
 }

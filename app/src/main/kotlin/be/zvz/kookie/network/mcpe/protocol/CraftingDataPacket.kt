@@ -35,7 +35,7 @@ class CraftingDataPacket : DataPacket(), ClientboundPacket {
     var cleanRecipes: Boolean = false
 
     override fun decodePayload(input: PacketSerializer) {
-        for (i in 0 until input.getUnsignedVarInt()) {
+        repeat(input.getUnsignedVarInt()) {
             val type = Entry.from(input.getVarInt())
             entries.add(
                 when (type) {
@@ -51,7 +51,7 @@ class CraftingDataPacket : DataPacket(), ClientboundPacket {
                 }
             )
         }
-        for (i in 0 until input.getUnsignedVarInt()) {
+        repeat(input.getUnsignedVarInt()) {
             potionTypeRecipes.add(
                 PotionTypeRecipe(
                     inputItemId = input.getVarInt(),
@@ -63,7 +63,7 @@ class CraftingDataPacket : DataPacket(), ClientboundPacket {
                 )
             )
         }
-        for (i in 0 until input.getUnsignedVarInt()) {
+        repeat(input.getUnsignedVarInt()) {
             potionContainerRecipes.add(
                 PotionContainerChangeRecipe(
                     inputItemId = input.getVarInt(),
@@ -98,9 +98,7 @@ class CraftingDataPacket : DataPacket(), ClientboundPacket {
         output.putBoolean(cleanRecipes)
     }
 
-    override fun handle(handler: PacketHandlerInterface): Boolean {
-        return handler.handleCraftingData(this)
-    }
+    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleCraftingData(this)
 
     enum class Entry(val value: Int) {
         UNKNOWN(-1),
@@ -115,6 +113,7 @@ class CraftingDataPacket : DataPacket(), ClientboundPacket {
 
         companion object {
             private val VALUES = values()
+
             @JvmStatic
             fun from(value: Int) = VALUES.firstOrNull { it.value == value } ?: UNKNOWN
         }

@@ -24,8 +24,7 @@ class TakeStackRequestAction(
     val count: Int,
     var source: ItemStackRequestSlotInfo,
     var destination: ItemStackRequestSlotInfo
-) :
-    ItemStackRequestAction() {
+) : ItemStackRequestAction() {
 
     override fun write(out: PacketSerializer) {
         out.putByte(count)
@@ -35,11 +34,10 @@ class TakeStackRequestAction(
 
     companion object {
         @JvmStatic
-        fun read(input: PacketSerializer): TakeStackRequestAction {
-            val count = input.getByte()
-            val src = ItemStackRequestSlotInfo.read(input)
-            val dst = ItemStackRequestSlotInfo.read(input)
-            return TakeStackRequestAction(count, src, dst)
-        }
+        fun read(input: PacketSerializer) = TakeStackRequestAction(
+            count = input.getByte(),
+            source = ItemStackRequestSlotInfo.read(input),
+            destination = ItemStackRequestSlotInfo.read(input)
+        )
     }
 }

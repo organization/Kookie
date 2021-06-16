@@ -35,7 +35,5 @@ class ActorPickRequestPacket : DataPacket(), ServerboundPacket {
         output.putByte(hotbarSlot)
     }
 
-    override fun handle(handler: PacketHandlerInterface): Boolean {
-        return handler.handleActorPickRequest(this)
-    }
+    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleActorPickRequest(this)
 }

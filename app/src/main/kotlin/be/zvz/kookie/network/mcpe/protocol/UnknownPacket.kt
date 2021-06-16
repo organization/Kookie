@@ -35,7 +35,5 @@ class UnknownPacket : DataPacket(), ClientboundPacket, ServerboundPacket {
         // NO PAYLOAD
     }
 
-    override fun handle(handler: PacketHandlerInterface): Boolean {
-        return handler.handleUnknown(this)
-    }
+    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleUnknown(this)
 }

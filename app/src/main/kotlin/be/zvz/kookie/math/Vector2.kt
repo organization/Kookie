@@ -28,11 +28,7 @@ class Vector2 @JvmOverloads constructor(var x: Double = 0.0, var y: Double = 0.0
 
     override fun equals(other: Any?): Boolean = other is Vector2 && other.x == x && other.y == y
 
-    override fun hashCode(): Int {
-        var result = x.hashCode()
-        result = 31 * result + y.hashCode()
-        return result
-    }
+    override fun hashCode(): Int = x.hashCode().let { 31 * it + y.hashCode() }
 
     operator fun plus(pos: Vector2): Vector2 = Vector2(this.x + pos.x, this.y + pos.y)
     fun add(pos: Vector2): Vector2 = Vector2(this.x + pos.x, this.y + pos.y)

@@ -35,14 +35,16 @@ class ItemStackResponse(
 
     companion object {
         @JvmStatic
-        fun read(input: PacketSerializer): ItemStackResponse {
-            val result = input.getByte()
-            val requestId = input.readGenericTypeNetworkId()
-            val containerInfos = mutableListOf<ItemStackResponseContainerInfo>()
-            for (i in 0 until input.getUnsignedVarInt()) {
-                containerInfos.add(ItemStackResponseContainerInfo.read(input))
+        fun read(input: PacketSerializer) = ItemStackResponse(
+            result = input.getByte(),
+            requestId = input.readGenericTypeNetworkId(),
+            containerInfos = run {
+                val list = mutableListOf<ItemStackResponseContainerInfo>()
+                repeat(input.getUnsignedVarInt()) {
+                    list.add(ItemStackResponseContainerInfo.read(input))
+                }
+                list
             }
-            return ItemStackResponse(result, requestId, containerInfos)
-        }
+        )
     }
 }

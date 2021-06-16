@@ -40,7 +40,5 @@ class AddVolumeEntityPacket : DataPacket(), ClientboundPacket {
         output.put(NetworkNbtSerializer().write(TreeRoot(data)))
     }
 
-    override fun handle(handler: PacketHandlerInterface): Boolean {
-        return handler.handleAddVolumeEntity(this)
-    }
+    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleAddVolumeEntity(this)
 }

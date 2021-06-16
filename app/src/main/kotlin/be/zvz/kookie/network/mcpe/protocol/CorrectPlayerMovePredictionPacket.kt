@@ -43,9 +43,7 @@ class CorrectPlayerMovePredictionPacket : DataPacket(), ClientboundPacket {
         output.putUnsignedVarLong(tick)
     }
 
-    override fun handle(handler: PacketHandlerInterface): Boolean {
-        return handler.handleCorrectPlayerMovePrediction(this)
-    }
+    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleCorrectPlayerMovePrediction(this)
 
     companion object {
         @JvmStatic
@@ -54,12 +52,11 @@ class CorrectPlayerMovePredictionPacket : DataPacket(), ClientboundPacket {
             delta: Vector3,
             onGround: Boolean,
             tick: Long
-        ): CorrectPlayerMovePredictionPacket =
-            CorrectPlayerMovePredictionPacket().apply {
-                this.position = position
-                this.delta = delta
-                this.onGround = onGround
-                this.tick = tick
-            }
+        ) = CorrectPlayerMovePredictionPacket().apply {
+            this.position = position
+            this.delta = delta
+            this.onGround = onGround
+            this.tick = tick
+        }
     }
 }

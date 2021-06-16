@@ -33,7 +33,5 @@ class SetHealthPacket : DataPacket(), ClientboundPacket {
         output.putVarInt(health)
     }
 
-    override fun handle(handler: PacketHandlerInterface): Boolean {
-        return handler.handleSetHealth(this)
-    }
+    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleSetHealth(this)
 }

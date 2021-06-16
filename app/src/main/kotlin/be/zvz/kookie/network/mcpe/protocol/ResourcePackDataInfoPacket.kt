@@ -32,23 +32,6 @@ class ResourcePackDataInfoPacket : DataPacket(), ClientboundPacket {
     var isPremium: Boolean = false
     var packType: ResourcePackType = ResourcePackType.RESOURCES // TODO: check the values for this
 
-    companion object {
-        @JvmStatic
-        fun create(
-            packId: String,
-            maxChunkSize: Int,
-            chunkCount: Int,
-            compressedPackSize: Long,
-            sha256sum: String
-        ): ResourcePackDataInfoPacket = ResourcePackDataInfoPacket().apply {
-            this.packId = packId
-            this.maxChunkSize = maxChunkSize
-            this.chunkCount = chunkCount
-            this.compressedPackSize = compressedPackSize
-            this.sha256 = sha256sum
-        }
-    }
-
     override fun decodePayload(input: PacketSerializer) {
         packId = input.getString()
         maxChunkSize = input.getLInt()
@@ -70,4 +53,21 @@ class ResourcePackDataInfoPacket : DataPacket(), ClientboundPacket {
     }
 
     override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleResourcePackDataInfo(this)
+
+    companion object {
+        @JvmStatic
+        fun create(
+            packId: String,
+            maxChunkSize: Int,
+            chunkCount: Int,
+            compressedPackSize: Long,
+            sha256sum: String
+        ): ResourcePackDataInfoPacket = ResourcePackDataInfoPacket().apply {
+            this.packId = packId
+            this.maxChunkSize = maxChunkSize
+            this.chunkCount = chunkCount
+            this.compressedPackSize = compressedPackSize
+            this.sha256 = sha256sum
+        }
+    }
 }

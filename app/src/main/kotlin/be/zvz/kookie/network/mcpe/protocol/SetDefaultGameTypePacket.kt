@@ -33,9 +33,7 @@ class SetDefaultGameTypePacket : DataPacket(), ClientboundPacket, ServerboundPac
         output.putUnsignedVarInt(gamemode)
     }
 
-    override fun handle(handler: PacketHandlerInterface): Boolean {
-        return handler.handleSetDefaultGameType(this)
-    }
+    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleSetDefaultGameType(this)
 
     companion object {
         @JvmStatic

@@ -39,7 +39,6 @@ class ChangeDimensionPacket : DataPacket(), ClientboundPacket {
         output.putBoolean(respawn)
     }
 
-    override fun handle(handler: PacketHandlerInterface): Boolean {
-        return handler.handleChangeDimension(this)
-    }
+    override fun handle(handler: PacketHandlerInterface) =
+        handler.handleChangeDimension(this)
 }

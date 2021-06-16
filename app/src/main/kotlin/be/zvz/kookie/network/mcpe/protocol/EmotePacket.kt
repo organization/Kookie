@@ -39,15 +39,13 @@ class EmotePacket : DataPacket(), ClientboundPacket, ServerboundPacket {
         output.putByte(flags)
     }
 
-    override fun handle(handler: PacketHandlerInterface): Boolean {
-        return handler.handleEmote(this)
-    }
+    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleEmote(this)
 
     companion object {
         const val FLAG_SERVER = 1 shl 0
 
         @JvmStatic
-        fun create(entityRuntimeId: Long, emoteId: String, flags: Int): EmotePacket =
+        fun create(entityRuntimeId: Long, emoteId: String, flags: Int) =
             EmotePacket().apply {
                 this.entityRuntimeId = entityRuntimeId
                 this.emoteId = emoteId

@@ -50,7 +50,7 @@ class AddActorPacket : DataPacket(), ClientboundPacket {
         yaw = input.getLFloat()
         headYaw = input.getLFloat()
 
-        for (i in 0 until input.getUnsignedVarInt()) {
+        repeat(input.getUnsignedVarInt()) {
             val id = input.getString()
             val min = input.getLFloat()
             val current = input.getLFloat()
@@ -58,7 +58,7 @@ class AddActorPacket : DataPacket(), ClientboundPacket {
             attributes.add(NetworkAttribute(id, min, max, current, current))
         }
         metadata = input.getEntityMetadataProperty()
-        for (i in 0 until input.getUnsignedVarInt()) {
+        repeat(input.getUnsignedVarInt()) {
             links.add(input.getEntityLink())
         }
     }
@@ -88,7 +88,5 @@ class AddActorPacket : DataPacket(), ClientboundPacket {
         }
     }
 
-    override fun handle(handler: PacketHandlerInterface): Boolean {
-        return handler.handleAddActor(this)
-    }
+    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleAddActor(this)
 }

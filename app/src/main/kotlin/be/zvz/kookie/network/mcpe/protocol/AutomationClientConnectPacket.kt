@@ -32,7 +32,5 @@ class AutomationClientConnectPacket : DataPacket(), ClientboundPacket {
         output.putString(serverUri)
     }
 
-    override fun handle(handler: PacketHandlerInterface): Boolean {
-        return handler.handleAutomationClientConnect(this)
-    }
+    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleAutomationClientConnect(this)
 }

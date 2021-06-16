@@ -72,20 +72,15 @@ class ClientboundDebugRendererPacket : DataPacket(), ClientboundPacket {
         }
     }
 
-    override fun handle(handler: PacketHandlerInterface): Boolean {
-        return handler.handleClientboundDebugRenderer(this)
-    }
+    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleClientboundDebugRenderer(this)
 
     companion object {
         const val TYPE_CLEAR = 1
         const val TYPE_ADD_CUBE = 2
 
         @JvmStatic
-        fun base(type: Int): ClientboundDebugRendererPacket {
-
-            return ClientboundDebugRendererPacket().apply {
-                this.type = type
-            }
+        fun base(type: Int) = ClientboundDebugRendererPacket().apply {
+            this.type = type
         }
 
         @JvmStatic
@@ -100,9 +95,8 @@ class ClientboundDebugRendererPacket : DataPacket(), ClientboundPacket {
             blue: Float,
             alpha: Float,
             durationMillis: Long,
-        ): ClientboundDebugRendererPacket {
-
-            return base(TYPE_ADD_CUBE).apply {
+        ): ClientboundDebugRendererPacket =
+            base(TYPE_ADD_CUBE).apply {
                 this.text = text
                 this.position = position
                 this.red = red
@@ -111,6 +105,5 @@ class ClientboundDebugRendererPacket : DataPacket(), ClientboundPacket {
                 this.alpha = alpha
                 this.durationMillis = durationMillis
             }
-        }
     }
 }

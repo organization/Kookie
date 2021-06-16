@@ -40,7 +40,5 @@ class CommandRequestPacket : DataPacket(), ServerboundPacket {
         output.putBoolean(isInternal)
     }
 
-    override fun handle(handler: PacketHandlerInterface): Boolean {
-        return handler.handleCommandRequest(this)
-    }
+    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleCommandRequest(this)
 }

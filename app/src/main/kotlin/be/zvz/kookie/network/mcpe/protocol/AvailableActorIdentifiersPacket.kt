@@ -34,13 +34,11 @@ class AvailableActorIdentifiersPacket : DataPacket(), ClientboundPacket {
         output.put(identifiers.encodedNbt)
     }
 
-    override fun handle(handler: PacketHandlerInterface): Boolean {
-        return handler.handleAvailableActorIdentifiers(this)
-    }
+    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleAvailableActorIdentifiers(this)
 
     companion object {
         @JvmStatic
-        fun create(nbt: CacheableNbt): AvailableActorIdentifiersPacket = AvailableActorIdentifiersPacket().apply {
+        fun create(nbt: CacheableNbt) = AvailableActorIdentifiersPacket().apply {
             this.identifiers = nbt
         }
     }

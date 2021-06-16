@@ -33,13 +33,9 @@ class PlayStatusPacket : DataPacket(), ClientboundPacket {
         output.putInt(status.state)
     }
 
-    override fun handle(handler: PacketHandlerInterface): Boolean {
-        return handler.handlePlayStatus(this)
-    }
+    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handlePlayStatus(this)
 
-    override fun canBeSentBeforeLogin(): Boolean {
-        return true
-    }
+    override fun canBeSentBeforeLogin(): Boolean = true
 
     enum class PlayStatus(val state: Int) {
         LOGIN_SUCCESS(0),
@@ -53,6 +49,7 @@ class PlayStatusPacket : DataPacket(), ClientboundPacket {
 
         companion object {
             private val VALUES = values()
+
             @JvmStatic
             fun from(value: Int) = VALUES.first { it.state == value }
         }
@@ -60,7 +57,7 @@ class PlayStatusPacket : DataPacket(), ClientboundPacket {
 
     companion object {
         @JvmStatic
-        fun create(status: PlayStatus): PlayStatusPacket = PlayStatusPacket().apply {
+        fun create(status: PlayStatus) = PlayStatusPacket().apply {
             this.status = status
         }
     }

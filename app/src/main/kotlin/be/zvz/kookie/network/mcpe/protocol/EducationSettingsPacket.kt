@@ -50,9 +50,7 @@ class EducationSettingsPacket : DataPacket(), ClientboundPacket {
         output.putBoolean(hasQuiz)
     }
 
-    override fun handle(handler: PacketHandlerInterface): Boolean {
-        return handler.handleEducationSettings(this)
-    }
+    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleEducationSettings(this)
 
     companion object {
         @JvmStatic
@@ -62,7 +60,7 @@ class EducationSettingsPacket : DataPacket(), ClientboundPacket {
             canResizeCodeBuilder: Boolean,
             codeBuilderOverrideUri: String?,
             hasQuiz: Boolean
-        ): EducationSettingsPacket = EducationSettingsPacket().apply {
+        ) = EducationSettingsPacket().apply {
             this.codeBuilderDefaultUri = codeBuilderDefaultUri
             this.codeBuilderTitle = codeBuilderTitle
             this.canResizeCodeBuilder = canResizeCodeBuilder

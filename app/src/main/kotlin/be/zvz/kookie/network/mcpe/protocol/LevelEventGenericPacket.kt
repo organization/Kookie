@@ -38,9 +38,7 @@ class LevelEventGenericPacket : DataPacket(), ClientboundPacket {
         output.put(eventData.encodedNbt)
     }
 
-    override fun handle(handler: PacketHandlerInterface): Boolean {
-        return handler.handleLevelEventGeneric(this)
-    }
+    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleLevelEventGeneric(this)
 
     companion object {
         @JvmStatic

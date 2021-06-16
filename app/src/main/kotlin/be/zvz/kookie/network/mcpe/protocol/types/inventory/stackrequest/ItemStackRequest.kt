@@ -77,12 +77,11 @@ class ItemStackRequest(
         fun read(input: PacketSerializer): ItemStackRequest {
             val requestId = input.readGenericTypeNetworkId()
             val actions = mutableListOf<ItemStackRequestAction>()
-            for (i in 0 until input.getUnsignedVarInt()) {
-                val typeId = input.getByte()
-                actions.add(readAction(input, typeId))
+            repeat(input.getUnsignedVarInt()) {
+                actions.add(readAction(input, typeId = input.getByte()))
             }
             val filterStrings = mutableListOf<String>()
-            for (i in 0 until input.getUnsignedVarInt()) {
+            repeat(input.getUnsignedVarInt()) {
                 filterStrings.add(input.getString())
             }
             return ItemStackRequest(requestId, actions, filterStrings)

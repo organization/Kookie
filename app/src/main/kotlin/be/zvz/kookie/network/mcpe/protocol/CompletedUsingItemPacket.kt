@@ -36,9 +36,7 @@ class CompletedUsingItemPacket : DataPacket(), ClientboundPacket {
         output.putLInt(action)
     }
 
-    override fun handle(handler: PacketHandlerInterface): Boolean {
-        return handler.handleCompletedUsingItem(this)
-    }
+    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleCompletedUsingItem(this)
 
     enum class Action(val action: Int) {
         UNKNOWN(-1),

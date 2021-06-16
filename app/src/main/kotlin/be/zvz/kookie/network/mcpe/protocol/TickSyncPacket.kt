@@ -36,7 +36,5 @@ class TickSyncPacket : DataPacket(), ClientboundPacket, ServerboundPacket {
         output.putLLong(serverReceiveTime)
     }
 
-    override fun handle(handler: PacketHandlerInterface): Boolean {
-        return handler.handleTickSync(this)
-    }
+    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleTickSync(this)
 }

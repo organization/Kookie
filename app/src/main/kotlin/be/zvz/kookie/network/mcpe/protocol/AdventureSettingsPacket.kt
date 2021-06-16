@@ -63,9 +63,7 @@ class AdventureSettingsPacket : DataPacket(), ClientboundPacket, ServerboundPack
         }
     }
 
-    override fun handle(handler: PacketHandlerInterface): Boolean {
-        return handler.handleAdventureSettings(this)
-    }
+    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleAdventureSettings(this)
 
     companion object {
         const val PERMISSION_NORMAL = 0

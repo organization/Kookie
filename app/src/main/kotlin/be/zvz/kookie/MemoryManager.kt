@@ -36,18 +36,14 @@ class MemoryManager(private val server: Server) {
 
     fun canUseChunkCache(): Boolean = !lowMemory || !lowMemDisableChunkCache
 
-    fun getViewDistance(distance: Int): Int {
-        return 0
-    }
+    fun getViewDistance(distance: Int): Int = 0
 
     @JvmOverloads
     fun trigger(memory: Int, limit: Int, global: Boolean = false, triggerCount: Int = 0) {}
 
     fun check() {}
 
-    fun triggerGarbageCollector(): Int {
-        return 0
-    }
+    fun triggerGarbageCollector(): Int = 0
 
     fun dumpServerMemory(outputFolder: String, maxNesting: Int, maxStringSize: Int) {}
 

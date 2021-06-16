@@ -39,15 +39,17 @@ class Experiments(
 
     companion object {
         @JvmStatic
-        fun read(input: PacketSerializer): Experiments {
-            val experiments: MutableMap<String, Boolean> = HashObjObjMaps.newMutableMap()
-            for (i in 0 until input.getLInt()) {
-                val experimentName = input.getString()
-                val enabled = input.getBoolean()
-                experiments[experimentName] = enabled
-            }
-            val hasPreviouslyUsedExperiments = input.getBoolean()
-            return Experiments(experiments, hasPreviouslyUsedExperiments)
-        }
+        fun read(input: PacketSerializer) = Experiments(
+            experiments = run {
+                val experiments: MutableMap<String, Boolean> = HashObjObjMaps.newMutableMap()
+                repeat(input.getLInt()) {
+                    val experimentName = input.getString()
+                    val enabled = input.getBoolean()
+                    experiments[experimentName] = enabled
+                }
+                experiments
+            },
+            hasPreviouslyUsedExperiments = input.getBoolean()
+        )
     }
 }

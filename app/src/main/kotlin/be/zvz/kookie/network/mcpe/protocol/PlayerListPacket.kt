@@ -30,7 +30,7 @@ class PlayerListPacket : DataPacket(), ClientboundPacket {
     override fun decodePayload(input: PacketSerializer) {
         type = input.getByte()
         entries = mutableListOf<PlayerListEntry>().apply {
-            for (i in 0 until input.getUnsignedVarInt()) {
+            repeat(input.getUnsignedVarInt()) {
                 val entry = PlayerListEntry()
 
                 if (type == TYPE_ADD) {
@@ -83,9 +83,7 @@ class PlayerListPacket : DataPacket(), ClientboundPacket {
         }
     }
 
-    override fun handle(handler: PacketHandlerInterface): Boolean {
-        return handler.handlePlayerList(this)
-    }
+    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handlePlayerList(this)
 
     companion object {
         const val TYPE_ADD = 0

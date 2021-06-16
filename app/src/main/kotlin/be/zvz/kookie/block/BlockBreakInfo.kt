@@ -61,14 +61,12 @@ class BlockBreakInfo @JvmOverloads constructor(
     companion object {
         @JvmStatic
         @JvmOverloads
-        fun instant(toolType: BlockToolType = BlockToolType.NONE, toolHarvestLevel: Int = 0): BlockBreakInfo {
-            return BlockBreakInfo(0f, toolType, toolHarvestLevel, 0f)
-        }
+        fun instant(toolType: BlockToolType = BlockToolType.NONE, toolHarvestLevel: Int = 0): BlockBreakInfo =
+            BlockBreakInfo(0f, toolType, toolHarvestLevel, 0f)
 
         @JvmStatic
         @JvmOverloads
-        fun indestructible(blastResistance: Float = 18000000f): BlockBreakInfo {
-            return BlockBreakInfo(-1f, BlockToolType.NONE, 0, blastResistance)
-        }
+        fun indestructible(blastResistance: Float = 18000000f): BlockBreakInfo =
+            BlockBreakInfo(-1f, BlockToolType.NONE, 0, blastResistance)
     }
 }

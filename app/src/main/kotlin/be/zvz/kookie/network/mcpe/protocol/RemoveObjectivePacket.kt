@@ -32,7 +32,5 @@ class RemoveObjectivePacket : DataPacket(), ClientboundPacket {
         output.putString(objectiveName)
     }
 
-    override fun handle(handler: PacketHandlerInterface): Boolean {
-        return handler.handleRemoveObjective(this)
-    }
+    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleRemoveObjective(this)
 }

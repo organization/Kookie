@@ -19,7 +19,11 @@ package be.zvz.kookie.network.mcpe.protocol.types.inventory.stackrequest
 
 import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 
-class ItemStackRequestSlotInfo(val containerId: Int, val slotId: Int, val stackId: Int) {
+class ItemStackRequestSlotInfo(
+    val containerId: Int,
+    val slotId: Int,
+    val stackId: Int
+) {
 
     fun write(out: PacketSerializer) {
         out.putByte(containerId)
@@ -29,11 +33,10 @@ class ItemStackRequestSlotInfo(val containerId: Int, val slotId: Int, val stackI
 
     companion object {
         @JvmStatic
-        fun read(input: PacketSerializer): ItemStackRequestSlotInfo {
-            val containerId = input.getByte()
-            val slotId = input.getByte()
-            val stackId = input.readGenericTypeNetworkId()
-            return ItemStackRequestSlotInfo(containerId, slotId, stackId)
-        }
+        fun read(input: PacketSerializer) = ItemStackRequestSlotInfo(
+            containerId = input.getByte(),
+            slotId = input.getByte(),
+            stackId = input.readGenericTypeNetworkId()
+        )
     }
 }

@@ -36,7 +36,5 @@ class ServerSettingsResponsePacket : DataPacket(), ClientboundPacket {
         output.putString(formData)
     }
 
-    override fun handle(handler: PacketHandlerInterface): Boolean {
-        return handler.handleServerSettingsResponse(this)
-    }
+    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleServerSettingsResponse(this)
 }

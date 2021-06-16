@@ -42,7 +42,5 @@ class LecternUpdatePacket : DataPacket(), ServerboundPacket {
         output.putBoolean(dropBook)
     }
 
-    override fun handle(handler: PacketHandlerInterface): Boolean {
-        return handler.handleLecternUpdate(this)
-    }
+    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleLecternUpdate(this)
 }

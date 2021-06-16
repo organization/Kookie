@@ -33,13 +33,11 @@ class SetTimePacket : DataPacket(), ClientboundPacket {
         output.putVarInt(time)
     }
 
-    override fun handle(handler: PacketHandlerInterface): Boolean {
-        return handler.handleSetTime(this)
-    }
+    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleSetTime(this)
 
     companion object {
         @JvmStatic
-        fun create(time: Int): SetTimePacket = SetTimePacket().apply {
+        fun create(time: Int) = SetTimePacket().apply {
             this.time = time and 0xffffffff.toInt()
         }
     }

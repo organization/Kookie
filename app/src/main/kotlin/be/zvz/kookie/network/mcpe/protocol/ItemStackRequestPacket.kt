@@ -27,7 +27,7 @@ class ItemStackRequestPacket : DataPacket(), ServerboundPacket {
 
     override fun decodePayload(input: PacketSerializer) {
         requests.clear()
-        for (i in 0 until input.getUnsignedVarInt()) {
+        repeat(input.getUnsignedVarInt()) {
             requests.add(ItemStackRequest.read(input))
         }
     }
@@ -39,9 +39,7 @@ class ItemStackRequestPacket : DataPacket(), ServerboundPacket {
         }
     }
 
-    override fun handle(handler: PacketHandlerInterface): Boolean {
-        return handler.handleItemStackRequest(this)
-    }
+    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleItemStackRequest(this)
 
     companion object {
         @JvmStatic

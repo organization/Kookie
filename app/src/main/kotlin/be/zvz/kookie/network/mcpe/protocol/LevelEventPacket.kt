@@ -39,9 +39,7 @@ class LevelEventPacket : DataPacket(), ClientboundPacket {
         output.putVarInt(data)
     }
 
-    override fun handle(handler: PacketHandlerInterface): Boolean {
-        return handler.handleLevelEvent(this)
-    }
+    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleLevelEvent(this)
 
     companion object {
         const val EVENT_SOUND_CLICK = 1000
