@@ -290,7 +290,7 @@ abstract class Living(location: Location) : Entity(location) {
     fun getArmorPoints(): Int {
         var total = 0
         armorInventory.getContents().values.forEach { item ->
-            total += item.getDefensePoints()
+            // total += item.getDefensePoints()
         }
         return total
     }

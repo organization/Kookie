@@ -67,7 +67,7 @@ abstract class Entity @JvmOverloads constructor(var location: Location, nbt: Com
     protected var lastLocation: Location = Location()
 
     var motion: Vector3 = Vector3(0, 0, 0)
-        private set
+        protected set
     protected var lastMotion: Vector3 = Vector3(0, 0, 0)
     protected var forceMovementUpdate: Boolean = false
 
