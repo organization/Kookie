@@ -26,13 +26,15 @@ data class EffectManager(val entity: Living) {
 
     protected var effects: MutableMap<Int, EffectInstance> = HashIntObjMaps.newMutableMap()
 
-    protected var bubbleColor: Color = Color(0, 0, 0, 0)
+    var bubbleColor: Color = Color(0, 0, 0, 0)
+        private set
 
-    protected var onlyAmbientEffects: Boolean = false
+    var onlyAmbientEffects: Boolean = false
+        private set
 
-    val effectAddHooks: MutableList<(instance: EffectInstance, replaceOldEffect: Boolean) -> Unit> = mutableListOf()
+    var effectAddHooks: MutableList<(instance: EffectInstance, replaceOldEffect: Boolean) -> Unit> = mutableListOf()
 
-    val effectRemoveHooks: MutableList<(instance: EffectInstance) -> Unit> = mutableListOf()
+    var effectRemoveHooks: MutableList<(instance: EffectInstance) -> Unit> = mutableListOf()
 
     fun all(): MutableMap<Int, EffectInstance> = effects
 

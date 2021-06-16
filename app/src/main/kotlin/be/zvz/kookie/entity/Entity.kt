@@ -74,7 +74,7 @@ abstract class Entity @JvmOverloads constructor(var location: Location, nbt: Com
     var boundingBox: AxisAlignedBB
     var onGround: Boolean = false
 
-    private lateinit var size: EntitySizeInfo
+    lateinit var size: EntitySizeInfo
 
     private var health: Float = 20F
     open var maxHealth: Int = 20
@@ -336,7 +336,7 @@ abstract class Entity @JvmOverloads constructor(var location: Location, nbt: Com
         return networkProperties.getDirty()
     }
 
-    fun syncNetworkData(properties: EntityMetadataCollection) {
+    open fun syncNetworkData(properties: EntityMetadataCollection) {
         properties.setByte(EntityMetadataProperties.ALWAYS_SHOW_NAMETAG, if (alwaysShowNameTag) 1 else 0)
         properties.setFloat(EntityMetadataProperties.BOUNDING_BOX_HEIGHT, size.height)
         properties.setFloat(EntityMetadataProperties.BOUNDING_BOX_WIDTH, size.width)
