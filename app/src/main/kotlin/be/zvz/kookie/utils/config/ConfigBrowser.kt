@@ -52,6 +52,16 @@ abstract class ConfigBrowser protected constructor(private val node: JsonNode?) 
      */
     val isNull: Boolean get() = node == null || node.isNull
 
+    /**
+     * @return True if the value represents a list.
+     */
+    val isList: Boolean get() = node is ArrayNode
+
+    /**
+     * @return True if the value represents a map.
+     */
+    val isMap: Boolean get() = node is ObjectNode
+
     abstract fun create(node: JsonNode?): ConfigBrowser
 
     /**
@@ -77,16 +87,6 @@ abstract class ConfigBrowser protected constructor(private val node: JsonNode?) 
 
     @Throws(IllegalArgumentException::class)
     fun <K, V> toMap(): Map<K, V> = mapper.convertValue(node, object : TypeReference<Map<K, V>>() {})
-
-    /**
-     * @return True if the value represents a list.
-     */
-    val isList: Boolean get() = node is ArrayNode
-
-    /**
-     * @return True if the value represents a map.
-     */
-    val isMap: Boolean get() = node is ObjectNode
 
     /**
      * Get an element at an index for a list value

@@ -25,6 +25,13 @@ class ShapelessRecipe(
     recipeNetId
 ) {
 
+    override fun encodeInputs(output: PacketSerializer) {
+        output.putUnsignedVarInt(inputs.size)
+        inputs.forEach {
+            output.putRecipeIngredient(it)
+        }
+    }
+
     companion object {
         @JvmStatic
         fun decode(type: CraftingDataPacket.Entry, input: PacketSerializer): ShapelessRecipe =
@@ -35,13 +42,6 @@ class ShapelessRecipe(
             repeat(input.getUnsignedVarInt()) {
                 add(input.getRecipeIngredient())
             }
-        }
-    }
-
-    override fun encodeInputs(output: PacketSerializer) {
-        output.putUnsignedVarInt(inputs.size)
-        inputs.forEach {
-            output.putRecipeIngredient(it)
         }
     }
 }

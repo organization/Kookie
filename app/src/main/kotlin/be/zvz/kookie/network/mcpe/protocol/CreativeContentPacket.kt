@@ -26,14 +26,6 @@ class CreativeContentPacket : DataPacket(), ClientboundPacket {
     lateinit var entries: List<CreativeContentEntry>
         private set
 
-    companion object {
-        @JvmStatic
-        fun create(entries: List<CreativeContentEntry>) =
-            CreativeContentPacket().apply {
-                this.entries = entries
-            }
-    }
-
     override fun decodePayload(input: PacketSerializer) {
         entries = mutableListOf<CreativeContentEntry>().apply {
             repeat(input.getUnsignedVarInt()) {
@@ -50,4 +42,12 @@ class CreativeContentPacket : DataPacket(), ClientboundPacket {
     }
 
     override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleCreativeContent(this)
+
+    companion object {
+        @JvmStatic
+        fun create(entries: List<CreativeContentEntry>) =
+            CreativeContentPacket().apply {
+                this.entries = entries
+            }
+    }
 }

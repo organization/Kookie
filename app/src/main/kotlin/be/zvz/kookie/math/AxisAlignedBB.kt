@@ -29,9 +29,6 @@ class AxisAlignedBB constructor(
     var maxY: Double,
     var maxZ: Double
 ) {
-    constructor(minX: Int, minY: Int, minZ: Int, maxX: Int, maxY: Int, maxZ: Int) :
-        this(minX.toDouble(), minY.toDouble(), minZ.toDouble(), maxX.toDouble(), maxY.toDouble(), maxZ.toDouble())
-
     init {
         if (minX > maxX) {
             throw IllegalArgumentException("minX minX is larger than maxX maxX")
@@ -43,6 +40,9 @@ class AxisAlignedBB constructor(
             throw IllegalArgumentException("minZ minZ is larger than maxZ maxZ")
         }
     }
+
+    constructor(minX: Int, minY: Int, minZ: Int, maxX: Int, maxY: Int, maxZ: Int) :
+        this(minX.toDouble(), minY.toDouble(), minZ.toDouble(), maxX.toDouble(), maxY.toDouble(), maxZ.toDouble())
 
     fun clone(): AxisAlignedBB = AxisAlignedBB(minX, minY, minZ, maxX, maxY, maxZ)
 

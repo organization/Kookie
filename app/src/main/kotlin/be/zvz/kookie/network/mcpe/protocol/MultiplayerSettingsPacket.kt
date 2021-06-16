@@ -24,13 +24,6 @@ import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 class MultiplayerSettingsPacket : DataPacket(), ClientboundPacket, ServerboundPacket {
     lateinit var action: Action
 
-    companion object {
-        @JvmStatic
-        fun create(action: Action) = MultiplayerSettingsPacket().apply {
-            this.action = action
-        }
-    }
-
     override fun decodePayload(input: PacketSerializer) {
         action = Action.from(input.getVarInt())
     }
@@ -51,6 +44,13 @@ class MultiplayerSettingsPacket : DataPacket(), ClientboundPacket, ServerboundPa
 
             @JvmStatic
             fun from(value: Int) = VALUES.first { it.value == value }
+        }
+    }
+
+    companion object {
+        @JvmStatic
+        fun create(action: Action) = MultiplayerSettingsPacket().apply {
+            this.action = action
         }
     }
 }

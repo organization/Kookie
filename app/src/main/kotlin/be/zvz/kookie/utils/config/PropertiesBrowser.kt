@@ -22,9 +22,9 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.dataformat.javaprop.JavaPropsFactory
 
 class PropertiesBrowser private constructor(node: JsonNode?) : ConfigBrowser(node) {
-    internal constructor() : this(staticMapper.createObjectNode())
-
     override val mapper = staticMapper
+
+    internal constructor() : this(staticMapper.createObjectNode())
 
     override fun create(node: JsonNode?): ConfigBrowser = PropertiesBrowser(node)
 

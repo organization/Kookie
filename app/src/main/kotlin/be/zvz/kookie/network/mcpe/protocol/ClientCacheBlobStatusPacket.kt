@@ -26,15 +26,6 @@ class ClientCacheBlobStatusPacket : DataPacket(), ServerboundPacket {
     lateinit var hitHashes: MutableList<Long>
     lateinit var missHashes: MutableList<Long>
 
-    companion object {
-        @JvmStatic
-        fun create(hitHashes: List<Long>, missHashes: List<Long>) =
-            ClientCacheBlobStatusPacket().apply {
-                this.hitHashes = hitHashes.toMutableList()
-                this.missHashes = missHashes.toMutableList()
-            }
-    }
-
     override fun decodePayload(input: PacketSerializer) {
         val missCount = input.getUnsignedVarInt()
         val hitCount = input.getUnsignedVarInt()
@@ -54,4 +45,13 @@ class ClientCacheBlobStatusPacket : DataPacket(), ServerboundPacket {
     }
 
     override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleClientCacheBlobStatus(this)
+
+    companion object {
+        @JvmStatic
+        fun create(hitHashes: List<Long>, missHashes: List<Long>) =
+            ClientCacheBlobStatusPacket().apply {
+                this.hitHashes = hitHashes.toMutableList()
+                this.missHashes = missHashes.toMutableList()
+            }
+    }
 }
