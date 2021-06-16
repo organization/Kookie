@@ -27,7 +27,7 @@ class ModalFormRequestPacket : DataPacket(), ClientboundPacket {
 
     companion object {
         @JvmStatic
-        fun create(formId: Int, formData: String): ModalFormRequestPacket = ModalFormRequestPacket().apply {
+        fun create(formId: Int, formData: String) = ModalFormRequestPacket().apply {
             this.formId = formId
             this.formData = formData
         }
@@ -43,7 +43,5 @@ class ModalFormRequestPacket : DataPacket(), ClientboundPacket {
         output.putString(formData)
     }
 
-    override fun handle(handler: PacketHandlerInterface): Boolean {
-        return handler.handleModalFormRequest(this)
-    }
+    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleModalFormRequest(this)
 }

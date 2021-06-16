@@ -23,13 +23,11 @@ import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.ObjectMapper
 
 class JsonBrowser private constructor(node: JsonNode?) : ConfigBrowser(node) {
-    internal constructor() : this(staticMapper.createObjectNode())
-
     override val mapper = staticMapper
 
-    override fun create(node: JsonNode?): ConfigBrowser {
-        return JsonBrowser(node)
-    }
+    internal constructor() : this(staticMapper.createObjectNode())
+
+    override fun create(node: JsonNode?): ConfigBrowser = JsonBrowser(node)
 
     companion object {
         private val staticMapper = ObjectMapper(

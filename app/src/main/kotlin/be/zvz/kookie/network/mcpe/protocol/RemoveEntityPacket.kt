@@ -24,15 +24,6 @@ import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 class RemoveEntityPacket : DataPacket(), ClientboundPacket {
     var uvarInt1: Int = 0
 
-    companion object {
-        @JvmStatic
-        fun create(uvarInt1: Int): RemoveEntityPacket {
-            return RemoveEntityPacket().apply {
-                this.uvarInt1 = uvarInt1
-            }
-        }
-    }
-
     override fun decodePayload(input: PacketSerializer) {
         uvarInt1 = input.getUnsignedVarInt()
     }
@@ -42,4 +33,13 @@ class RemoveEntityPacket : DataPacket(), ClientboundPacket {
     }
 
     override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleRemoveEntity(this)
+
+    companion object {
+        @JvmStatic
+        fun create(uvarInt1: Int): RemoveEntityPacket {
+            return RemoveEntityPacket().apply {
+                this.uvarInt1 = uvarInt1
+            }
+        }
+    }
 }

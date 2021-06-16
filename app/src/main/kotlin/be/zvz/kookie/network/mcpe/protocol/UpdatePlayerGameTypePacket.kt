@@ -36,16 +36,13 @@ class UpdatePlayerGameTypePacket : DataPacket(), ClientboundPacket {
         output.putEntityUniqueId(playerEntityUniqueId)
     }
 
-    override fun handle(handler: PacketHandlerInterface): Boolean {
-        return handler.handleUpdatePlayerGameType(this)
-    }
+    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleUpdatePlayerGameType(this)
 
     companion object {
         @JvmStatic
-        fun create(gameMode: GameMode, playerEntityUniqueId: Long): UpdatePlayerGameTypePacket =
-            UpdatePlayerGameTypePacket().apply {
-                this.gameMode = gameMode
-                this.playerEntityUniqueId = playerEntityUniqueId
-            }
+        fun create(gameMode: GameMode, playerEntityUniqueId: Long) = UpdatePlayerGameTypePacket().apply {
+            this.gameMode = gameMode
+            this.playerEntityUniqueId = playerEntityUniqueId
+        }
     }
 }

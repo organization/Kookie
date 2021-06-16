@@ -28,7 +28,7 @@ class UpdateSoftEnumPacket : DataPacket(), ClientboundPacket {
 
     override fun decodePayload(input: PacketSerializer) {
         enumName = input.getString()
-        for (i in 0 until input.getUnsignedVarInt()) {
+        repeat(input.getUnsignedVarInt()) {
             values.add(input.getString())
         }
         type = input.getByte()
@@ -43,9 +43,7 @@ class UpdateSoftEnumPacket : DataPacket(), ClientboundPacket {
         output.putByte(type)
     }
 
-    override fun handle(handler: PacketHandlerInterface): Boolean {
-        return handler.handleUpdateSoftEnum(this)
-    }
+    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleUpdateSoftEnum(this)
 
     enum class Type(val id: Int) {
         ADD(0),

@@ -64,7 +64,5 @@ class UpdateTradePacket : DataPacket(), ClientboundPacket {
         output.put(offers.encodedNbt)
     }
 
-    override fun handle(handler: PacketHandlerInterface): Boolean {
-        return handler.handleUpdateTrade(this)
-    }
+    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleUpdateTrade(this)
 }

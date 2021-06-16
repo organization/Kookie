@@ -47,7 +47,5 @@ class PlaySoundPacket : DataPacket(), ClientboundPacket {
         output.putLFloat(pitch)
     }
 
-    override fun handle(handler: PacketHandlerInterface): Boolean {
-        return handler.handlePlaySound(this)
-    }
+    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handlePlaySound(this)
 }

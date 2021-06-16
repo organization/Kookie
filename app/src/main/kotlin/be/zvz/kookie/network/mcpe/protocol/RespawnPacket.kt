@@ -49,9 +49,7 @@ class RespawnPacket : DataPacket(), ClientboundPacket, ServerboundPacket {
         output.putEntityRuntimeId(entityRuntimeId)
     }
 
-    override fun handle(handler: PacketHandlerInterface): Boolean {
-        return handler.handleRespawn(this)
-    }
+    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleRespawn(this)
 
     enum class RespawnStatus(val state: Int) {
         SEARCHING_FOR_SPAWN(0),

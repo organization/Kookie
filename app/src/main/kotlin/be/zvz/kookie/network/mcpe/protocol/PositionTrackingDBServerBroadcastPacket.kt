@@ -46,9 +46,7 @@ class PositionTrackingDBServerBroadcastPacket : DataPacket(), ClientboundPacket 
         output.put(nbt.encodedNbt)
     }
 
-    override fun handle(handler: PacketHandlerInterface): Boolean {
-        return handler.handlePositionTrackingDBServerBroadcast(this)
-    }
+    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handlePositionTrackingDBServerBroadcast(this)
 
     enum class Action(val value: Int) {
         UPDATE(0),

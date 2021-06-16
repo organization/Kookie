@@ -40,9 +40,7 @@ class LabTablePacket : DataPacket(), ClientboundPacket, ServerboundPacket {
         output.putByte(reactionType)
     }
 
-    override fun handle(handler: PacketHandlerInterface): Boolean {
-        return handler.handleLabTable(this)
-    }
+    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleLabTable(this)
 
     companion object {
         const val TYPE_START_COMBINE = 0

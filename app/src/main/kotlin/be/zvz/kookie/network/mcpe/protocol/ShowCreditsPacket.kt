@@ -37,9 +37,7 @@ class ShowCreditsPacket : DataPacket(), ClientboundPacket, ServerboundPacket {
         output.putVarInt(status)
     }
 
-    override fun handle(handler: PacketHandlerInterface): Boolean {
-        return handler.handleShowCredits(this)
-    }
+    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleShowCredits(this)
 
     companion object {
         const val STATUS_START_CREDITS = 0

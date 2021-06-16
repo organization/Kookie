@@ -36,9 +36,7 @@ class AnvilDamagePacket : DataPacket(), ServerboundPacket {
         output.putBlockPosition(pos)
     }
 
-    override fun handle(handler: PacketHandlerInterface): Boolean {
-        return handler.handleAnvilDamage(this)
-    }
+    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleAnvilDamage(this)
 
     companion object {
         @JvmStatic

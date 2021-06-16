@@ -131,6 +131,46 @@ class CompoundTag : Tag<Map<String, Tag<*>>>() {
         setTag(name, DoubleTag(value))
     }
 
+    override fun write(writer: NbtStreamWriter) {
+        value.forEach { (name, tag) ->
+            writer.writeByte(tag.getTagType().value)
+            writer.writeString(name)
+            tag.write(writer)
+        }
+        writer.writeByte(NBT.TagType.NOTHING.value)
+    }
+
+    override fun makeCopy(): CompoundTag = CompoundTag().let {
+        it.value.forEach { (name, tag) ->
+            value[name] = tag
+        }
+        it
+    }
+
+    inline fun <T> setTagIf(name: String, tag: Tag<T>?, predicate: (T) -> Boolean = { _ -> true }) =
+        if (tag !== null && predicate(tag.value)) setTag(name, tag) else removeTag(name)
+
+    inline fun setStringIf(name: String, value: String?, predicate: (String) -> Boolean = { _ -> true }) =
+        setTagIf(name, value?.let(::StringTag), predicate)
+
+    inline fun setByteIf(name: String, value: Int?, predicate: (Int) -> Boolean = { _ -> true }) =
+        setTagIf(name, value?.let(::ByteTag), predicate)
+
+    inline fun setShortIf(name: String, value: Int?, predicate: (Int) -> Boolean = { _ -> true }) =
+        setTagIf(name, value?.let(::ShortTag), predicate)
+
+    inline fun setIntIf(name: String, value: Int?, predicate: (Int) -> Boolean = { _ -> true }) =
+        setTagIf(name, value?.let(::IntTag), predicate)
+
+    inline fun setLongIf(name: String, value: Long?, predicate: (Long) -> Boolean = { _ -> true }) =
+        setTagIf(name, value?.let(::LongTag), predicate)
+
+    inline fun setFloatIf(name: String, value: Float?, predicate: (Float) -> Boolean = { _ -> true }) =
+        setTagIf(name, value?.let(::FloatTag), predicate)
+
+    inline fun setDoubleIf(name: String, value: Double?, predicate: (Double) -> Boolean = { _ -> true }) =
+        setTagIf(name, value?.let(::DoubleTag), predicate)
+
     companion object {
         @JvmStatic
         fun create(): CompoundTag {
@@ -154,21 +194,5 @@ class CompoundTag : Tag<Map<String, Tag<*>>>() {
             }
             return result
         }
-    }
-
-    override fun write(writer: NbtStreamWriter) {
-        value.forEach { (name, tag) ->
-            writer.writeByte(tag.getTagType().value)
-            writer.writeString(name)
-            tag.write(writer)
-        }
-        writer.writeByte(NBT.TagType.NOTHING.value)
-    }
-
-    override fun makeCopy(): CompoundTag = CompoundTag().let {
-        it.value.forEach { (name, tag) ->
-            value[name] = tag
-        }
-        it
     }
 }

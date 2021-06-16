@@ -47,6 +47,10 @@ class ListTag<T> @JvmOverloads constructor(
         }
     }
 
+    override fun getTagType(): NBT.TagType {
+        return NBT.TagType.LIST
+    }
+
     fun push(tag: Tag<T>) {
         if (tag.getTagType() !== tagType) {
             throw NbtException("Expected TagType ${tagType.name}, got ${tag.getTagType().name}")
@@ -84,7 +88,7 @@ class ListTag<T> @JvmOverloads constructor(
                     throw IllegalArgumentException("Unexpected non-empty list of TagType.NOTHING")
                 }
                 tracker.protectDepth {
-                    for (i in 0 until size) {
+                    repeat(size) {
                         value.add(NBT.createTag(tagType, reader, tracker))
                     }
                 }

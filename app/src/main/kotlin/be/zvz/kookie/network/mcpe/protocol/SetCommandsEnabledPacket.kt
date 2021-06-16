@@ -33,9 +33,7 @@ class SetCommandsEnabledPacket : DataPacket(), ClientboundPacket {
         output.putBoolean(enabled)
     }
 
-    override fun handle(handler: PacketHandlerInterface): Boolean {
-        return handler.handleSetCommandsEnabled(this)
-    }
+    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleSetCommandsEnabled(this)
 
     companion object {
         @JvmStatic

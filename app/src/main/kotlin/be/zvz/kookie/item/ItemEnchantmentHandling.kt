@@ -30,9 +30,10 @@ interface ItemEnchantmentHandling {
 
     fun getEnchantment(enchantment: Enchantment): EnchantmentInstance? = enchantments[enchantment.internalRuntimeId]
     fun removeEnchantment(enchantment: Enchantment, level: Int = -1): ItemEnchantmentHandling = apply {
-        val instance = getEnchantment(enchantment)
-        if (instance != null && (level == -1 || instance.getRuntimeId() == level)) {
-            enchantments.remove(instance.getRuntimeId())
+        getEnchantment(enchantment)?.let {
+            if (level == -1 || it.getRuntimeId() == level) {
+                enchantments.remove(it.getRuntimeId())
+            }
         }
     }
 

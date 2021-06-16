@@ -30,13 +30,16 @@ class LongMetadataProperty(override var value: Int) : MetadataProperty(), Intege
         output.putVarLong(value.toLong())
     }
 
-    override fun min(): Int {
-        return Long.MIN_VALUE.toInt()
-    }
+    override fun equals(other: Any?): Boolean = this === other ||
+        javaClass == other?.javaClass &&
+        value == (other as LongMetadataProperty).value &&
+        id == other.id
 
-    override fun max(): Int {
-        return Long.MAX_VALUE.toInt()
-    }
+    override fun hashCode(): Int = super.hashCode().let { 31 * it + id }
+
+    override fun min(): Int = Long.MIN_VALUE.toInt()
+
+    override fun max(): Int = Long.MAX_VALUE.toInt()
 
     override fun buildFromFlags(flags: Map<Int, Boolean>): IntegerishMetadataProperty {
         var value = 0
@@ -48,28 +51,8 @@ class LongMetadataProperty(override var value: Int) : MetadataProperty(), Intege
         return LongMetadataProperty(value)
     }
 
-    override fun hashCode(): Int {
-        var result = value
-        result = 31 * result + id
-        return result
-    }
-
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (javaClass != other?.javaClass) return false
-
-        other as LongMetadataProperty
-
-        if (value != other.value) return false
-        if (id != other.id) return false
-
-        return true
-    }
-
     companion object {
         @JvmStatic
-        fun read(input: PacketSerializer): LongMetadataProperty {
-            return LongMetadataProperty(input.getVarLong().toInt())
-        }
+        fun read(input: PacketSerializer) = LongMetadataProperty(input.getVarLong().toInt())
     }
 }

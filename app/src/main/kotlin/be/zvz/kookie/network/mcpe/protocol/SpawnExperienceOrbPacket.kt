@@ -37,7 +37,5 @@ class SpawnExperienceOrbPacket : DataPacket(), ServerboundPacket {
         output.putVarInt(amount)
     }
 
-    override fun handle(handler: PacketHandlerInterface): Boolean {
-        return handler.handleSpawnExperienceOrb(this)
-    }
+    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleSpawnExperienceOrb(this)
 }

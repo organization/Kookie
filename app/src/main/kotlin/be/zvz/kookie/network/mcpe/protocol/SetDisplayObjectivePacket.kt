@@ -45,7 +45,5 @@ class SetDisplayObjectivePacket : DataPacket(), ClientboundPacket {
         output.putVarInt(sortOrder)
     }
 
-    override fun handle(handler: PacketHandlerInterface): Boolean {
-        return handler.handleSetDisplayObjective(this)
-    }
+    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleSetDisplayObjective(this)
 }

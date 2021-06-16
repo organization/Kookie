@@ -38,8 +38,8 @@ class AnimateEntityPacket : DataPacket(), ClientboundPacket {
         blendOutTime = input.getLFloat()
         actorRuntimeIds = mutableListOf()
 
-        for (i in 0 until input.getUnsignedVarInt()) {
-            actorRuntimeIds[i] = input.getEntityRuntimeId()
+        repeat(input.getUnsignedVarInt()) {
+            actorRuntimeIds[it] = input.getEntityRuntimeId()
         }
     }
 
@@ -56,9 +56,7 @@ class AnimateEntityPacket : DataPacket(), ClientboundPacket {
         }
     }
 
-    override fun handle(handler: PacketHandlerInterface): Boolean {
-        return handler.handleAnimateEntity(this)
-    }
+    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleAnimateEntity(this)
 
     companion object {
         @JvmStatic

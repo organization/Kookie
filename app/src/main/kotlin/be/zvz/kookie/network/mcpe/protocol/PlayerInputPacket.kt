@@ -42,7 +42,5 @@ class PlayerInputPacket : DataPacket(), ServerboundPacket {
         output.putBoolean(sneaking)
     }
 
-    override fun handle(handler: PacketHandlerInterface): Boolean {
-        return handler.handlePlayerInput(this)
-    }
+    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handlePlayerInput(this)
 }

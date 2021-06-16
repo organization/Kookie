@@ -29,10 +29,11 @@ class CodeBuilderPacket : DataPacket(), ClientboundPacket {
 
     companion object {
         @JvmStatic
-        fun create(url: String, openCodeBuilder: Boolean): CodeBuilderPacket = CodeBuilderPacket().apply {
-            this.url = url
-            this.openCodeBuilder = openCodeBuilder
-        }
+        fun create(url: String, openCodeBuilder: Boolean) =
+            CodeBuilderPacket().apply {
+                this.url = url
+                this.openCodeBuilder = openCodeBuilder
+            }
     }
 
     override fun decodePayload(input: PacketSerializer) {
@@ -45,7 +46,5 @@ class CodeBuilderPacket : DataPacket(), ClientboundPacket {
         output.putBoolean(openCodeBuilder)
     }
 
-    override fun handle(handler: PacketHandlerInterface): Boolean {
-        return handler.handleCodeBuilder(this)
-    }
+    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleCodeBuilder(this)
 }

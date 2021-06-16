@@ -56,8 +56,9 @@ object TypeConverter {
 
     @JvmStatic
     fun coreItemStackToRecipeIngredient(itemStack: Item): RecipeIngredient {
-        if (itemStack.isNull())
+        if (itemStack.isNull()) {
             return RecipeIngredient(0, 0, 0)
+        }
         val id: Int
         val meta: Int
         if (itemStack.hasAnyDamageValue()) {

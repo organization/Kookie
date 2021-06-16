@@ -30,23 +30,17 @@ class HeightArray @JvmOverloads constructor(val values: MutableList<Int> = mutab
         values[idx(x, z)] = height
     }
 
-    fun clone(): HeightArray {
-        return HeightArray(values)
-    }
+    fun clone(): HeightArray = HeightArray(values)
 
     companion object {
         @JvmStatic
-        fun fill(value: Int): HeightArray {
-            val list = MutableList(255) { value }
-            return HeightArray(list)
-        }
+        fun fill(value: Int): HeightArray = HeightArray(MutableList(255) { value })
 
-        private fun idx(x: Int, z: Int): Int {
-            if (x !in 0 until 16 || z !in 0 until 16) {
+        private fun idx(x: Int, z: Int): Int =
+            if (x in 0 until 16 && z in 0 until 16) {
+                z shl 4 or x
+            } else {
                 throw IllegalArgumentException("x and z must be in the range 0-15")
             }
-
-            return (z shl 4) or x
-        }
     }
 }

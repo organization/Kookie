@@ -27,9 +27,7 @@ abstract class DataPacket : Packet {
 
     var recipientSubId = 0
 
-    override fun canBeSentBeforeLogin(): Boolean {
-        return false
-    }
+    override fun canBeSentBeforeLogin(): Boolean = false
 
     override fun getName(): String = this::class.java.simpleName
 

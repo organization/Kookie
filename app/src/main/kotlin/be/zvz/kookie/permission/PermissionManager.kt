@@ -69,14 +69,10 @@ object PermissionManager {
     }
 
     @JvmStatic
-    fun getPermissionSubscriptions(permission: String): Map<String, Permissible> {
-        return this.permSubs[permission] ?: mapOf()
-    }
+    fun getPermissionSubscriptions(permission: String): Map<String, Permissible> = this.permSubs[permission] ?: mapOf()
 
     @JvmStatic
-    fun getPermissions(): Map<String, Permission> {
-        return this.permissions
-    }
+    fun getPermissions(): Map<String, Permission> = this.permissions
 
     @JvmStatic
     fun clearPermissions() {

@@ -33,7 +33,5 @@ class SetLastHurtByPacket : DataPacket(), ClientboundPacket {
         output.putVarInt(entityTypeId)
     }
 
-    override fun handle(handler: PacketHandlerInterface): Boolean {
-        return handler.handleSetLastHurtBy(this)
-    }
+    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleSetLastHurtBy(this)
 }

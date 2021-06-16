@@ -40,7 +40,7 @@ class SettingsCommandPacket : DataPacket(), ServerboundPacket {
 
     companion object {
         @JvmStatic
-        fun create(command: String, supressOutput: Boolean): SettingsCommandPacket = SettingsCommandPacket().apply {
+        fun create(command: String, supressOutput: Boolean) = SettingsCommandPacket().apply {
             this.command = command
             this.suppressOutput = supressOutput
         }

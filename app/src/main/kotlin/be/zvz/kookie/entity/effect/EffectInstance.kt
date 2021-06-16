@@ -31,7 +31,7 @@ class EffectInstance @JvmOverloads constructor(
 
     var duration: Int = duration
         set(value) {
-            if (value < 0 || value > Int.MAX_VALUE) {
+            if (value !in 0..Int.MAX_VALUE) {
                 throw IllegalArgumentException("Effect duration must be in range 0 - ${Int.MAX_VALUE}, got $value")
             }
             field = value
@@ -39,7 +39,7 @@ class EffectInstance @JvmOverloads constructor(
 
     var amplifier: Int = amplifier
         set(value) {
-            if (value < 0 || value > 255) {
+            if (value !in 0..255) {
                 throw IllegalArgumentException("Amplifier must be in range 0 - 255, got $value")
             }
             field = value

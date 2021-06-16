@@ -29,7 +29,7 @@ class SetScorePacket : DataPacket(), ClientboundPacket {
 
     override fun decodePayload(input: PacketSerializer) {
         type = Type.from(input.getByte())
-        for (i in 0 until input.getUnsignedVarInt()) {
+        repeat(input.getUnsignedVarInt()) {
             val entry =
                 ScorePacketEntry(
                     scoreboardId = input.getVarLong(),
@@ -66,9 +66,7 @@ class SetScorePacket : DataPacket(), ClientboundPacket {
         }
     }
 
-    override fun handle(handler: PacketHandlerInterface): Boolean {
-        return handler.handleSetScore(this)
-    }
+    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleSetScore(this)
 
     enum class Type(val id: Int) {
         CHANGE(0),

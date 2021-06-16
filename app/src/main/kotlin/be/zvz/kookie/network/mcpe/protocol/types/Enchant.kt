@@ -29,10 +29,9 @@ class Enchant(val id: Int, val level: Int) {
 
     companion object {
         @JvmStatic
-        fun read(input: PacketSerializer): Enchant {
-            val id = input.getByte()
-            val level = input.getByte()
-            return Enchant(id, level)
-        }
+        fun read(input: PacketSerializer) = Enchant(
+            id = input.getByte(),
+            level = input.getByte()
+        )
     }
 }
