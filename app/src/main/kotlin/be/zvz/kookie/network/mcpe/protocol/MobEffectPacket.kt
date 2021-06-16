@@ -48,9 +48,7 @@ class MobEffectPacket : DataPacket(), ClientboundPacket {
         output.putVarInt(duration)
     }
 
-    override fun handle(handler: PacketHandlerInterface): Boolean {
-        return handler.handleMobEffect(this)
-    }
+    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleMobEffect(this)
 
     companion object {
         const val EVENT_ADD = 1

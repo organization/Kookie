@@ -46,13 +46,10 @@ abstract class VanillaCommand @JvmOverloads constructor(
         max: Double = MAX_COORD.toDouble()
     ): Double {
         if (input.first() == '~') {
-            val value = getDouble(sender, input.substring(1))
-
-            return original + (value ?: 0.0)
+            original + (getDouble(sender, input.substring(1)) ?: 0.0)
+        } else {
+            getDouble(sender, input, min, max)
         }
-
-        return getDouble(sender, input, min, max)
-    }
 
     @JvmOverloads
     protected fun getDouble(

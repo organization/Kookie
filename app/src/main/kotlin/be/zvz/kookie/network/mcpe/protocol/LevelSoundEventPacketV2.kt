@@ -52,7 +52,5 @@ class LevelSoundEventPacketV2 : DataPacket() {
         output.putBoolean(disableRelativeVolume)
     }
 
-    override fun handle(handler: PacketHandlerInterface): Boolean {
-        return handler.handleLevelSoundEventPacketV2(this)
-    }
+    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleLevelSoundEventPacketV2(this)
 }

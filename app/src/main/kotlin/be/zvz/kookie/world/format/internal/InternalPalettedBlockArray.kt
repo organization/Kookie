@@ -99,12 +99,12 @@ class InternalPalettedBlockArray<Block> internal constructor(private val bitsPer
 
     fun countUniqueBlocks(): Int {
         val hasFound: MutableSet<Block> = HashObjSets.newMutableSet()
-        for (x in 0 until IPalettedBlockArray.ARRAY_DIM) {
-            for (z in 0 until IPalettedBlockArray.ARRAY_DIM) {
-                for (y in 0 until IPalettedBlockArray.ARRAY_DIM) {
+        repeat(IPalettedBlockArray.ARRAY_DIM) { x ->
+            repeat(IPalettedBlockArray.ARRAY_DIM) { z ->
+                repeat(IPalettedBlockArray.ARRAY_DIM) { y ->
                     val inserted = hasFound.add(palette[internalGetPaletteOffset(x, y, z)])
                     if (inserted && hasFound.size == getPaletteSize()) {
-                        break
+                        return hasFound.size
                     }
                 }
             }
@@ -113,10 +113,7 @@ class InternalPalettedBlockArray<Block> internal constructor(private val bitsPer
         return hasFound.size
     }
 
-    override fun get(x: Int, y: Int, z: Int): Block {
-        val offset = internalGetPaletteOffset(x, y, z)
-        return palette[offset]
-    }
+    override fun get(x: Int, y: Int, z: Int): Block = palette[internalGetPaletteOffset(x, y, z)]
 
     override fun set(x: Int, y: Int, z: Int, v: Block): Boolean {
         var offset = -1
@@ -139,9 +136,7 @@ class InternalPalettedBlockArray<Block> internal constructor(private val bitsPer
         return true
     }
 
-    override fun getPaletteOffset(x: Int, y: Int, z: Int): Int {
-        return internalGetPaletteOffset(x, y, z)
-    }
+    override fun getPaletteOffset(x: Int, y: Int, z: Int): Int = internalGetPaletteOffset(x, y, z)
 
     override fun replace(offset: Int, value: Block) {
         if (offset >= nextPaletteIndex) {
@@ -151,17 +146,17 @@ class InternalPalettedBlockArray<Block> internal constructor(private val bitsPer
     }
 
     override fun replaceAll(from: Block, to: Block) {
-        for (i in 0 until nextPaletteIndex) {
-            if (palette[i] == from) {
-                palette[i] = to
+        repeat(nextPaletteIndex) {
+            if (palette[it] == from) {
+                palette[it] = to
             }
         }
     }
 
     override fun convertFrom(otherArray: IPalettedBlockArray<Block>) {
-        for (x in 0 until IPalettedBlockArray.ARRAY_DIM) {
-            for (z in 0 until IPalettedBlockArray.ARRAY_DIM) {
-                for (y in 0 until IPalettedBlockArray.ARRAY_DIM) {
+        repeat(IPalettedBlockArray.ARRAY_DIM) { x ->
+            repeat(IPalettedBlockArray.ARRAY_DIM) { z ->
+                repeat(IPalettedBlockArray.ARRAY_DIM) { y ->
                     if (!set(x, y, z, otherArray.get(x, y, z))) {
                         throw IndexOutOfBoundsException("out of palette space")
                     }

@@ -28,7 +28,7 @@ class ItemStackResponsePacket : DataPacket(), ClientboundPacket {
 
     override fun decodePayload(input: PacketSerializer) {
         val responses = mutableListOf<ItemStackResponse>()
-        for (i in 0 until input.getUnsignedVarInt()) {
+        repeat(input.getUnsignedVarInt()) {
             responses.add(ItemStackResponse.read(input))
         }
     }
@@ -39,9 +39,7 @@ class ItemStackResponsePacket : DataPacket(), ClientboundPacket {
         }
     }
 
-    override fun handle(handler: PacketHandlerInterface): Boolean {
-        return handler.handleItemStackResponse(this)
-    }
+    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleItemStackResponse(this)
 
     companion object {
         @JvmStatic

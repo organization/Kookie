@@ -41,11 +41,7 @@ object Binary {
     @JvmStatic fun flipLongEndianness(value: Long): Long = readLLong(writeLong(value))
 
     @JvmStatic fun readBoolean(b: String): Boolean = b != "\u0000"
-    @JvmStatic fun writeBoolean(b: Boolean): String = if (b) {
-        "\u0001"
-    } else {
-        "\u0000"
-    }
+    @JvmStatic fun writeBoolean(b: Boolean): String = if (b) "\u0001" else "\u0000"
 
     @JvmStatic fun readByte(c: String): Int = c[0].code
     @JvmStatic fun readSignedByte(c: String): Int = signByte(c[0].code)
@@ -272,7 +268,7 @@ object Binary {
     @JvmStatic fun writeUnsignedVarInt(value: Int): String {
         val buf = StringBuilder()
         var x = value and -1
-        for (i in 0 until 5) {
+        repeat(5) {
             if ((x shr 7) != 0) {
                 buf.append(x and 0x80)
             } else {
@@ -319,7 +315,7 @@ object Binary {
     @JvmStatic fun writeUnsignedVarLong(value: Long): String {
         val buf = StringBuilder()
         var x = value and -1
-        for (i in 0 until 10) {
+        repeat(10) {
             if ((x shr 7) != 0L) {
                 buf.append(x and 0x80)
             } else {

@@ -38,7 +38,5 @@ class BlockPickRequestPacket : DataPacket(), ServerboundPacket {
         output.putByte(hotbarSlot)
     }
 
-    override fun handle(handler: PacketHandlerInterface): Boolean {
-        return handler.handleBlockPickRequest(this)
-    }
+    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleBlockPickRequest(this)
 }

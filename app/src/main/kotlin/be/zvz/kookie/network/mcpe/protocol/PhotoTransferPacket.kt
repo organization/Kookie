@@ -41,7 +41,5 @@ class PhotoTransferPacket : DataPacket(), ClientboundPacket {
         output.putString(bookId)
     }
 
-    override fun handle(handler: PacketHandlerInterface): Boolean {
-        return handler.handlePhotoTransfer(this)
-    }
+    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handlePhotoTransfer(this)
 }

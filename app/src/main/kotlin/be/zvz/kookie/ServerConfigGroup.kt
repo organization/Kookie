@@ -41,11 +41,12 @@ class ServerConfigGroup(
     }
 
     @JvmOverloads
-    fun getConfigString(variable: String, defaultValue: String = ""): String = if (serverProperties.exists(variable)) {
-        serverProperties.get(variable).safeText()
-    } else {
-        defaultValue
-    }
+    fun getConfigString(variable: String, defaultValue: String = ""): String =
+        if (serverProperties.exists(variable)) {
+            serverProperties.get(variable).safeText()
+        } else {
+            defaultValue
+        }
 
     fun setConfigString(variable: String, value: String) = serverProperties.set(variable, value)
 

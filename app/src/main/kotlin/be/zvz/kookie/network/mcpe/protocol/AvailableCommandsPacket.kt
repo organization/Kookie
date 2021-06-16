@@ -75,7 +75,7 @@ open class AvailableCommandsPacket : DataPacket(), ClientboundPacket {
         val postfixIndexes: MutableMap<String, Int> = HashObjIntMaps.newMutableMap()
         val enums: MutableMap<Int, CommandEnum> = HashIntObjMaps.newMutableMap()
 
-        fun addEnum(enum: CommandEnum) {
+        val addEnum = fun(enum: CommandEnum) {
             if (!enumIndexes.containsKey(enum.getEnumName())) {
                 val size = enumIndexes.size
                 enumIndexes[enum.getEnumName()] = size
@@ -86,24 +86,20 @@ open class AvailableCommandsPacket : DataPacket(), ClientboundPacket {
             }
         }
 
-        hardCodeEnums.forEach {
-            addEnum(it)
+        val addPostfix = fun(postfix: String) {
+            postfixIndexes[postfix] = postfixIndexes.getOrDefault(postfix, postfixIndexes.size)
         }
 
+        hardCodeEnums.forEach(addEnum)
+
         commandData.forEach { (_, data) ->
-            data.aliases?.let {
-                addEnum(it)
-            }
+            data.aliases?.let(addEnum)
+
             data.overloads.forEach { (_, map) ->
                 map.forEach { (_, commandParameter) ->
-                    commandParameter.enum?.let {
-                        addEnum(it)
-                    }
+                    commandParameter.enum?.let(addEnum)
 
-                    commandParameter.postfix?.let {
-                        postfixIndexes[it] =
-                            postfixIndexes.getOrDefault(it, postfixIndexes.size)
-                    }
+                    commandParameter.postfix?.let(addPostfix)
                 }
             }
         }
@@ -138,9 +134,7 @@ open class AvailableCommandsPacket : DataPacket(), ClientboundPacket {
         }
     }
 
-    override fun handle(handler: PacketHandlerInterface): Boolean {
-        return false
-    }
+    override fun handle(handler: PacketHandlerInterface): Boolean = false
 
     protected fun getEnum(enumList: List<String>, input: PacketSerializer): CommandEnum {
         val enumName = input.getString()
@@ -170,7 +164,7 @@ open class AvailableCommandsPacket : DataPacket(), ClientboundPacket {
         }
     }
 
-    protected fun getEnumValueIndex(valueCount: Int, input: PacketSerializer): Int = when {
+    private fun getEnumValueIndex(valueCount: Int, input: PacketSerializer): Int = when {
         valueCount < 256 -> {
             input.getByte()
         }
@@ -182,7 +176,7 @@ open class AvailableCommandsPacket : DataPacket(), ClientboundPacket {
         }
     }
 
-    protected fun putEnumValueIndex(index: Int, valueCount: Int, output: PacketSerializer) {
+    private fun putEnumValueIndex(index: Int, valueCount: Int, output: PacketSerializer) {
         when {
             valueCount < 256 -> {
                 output.putByte(index)
@@ -196,7 +190,7 @@ open class AvailableCommandsPacket : DataPacket(), ClientboundPacket {
         }
     }
 
-    protected fun getCommandData(
+    private fun getCommandData(
         enums: MutableList<CommandEnum>,
         postFixes: MutableList<String>,
         input: PacketSerializer
@@ -210,41 +204,43 @@ open class AvailableCommandsPacket : DataPacket(), ClientboundPacket {
 
         val overloadCount = input.getUnsignedVarInt()
 
-        for (overloadIndex in 0 until overloadCount) {
+        repeat(overloadCount) { overloadIndex ->
             if (!overloads.containsKey(overloadIndex)) {
                 overloads[overloadIndex] = HashIntObjMaps.newMutableMap()
             }
             val paramCount = input.getUnsignedVarInt()
-            for (paramIndex in 0 until paramCount) {
+            repeat(paramCount) { paramIndex ->
                 val parameter = CommandParameter()
                 parameter.paramName = input.getString()
                 parameter.paramType = input.getLInt()
                 parameter.isOptional = input.getBoolean()
                 parameter.flags = input.getByte()
 
-                if ((parameter.paramType and ARG_FLAG_ENUM) != 0) {
-                    val index = (parameter.paramType and 0xffff)
-                    parameter.enum = enums.getOrNull(index)
-                    if (parameter.enum !is CommandEnum) {
-                        throw PacketDecodeException(
+                when {
+                    parameter.paramType and ARG_FLAG_ENUM != 0 -> {
+                        val index = (parameter.paramType and 0xffff)
+                        enums.getOrNull(index)?.let {
+                            parameter.enum = it
+                        } ?: throw PacketDecodeException(
                             "Deserializing $name parameter ${parameter.paramName}: " +
                                 "Expected enum at $index, but got none"
                         )
                     }
-                } else if ((parameter.paramType and ARG_FLAG_POSTFIX) != 0) {
-                    val index = (parameter.paramType and 0xffff)
-                    parameter.postfix = postFixes.getOrNull(index)
-                    if (parameter.postfix == null) {
-                        throw PacketDecodeException(
+                    parameter.paramType and ARG_FLAG_POSTFIX != 0 -> {
+                        val index = (parameter.paramType and 0xffff)
+                        postFixes.getOrNull(index)?.let {
+                            parameter.postfix = it
+                        } ?: throw PacketDecodeException(
                             "Deserializing $name parameter ${parameter.paramName}: " +
                                 "Expected postfix at $index, but got none"
                         )
                     }
-                } else if ((parameter.paramType and ARG_FLAG_VALID) == 0) {
-                    throw PacketDecodeException(
-                        "deserializing $name parameter ${parameter.paramName}: " +
-                            "Invalid parameter type ${parameter.paramType}"
-                    )
+                    parameter.paramType and ARG_FLAG_VALID == 0 -> {
+                        throw PacketDecodeException(
+                            "Deserializing $name parameter ${parameter.paramName}: " +
+                                "Invalid parameter type ${parameter.paramType}"
+                        )
+                    }
                 }
                 overloads.getValue(overloadIndex)[paramIndex] = parameter
             }
@@ -252,7 +248,7 @@ open class AvailableCommandsPacket : DataPacket(), ClientboundPacket {
         return CommandData(name, description, flags, permission, aliases, overloads)
     }
 
-    protected fun putCommandData(
+    private fun putCommandData(
         data: CommandData,
         enumIndexes: Map<String, Int>,
         postFixIndexes: Map<String, Int>,
@@ -272,13 +268,11 @@ open class AvailableCommandsPacket : DataPacket(), ClientboundPacket {
             output.putUnsignedVarInt(overload.size)
             overload.forEach { (_, parameter) ->
                 output.putString(parameter.paramName)
+
                 val type = parameter.enum?.let {
                     ARG_FLAG_ENUM or ARG_FLAG_VALID or enumIndexes.getOrDefault(it.getEnumName(), -1)
                 } ?: parameter.postfix?.let {
-                    val key = postFixIndexes.getOrDefault(it, -1)
-                    if (key == -1) {
-                        throw AssertionError("Postfix '${parameter.postfix} not in postfixes array")
-                    }
+                    val key = postFixIndexes[it] ?: throw AssertionError("Postfix '${parameter.postfix} not in postfixes array")
                     ARG_FLAG_POSTFIX or key
                 } ?: parameter.paramType
 
@@ -289,18 +283,16 @@ open class AvailableCommandsPacket : DataPacket(), ClientboundPacket {
         }
     }
 
-    protected fun getSoftEnum(input: PacketSerializer): CommandEnum {
-        return CommandEnum(
-            enumName = input.getString(),
-            enumValues = mutableListOf<String>().apply {
-                for (i in 0 until input.getUnsignedVarInt()) {
-                    add(input.getString())
-                }
+    private fun getSoftEnum(input: PacketSerializer) = CommandEnum(
+        enumName = input.getString(),
+        enumValues = mutableListOf<String>().apply {
+            repeat(input.getUnsignedVarInt()) {
+                add(input.getString())
             }
-        )
-    }
+        }
+    )
 
-    protected fun putSoftEnum(enum: CommandEnum, output: PacketSerializer) {
+    private fun putSoftEnum(enum: CommandEnum, output: PacketSerializer) {
         output.putString(enum.getEnumName())
 
         val values = enum.getEnumValues()
@@ -310,7 +302,7 @@ open class AvailableCommandsPacket : DataPacket(), ClientboundPacket {
         }
     }
 
-    protected fun getEnumConstraint(
+    private fun getEnumConstraint(
         enums: List<CommandEnum>,
         enumValues: List<String>,
         input: PacketSerializer
@@ -330,14 +322,14 @@ open class AvailableCommandsPacket : DataPacket(), ClientboundPacket {
         }
 
         val constraintIds = mutableListOf<Int>().apply {
-            for (i in 0 until input.getUnsignedVarInt()) {
+            repeat(input.getUnsignedVarInt()) {
                 add(input.getByte())
             }
         }
         return CommandEnumConstraint(enum, valueOffset, constraintIds)
     }
 
-    protected fun putEnumConstraint(
+    private fun putEnumConstraint(
         constraint: CommandEnumConstraint,
         enumIndexes: Map<String, Int>,
         enumValues: Map<String, Int>,

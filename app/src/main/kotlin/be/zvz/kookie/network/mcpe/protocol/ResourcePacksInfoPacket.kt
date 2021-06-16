@@ -39,11 +39,11 @@ class ResourcePacksInfoPacket : DataPacket(), ClientboundPacket {
         mustAccept = input.getBoolean()
         hasScript = input.getBoolean()
         val behaviorPackCount = input.getLShort()
-        for (i in 0 until behaviorPackCount) {
+        repeat(behaviorPackCount) {
             behaviorPackEntries.add(BehaviorPackEntry.read(input))
         }
         val resourcePackCount = input.getLShort()
-        for (i in 0 until resourcePackCount) {
+        repeat(resourcePackCount) {
             resourcePackEntries.add(ResourcePackEntry.read(input))
         }
     }
@@ -61,7 +61,5 @@ class ResourcePacksInfoPacket : DataPacket(), ClientboundPacket {
         }
     }
 
-    override fun handle(handler: PacketHandlerInterface): Boolean {
-        return handler.handleResourcePacksInfo(this)
-    }
+    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleResourcePacksInfo(this)
 }

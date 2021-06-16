@@ -37,9 +37,7 @@ class BlockActorDataPacket : DataPacket(), ClientboundPacket, ServerboundPacket 
         output.put(namedtag.encodedNbt)
     }
 
-    override fun handle(handler: PacketHandlerInterface): Boolean {
-        return handler.handleBlockActorData(this)
-    }
+    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleBlockActorData(this)
 
     companion object {
         @JvmStatic

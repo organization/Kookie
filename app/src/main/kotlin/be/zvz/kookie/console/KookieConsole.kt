@@ -23,9 +23,7 @@ import org.jline.reader.LineReader
 import org.jline.reader.LineReaderBuilder
 
 class KookieConsole(private val server: Server) : SimpleTerminalConsole() {
-    override fun isRunning(): Boolean {
-        return true
-    }
+    override fun isRunning(): Boolean = true
 
     override fun runCommand(command: String?) {
     }

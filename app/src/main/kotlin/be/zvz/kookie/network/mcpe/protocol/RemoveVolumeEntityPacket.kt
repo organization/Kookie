@@ -33,7 +33,5 @@ class RemoveVolumeEntityPacket : DataPacket() {
         output.putUnsignedVarInt(entityNetId)
     }
 
-    override fun handle(handler: PacketHandlerInterface): Boolean {
-        return handler.handleRemoveVolumeEntity(this)
-    }
+    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleRemoveVolumeEntity(this)
 }

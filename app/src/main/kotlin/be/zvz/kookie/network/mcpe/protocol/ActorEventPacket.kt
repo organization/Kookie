@@ -38,9 +38,7 @@ class ActorEventPacket : DataPacket(), ClientboundPacket, ServerboundPacket {
         output.putVarInt(data)
     }
 
-    override fun handle(handler: PacketHandlerInterface): Boolean {
-        return handler.handleActorEvent(this)
-    }
+    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleActorEvent(this)
 
     companion object {
         const val JUMP = 1

@@ -65,19 +65,8 @@ abstract class Command @JvmOverloads constructor(
         return false
     }
 
-    fun testPermissionSilent(target: CommandSender): Boolean {
-        if (permission.trim().isNotEmpty()) {
-            permission.split(';').forEach {
-                if (target.hasPermission(it)) {
-                    return true
-                }
-            }
-        } else {
-            return true
-        }
-
-        return false
-    }
+    fun testPermissionSilent(target: CommandSender): Boolean =
+        permission.trim().isEmpty() || permission.split(";").find(target::hasPermission) !== null
 
     fun setLabel(name: String): Boolean {
         nextLabel = name

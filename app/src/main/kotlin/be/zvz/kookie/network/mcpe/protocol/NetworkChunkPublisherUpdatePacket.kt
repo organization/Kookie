@@ -36,15 +36,14 @@ class NetworkChunkPublisherUpdatePacket : DataPacket(), ClientboundPacket {
         output.putUnsignedVarInt(radius)
     }
 
-    override fun handle(handler: PacketHandlerInterface): Boolean {
-        return handler.handleNetworkChunkPublisherUpdate(this)
-    }
+    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleNetworkChunkPublisherUpdate(this)
 
     companion object {
         @JvmStatic
-        fun create(x: Int, y: Int, z: Int, blockRadius: Int) = NetworkChunkPublisherUpdatePacket().apply {
-            this.position = PacketSerializer.BlockPosition(x, y, z)
-            this.radius = blockRadius
-        }
+        fun create(x: Int, y: Int, z: Int, blockRadius: Int) =
+            NetworkChunkPublisherUpdatePacket().apply {
+                this.position = PacketSerializer.BlockPosition(x, y, z)
+                this.radius = blockRadius
+            }
     }
 }

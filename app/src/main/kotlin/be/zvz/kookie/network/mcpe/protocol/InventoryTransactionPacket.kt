@@ -38,7 +38,7 @@ class InventoryTransactionPacket : DataPacket(), ClientboundPacket, ServerboundP
     override fun decodePayload(input: PacketSerializer) {
         requestId = input.readGenericTypeNetworkId()
         if (requestId != 0) {
-            for (i in 0 until input.getUnsignedVarInt()) {
+            repeat(input.getUnsignedVarInt()) {
                 requestChangedSlot.add(InventoryTransactionChangedSlotsHack.read(input))
             }
         }
@@ -67,9 +67,7 @@ class InventoryTransactionPacket : DataPacket(), ClientboundPacket, ServerboundP
         trData.encode(output)
     }
 
-    override fun handle(handler: PacketHandlerInterface): Boolean {
-        return handler.handleInventoryTransaction(this)
-    }
+    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleInventoryTransaction(this)
 
     companion object {
         const val TYPE_NORMAL = 0

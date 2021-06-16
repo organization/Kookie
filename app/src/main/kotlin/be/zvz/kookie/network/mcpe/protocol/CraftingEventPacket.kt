@@ -61,7 +61,5 @@ class CraftingEventPacket : DataPacket(), ServerboundPacket {
         }
     }
 
-    override fun handle(handler: PacketHandlerInterface): Boolean {
-        return handler.handleCraftingEvent(this)
-    }
+    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleCraftingEvent(this)
 }

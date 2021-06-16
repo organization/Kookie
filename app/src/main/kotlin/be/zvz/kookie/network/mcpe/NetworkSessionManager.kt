@@ -35,9 +35,7 @@ class NetworkSessionManager {
         updateSessions.add(session)
     }
 
-    fun getSessionsCount(): Int {
-        return sessions.size
-    }
+    fun getSessionsCount(): Int = sessions.size
 
     fun tick() {
         val iterate = updateSessions.iterator()

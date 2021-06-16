@@ -30,7 +30,7 @@ class EmoteListPacket : DataPacket(), ClientboundPacket, ServerboundPacket {
     override fun decodePayload(input: PacketSerializer) {
         playerEntityRuntimeId = input.getEntityRuntimeId()
         emoteIds = mutableListOf<UUID>().apply {
-            for (i in 0 until input.getUnsignedVarInt()) {
+            repeat(input.getUnsignedVarInt()) {
                 add(input.getUUID())
             }
         }
@@ -44,15 +44,14 @@ class EmoteListPacket : DataPacket(), ClientboundPacket, ServerboundPacket {
         }
     }
 
-    override fun handle(handler: PacketHandlerInterface): Boolean {
-        return handler.handleEmoteList(this)
-    }
+    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleEmoteList(this)
 
     companion object {
         @JvmStatic
-        fun create(playerEntityRuntimeId: Long, emoteIds: List<UUID>) = EmoteListPacket().apply {
-            this.playerEntityRuntimeId = playerEntityRuntimeId
-            this.emoteIds = emoteIds
-        }
+        fun create(playerEntityRuntimeId: Long, emoteIds: List<UUID>) =
+            EmoteListPacket().apply {
+                this.playerEntityRuntimeId = playerEntityRuntimeId
+                this.emoteIds = emoteIds
+            }
     }
 }

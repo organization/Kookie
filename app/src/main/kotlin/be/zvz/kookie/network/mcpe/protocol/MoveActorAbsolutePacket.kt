@@ -49,9 +49,7 @@ class MoveActorAbsolutePacket : DataPacket(), ClientboundPacket, ServerboundPack
         output.putByteRotation(zRot)
     }
 
-    override fun handle(handler: PacketHandlerInterface): Boolean {
-        return handler.handleMoveActorAbsolute(this)
-    }
+    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleMoveActorAbsolute(this)
 
     companion object {
         const val FLAG_GROUND = 0x01
@@ -68,7 +66,7 @@ class MoveActorAbsolutePacket : DataPacket(), ClientboundPacket, ServerboundPack
             yRot: Float,
             zRot: Float,
             flags: Int = 0
-        ): MoveActorAbsolutePacket = MoveActorAbsolutePacket().apply {
+        ) = MoveActorAbsolutePacket().apply {
             this.entityRuntimeId = entityRuntimeId
             this.flags = flags
             this.position = pos

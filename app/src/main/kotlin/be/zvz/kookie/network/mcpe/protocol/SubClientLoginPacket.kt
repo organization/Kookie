@@ -33,7 +33,5 @@ class SubClientLoginPacket : DataPacket(), ServerboundPacket {
         output.putString(connectionRequestData)
     }
 
-    override fun handle(handler: PacketHandlerInterface): Boolean {
-        return handler.handleSubClientLogin(this)
-    }
+    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleSubClientLogin(this)
 }

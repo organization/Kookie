@@ -148,8 +148,9 @@ object ItemFactory {
                         val clone = durableItem.clone() as Durable
                         clone.damage = meta
                         clone
-                    } else
+                    } else {
                         null
+                    }
                 }
                 id < 256 -> ItemBlock(ItemIdentifier(id, meta), BlockFactory.get(if (id < 0) -id else id, meta and 0xf))
                 else -> null

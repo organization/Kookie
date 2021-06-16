@@ -44,7 +44,5 @@ class SpawnParticleEffectPacket : DataPacket(), ClientboundPacket {
         output.putString(particleName)
     }
 
-    override fun handle(handler: PacketHandlerInterface): Boolean {
-        return handler.handleSpawnParticleEffect(this)
-    }
+    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleSpawnParticleEffect(this)
 }

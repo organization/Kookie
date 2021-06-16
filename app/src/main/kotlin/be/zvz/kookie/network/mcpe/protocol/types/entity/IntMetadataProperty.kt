@@ -31,9 +31,14 @@ class IntMetadataProperty(override var value: Int) : MetadataProperty(), Integer
         output.putVarInt(value)
     }
 
-    override fun min(): Int {
-        return Int.MIN_VALUE
-    }
+    override fun equals(other: Any?): Boolean = this === other ||
+        javaClass == other?.javaClass &&
+        value == (other as IntMetadataProperty).value &&
+        id == other.id
+
+    override fun hashCode(): Int = super.hashCode().let { 31 * it + id }
+
+    override fun min(): Int = Int.MIN_VALUE
 
     override fun max(): Int {
         return Int.MAX_VALUE
@@ -49,28 +54,8 @@ class IntMetadataProperty(override var value: Int) : MetadataProperty(), Integer
         return IntMetadataProperty(value)
     }
 
-    override fun hashCode(): Int {
-        var result = value
-        result = 31 * result + id
-        return result
-    }
-
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (javaClass != other?.javaClass) return false
-
-        other as IntMetadataProperty
-
-        if (value != other.value) return false
-        if (id != other.id) return false
-
-        return true
-    }
-
     companion object {
         @JvmStatic
-        fun read(input: PacketSerializer): IntMetadataProperty {
-            return IntMetadataProperty(input.getVarInt())
-        }
+        fun read(input: PacketSerializer) = IntMetadataProperty(input.getVarInt())
     }
 }

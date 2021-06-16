@@ -36,9 +36,7 @@ class NetworkStackLatencyPacket : DataPacket(), ClientboundPacket, ServerboundPa
         output.putBoolean(needResponse)
     }
 
-    override fun handle(handler: PacketHandlerInterface): Boolean {
-        return handler.handleNetworkStackLatency(this)
-    }
+    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleNetworkStackLatency(this)
 
     companion object {
         @JvmStatic

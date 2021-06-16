@@ -32,11 +32,6 @@ class PlayerMovementSettings(
     fun isServerAuthoritativeBlockBreaking(): Boolean = serverAuthoritativeBlockBreaking
 
     fun write(output: PacketSerializer) {
-        /*
-        $out->putVarInt($this->movementType);
-		$out->putVarInt($this->rewindHistorySize);
-		$out->putBool($this->serverAuthoritativeBlockBreaking);
-         */
         output.putVarInt(movementType)
         output.putVarInt(rewindSize)
         output.putBoolean(serverAuthoritativeBlockBreaking)
@@ -44,12 +39,10 @@ class PlayerMovementSettings(
 
     companion object {
         @JvmStatic
-        fun read(input: PacketSerializer): PlayerMovementSettings {
-            return PlayerMovementSettings(
-                input.getVarInt(),
-                input.getVarInt(),
-                input.getBoolean()
-            )
-        }
+        fun read(input: PacketSerializer) = PlayerMovementSettings(
+            movementType = input.getVarInt(),
+            rewindSize = input.getVarInt(),
+            serverAuthoritativeBlockBreaking = input.getBoolean()
+        )
     }
 }

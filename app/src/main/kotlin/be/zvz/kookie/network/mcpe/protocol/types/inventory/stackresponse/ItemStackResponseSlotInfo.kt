@@ -38,14 +38,13 @@ class ItemStackResponseSlotInfo(
 
     companion object {
         @JvmStatic
-        fun read(input: PacketSerializer): ItemStackResponseSlotInfo {
-            val slot = input.getByte()
-            val horbarSlot = input.getByte()
-            val count = input.getByte()
-            val itemStackId = input.readGenericTypeNetworkId()
-            val customName = input.getString()
-            val durabilityCorrection = input.getVarInt()
-            return ItemStackResponseSlotInfo(slot, horbarSlot, count, itemStackId, customName, durabilityCorrection)
-        }
+        fun read(input: PacketSerializer) = ItemStackResponseSlotInfo(
+            slot = input.getByte(),
+            horbarSlot = input.getByte(),
+            count = input.getByte(),
+            itemStackId = input.readGenericTypeNetworkId(),
+            customName = input.getString(),
+            durabilityCorrection = input.getVarInt()
+        )
     }
 }

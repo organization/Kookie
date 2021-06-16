@@ -80,9 +80,7 @@ class MoveActorDeltaPacket : DataPacket(), ClientboundPacket {
         maybeWriteRotation(FLAG_HAS_ROT_Z, zRot, output)
     }
 
-    override fun handle(handler: PacketHandlerInterface): Boolean {
-        return handler.handleMoveActorDelta(this)
-    }
+    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleMoveActorDelta(this)
 
     companion object {
         const val FLAG_HAS_X = 0x01

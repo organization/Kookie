@@ -29,10 +29,8 @@ class NetworkSettingsPacket : DataPacket(), ClientboundPacket {
         const val EVERYTHING = 1
 
         @JvmStatic
-        fun create(compressionThreshold: Int): NetworkSettingsPacket {
-            return NetworkSettingsPacket().apply {
-                this.compressionThreshold = compressionThreshold
-            }
+        fun create(compressionThreshold: Int) = NetworkSettingsPacket().apply {
+            this.compressionThreshold = compressionThreshold
         }
     }
 
@@ -44,7 +42,5 @@ class NetworkSettingsPacket : DataPacket(), ClientboundPacket {
         output.putLShort(compressionThreshold)
     }
 
-    override fun handle(handler: PacketHandlerInterface): Boolean {
-        return handler.handleNetworkSettings(this)
-    }
+    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleNetworkSettings(this)
 }

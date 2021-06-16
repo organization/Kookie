@@ -42,32 +42,29 @@ class SetSpawnPositionPacket : DataPacket(), ClientboundPacket {
         output.putBlockPosition(pos2)
     }
 
-    override fun handle(handler: PacketHandlerInterface): Boolean {
-        return handler.handleSetSpawnPosition(this)
-    }
+    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleSetSpawnPosition(this)
 
     companion object {
         const val TYPE_PLAYER_SPAWN = 0
         const val TYPE_WORLD_SPAWN = 1
 
         @JvmStatic
-        fun playerSpawn(x: Int, y: Int, z: Int, dimension: Int, x2: Int, y2: Int, z2: Int): SetSpawnPositionPacket {
-            return SetSpawnPositionPacket().apply {
+        fun playerSpawn(x: Int, y: Int, z: Int, dimension: Int, x2: Int, y2: Int, z2: Int) =
+            SetSpawnPositionPacket().apply {
                 this.spawnType = TYPE_PLAYER_SPAWN
                 this.pos1 = PacketSerializer.BlockPosition(x, y, z)
                 this.pos2 = PacketSerializer.BlockPosition(x2, y2, z2)
                 this.dimension = dimension
             }
-        }
 
         @JvmStatic
-        fun worldSPawn(x: Int, y: Int, z: Int, dimension: Int): SetSpawnPositionPacket {
-            return SetSpawnPositionPacket().apply {
+        fun worldSPawn(x: Int, y: Int, z: Int, dimension: Int) =
+            SetSpawnPositionPacket().apply {
                 this.spawnType = TYPE_WORLD_SPAWN
                 val pos = PacketSerializer.BlockPosition(x, y, z)
                 this.pos1 = pos
                 this.pos2 = pos
+                this.dimension = dimension
             }
-        }
     }
 }

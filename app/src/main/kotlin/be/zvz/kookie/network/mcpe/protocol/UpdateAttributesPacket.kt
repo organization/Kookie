@@ -40,7 +40,5 @@ class UpdateAttributesPacket : DataPacket(), ClientboundPacket {
         output.putUnsignedVarLong(tick)
     }
 
-    override fun handle(handler: PacketHandlerInterface): Boolean {
-        return handler.handleUpdateAttributes(this)
-    }
+    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleUpdateAttributes(this)
 }

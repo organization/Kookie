@@ -33,9 +33,7 @@ class SimpleEventPacket : DataPacket(), ClientboundPacket, ServerboundPacket {
         output.putLShort(eventType)
     }
 
-    override fun handle(handler: PacketHandlerInterface): Boolean {
-        return handler.handleSimpleEvent(this)
-    }
+    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleSimpleEvent(this)
 
     companion object {
         const val TYPE_ENABLE_COMMANDS = 1

@@ -36,7 +36,7 @@ open class CommandOutputPacket : DataPacket(), ClientboundPacket {
         outputType = Type.from(input.getByte())
         successCount = input.getUnsignedVarInt()
 
-        for (i in 0 until input.getUnsignedVarInt()) {
+        repeat(input.getUnsignedVarInt()) {
             messages.add(getCommandMessage(input))
         }
 
@@ -54,7 +54,7 @@ open class CommandOutputPacket : DataPacket(), ClientboundPacket {
         message.isInternal = input.getBoolean()
         message.messageId = input.getString()
 
-        for (i in 0 until input.getUnsignedVarInt()) {
+        repeat(input.getUnsignedVarInt()) {
             message.parameters.add(input.getString())
         }
 
@@ -86,9 +86,7 @@ open class CommandOutputPacket : DataPacket(), ClientboundPacket {
         }
     }
 
-    override fun handle(handler: PacketHandlerInterface): Boolean {
-        return handler.handleCommandOutput(this)
-    }
+    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleCommandOutput(this)
 
     enum class Type(val id: Int) {
         LAST(1),

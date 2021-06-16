@@ -106,14 +106,8 @@ class Config @JvmOverloads constructor(
     }
 
     @JvmOverloads
-    fun get(key: String, default: ConfigBrowser = ConfigBrowser.NULL_BROWSER): ConfigBrowser {
-        val value = config[key]
-        return if (value !== ConfigBrowser.NULL_BROWSER) {
-            value
-        } else {
-            default
-        }
-    }
+    fun get(key: String, default: ConfigBrowser = ConfigBrowser.NULL_BROWSER): ConfigBrowser =
+        config[key].takeIf { it !== ConfigBrowser.NULL_BROWSER } ?: default
 
     fun set(key: String, value: Any) {
         config.put(key, value)

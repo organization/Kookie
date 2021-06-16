@@ -24,15 +24,13 @@ class PacketDecodeException @JvmOverloads internal constructor(
     companion object {
         @JvmStatic
         @JvmOverloads
-        fun wrap(previous: Throwable, prefix: String? = null): PacketDecodeException {
-            return PacketDecodeException(
-                if (prefix !== null) {
-                    "$prefix: "
-                } else {
-                    ""
-                } + previous.message,
-                previous
-            )
-        }
+        fun wrap(previous: Throwable, prefix: String? = null) = PacketDecodeException(
+            if (prefix !== null) {
+                "$prefix: "
+            } else {
+                ""
+            } + previous.message,
+            previous
+        )
     }
 }

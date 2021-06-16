@@ -31,12 +31,10 @@ class ResourcePackStackPacket : DataPacket(), ClientboundPacket {
 
     override fun decodePayload(input: PacketSerializer) {
         mustAccept = input.getBoolean()
-        val behaviorPackCount = input.getUnsignedVarInt()
-        for (i in 0 until behaviorPackCount) {
+        repeat(input.getUnsignedVarInt()) {
             behaviorStacks.add(BehaviorPackEntry.read(input))
         }
-        val resourcePackCount = input.getUnsignedVarInt()
-        for (i in 0 until resourcePackCount) {
+        repeat(input.getUnsignedVarInt()) {
             resourcePackStacks.add(ResourcePackEntry.read(input))
         }
     }
@@ -53,7 +51,5 @@ class ResourcePackStackPacket : DataPacket(), ClientboundPacket {
         }
     }
 
-    override fun handle(handler: PacketHandlerInterface): Boolean {
-        TODO("Not yet implemented")
-    }
+    override fun handle(handler: PacketHandlerInterface): Boolean = TODO("Not yet implemented")
 }

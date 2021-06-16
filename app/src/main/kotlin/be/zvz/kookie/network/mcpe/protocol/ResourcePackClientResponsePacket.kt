@@ -29,7 +29,7 @@ class ResourcePackClientResponsePacket : DataPacket(), ServerboundPacket {
 
     override fun decodePayload(input: PacketSerializer) {
         status = input.getByte()
-        for (i in 0 until input.getLShort()) {
+        repeat(input.getLShort()) {
             packIds.add(input.getString())
         }
     }
@@ -41,9 +41,7 @@ class ResourcePackClientResponsePacket : DataPacket(), ServerboundPacket {
         }
     }
 
-    override fun handle(handler: PacketHandlerInterface): Boolean {
-        return handler.handleResourcePackClientResponse(this)
-    }
+    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleResourcePackClientResponse(this)
 
     enum class Status(val state: Int) {
         REFUSED(1),

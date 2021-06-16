@@ -27,7 +27,5 @@ abstract class MetadataProperty {
 
     abstract override fun equals(other: Any?): Boolean
 
-    override fun hashCode(): Int {
-        return id
-    }
+    override fun hashCode(): Int = id
 }

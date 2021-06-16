@@ -33,9 +33,7 @@ class SetDifficultyPacket : DataPacket(), ClientboundPacket, ServerboundPacket {
         output.putUnsignedVarInt(difficulty)
     }
 
-    override fun handle(handler: PacketHandlerInterface): Boolean {
-        return handler.handleSetDifficulty(this)
-    }
+    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleSetDifficulty(this)
 
     companion object {
         @JvmStatic
