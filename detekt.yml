@@ -563,7 +563,7 @@ style:
   ForbiddenComment:
     active: true
     values: ['FIXME:', 'STOPSHIP:']
-    allowedPatterns: []
+    allowedPatterns: ''
   ForbiddenImport:
     active: false
     imports: []
