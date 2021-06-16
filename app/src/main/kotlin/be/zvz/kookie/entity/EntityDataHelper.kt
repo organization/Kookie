@@ -27,6 +27,7 @@ import be.zvz.kookie.world.World
 
 object EntityDataHelper {
 
+    @JvmStatic
     fun parseLocation(nbt: CompoundTag, world: World): Location {
         val pos = parseVec3(nbt, "pos", false)
 
@@ -41,6 +42,7 @@ object EntityDataHelper {
         return Location.fromObject(pos, world, (values[0] as FloatTag).value, (values[1] as FloatTag).value)
     }
 
+    @JvmStatic
     fun parseVec3(nbt: CompoundTag, tagName: String, optional: Boolean): Vector3 {
         val pos = nbt.getTag(tagName)
         if (pos === null && optional) {
@@ -56,6 +58,7 @@ object EntityDataHelper {
         return Vector3((values[0] as DoubleTag).value, (values[1] as DoubleTag).value, (values[2] as DoubleTag).value)
     }
 
+    @JvmStatic
     fun createBaseNBT(pos: Vector3, motion: Vector3? = null, yaw: Double = 0.0, pitch: Double = 0.0): CompoundTag {
         val nbt = CompoundTag.create()
         nbt.setTag(
