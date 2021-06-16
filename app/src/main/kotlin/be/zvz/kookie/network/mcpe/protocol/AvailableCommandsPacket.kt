@@ -75,7 +75,7 @@ class AvailableCommandsPacket : DataPacket(), ClientboundPacket {
         val postfixIndexes: MutableMap<String, Int> = HashObjIntMaps.newMutableMap()
         val enums: MutableMap<Int, CommandEnum> = HashIntObjMaps.newMutableMap()
 
-        fun addEnum(enum: CommandEnum) {
+        val addEnum = fun(enum: CommandEnum) {
             if (!enumIndexes.containsKey(enum.getEnumName())) {
                 val size = enumIndexes.size
                 enumIndexes[enum.getEnumName()] = size
@@ -86,24 +86,20 @@ class AvailableCommandsPacket : DataPacket(), ClientboundPacket {
             }
         }
 
-        hardCodeEnums.forEach {
-            addEnum(it)
+        val addPostfix = fun(postfix: String) {
+            postfixIndexes[postfix] = postfixIndexes.getOrDefault(postfix, postfixIndexes.size)
         }
 
+        hardCodeEnums.forEach(addEnum)
+
         commandData.forEach { (_, data) ->
-            if (data.aliases != null) {
-                addEnum(data.aliases!!)
-            }
+            data.aliases?.let(addEnum)
+
             data.overloads.forEach { (_, map) ->
                 map.forEach { (_, commandParameter) ->
-                    commandParameter.enum?.let {
-                        addEnum(it)
-                    }
+                    commandParameter.enum?.let(addEnum)
 
-                    commandParameter.postfix?.let {
-                        postfixIndexes[it] =
-                            postfixIndexes.getOrDefault(it, postfixIndexes.size)
-                    }
+                    commandParameter.postfix?.let(addPostfix)
                 }
             }
         }
@@ -220,29 +216,31 @@ class AvailableCommandsPacket : DataPacket(), ClientboundPacket {
                 parameter.isOptional = input.getBoolean()
                 parameter.flags = input.getByte()
 
-                if ((parameter.paramType and ARG_FLAG_ENUM) != 0) {
-                    val index = (parameter.paramType and 0xffff)
-                    parameter.enum = enums.getOrNull(index)
-                    if (parameter.enum !is CommandEnum) {
-                        throw PacketDecodeException(
+                when {
+                    (parameter.paramType and ARG_FLAG_ENUM) != 0 -> {
+                        val index = (parameter.paramType and 0xffff)
+                        enums.getOrNull(index)?.let {
+                            parameter.enum = it
+                        } ?: throw PacketDecodeException(
                             "Deserializing $name parameter ${parameter.paramName}: " +
                                 "Expected enum at $index, but got none"
                         )
                     }
-                } else if ((parameter.paramType and ARG_FLAG_POSTFIX) != 0) {
-                    val index = (parameter.paramType and 0xffff)
-                    parameter.postfix = postFixes.getOrNull(index)
-                    if (parameter.postfix == null) {
-                        throw PacketDecodeException(
+                    (parameter.paramType and ARG_FLAG_POSTFIX) != 0 -> {
+                        val index = (parameter.paramType and 0xffff)
+                        postFixes.getOrNull(index)?.let {
+                            parameter.postfix = it
+                        } ?: throw PacketDecodeException(
                             "Deserializing $name parameter ${parameter.paramName}: " +
                                 "Expected postfix at $index, but got none"
                         )
                     }
-                } else if ((parameter.paramType and ARG_FLAG_VALID) == 0) {
-                    throw PacketDecodeException(
-                        "deserializing $name parameter ${parameter.paramName}: " +
-                            "Invalid parameter type ${parameter.paramType}"
-                    )
+                    (parameter.paramType and ARG_FLAG_VALID) == 0 -> {
+                        throw PacketDecodeException(
+                            "Deserializing $name parameter ${parameter.paramName}: " +
+                                "Invalid parameter type ${parameter.paramType}"
+                        )
+                    }
                 }
                 overloads.getValue(overloadIndex)[paramIndex] = parameter
             }
@@ -270,13 +268,11 @@ class AvailableCommandsPacket : DataPacket(), ClientboundPacket {
             output.putUnsignedVarInt(overload.size)
             overload.forEach { (_, parameter) ->
                 output.putString(parameter.paramName)
+
                 val type = parameter.enum?.let {
                     ARG_FLAG_ENUM or ARG_FLAG_VALID or enumIndexes.getOrDefault(it.getEnumName(), -1)
                 } ?: parameter.postfix?.let {
-                    val key = postFixIndexes.getOrDefault(it, -1)
-                    if (key == -1) {
-                        throw AssertionError("Postfix '${parameter.postfix} not in postfixes array")
-                    }
+                    val key = postFixIndexes[it] ?: throw AssertionError("Postfix '${parameter.postfix} not in postfixes array")
                     ARG_FLAG_POSTFIX or key
                 } ?: parameter.paramType
 

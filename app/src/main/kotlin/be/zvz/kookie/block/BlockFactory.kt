@@ -17,7 +17,6 @@
  */
 package be.zvz.kookie.block
 
-import be.zvz.kookie.block.util.IllegalBlockStateException
 import com.koloboke.collect.map.hash.HashIntFloatMaps
 import com.koloboke.collect.map.hash.HashIntIntMaps
 import com.koloboke.collect.map.hash.HashIntObjMaps
@@ -49,40 +48,30 @@ object BlockFactory {
         }
 
         block.idInfo.getAllBlockIds().forEach { id ->
-            if (!override && isRegistered(id, variant)) {
-                throw IllegalArgumentException("Block registration $id:$variant conflicts with an existing block")
+            if (!override) assertRegisterValid(block, id, variant)
+            for (meta in variant until (variant or stateMask)) {
+                if (meta and stateMask.inv() != variant) {
+                    continue
+                }
+                if (!override) assertRegisterValid(block, id, meta)
+
+                val index = id shl 4 or meta
+                val v = block.clone().apply { readStateFromData(id, meta) }
+                if (v.getFullId() != index) {
+                    // if the fullID comes back different, this is a broken state that we can't rely on; map it to default
+                    fillStaticArrays(index, block)
+                } else {
+                    fillStaticArrays(index, v)
+                }
             }
-            registerInternal(block, override, id, variant, stateMask)
         }
     }
 
-    private fun registerInternal(block: Block, override: Boolean, id: Int, variant: Int, stateMask: Int) {
-        for (m in variant until (variant or stateMask)) {
-            if (m and stateMask.inv() != variant) {
-                continue
-            }
-
-            if (!override && isRegistered(id, m)) {
-                throw IllegalArgumentException(
-                    "Block registration ${block::class} has states which conflict with other blocks"
-                )
-            }
-
-            val index = id shl 4 or m
-
-            val v = block.clone()
-            try {
-                v.readStateFromData(id, m)
-                if (v.getFullId() != index) {
-                    // if the fullID comes back different, this is a broken state that we can't rely on; map it to default
-                    throw IllegalBlockStateException("Corrupted state")
-                }
-            } catch (e: IllegalBlockStateException) { // invalid property combination, fill the default state
-                fillStaticArrays(index, block)
-                continue
-            }
-
-            fillStaticArrays(index, block)
+    private fun assertRegisterValid(block: Block, id: Int, variant: Int) {
+        if (isRegistered(id, variant)) {
+            throw IllegalArgumentException(
+                "Block registration ${block::class} has states which conflict with other blocks"
+            )
         }
     }
 
