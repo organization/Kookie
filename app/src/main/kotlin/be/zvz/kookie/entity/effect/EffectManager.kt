@@ -141,7 +141,7 @@ data class EffectManager(val entity: Living) {
             if (effect.visible && effect.effectType.hasBubbles) {
                 val level = effect.effectLevel
                 val color = effect.color
-                for (i in 0..level) {
+                repeat(level) {
                     colors.add(color)
                 }
                 if (!effect.ambient) {
