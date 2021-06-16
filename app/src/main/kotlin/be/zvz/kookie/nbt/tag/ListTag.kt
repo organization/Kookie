@@ -31,10 +31,6 @@ class ListTag<T> @JvmOverloads constructor(
     override val value: List<Tag<T>>
         get() = list
 
-    override fun getTagType(): NBT.TagType {
-        return tagType
-    }
-
     init {
         value.forEach { tag ->
             if (tagType === NBT.TagType.NOTHING) {

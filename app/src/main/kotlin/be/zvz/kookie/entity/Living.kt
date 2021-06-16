@@ -64,7 +64,7 @@ abstract class Living(location: Location) : Entity(location) {
 
     lateinit var effectManager: EffectManager
 
-    lateinit var armorInventory: ArmorInventory
+    open lateinit var armorInventory: ArmorInventory
 
     var breathing: Boolean = true
     var breathTicks: Long = DEFAULT_BREATH_TICKS
@@ -464,7 +464,9 @@ abstract class Living(location: Location) : Entity(location) {
     }
 
     open fun canBreath(): Boolean =
-        effectManager.has(VanillaEffects.WATER_BREATH.effect) || effectManager.has(VanillaEffects.CONDUIT_POWER.effect) || !isUnderWater()
+        effectManager.has(VanillaEffects.WATER_BREATH.effect) ||
+            effectManager.has(VanillaEffects.CONDUIT_POWER.effect) ||
+            !isUnderWater()
 
     open fun isBreathing(): Boolean = breathing
 
