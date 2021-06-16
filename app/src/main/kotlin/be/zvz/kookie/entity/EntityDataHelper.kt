@@ -95,4 +95,19 @@ object EntityDataHelper {
 
     fun createBaseNBT(location: Location, motion: Vector3? = null): CompoundTag =
         createBaseNBT(location.asVector3(), motion, location.yaw, location.pitch)
+
+    /**
+     * Used to initialize an entity.
+     * Calling Entity.spawnTo() without calling
+     * this method will result in an AssertionError.
+     *
+     * @see Entity.spawnTo
+     */
+    fun initDefaults(entity: Entity, nbt: CompoundTag? = null) {
+        entity.recalculateBoundingBox()
+        entity.resetLastMovement()
+        entity.addAttributes()
+        entity.initEntity(nbt ?: CompoundTag.create())
+        entity.initialized = true
+    }
 }

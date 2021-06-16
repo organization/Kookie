@@ -149,6 +149,8 @@ abstract class Entity @JvmOverloads constructor(var location: Location, nbt: Com
     private var ownerId: Long = -1
     private var targetId: Long = -1
 
+    var initialized: Boolean = false
+
     abstract val entityNetworkIdentifier: EntityIds
 
     init {
@@ -160,18 +162,12 @@ abstract class Entity @JvmOverloads constructor(var location: Location, nbt: Com
                 !location.z.isNaN() && !location.z.isInfinite()
         )
         boundingBox = AxisAlignedBB(0.0, 0.0, 0.0, 0.0, 0.0, 0.0)
-        recalculateBoundingBox()
 
         motion = if (nbt !== null) {
             EntityDataHelper.parseVec3(nbt, "Motion", true)
         } else {
             Vector3()
         }
-        resetLastMovement()
-
-        addAttributes()
-
-        initEntity(nbt ?: CompoundTag.create())
 
         // TODO: getWorld().addEntity(this)
 
@@ -205,7 +201,7 @@ abstract class Entity @JvmOverloads constructor(var location: Location, nbt: Com
     open fun addAttributes() {
     }
 
-    protected open fun initEntity(nbt: CompoundTag) {
+    open fun initEntity(nbt: CompoundTag) {
         // JLS 7 17.5
         timings = Timings.getEntityTimings(this)
         size = getInitialSizeInfo()
@@ -1060,6 +1056,9 @@ abstract class Entity @JvmOverloads constructor(var location: Location, nbt: Com
 
     open fun spawnTo(player: Player) {
         // TODO
+        if (!initialized) {
+            throw AssertionError("Entity must be initialized before calling spawnTo()")
+        }
         if (
             !hasSpawned.containsKey(player.getId())
             /* && player.hasReceovedChunk(floor(location.x).toInt() shr 4, floor(location.z).toInt() shr 4)*/
