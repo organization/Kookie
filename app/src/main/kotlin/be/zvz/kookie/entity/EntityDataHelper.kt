@@ -103,6 +103,7 @@ object EntityDataHelper {
      *
      * @see Entity.spawnTo
      */
+    @JvmStatic
     fun initDefaults(entity: Entity, nbt: CompoundTag? = null) {
         entity.recalculateBoundingBox()
         entity.resetLastMovement()
