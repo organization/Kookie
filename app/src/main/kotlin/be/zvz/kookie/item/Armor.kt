@@ -88,10 +88,11 @@ class Armor(identifier: ItemIdentifier, name: String, val armorInfo: ArmorTypeIn
 
     override fun serializeCompoundTag(tag: CompoundTag) {
         super.serializeCompoundTag(tag)
-        if (customColor !== null)
+        if (customColor !== null) {
             tag.setInt(TAG_CUSTOM_COLOR, Binary.signInt(customColor!!.toARGB()))
-        else
+        } else {
             tag.removeTag(TAG_CUSTOM_COLOR)
+        }
     }
 
     companion object {

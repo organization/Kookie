@@ -469,8 +469,9 @@ class PacketSerializer @JvmOverloads constructor(
 
     fun getRecipeIngredient(): RecipeIngredient {
         val id = getVarInt()
-        if (id == 0)
+        if (id == 0) {
             return RecipeIngredient(0, 0, 0)
+        }
 
         val meta = getVarInt()
         val count = getVarInt()

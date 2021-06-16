@@ -111,8 +111,9 @@ object ItemTranslator {
     @JvmStatic
     fun fromNetworkIdWithWildcardHandling(networkId: Int, networkMeta: Int): Pair<Int, Int> {
         val isComplexMapping = AtomicBoolean(false)
-        if (networkMeta != 0x7fff)
+        if (networkMeta != 0x7fff) {
             return fromNetworkId(networkId, networkMeta)
+        }
         val (id, meta) = fromNetworkId(networkId, 0, isComplexMapping)
         return Pair(id, if (isComplexMapping.get()) meta else -1)
     }

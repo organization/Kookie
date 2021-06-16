@@ -343,8 +343,9 @@ open class Block(val idInfo: BlockIdentifier, val name: String, val breakInfo: B
      */
     fun collidesWithBB(bb: AxisAlignedBB): Boolean {
         collisionBoxes?.forEach {
-            if (bb.intersectsWith(it))
+            if (bb.intersectsWith(it)) {
                 return true
+            }
         }
 
         return false

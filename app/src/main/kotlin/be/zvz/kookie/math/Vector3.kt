@@ -204,9 +204,9 @@ open class Vector3 @JvmOverloads constructor(var x: Double = 0.0, var y: Double 
 
     fun withComponents(x: Int?, y: Int?, z: Int?): Vector3 = withComponents(x?.toDouble(), y?.toDouble(), z?.toDouble())
     fun withComponents(x: Double?, y: Double?, z: Double?): Vector3 =
-        if (x !== null || y !== null || z !== null)
+        if (x !== null || y !== null || z !== null) {
             Vector3(x ?: this.x, y ?: this.y, z ?: this.z)
-        else this.asVector3()
+        } else this.asVector3()
 
     fun maxComponents(vector: Vector3, vararg vectors: Vector3): Vector3 {
         var x = vector.x
