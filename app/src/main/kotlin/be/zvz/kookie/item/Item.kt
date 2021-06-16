@@ -115,11 +115,9 @@ open class Item @JvmOverloads constructor(
         customName = ""
         lore.clear()
 
-        val display = tag.getCompoundTag(TAG_DISPLAY)
-        if (display != null) {
+        tag.getCompoundTag(TAG_DISPLAY)?.let { display ->
             customName = display.getString(TAG_DISPLAY_NAME, customName)
-            val loreTag = display.getListTag(TAG_DISPLAY_LORE)
-            if (loreTag != null && loreTag.getTagType() == NBT.TagType.STRING) {
+            display.getListTag(TAG_DISPLAY_LORE)?.takeIf { it.getTagType() == NBT.TagType.STRING }?.let { loreTag ->
                 loreTag.value.forEach {
                     lore.add(it.value.toString())
                 }
@@ -127,19 +125,17 @@ open class Item @JvmOverloads constructor(
         }
 
         removeEnchantments()
-        val enchantmentsTag = tag.getListTag(TAG_ENCH)
-        if (enchantmentsTag != null && enchantmentsTag.getTagType() == NBT.TagType.COMPOUND) {
-            enchantmentsTag.value.forEach {
-                it as CompoundTag
-                val magicNumber = it.getShort("id", -1)
-                val level = it.getShort("lvl", 0)
+        val enchantmentsTag = tag.getListTag(TAG_ENCH)?.takeIf { it.getTagType() == NBT.TagType.COMPOUND }
+        enchantmentsTag?.let {
+            it.value.forEach { value ->
+                value as CompoundTag
+                val magicNumber = value.getShort("id", -1)
+                val level = value.getShort("lvl", 0)
                 if (level <= 0) {
                     return
                 }
-                EnchantmentIdMap.fromId(magicNumber).let { type ->
-                    if (type != null) {
-                        addEnchantment(EnchantmentInstance(type, level))
-                    }
+                EnchantmentIdMap.fromId(magicNumber)?.let { type ->
+                    addEnchantment(EnchantmentInstance(type, level))
                 }
             }
         }
@@ -202,20 +198,27 @@ open class Item @JvmOverloads constructor(
         }
 
         if (this.canPlaceOn.isNotEmpty()) {
-            val canPlaceOnTag = ListTag<String>()
-            canPlaceOn.forEach { (_, value) ->
-                canPlaceOnTag.push(StringTag(value))
-            }
-            tag.setTag("CanPlaceOn", canPlaceOnTag)
+            tag.setTag(
+                "CanPlaceOn",
+                ListTag<String>().apply {
+                    canPlaceOn.forEach { (_, value) ->
+                        push(StringTag(value))
+                    }
+                }
+
+            )
         } else {
             tag.removeTag("CanPlaceOn")
         }
         if (this.canDestroy.isNotEmpty()) {
-            val canDestroyTag = ListTag<String>()
-            canDestroy.forEach { (_, value) ->
-                canDestroyTag.push(StringTag(value))
-            }
-            tag.setTag("canDestroy", canDestroyTag)
+            tag.setTag(
+                "canDestroy",
+                ListTag<String>().apply {
+                    canDestroy.forEach { (_, value) ->
+                        push(StringTag(value))
+                    }
+                }
+            )
         } else {
             tag.removeTag("canDestroy")
         }

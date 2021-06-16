@@ -72,7 +72,7 @@ interface InventoryHelpers : Inventory {
         val checkTags = item.hasNamedTag()
 
         getContents().forEach { (index, i) ->
-            if (item.equals(i, checkDamage, checkTags) && (i.count == count || !exact || i.count > count)) {
+            if (item.equals(i, checkDamage, checkTags) && (!exact || i.count >= count)) {
                 return index
             }
         }
@@ -123,53 +123,53 @@ interface InventoryHelpers : Inventory {
         }
 
         val emptySlots = mutableListOf<Int>()
-        for (i in 0 until size) {
-            val item = getItem(i)
-            if (item.isNull()) {
+        repeat(size) { i ->
+            getItem(i).takeIf {
+                !it.isNull() && it.count < it.maxStackSize
+            }?.let { item ->
+                val iterate = itemSlots.listIterator()
+                var index = 0
+                while (iterate.hasNext()) {
+                    iterate.next().takeIf(item::equals)?.let { slot ->
+                        mergeItem(index, item, slot, iterate)
+                    }
+                    index++
+                }
+            } ?: run {
                 emptySlots.add(i)
             }
 
-            val iterate = itemSlots.listIterator()
-            var index = 0
-            while (iterate.hasNext()) {
-                val slot = iterate.next()
-                if (slot.equals(item) && item.count < item.maxStackSize) {
-                    val amount = min(item.maxStackSize - item.count, min(slot.count, maxStackSize))
-                    if (amount > 0) {
-                        slot.count -= amount
-                        item.count += amount
-                        setItem(index, item)
-                        if (slot.count <= 0) {
-                            iterate.remove()
-                        }
-                    }
-                }
-                index++
-            }
-
             if (itemSlots.size == 0) {
-                break
+                return mutableListOf()
             }
         }
+        if (itemSlots.size == 0) {
+            return mutableListOf()
+        }
 
-        if (itemSlots.size > 0 && emptySlots.size > 0) {
-            emptySlots.forEach { slotIndex ->
-                val iterate = itemSlots.listIterator()
-                while (iterate.hasNext()) {
-                    val slot = iterate.next()
-                    val amount = min(slot.maxStackSize, min(slot.count, maxStackSize))
-                    slot.count -= amount
-                    val item = slot.clone()
-                    item.count = amount
-                    setItem(slotIndex, item)
-                    if (slot.count <= 0) {
-                        iterate.remove()
-                    }
-                }
+        emptySlots.forEach { index ->
+            val iterate = itemSlots.listIterator()
+            while (iterate.hasNext()) {
+                val slot = iterate.next()
+                val item = slot.clone().apply { count = 0 }
+                mergeItem(index, item, slot, iterate)
             }
         }
 
         return itemSlots
+    }
+
+    private fun mergeItem(index: Int, item: Item, slot: Item, iterate: MutableListIterator<Item>) {
+        (min(slot.maxStackSize, item.maxStackSize) - slot.count).let { amount ->
+            if (amount > 0) {
+                slot.count -= amount
+                item.count += amount
+                setItem(index, item)
+                if (slot.count <= 0) {
+                    iterate.remove()
+                }
+            }
+        }
     }
 
     fun removeItem(vararg slots: Item): MutableList<Item> {
@@ -180,32 +180,29 @@ interface InventoryHelpers : Inventory {
             }
         }
 
-        for (i in 0 until size) {
-            val item = getItem(i)
-            if (item.isNull()) {
-                continue
-            }
-
-            val iterate = itemSlots.listIterator()
-            var index = 0
-            while (iterate.hasNext()) {
-                val slot = iterate.next()
-                if (slot.equals(item, !slot.hasAnyDamageValue(), slot.hasNamedTag())) {
-                    val amount = min(item.count, slot.count)
-                    if (amount > 0) {
-                        slot.count -= amount
-                        item.count -= amount
-                        setItem(index, item)
-                        if (slot.count <= 0) {
-                            iterate.remove()
+        repeat(size) { i ->
+            getItem(i).takeIf { it.isNull() }?.let { item ->
+                val iterate = itemSlots.listIterator()
+                var index = 0
+                while (iterate.hasNext()) {
+                    val slot = iterate.next()
+                    if (slot.equals(item, !slot.hasAnyDamageValue(), slot.hasNamedTag())) {
+                        val amount = min(item.count, slot.count)
+                        if (amount > 0) {
+                            slot.count -= amount
+                            item.count -= amount
+                            setItem(index, item)
+                            if (slot.count <= 0) {
+                                iterate.remove()
+                            }
                         }
                     }
+                    index++
                 }
-                index++
             }
 
-            if (itemSlots.size == 0) {
-                break
+            if (itemSlots.isEmpty()) {
+                return mutableListOf()
             }
         }
 

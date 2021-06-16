@@ -52,34 +52,37 @@ object BlockFactory {
             if (!override && isRegistered(id, variant)) {
                 throw IllegalArgumentException("Block registration $id:$variant conflicts with an existing block")
             }
+            registerInternal(block, override, id, variant, stateMask)
+        }
+    }
 
-            for (m in variant until (variant or stateMask)) {
-                if (m and stateMask.inv() != variant) {
-                    continue
-                }
-
-                if (!override && isRegistered(id, m)) {
-                    throw IllegalArgumentException(
-                        "Block registration ${block::class} has states which conflict with other blocks"
-                    )
-                }
-
-                val index = id shl 4 or m
-
-                val v = block.clone()
-                try {
-                    v.readStateFromData(id, m)
-                    if (v.getFullId() != index) {
-                        // if the fullID comes back different, this is a broken state that we can't rely on; map it to default
-                        throw IllegalBlockStateException("Corrupted state")
-                    }
-                } catch (e: IllegalBlockStateException) { // invalid property combination, fill the default state
-                    fillStaticArrays(index, block)
-                    continue
-                }
-
-                fillStaticArrays(index, block)
+    private fun registerInternal(block: Block, override: Boolean, id: Int, variant: Int, stateMask: Int) {
+        for (m in variant until (variant or stateMask)) {
+            if (m and stateMask.inv() != variant) {
+                continue
             }
+
+            if (!override && isRegistered(id, m)) {
+                throw IllegalArgumentException(
+                    "Block registration ${block::class} has states which conflict with other blocks"
+                )
+            }
+
+            val index = id shl 4 or m
+
+            val v = block.clone()
+            try {
+                v.readStateFromData(id, m)
+                if (v.getFullId() != index) {
+                    // if the fullID comes back different, this is a broken state that we can't rely on; map it to default
+                    throw IllegalBlockStateException("Corrupted state")
+                }
+            } catch (e: IllegalBlockStateException) { // invalid property combination, fill the default state
+                fillStaticArrays(index, block)
+                continue
+            }
+
+            fillStaticArrays(index, block)
         }
     }
 
