@@ -41,7 +41,7 @@ class BiomeArray(var payload: String) {
         @JvmStatic
         fun idx(x: Int, z: Int): Int =
             if (x in 0..15 && z in 0..15) {
-                (z shl 4) or x
+                z shl 4 or x
             } else {
                 throw IllegalArgumentException("x and z must be in the range 0-15")
             }

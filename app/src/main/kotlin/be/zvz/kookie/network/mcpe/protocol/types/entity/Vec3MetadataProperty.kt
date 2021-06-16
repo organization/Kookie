@@ -28,7 +28,7 @@ class Vec3MetadataProperty(val value: Vector3) : MetadataProperty() {
         output.putVector3(value)
     }
 
-    override fun equals(other: Any?): Boolean = javaClass == other?.javaClass && (other as Vector3) == value
+    override fun equals(other: Any?): Boolean = javaClass == other?.javaClass && other as Vector3 == value
 
     override fun hashCode(): Int = super.hashCode().let { 31 * it + value.hashCode() }.let { 31 * it + id }
 

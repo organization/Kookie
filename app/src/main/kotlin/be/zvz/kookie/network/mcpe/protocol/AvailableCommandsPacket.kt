@@ -217,7 +217,7 @@ class AvailableCommandsPacket : DataPacket(), ClientboundPacket {
                 parameter.flags = input.getByte()
 
                 when {
-                    (parameter.paramType and ARG_FLAG_ENUM) != 0 -> {
+                    parameter.paramType and ARG_FLAG_ENUM != 0 -> {
                         val index = (parameter.paramType and 0xffff)
                         enums.getOrNull(index)?.let {
                             parameter.enum = it
@@ -226,7 +226,7 @@ class AvailableCommandsPacket : DataPacket(), ClientboundPacket {
                                 "Expected enum at $index, but got none"
                         )
                     }
-                    (parameter.paramType and ARG_FLAG_POSTFIX) != 0 -> {
+                    parameter.paramType and ARG_FLAG_POSTFIX != 0 -> {
                         val index = (parameter.paramType and 0xffff)
                         postFixes.getOrNull(index)?.let {
                             parameter.postfix = it
@@ -235,7 +235,7 @@ class AvailableCommandsPacket : DataPacket(), ClientboundPacket {
                                 "Expected postfix at $index, but got none"
                         )
                     }
-                    (parameter.paramType and ARG_FLAG_VALID) == 0 -> {
+                    parameter.paramType and ARG_FLAG_VALID == 0 -> {
                         throw PacketDecodeException(
                             "Deserializing $name parameter ${parameter.paramName}: " +
                                 "Invalid parameter type ${parameter.paramType}"

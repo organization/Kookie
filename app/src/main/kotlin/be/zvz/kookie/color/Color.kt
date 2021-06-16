@@ -28,15 +28,10 @@ class Color @JvmOverloads constructor(r: Int, g: Int, b: Int, a: Int = 0xff) : A
             return Color(r / count, g / count, b / count, a / count)
         }
 
-        @JvmStatic
-        fun fromRGB(code: Int): Color =
-            Color((code shr 16) and 0xff, (code shr 8) and 0xff, code and 0xff)
+        @JvmStatic fun fromRGB(code: Int) = Color(code shr 16 and 0xff, code shr 8 and 0xff, code and 0xff)
 
-        @JvmStatic
-        fun fromARGB(code: Int): Color =
-            Color((code shr 16) and 0xff, (code shr 8) and 0xff, code and 0xff, (code shr 24) and 0xff)
+        @JvmStatic fun fromARGB(code: Int) = Color(code shr 16 and 0xff, code shr 8 and 0xff, code and 0xff, code shr 24 and 0xff)
 
-        @JvmStatic
-        fun fromRGBA(c: Int): Color = Color((c shr 24) and 0xff, (c shr 16) and 0xff, (c shr 8) and 0xff, c and 0xff)
+        @JvmStatic fun fromRGBA(c: Int) = Color(c shr 24 and 0xff, c shr 16 and 0xff, c shr 8 and 0xff, c and 0xff)
     }
 }
