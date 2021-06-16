@@ -562,8 +562,8 @@ style:
     includeLineWrapping: false
   ForbiddenComment:
     active: true
-    values: ['TODO:', 'FIXME:', 'STOPSHIP:']
-    allowedPatterns: ''
+    values: ['FIXME:', 'STOPSHIP:']
+    allowedPatterns: []
   ForbiddenImport:
     active: false
     imports: []
@@ -650,7 +650,7 @@ style:
     active: true
   ReturnCount:
     active: true
-    max: 2
+    max: 3
     excludedFunctions: 'equals'
     excludeLabeled: false
     excludeReturnFromLambda: true
@@ -663,7 +663,7 @@ style:
     active: true
   ThrowsCount:
     active: true
-    max: 2
+    max: 3
     #excludeGuardClauses: false
   TrailingWhitespace:
     active: false
