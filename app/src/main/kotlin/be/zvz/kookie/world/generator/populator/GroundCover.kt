@@ -45,11 +45,11 @@ class GroundCover : Populator {
                     val endY = startY - biome.groundCover.size
 
                     var y = startY
-                    while ((y > endY) and (y >= 0)) {
+                    while (y > endY && y >= 0) {
                         --y
                         val coverBlock = biome.groundCover[startY - y]
                         val beforeBlock = BlockFactory.fromFullBlock(chunk.getFullBlock(x, y, z))
-                        if ((beforeBlock.getId() == BlockLegacyIds.AIR.id) and coverBlock.isSolid()) {
+                        if (beforeBlock.getId() == BlockLegacyIds.AIR.id && coverBlock.isSolid()) {
                             break
                         }
                         if (coverBlock.canBeFlowedInto()) {

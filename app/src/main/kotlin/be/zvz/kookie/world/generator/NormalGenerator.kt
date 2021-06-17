@@ -103,7 +103,7 @@ class NormalGenerator(seed: Long, preset: String) : Generator(seed, preset) {
                 for (sx in -gaussian.smoothSize..gaussian.smoothSize) {
                     for (sz in -gaussian.smoothSize..gaussian.smoothSize) {
                         val weight = gaussian.kernel.getValue(sx + gaussian.smoothSize).getValue(sz + gaussian.smoothSize).toInt()
-                        val adjacent = if ((sx == 0) and (sz == 0)) {
+                        val adjacent = if (sx == 0 && sz == 0) {
                             biome
                         } else {
                             val index = World.chunkHash(absoluteX + sx, absoluteZ + sz)

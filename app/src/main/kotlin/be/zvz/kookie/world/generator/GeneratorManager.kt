@@ -30,7 +30,7 @@ object GeneratorManager {
 
     @JvmOverloads
     fun addGenerator(clazz: KClass<out Generator>, name: String, overwrite: Boolean = false) {
-        if (!overwrite and list.containsKey(name.lowercase())) {
+        if (!overwrite && list.containsKey(name.lowercase())) {
             throw IllegalArgumentException("Alias \"$name\" is already assigned")
         }
         list[name.lowercase()] = clazz

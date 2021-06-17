@@ -61,10 +61,13 @@ class Ore(
                 if (sizeX < 1) {
                     for (yy in startY..endY) {
                         val sizeY = ((yy + 0.5 - seedY) / size).pow(2.0)
-                        if ((yy > 0) and (sizeX + sizeY < 1)) {
+                        if (yy > 0 && sizeX + sizeY < 1) {
                             for (zz in startZ..endZ) {
                                 val sizeZ = ((zz + 0.5 - seedZ) / size).pow(2.0)
-                                if ((sizeX + sizeY + sizeZ < 1) and world.getBlockAt(xx, yy, zz).isSameType(type.replaces)) {
+                                if (
+                                    sizeX + sizeY + sizeZ < 1 &&
+                                    world.getBlockAt(xx, yy, zz).isSameType(type.replaces)
+                                ) {
                                     world.setBlockAt(xx, yy, zz, type.material)
                                 }
                             }

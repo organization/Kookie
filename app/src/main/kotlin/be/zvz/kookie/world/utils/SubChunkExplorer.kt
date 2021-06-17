@@ -33,7 +33,7 @@ class SubChunkExplorer(val world: ChunkManager) {
 
     fun moveToChunk(chunkX: Int, chunkY: Int, chunkZ: Int): Status {
         var chunk = currentChunk
-        if ((currentChunk == null) or (currentX != chunkX) or (currentZ != chunkZ)) {
+        if (currentChunk == null || currentX != chunkX || currentZ != chunkZ) {
             currentX = chunkX
             currentZ = chunkZ
             currentSubChunk = null

@@ -111,7 +111,7 @@ abstract class LightUpdate(
                     computeRemoveLight(cx, cy, cz, oldAdjacentLight, context)
                 } else {
                     val blockHash = World.blockHash(cx, cy, cz)
-                    if ((getEffectiveLight(cx, cy, cz) > 0) and (context.spreadVisited[blockHash] == true)) {
+                    if (getEffectiveLight(cx, cy, cz) > 0 && context.spreadVisited[blockHash] == true) {
                         context.spreadVisited[blockHash] = true
                         context.spreadQueue.add(Triple(cx, cy, cz))
                     }
@@ -148,7 +148,7 @@ abstract class LightUpdate(
     protected fun computeRemoveLight(x: Int, y: Int, z: Int, oldAdjacentLevel: LightLevel, context: LightPropagationContext) {
         val lightArray = getCurrentLightArray()
         val current = LightLevel(lightArray.get(x and 0xf, y and 0xf, z and 0xf))
-        if ((current.value != 0) and (current < oldAdjacentLevel)) {
+        if (current.value != 0 && current < oldAdjacentLevel) {
             lightArray.set(x and 0xf, y and 0xf, z and 0xf, LightLevel(0))
 
             val blockHash = World.blockHash(x, y, z)
@@ -177,7 +177,7 @@ abstract class LightUpdate(
             lightArray.set(x and 0xf, y and 0xf, z and 0xf, potentialLight)
 
             val blockHash = World.blockHash(x, y, z)
-            if (context.spreadVisited[blockHash] != true and (potentialLight > 1)) {
+            if (context.spreadVisited[blockHash] != true && potentialLight > 1) {
                 context.spreadVisited[blockHash] = true
                 context.spreadQueue.add(Triple(x, y, z))
             }
