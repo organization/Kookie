@@ -56,12 +56,15 @@ object EffectIdMap {
         register(EffectIds.CONDUIT_POWER, VanillaEffects.CONDUIT_POWER)
     }
 
+    @JvmStatic
     fun register(mcpeId: Int, effect: VanillaEffects) {
         idToEffect[mcpeId] = effect.effect
         effectToId[effect.effect] = mcpeId
     }
 
+    @JvmStatic
     fun fromId(id: Int): Effect? = idToEffect[id]
 
+    @JvmStatic
     fun toId(effect: Effect): Int = effectToId.getValue(effect)
 }
