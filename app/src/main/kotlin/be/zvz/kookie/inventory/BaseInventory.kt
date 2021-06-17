@@ -24,7 +24,7 @@ import be.zvz.kookie.player.Player
 abstract class BaseInventory : InventoryHelpers {
     override val maxStackSize: Int = Inventory.MAX_STACK
     private val viewers = mutableListOf<Player>()
-    private val listeners = mutableListOf<InventoryListener>()
+    private var listeners = mutableListOf<InventoryListener>()
 
     protected abstract fun internalSetContents(items: Map<Int, Item>)
     override fun setContents(items: Map<Int, Item>) {
@@ -87,4 +87,8 @@ abstract class BaseInventory : InventoryHelpers {
     override fun slotExists(slot: Int) = slot in 0 until size
     override fun getViewers(): MutableList<Player> = viewers
     override fun getListeners(): MutableList<InventoryListener> = listeners
+
+    fun clearListeners() {
+        listeners = mutableListOf()
+    }
 }

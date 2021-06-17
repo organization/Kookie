@@ -21,8 +21,7 @@ import be.zvz.kookie.Server
 import be.zvz.kookie.command.CommandSender
 import be.zvz.kookie.entity.Human
 import be.zvz.kookie.entity.Location
-import be.zvz.kookie.inventory.ArmorInventory
-import be.zvz.kookie.inventory.PlayerInventory
+import be.zvz.kookie.entity.Skin
 import be.zvz.kookie.lang.Language
 import be.zvz.kookie.lang.TranslationContainer
 import be.zvz.kookie.nbt.tag.CompoundTag
@@ -40,8 +39,9 @@ class Player(
     val authenticated: Boolean,
     val spawnLocation: Any, // TODO: Location,
     val namedTag: CompoundTag,
+    skin: Skin,
     location: Location
-) : Human(location), CommandSender {
+) : Human(skin, location), CommandSender {
     override val language: Language
         get() = server.language
     val username = playerInfo.getUsername()
@@ -51,9 +51,6 @@ class Player(
 
     override val permissionRecalculationCallbacks: Set<(changedPermissionsOldValues: Map<String, Boolean>) -> Unit>
         get() = TODO("Not yet implemented")
-
-    val inventory: PlayerInventory = TODO("PlayerInventory()")
-    override var armorInventory: ArmorInventory = TODO("ArmorInventory()")
 
     fun doChunkRequest() {
         TODO("Not yet implemented")
