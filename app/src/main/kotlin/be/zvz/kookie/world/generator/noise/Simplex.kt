@@ -205,8 +205,8 @@ class Simplex(
         val F2 = 0.5F * (sqrt(3.0F) - 1)
         val G2 = (3 - sqrt(3.0F)) / 6
         val G22 = G2 * 2.0F - 1
-        val F3 = 1.0F / 3.0F
-        val G3 = 1.0F / 6.0F
+        const val F3 = 1.0F / 3.0F
+        const val G3 = 1.0F / 6.0F
     }
 }
 
