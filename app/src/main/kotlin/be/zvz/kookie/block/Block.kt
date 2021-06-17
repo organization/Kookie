@@ -66,7 +66,7 @@ open class Block(val idInfo: BlockIdentifier, val name: String, val breakInfo: B
     fun getFullId(): Int = (getId() shl 4) or getMeta()
 
     fun asItem(): Item = ItemFactory.get(
-        idInfo.itemId!!,
+        idInfo.itemId,
         idInfo.variant or (writeStateToMeta() and getNonPersistentStateBitmask().inv())
     )
 
@@ -284,7 +284,9 @@ open class Block(val idInfo: BlockIdentifier, val name: String, val breakInfo: B
 
     fun getHorizontalSides() = sequence {
         pos.sidesAroundAxis(Axis.Y).forEach {
-            yield(pos.world!!.getBlock(it.second))
+            pos.world?.let { world ->
+                yield(world.getBlock(it.second))
+            }
         }
     }
 
