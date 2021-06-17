@@ -148,7 +148,7 @@ class NormalGenerator(seed: Long, preset: String) : Generator(seed, preset) {
 
     class NormalBiomeSelector(random: Random) : BiomeSelector(random) {
         override fun lookup(temperature: Float, rainfall: Float): BiomeIds = when {
-            rainfall > 0.25 -> when {
+            rainfall < 0.25 -> when {
                 temperature < 0.7 -> BiomeIds.OCEAN
                 temperature < 0.85 -> BiomeIds.RIVER
                 else -> BiomeIds.SWAMP
