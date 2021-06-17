@@ -28,7 +28,7 @@ import be.zvz.kookie.player.Player
 import be.zvz.kookie.world.format.Chunk
 import com.koloboke.collect.map.hash.HashIntObjMaps
 
-class World(val server: Server, val folderName: String) {
+class World(val server: Server, val folderName: String) : ChunkManager {
     val players: MutableList<Player> = mutableListOf()
     val entities: MutableList<Entity> = mutableListOf()
     private val entityLastKnownPositions: MutableMap<Int, Vector3> = HashIntObjMaps.newMutableMap()
@@ -59,6 +59,34 @@ class World(val server: Server, val folderName: String) {
 
     fun setBlock(pos: Vector3, block: Block): Any {
         TODO("Chunk not yet implemented")
+    }
+
+    override fun getBlockAt(x: Int, y: Int, z: Int): Block {
+        TODO("Not yet implemented")
+    }
+
+    override fun setBlockAt(x: Int, y: Int, z: Int, block: Block) {
+        TODO("Not yet implemented")
+    }
+
+    override fun getChunk(chunkX: Int, chunkZ: Int): Chunk? {
+        TODO("Not yet implemented")
+    }
+
+    override fun setChunk(chunkX: Int, chunkZ: Int, chunk: Chunk) {
+        TODO("Not yet implemented")
+    }
+
+    override fun getMinY(): Int {
+        TODO("Not yet implemented")
+    }
+
+    override fun getMaxY(): Int {
+        TODO("Not yet implemented")
+    }
+
+    override fun isInWorld(x: Int, y: Int, z: Int): Boolean {
+        TODO("Not yet implemented")
     }
 
     companion object {
