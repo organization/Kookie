@@ -79,8 +79,6 @@ class World(val server: Server, val folderName: String) {
 
         private var worldIdCounter = 0
 
-        fun chunkHash(x: Int, z: Int): Long = Morton2D.encode(x, z)
-
         private const val MORTON3D_BIT_SIZE = 21
         private const val BLOCKHASH_Y_BITS = 9
         private const val BLOCKHASH_Y_PADDING = 128 // size (in blocks) of padding after both boundaries of the Y axis
@@ -110,6 +108,8 @@ class World(val server: Server, val folderName: String) {
                 z = z and BLOCKHASH_XZ_MASK
             )
         }
+
+        fun chunkHash(x: Int, z: Int): Long = Morton2D.encode(x, z)
 
         /** Computes a small index relative to chunk base from the given coordinates. */
         fun chunkBlockHash(x: Int, y: Int, z: Int): Long = Morton3D.encode(x, y, z)

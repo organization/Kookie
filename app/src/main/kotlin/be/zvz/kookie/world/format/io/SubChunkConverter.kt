@@ -23,6 +23,32 @@ import be.zvz.kookie.world.format.PalettedBlockArray
 import kotlin.jvm.internal.Ref
 
 object SubChunkConverter {
+    private val mapper: (Int, Int) -> Long = Block.Companion::fullId
+
+    private val getIndexSubChunkXZY: (Int, Int, Int, Ref.IntRef, Ref.IntRef, Ref.IntRef, Int) -> Unit = { x: Int,
+        y: Int,
+        z: Int,
+        id1Idx: Ref.IntRef,
+        id2Idx: Ref.IntRef,
+        metaIdx: Ref.IntRef,
+        _: Int ->
+        id1Idx.element = x shl 8 or (z shl 4) or (y shl 1)
+        id2Idx.element = id1Idx.element or 1
+        metaIdx.element = id1Idx.element shr 1
+    }
+
+    private val getIndexLegacyColumnXZY: (Int, Int, Int, Ref.IntRef, Ref.IntRef, Ref.IntRef, Int) -> Unit = { x: Int,
+        y: Int,
+        z: Int,
+        id1Idx: Ref.IntRef,
+        id2Idx: Ref.IntRef,
+        metaIdx: Ref.IntRef,
+        yOffset: Int ->
+        id1Idx.element = x shl 11 or (z shl 7) or (yOffset shl 4) or (y shl 1)
+        id2Idx.element = id1Idx.element or 1
+        metaIdx.element = id1Idx.element shr 1
+    }
+
     @JvmStatic
     fun convertSubChunkXZY(idArray: String, metaArray: String): PalettedBlockArray =
         PalettedBlockArray(
@@ -52,32 +78,6 @@ object SubChunkConverter {
                 true
             )
         )
-
-    private val mapper: (Int, Int) -> Long = Block.Companion::fullId
-
-    private val getIndexSubChunkXZY: (Int, Int, Int, Ref.IntRef, Ref.IntRef, Ref.IntRef, Int) -> Unit = { x: Int,
-        y: Int,
-        z: Int,
-        id1Idx: Ref.IntRef,
-        id2Idx: Ref.IntRef,
-        metaIdx: Ref.IntRef,
-        _: Int ->
-        id1Idx.element = x shl 8 or (z shl 4) or (y shl 1)
-        id2Idx.element = id1Idx.element or 1
-        metaIdx.element = id1Idx.element shr 1
-    }
-
-    private val getIndexLegacyColumnXZY: (Int, Int, Int, Ref.IntRef, Ref.IntRef, Ref.IntRef, Int) -> Unit = { x: Int,
-        y: Int,
-        z: Int,
-        id1Idx: Ref.IntRef,
-        id2Idx: Ref.IntRef,
-        metaIdx: Ref.IntRef,
-        yOffset: Int ->
-        id1Idx.element = x shl 11 or (z shl 7) or (yOffset shl 4) or (y shl 1)
-        id2Idx.element = id1Idx.element or 1
-        metaIdx.element = id1Idx.element shr 1
-    }
 
     private fun <Block, getIndexArg> convert(
         idArray: String,
