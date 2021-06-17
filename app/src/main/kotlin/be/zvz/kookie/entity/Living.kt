@@ -250,28 +250,6 @@ abstract class Living(location: Location) : Entity(location) {
     }
 
     override fun fall(fallDistance: Float) {
-        /*
-        $damage = ceil($fallDistance - 3 - (($jumpBoost = $this->effectManager->get(VanillaEffects::JUMP_BOOST())) !== null ? $jumpBoost->getEffectLevel() : 0));
-		if($damage > 0){
-			$ev = new EntityDamageEvent($this, EntityDamageEvent::CAUSE_FALL, $damage);
-			$this->attack($ev);
-
-			$this->broadcastSound($damage > 4 ?
-				new EntityLongFallSound($this) :
-				new EntityShortFallSound($this)
-			);
-		}else{
-			$fallBlockPos = $this->location->floor();
-			$fallBlock = $this->getWorld()->getBlock($fallBlockPos);
-			if($fallBlock->getId() === BlockLegacyIds::AIR){
-				$fallBlockPos = $fallBlockPos->subtract(0, 1, 0);
-				$fallBlock = $this->getWorld()->getBlock($fallBlockPos);
-			}
-			if($fallBlock->getId() !== BlockLegacyIds::AIR){
-				$this->broadcastSound(new EntityLandSound($this, $fallBlock));
-			}
-		}
-         */
         val jumpBoost = effectManager.get(VanillaEffects.JUMP_BOOST.effect)
         val damage = ceil(fallDistance - 3 - (jumpBoost?.effectLevel ?: 0))
         if (damage > 0) {
@@ -286,6 +264,7 @@ abstract class Living(location: Location) : Entity(location) {
              */
         } else {
             /*
+            TODO:
             var fallBlockPos = location.floor()
             var fallBlock = world.getBlockAt(fallBlockPos)
             if (fallBlock.getId() == BlockLegacyIds.AIR.id) {
@@ -303,7 +282,7 @@ abstract class Living(location: Location) : Entity(location) {
     open fun getArmorPoints(): Int {
         var total = 0
         armorInventory.getContents().values.forEach { item ->
-            // total += item.getDefensePoints()
+            // TODO: total += item.getDefensePoints()
         }
         return total
     }
@@ -372,6 +351,7 @@ abstract class Living(location: Location) : Entity(location) {
 
     override fun onDeath() {
         /*
+        TODO:
         $ev = new EntityDeathEvent($this, $this->getDrops(), $this->getXpDropAmount());
 		$ev->call();
 		foreach($ev->getDrops() as $item){

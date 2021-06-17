@@ -937,8 +937,8 @@ abstract class Entity @JvmOverloads constructor(var location: Location, nbt: Com
         val newWorld = if (pos is Position) pos.world else oldWorld
 
         if (oldWorld != newWorld) {
-            // despawnFromAll()
-            // oldWorld.removeEntity(this)
+            despawnFromAll()
+            // TODO: oldWorld.removeEntity(this)
         }
 
         location = Location.fromObject(pos, newWorld, location.yaw, location.pitch)
@@ -947,9 +947,9 @@ abstract class Entity @JvmOverloads constructor(var location: Location, nbt: Com
         blocksAround = null
 
         if (oldWorld != newWorld) {
-            // newWorld.addEntity(this)
+            // TODO: newWorld.addEntity(this)
         } else {
-            // newWorld.onEntityMoved(this)
+            // TODO: newWorld.onEntityMoved(this)
         }
         return true
     }
@@ -1055,13 +1055,12 @@ abstract class Entity @JvmOverloads constructor(var location: Location, nbt: Com
     }
 
     open fun spawnTo(player: Player) {
-        // TODO
         if (!initialized) {
             throw AssertionError("Entity must be initialized before calling spawnTo()")
         }
         if (
             !hasSpawned.containsKey(player.getId())
-            /* && player.hasReceovedChunk(floor(location.x).toInt() shr 4, floor(location.z).toInt() shr 4)*/
+            /* TODO: && player.hasReceivedChunk(floor(location.x).toInt() shr 4, floor(location.z).toInt() shr 4)*/
         ) {
             hasSpawned[player.getId()] = player
             sendSpawnPacket(player)
@@ -1092,15 +1091,6 @@ abstract class Entity @JvmOverloads constructor(var location: Location, nbt: Com
     }
 
     open fun despawnFrom(player: Player, send: Boolean = true) {
-        /*
-        $id = spl_object_id($player);
-		if(isset($this->hasSpawned[$id])){
-			if($send){
-				$player->getNetworkSession()->onEntityRemoved($this);
-			}
-			unset($this->hasSpawned[$id]);
-		}
-         */
         val id = player.getId()
         if (hasSpawned.containsKey(id)) {
             if (send) {
