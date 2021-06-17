@@ -54,9 +54,7 @@ class PermissionAttachment(val plugin: Plugin) {
     }
 
     fun unsetPermissions(permissions: List<String>) {
-        permissions.forEach {
-            this.permissions.remove(it)
-        }
+        permissions.forEach(this.permissions::remove)
         recalculatePermissibles()
     }
 

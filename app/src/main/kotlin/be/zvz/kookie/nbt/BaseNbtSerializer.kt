@@ -87,9 +87,7 @@ abstract class BaseNbtSerializer : NbtStreamReader, NbtStreamWriter {
 
     fun writeMultiple(data: List<TreeRoot>): String {
         buffer = BinaryStream()
-        data.forEach { root ->
-            writeRoot(root)
-        }
+        data.forEach(this::writeRoot)
         return buffer.buffer.toString()
     }
 

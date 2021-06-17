@@ -316,9 +316,7 @@ open class Item @JvmOverloads constructor(
                 )
             }
 
-            tag.getCompoundTag("tag")?.let {
-                item.setNamedTag(it)
-            }
+            tag.getCompoundTag("tag")?.let(item::setNamedTag)
 
             return item
         }

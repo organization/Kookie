@@ -60,9 +60,7 @@ class InternalPalettedBlockArray<Block> internal constructor(private val bitsPer
         wordArray.forEachIndexed { index, value ->
             words[index] = value.code
         }
-        paletteEntries.forEachIndexed { index, value ->
-            palette[index] = value
-        }
+        paletteEntries.forEachIndexed(palette::set)
         nextPaletteIndex = paletteEntries.size
     }
 
@@ -169,9 +167,7 @@ class InternalPalettedBlockArray<Block> internal constructor(private val bitsPer
     override fun fastUpsize(otherArray: IPalettedBlockArray<Block>) {
         val otherPalette = otherArray.getPalette()
         nextPaletteIndex = otherPalette.size
-        otherPalette.forEachIndexed { index, value ->
-            palette[index] = value
-        }
+        otherPalette.forEachIndexed(palette::set)
     }
 
     override fun clone(): InternalPalettedBlockArray<*> = super.clone() as InternalPalettedBlockArray<*>

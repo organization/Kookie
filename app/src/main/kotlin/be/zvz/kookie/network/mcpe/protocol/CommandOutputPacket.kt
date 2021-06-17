@@ -81,9 +81,7 @@ open class CommandOutputPacket : DataPacket(), ClientboundPacket {
         output.putString(message.messageId)
 
         output.putUnsignedVarInt(message.parameters.size)
-        message.parameters.forEach { parameter ->
-            output.putString(parameter)
-        }
+        message.parameters.forEach(output::putString)
     }
 
     override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleCommandOutput(this)

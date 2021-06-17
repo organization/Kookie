@@ -138,9 +138,7 @@ class ClientboundMapItemDataPacket : DataPacket(), ClientboundPacket {
 
         if (type and 0x08 != 0) { // TODO: find out what these are for
             output.putUnsignedVarInt(eidsCount)
-            eids.forEach {
-                output.putEntityUniqueId(it)
-            }
+            eids.forEach(output::putEntityUniqueId)
         }
 
         if (type and (0x08 or BITFLAG_TEXTURE_UPDATE or BITFLAG_DECORATION_UPDATE) != 0) {

@@ -295,9 +295,7 @@ class AvailableCommandsPacket : DataPacket(), ClientboundPacket {
 
         val values = enum.getEnumValues()
         output.putUnsignedVarInt(values.size)
-        values.forEach {
-            output.putString(it)
-        }
+        values.forEach(output::putString)
     }
 
     private fun getEnumConstraint(
@@ -336,9 +334,7 @@ class AvailableCommandsPacket : DataPacket(), ClientboundPacket {
         output.putLInt(enumValues.getOrDefault(constraint.getAffectedValue(), -1))
         output.putLInt(enumIndexes.getOrDefault(constraint.getEnum().getEnumName(), -1))
         output.putUnsignedVarInt(constraint.getConstraints().size)
-        constraint.getConstraints().forEach {
-            output.putByte(it)
-        }
+        constraint.getConstraints().forEach(output::putByte)
     }
 
     companion object {

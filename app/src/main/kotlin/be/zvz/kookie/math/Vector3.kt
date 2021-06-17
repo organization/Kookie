@@ -230,6 +230,6 @@ open class Vector3 @JvmOverloads constructor(var x: Double = 0.0, var y: Double 
     }
 
     fun sum(vararg vector3s: Vector3): Vector3 = Vector3().apply {
-        vector3s.forEach { add(it) }
+        vector3s.forEach(this::add)
     }
 }

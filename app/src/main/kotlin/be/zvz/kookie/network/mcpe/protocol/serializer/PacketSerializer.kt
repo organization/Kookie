@@ -209,14 +209,14 @@ class PacketSerializer @JvmOverloads constructor(
             putLFloat(it.getFrames())
             putLInt(it.getExpressionType())
         }
-        skin.capeImage?.let { putSkinImage(it) }
+        skin.capeImage?.let(this::putSkinImage)
         putString(skin.geometryData)
         putString(skin.animationData)
         putBoolean(skin.premium)
         putBoolean(skin.persona)
         putBoolean(skin.personaCapeOnClassic)
         putString(skin.capeId)
-        skin.fullSkinId?.let { putString(it) }
+        skin.fullSkinId?.let(this::putString)
         putString(skin.armSize)
         putString(skin.skinColor)
         putLInt(skin.personaPieces.size)
@@ -231,9 +231,7 @@ class PacketSerializer @JvmOverloads constructor(
         skin.pieceTintColors.forEach {
             putString(it.getPieceType())
             putLInt(it.getColors().size)
-            it.getColors().forEach { color ->
-                putString(color)
-            }
+            it.getColors().forEach(this::putString)
         }
     }
 

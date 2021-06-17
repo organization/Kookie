@@ -59,9 +59,7 @@ class CompoundTag : Tag<Map<String, Tag<*>>>() {
     }
 
     fun removeTag(vararg names: String) {
-        names.forEach {
-            value.remove(it)
-        }
+        names.forEach(value::remove)
     }
 
     @JvmOverloads

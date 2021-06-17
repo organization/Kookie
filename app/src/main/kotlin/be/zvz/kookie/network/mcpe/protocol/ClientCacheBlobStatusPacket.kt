@@ -40,8 +40,8 @@ class ClientCacheBlobStatusPacket : DataPacket(), ServerboundPacket {
     override fun encodePayload(output: PacketSerializer) {
         output.putUnsignedVarInt(missHashes.size)
         output.putUnsignedVarInt(hitHashes.size)
-        missHashes.forEach { output.putLLong(it) }
-        hitHashes.forEach { output.putLLong(it) }
+        missHashes.forEach(output::putLLong)
+        hitHashes.forEach(output::putLLong)
     }
 
     override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleClientCacheBlobStatus(this)
