@@ -17,4 +17,4 @@
  */
 package be.zvz.kookie.world.particle
 
-class FlameParticle : StandardParticle(ParticleIds.FLAME)
+class FlameParticle : StandardParticle(Type.FLAME)

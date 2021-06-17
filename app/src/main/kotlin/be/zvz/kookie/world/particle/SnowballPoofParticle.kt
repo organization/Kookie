@@ -17,4 +17,4 @@
  */
 package be.zvz.kookie.world.particle
 
-class SnowballPoofParticle : StandardParticle(ParticleIds.SNOWBALL_POOF)
+class SnowballPoofParticle : StandardParticle(Type.SNOWBALL_POOF)

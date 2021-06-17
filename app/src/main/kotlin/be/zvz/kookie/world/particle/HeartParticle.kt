@@ -17,4 +17,4 @@
  */
 package be.zvz.kookie.world.particle
 
-class HeartParticle(scale: Int = 0) : StandardParticle(ParticleIds.HEART, scale)
+class HeartParticle(scale: Int = 0) : StandardParticle(Type.HEART, scale)

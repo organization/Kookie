@@ -17,4 +17,4 @@
  */
 package be.zvz.kookie.world.particle
 
-class SporeParticle : StandardParticle(ParticleIds.SUSPENDED_TOWN)
+class SporeParticle : StandardParticle(Type.SUSPENDED_TOWN)

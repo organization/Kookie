@@ -20,7 +20,6 @@ package be.zvz.kookie.world.particle
 import be.zvz.kookie.math.Vector3
 import be.zvz.kookie.network.mcpe.protocol.ClientboundPacket
 import be.zvz.kookie.network.mcpe.protocol.LevelEventPacket
-import be.zvz.kookie.world.particle.Particle
 
 abstract class EventParticle(
     open val id: Int,

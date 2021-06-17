@@ -17,4 +17,4 @@
  */
 package be.zvz.kookie.world.particle
 
-class BlockForceFieldParticle @JvmOverloads constructor(data: Int = 0) : StandardParticle(ParticleIds.BLOCK_FORCE_FIELD, data)
+class BlockForceFieldParticle @JvmOverloads constructor(data: Int = 0) : StandardParticle(Type.BLOCK_FORCE_FIELD, data)

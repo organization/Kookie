@@ -17,4 +17,4 @@
  */
 package be.zvz.kookie.world.particle
 
-class RainSplashParticle : StandardParticle(ParticleIds.RAIN_SPLASH)
+class RainSplashParticle : StandardParticle(Type.RAIN_SPLASH)

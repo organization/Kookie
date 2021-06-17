@@ -17,4 +17,4 @@
  */
 package be.zvz.kookie.world.particle
 
-class SplashParticle : StandardParticle(ParticleIds.WATER_SPLASH)
+class SplashParticle : StandardParticle(Type.WATER_SPLASH)

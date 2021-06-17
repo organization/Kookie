@@ -19,6 +19,6 @@ package be.zvz.kookie.world.particle
 
 import be.zvz.kookie.color.Color
 
-abstract class ColoredParticle(id: Int, val color: Color) : StandardParticle(id) {
+abstract class ColoredParticle(type: Type, val color: Color) : StandardParticle(type) {
     override val data: Int get() = color.toARGB()
 }

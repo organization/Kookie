@@ -17,4 +17,4 @@
  */
 package be.zvz.kookie.world.particle
 
-class WaterParticle : StandardParticle(ParticleIds.WATER_WAKE)
+class WaterParticle : StandardParticle(Type.WATER_WAKE)

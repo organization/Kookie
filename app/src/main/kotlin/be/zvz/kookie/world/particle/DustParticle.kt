@@ -19,4 +19,4 @@ package be.zvz.kookie.world.particle
 
 import be.zvz.kookie.color.Color
 
-class DustParticle(color: Color) : ColoredParticle(ParticleIds.DUST, color)
+class DustParticle(color: Color) : ColoredParticle(Type.DUST, color)

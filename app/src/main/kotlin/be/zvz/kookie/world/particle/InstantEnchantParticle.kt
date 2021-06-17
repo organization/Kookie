@@ -19,4 +19,4 @@ package be.zvz.kookie.world.particle
 
 import be.zvz.kookie.color.Color
 
-class InstantEnchantParticle(color: Color) : ColoredParticle(ParticleIds.MOB_SPELL_INSTANTANEOUS, color)
+class InstantEnchantParticle(color: Color) : ColoredParticle(Type.MOB_SPELL_INSTANTANEOUS, color)

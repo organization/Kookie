@@ -17,4 +17,4 @@
  */
 package be.zvz.kookie.world.particle
 
-class EnchantmentTableParticle : StandardParticle(ParticleIds.ENCHANTMENT_TABLE)
+class EnchantmentTableParticle : StandardParticle(Type.ENCHANTMENT_TABLE)

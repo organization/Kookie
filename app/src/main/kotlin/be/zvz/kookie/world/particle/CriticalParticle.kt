@@ -17,4 +17,4 @@
  */
 package be.zvz.kookie.world.particle
 
-class CriticalParticle @JvmOverloads constructor(scale: Int = 2) : StandardParticle(ParticleIds.CRITICAL, scale)
+class CriticalParticle @JvmOverloads constructor(scale: Int = 2) : StandardParticle(Type.CRITICAL, scale)

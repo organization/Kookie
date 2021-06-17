@@ -17,4 +17,4 @@
  */
 package be.zvz.kookie.world.particle
 
-class RedstoneParticle(lifetime: Int = 1) : StandardParticle(ParticleIds.REDSTONE, lifetime)
+class RedstoneParticle(lifetime: Int = 1) : StandardParticle(Type.REDSTONE, lifetime)

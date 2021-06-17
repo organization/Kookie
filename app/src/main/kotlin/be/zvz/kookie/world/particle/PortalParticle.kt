@@ -17,4 +17,4 @@
  */
 package be.zvz.kookie.world.particle
 
-class PortalParticle : StandardParticle(ParticleIds.PORTAL)
+class PortalParticle : StandardParticle(Type.PORTAL)

@@ -17,4 +17,4 @@
  */
 package be.zvz.kookie.world.particle
 
-class AngryVillagerParticle : StandardParticle(ParticleIds.VILLAGER_ANGRY)
+class AngryVillagerParticle : StandardParticle(Type.VILLAGER_ANGRY)

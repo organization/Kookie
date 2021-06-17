@@ -18,10 +18,8 @@
 package be.zvz.kookie.world.particle
 
 import be.zvz.kookie.block.Block
-import be.zvz.kookie.world.particle.ParticleIds
-import be.zvz.kookie.world.particle.EventParticle
 
-class TerrainParticle(val block: Block) : EventParticle(ParticleIds.TERRAIN) {
+class TerrainParticle(val block: Block) : StandardParticle(Type.TERRAIN) {
     override val data: Int
         get() {
             TODO("Implements after implemented RuntimeBlockMapping")

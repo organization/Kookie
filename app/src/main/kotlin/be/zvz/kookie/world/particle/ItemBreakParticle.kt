@@ -19,6 +19,6 @@ package be.zvz.kookie.world.particle
 
 import be.zvz.kookie.item.Item
 
-class ItemBreakParticle(val item: Item) : StandardParticle(ParticleIds.ITEM_BREAK) {
+class ItemBreakParticle(val item: Item) : StandardParticle(Type.ITEM_BREAK) {
     override val data: Int get() = item.getId() shl 16 or item.getMeta()
 }

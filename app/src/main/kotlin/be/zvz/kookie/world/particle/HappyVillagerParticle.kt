@@ -17,4 +17,4 @@
  */
 package be.zvz.kookie.world.particle
 
-class HappyVillagerParticle : StandardParticle(ParticleIds.VILLAGER_HAPPY)
+class HappyVillagerParticle : StandardParticle(Type.VILLAGER_HAPPY)

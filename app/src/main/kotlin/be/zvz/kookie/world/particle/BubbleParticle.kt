@@ -17,4 +17,4 @@
  */
 package be.zvz.kookie.world.particle
 
-class BubbleParticle : StandardParticle(ParticleIds.BUBBLE)
+class BubbleParticle : StandardParticle(Type.BUBBLE)

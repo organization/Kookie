@@ -17,4 +17,4 @@
  */
 package be.zvz.kookie.world.particle
 
-class HugeExplodeParticle : StandardParticle(ParticleIds.HUGE_EXPLODE)
+class HugeExplodeParticle : StandardParticle(Type.HUGE_EXPLODE)

@@ -17,4 +17,4 @@
  */
 package be.zvz.kookie.world.particle
 
-class LavaParticle : StandardParticle(ParticleIds.LAVA)
+class LavaParticle : StandardParticle(Type.LAVA)
