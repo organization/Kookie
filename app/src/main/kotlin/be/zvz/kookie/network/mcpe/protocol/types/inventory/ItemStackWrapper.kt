@@ -43,5 +43,8 @@ data class ItemStackWrapper(val stackId: Int, val itemStack: ItemStack) {
             }
             return ItemStackWrapper(stackId, stack)
         }
+
+        @JvmStatic
+        fun legacy(itemStack: ItemStack): ItemStackWrapper = ItemStackWrapper(if (itemStack.id == 0) 0 else 1, itemStack)
     }
 }
