@@ -27,10 +27,10 @@ class Simplex(
     expansion: Float
 ) : Noise(octaves, persistence, expansion) {
 
-    protected val offsetX: Float
-    protected val offsetZ: Float
-    protected val offsetY: Float
-    protected val perm = IntArray(512) { 0 }
+    private val offsetX: Float
+    private val offsetZ: Float
+    private val offsetY: Float
+    private val perm = IntArray(512) { 0 }
 
     init {
         offsetX = random.nextFloat() * 256
