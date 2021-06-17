@@ -24,6 +24,7 @@ import be.zvz.kookie.network.mcpe.protocol.types.DimensionIds
 import be.zvz.kookie.network.mcpe.protocol.types.MapDecoration
 import be.zvz.kookie.network.mcpe.protocol.types.MapTrackedObject
 import be.zvz.kookie.utils.Binary
+import be.zvz.kookie.utils.inline.repeat2
 import com.koloboke.collect.map.hash.HashIntObjMaps
 
 @ProtocolIdentify(ProtocolInfo.IDS.CLIENTBOUND_MAP_ITEM_DATA_PACKET)
@@ -107,10 +108,8 @@ class ClientboundMapItemDataPacket : DataPacket(), ClientboundPacket {
                 throw PacketDecodeException(msg)
             }
 
-            repeat(height) { y ->
-                repeat(width) { x ->
-                    colors.getValue(y)[x] = Color.fromRGBA(Binary.flipIntEndianness(input.getUnsignedVarInt()))
-                }
+            repeat2(width, height) { x, y ->
+                colors.getValue(y)[x] = Color.fromRGBA(Binary.flipIntEndianness(input.getUnsignedVarInt()))
             }
         }
     }
@@ -182,11 +181,9 @@ class ClientboundMapItemDataPacket : DataPacket(), ClientboundPacket {
             // list count, but we handle it as a 2D array... thanks for the confusion mojang
             output.putUnsignedVarInt(width * height)
 
-            repeat(height) { y ->
-                repeat(width) { x ->
-                    // if mojang had any sense this would just be a regular LE Int
-                    output.putUnsignedVarInt(Binary.flipIntEndianness(colors.getValue(y).getValue(x).toRGBA()))
-                }
+            repeat2(width, height) { x, y ->
+                // if mojang had any sense this would just be a regular LE Int
+                output.putUnsignedVarInt(Binary.flipIntEndianness(colors.getValue(y).getValue(x).toRGBA()))
             }
         }
     }

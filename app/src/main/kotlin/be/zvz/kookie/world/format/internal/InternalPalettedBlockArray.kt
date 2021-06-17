@@ -17,6 +17,7 @@
  */
 package be.zvz.kookie.world.format.internal
 
+import be.zvz.kookie.utils.inline.repeat3
 import com.koloboke.collect.set.hash.HashObjSets
 
 class InternalPalettedBlockArray<Block> internal constructor(private val bitsPerBlock: Int) :
@@ -99,14 +100,14 @@ class InternalPalettedBlockArray<Block> internal constructor(private val bitsPer
 
     fun countUniqueBlocks(): Int {
         val hasFound: MutableSet<Block> = HashObjSets.newMutableSet()
-        repeat(IPalettedBlockArray.ARRAY_DIM) { x ->
-            repeat(IPalettedBlockArray.ARRAY_DIM) { z ->
-                repeat(IPalettedBlockArray.ARRAY_DIM) { y ->
-                    val inserted = hasFound.add(palette[internalGetPaletteOffset(x, y, z)])
-                    if (inserted && hasFound.size == getPaletteSize()) {
-                        return hasFound.size
-                    }
-                }
+        repeat3(
+            IPalettedBlockArray.ARRAY_DIM,
+            IPalettedBlockArray.ARRAY_DIM,
+            IPalettedBlockArray.ARRAY_DIM
+        ) { x, y, z ->
+            val inserted = hasFound.add(palette[internalGetPaletteOffset(x, y, z)])
+            if (inserted && hasFound.size == getPaletteSize()) {
+                return hasFound.size
             }
         }
 
@@ -154,13 +155,13 @@ class InternalPalettedBlockArray<Block> internal constructor(private val bitsPer
     }
 
     override fun convertFrom(otherArray: IPalettedBlockArray<Block>) {
-        repeat(IPalettedBlockArray.ARRAY_DIM) { x ->
-            repeat(IPalettedBlockArray.ARRAY_DIM) { z ->
-                repeat(IPalettedBlockArray.ARRAY_DIM) { y ->
-                    if (!set(x, y, z, otherArray.get(x, y, z))) {
-                        throw IndexOutOfBoundsException("out of palette space")
-                    }
-                }
+        repeat3(
+            IPalettedBlockArray.ARRAY_DIM,
+            IPalettedBlockArray.ARRAY_DIM,
+            IPalettedBlockArray.ARRAY_DIM
+        ) { x, y, z ->
+            if (!set(x, y, z, otherArray.get(x, y, z))) {
+                throw IndexOutOfBoundsException("out of palette space")
             }
         }
     }
