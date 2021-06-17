@@ -277,39 +277,6 @@ open class Item @JvmOverloads constructor(
         return result
     }
 
-    fun nbtDeserialize(tag: CompoundTag): Item {
-        val idTag = tag.getTag("id")
-        if (idTag == null || tag.getTag("Count") == null) {
-            return ItemFactory.air()
-        }
-
-        val count = Binary.unsignByte(tag.getByte("Count"))
-        val meta = tag.getShort("Damage", 0)
-
-        val item: Item = when (idTag) {
-            is ShortTag -> ItemFactory.get(idTag.value, meta, count)
-            is StringTag -> {
-                val id = LegacyStringToItemParser.parseId(idTag.value)
-
-                if (id === null) {
-                    ItemFactory.air()
-                } else {
-                    ItemFactory.get(id, meta, count)
-                }
-            }
-            else -> throw IllegalArgumentException(
-                "Item CompoundTag ID must be an instance of StringTag or ShortTag, " +
-                    "${idTag::class.java.simpleName} given"
-            )
-        }
-
-        tag.getCompoundTag("tag")?.let {
-            item.setNamedTag(it)
-        }
-
-        return item
-    }
-
     public override fun clone(): Item = (super.clone() as Item).also {
         it.nbt = nbt.clone() as CompoundTag
         it.blockEntityTag = blockEntityTag?.clone() as? CompoundTag
@@ -321,5 +288,39 @@ open class Item @JvmOverloads constructor(
         const val TAG_BLOCK_ENTITY_TAG = "BlockEntityTag"
         const val TAG_DISPLAY_NAME = "Name"
         const val TAG_DISPLAY_LORE = "Lore"
+
+        @JvmStatic
+        fun nbtDeserialize(tag: CompoundTag): Item {
+            val idTag = tag.getTag("id")
+            if (idTag == null || tag.getTag("Count") == null) {
+                return ItemFactory.air()
+            }
+
+            val count = Binary.unsignByte(tag.getByte("Count"))
+            val meta = tag.getShort("Damage", 0)
+
+            val item: Item = when (idTag) {
+                is ShortTag -> ItemFactory.get(idTag.value, meta, count)
+                is StringTag -> {
+                    val id = LegacyStringToItemParser.parseId(idTag.value)
+
+                    if (id === null) {
+                        ItemFactory.air()
+                    } else {
+                        ItemFactory.get(id, meta, count)
+                    }
+                }
+                else -> throw IllegalArgumentException(
+                    "Item CompoundTag ID must be an instance of StringTag or ShortTag, " +
+                        "${idTag::class.java.simpleName} given"
+                )
+            }
+
+            tag.getCompoundTag("tag")?.let {
+                item.setNamedTag(it)
+            }
+
+            return item
+        }
     }
 }
