@@ -441,7 +441,7 @@ abstract class Living(location: Location) : Entity(location) {
     }
 
     open fun canBreath(): Boolean =
-        effectManager.has(VanillaEffects.WATER_BREATH.effect) ||
+        effectManager.has(VanillaEffects.WATER_BREATHING.effect) ||
             effectManager.has(VanillaEffects.CONDUIT_POWER.effect) ||
             !isUnderWater()
 

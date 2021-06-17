@@ -28,34 +28,32 @@ object EffectIdMap {
     private val effectToId: MutableMap<Effect, Int> = HashObjObjMaps.newMutableMap()
 
     init {
-        /*
-        $this->register(EffectIds::SPEED, VanillaEffects::SPEED());
-		$this->register(EffectIds::SLOWNESS, VanillaEffects::SLOWNESS());
-		$this->register(EffectIds::HASTE, VanillaEffects::HASTE());
-		$this->register(EffectIds::MINING_FATIGUE, VanillaEffects::MINING_FATIGUE());
-		$this->register(EffectIds::STRENGTH, VanillaEffects::STRENGTH());
-		$this->register(EffectIds::INSTANT_HEALTH, VanillaEffects::INSTANT_HEALTH());
-		$this->register(EffectIds::INSTANT_DAMAGE, VanillaEffects::INSTANT_DAMAGE());
-		$this->register(EffectIds::JUMP_BOOST, VanillaEffects::JUMP_BOOST());
-		$this->register(EffectIds::NAUSEA, VanillaEffects::NAUSEA());
-		$this->register(EffectIds::REGENERATION, VanillaEffects::REGENERATION());
-		$this->register(EffectIds::RESISTANCE, VanillaEffects::RESISTANCE());
-		$this->register(EffectIds::FIRE_RESISTANCE, VanillaEffects::FIRE_RESISTANCE());
-		$this->register(EffectIds::WATER_BREATHING, VanillaEffects::WATER_BREATHING());
-		$this->register(EffectIds::INVISIBILITY, VanillaEffects::INVISIBILITY());
-		$this->register(EffectIds::BLINDNESS, VanillaEffects::BLINDNESS());
-		$this->register(EffectIds::NIGHT_VISION, VanillaEffects::NIGHT_VISION());
-		$this->register(EffectIds::HUNGER, VanillaEffects::HUNGER());
-		$this->register(EffectIds::WEAKNESS, VanillaEffects::WEAKNESS());
-		$this->register(EffectIds::POISON, VanillaEffects::POISON());
-		$this->register(EffectIds::WITHER, VanillaEffects::WITHER());
-		$this->register(EffectIds::HEALTH_BOOST, VanillaEffects::HEALTH_BOOST());
-		$this->register(EffectIds::ABSORPTION, VanillaEffects::ABSORPTION());
-		$this->register(EffectIds::SATURATION, VanillaEffects::SATURATION());
-		$this->register(EffectIds::LEVITATION, VanillaEffects::LEVITATION());
-		$this->register(EffectIds::FATAL_POISON, VanillaEffects::FATAL_POISON());
-		$this->register(EffectIds::CONDUIT_POWER, VanillaEffects::CONDUIT_POWER());
-         */
+        register(EffectIds.SPEED, VanillaEffects.SPEED)
+        register(EffectIds.SLOWNESS, VanillaEffects.SLOWNESS)
+        register(EffectIds.HASTE, VanillaEffects.HASTE)
+        register(EffectIds.MINING_FATIGUE, VanillaEffects.MINING_FATIGUE)
+        register(EffectIds.STRENGTH, VanillaEffects.STRENGTH)
+        register(EffectIds.INSTANT_HEALTH, VanillaEffects.INSTANT_HEALTH)
+        register(EffectIds.INSTANT_DAMAGE, VanillaEffects.INSTANT_DAMAGE)
+        register(EffectIds.JUMP_BOOST, VanillaEffects.JUMP_BOOST)
+        register(EffectIds.NAUSEA, VanillaEffects.NAUSEA)
+        register(EffectIds.REGENERATION, VanillaEffects.REGENERATION)
+        register(EffectIds.RESISTANCE, VanillaEffects.RESISTANCE)
+        register(EffectIds.FIRE_RESISTANCE, VanillaEffects.FIRE_RESISTANCE)
+        register(EffectIds.WATER_BREATHING, VanillaEffects.WATER_BREATHING)
+        register(EffectIds.INVISIBILITY, VanillaEffects.INVISIBILITY)
+        register(EffectIds.BLINDNESS, VanillaEffects.BLINDNESS)
+        register(EffectIds.NIGHT_VISION, VanillaEffects.NIGHT_VISION)
+        register(EffectIds.HUNGER, VanillaEffects.HUNGER)
+        register(EffectIds.WEAKNESS, VanillaEffects.WEAKNESS)
+        register(EffectIds.POISON, VanillaEffects.POISON)
+        register(EffectIds.WITHER, VanillaEffects.WITHER)
+        register(EffectIds.HEALTH_BOOST, VanillaEffects.HEALTH_BOOST)
+        register(EffectIds.ABSORPTION, VanillaEffects.ABSORPTION)
+        register(EffectIds.SATURATION, VanillaEffects.SATURATION)
+        register(EffectIds.LEVITATION, VanillaEffects.LEVITATION)
+        register(EffectIds.FATAL_POISON, VanillaEffects.FATAL_POISON)
+        register(EffectIds.CONDUIT_POWER, VanillaEffects.CONDUIT_POWER)
     }
 
     fun register(mcpeId: Int, effect: VanillaEffects) {

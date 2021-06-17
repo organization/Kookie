@@ -192,7 +192,7 @@ enum class VanillaEffects(val effect: Effect) {
             color = Color(0x93, 0x24, 0x23)
         )
     ),
-    WATER_BREATH(
+    WATER_BREATHING(
         Effect(
             internalRuntimeId = EffectIds.WATER_BREATHING,
             name = "%potion.waterBreathing",
