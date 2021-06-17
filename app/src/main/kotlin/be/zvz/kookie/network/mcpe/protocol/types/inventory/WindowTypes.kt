@@ -20,16 +20,16 @@ package be.zvz.kookie.network.mcpe.protocol.types.inventory
 enum class WindowTypes(val value: Int) {
     NONE(-9),
     INVENTORY(-1),
-    CONTAINE(0),
-    WORKBENC(1),
-    FURNAC(2),
-    ENCHANTMEN(3),
-    BREWING_STAN(4),
-    ANVI(5),
-    DISPENSE(6),
-    DROPPE(7),
-    HOPPE(8),
-    CAULDRO(9),
+    CONTAINER(0),
+    WORKBENCH(1),
+    FURNACE(2),
+    ENCHANTMENT(3),
+    BREWING_STAND(4),
+    ANVIL(5),
+    DISPENSER(6),
+    DROPPER(7),
+    HOPPER(8),
+    CAULDRON(9),
     MINECART_CHEST(10),
     MINECART_HOPPER(11),
     HORSE(12),
@@ -57,6 +57,7 @@ enum class WindowTypes(val value: Int) {
 
     companion object {
         private val VALUES = values()
+
         @JvmStatic
         fun from(findValue: Int): WindowTypes = VALUES.firstOrNull { it.value == findValue } ?: NONE
     }

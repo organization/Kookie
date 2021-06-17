@@ -33,7 +33,7 @@ class ItemTypeDictionary(val itemTypes: List<ItemTypeEntry>) {
         }
     }
 
-    fun getEntires(): List<ItemTypeEntry> = itemTypes
+    fun getEntries(): List<ItemTypeEntry> = itemTypes
 
     fun fromStringId(id: String): Int = stringToIntMap.getValue(id)
 
