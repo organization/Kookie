@@ -297,7 +297,7 @@ abstract class Entity @JvmOverloads constructor(var location: Location, nbt: Com
         }
 
         val changedProperties = getDirtyNetworkData()
-        if (changedProperties.size > 0) {
+        if (changedProperties.isNotEmpty()) {
             sendData(null, changedProperties)
             networkProperties.clearDirtyProperties()
         }
