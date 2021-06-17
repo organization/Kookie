@@ -22,5 +22,5 @@ import be.zvz.kookie.network.mcpe.protocol.LevelEventPacket
 
 class MobSpawnParticle(val width: Int = 0, val height: Int = 0) : Particle {
     override fun encode(pos: Vector3) =
-        listOf(LevelEventPacket.create(LevelEventPacket.EVENT_PARTICLE_SPAWN, (width and 0xff) or ((height and 0xff) shl 8), pos))
+        listOf(LevelEventPacket.create(LevelEventPacket.EVENT_PARTICLE_SPAWN, width and 0xff or (height and 0xff shl 8), pos))
 }

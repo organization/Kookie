@@ -24,5 +24,5 @@ import be.zvz.kookie.network.mcpe.protocol.types.ParticleIds
 
 class ItemBreakParticle(val item: Item) : Particle {
     override fun encode(pos: Vector3) =
-        listOf(LevelEventPacket.standardParticle(ParticleIds.ITEM_BREAK, (item.getId() shl 16) or item.getMeta(), pos))
+        listOf(LevelEventPacket.standardParticle(ParticleIds.ITEM_BREAK, item.getId() shl 16 or item.getMeta(), pos))
 }
