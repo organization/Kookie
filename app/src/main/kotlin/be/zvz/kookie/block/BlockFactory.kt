@@ -132,7 +132,7 @@ object BlockFactory {
 
     @JvmStatic
     @JvmOverloads
-    fun isRegistered(id: Int, meta: Int = 0): Boolean = fullList[id shl 4 or meta]?.takeIf { it !is UnknownBlock } !== null
+    fun isRegistered(id: Int, meta: Int = 0): Boolean = fullList[Block.fullId(id, meta)]?.takeIf { it !is UnknownBlock } !== null
 
     @Deprecated("In PMMP, it is used to fetch only blocks without null ")
     fun getAllKnownStates() = fullList.toList()

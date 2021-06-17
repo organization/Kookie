@@ -95,7 +95,8 @@ class SkyLightUpdate(
             ?: throw CorruptedWorldException("SubChunkExplorer does not have a target chunk")
 
         val newHeightMap = recalculateHeightMap(chunk, directSkyLightBlockers)
-        chunk.heightMap.values = newHeightMap.values
+        chunk.heightMap.values.clear()
+        newHeightMap.values.forEach(chunk.heightMap.values::add)
 
         // setAndUpdateLight() won't bother propagating from nodes that are already what we want to change them to, so we
         // have to avoid filling full light for any subchunk that contains a heightmap Y coordinate
