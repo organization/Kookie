@@ -27,16 +27,12 @@ class Simplex(
     expansion: Float
 ) : Noise(octaves, persistence, expansion) {
 
-    private val offsetX: Float
-    private val offsetZ: Float
-    private val offsetY: Float
+    private val offsetX: Float = random.nextFloat() * 256
+    private val offsetZ: Float = random.nextFloat() * 256
+    private val offsetY: Float = random.nextFloat() * 256
     private val perm = IntArray(512) { 0 }
 
     init {
-        offsetX = random.nextFloat() * 256
-        offsetY = random.nextFloat() * 256
-        offsetZ = random.nextFloat() * 256
-
         repeat(256) { i ->
             perm[i] = random.nextInt() % 256
         }
