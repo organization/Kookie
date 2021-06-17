@@ -15,7 +15,7 @@
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  */
-package be.zvz.kookie.network.mcpe.protocol.types
+package be.zvz.kookie.world.particle
 
 object ParticleIds {
     const val BUBBLE = 1

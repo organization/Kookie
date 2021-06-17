@@ -19,7 +19,7 @@ package be.zvz.kookie.world.particle
 
 import be.zvz.kookie.math.Vector3
 import be.zvz.kookie.network.mcpe.protocol.LevelEventPacket
-import be.zvz.kookie.network.mcpe.protocol.types.ParticleIds
+import be.zvz.kookie.world.particle.ParticleIds
 
 class EntityFlameParticle : Particle {
     override fun encode(pos: Vector3) = listOf(LevelEventPacket.standardParticle(ParticleIds.MOB_FLAME, 0, pos))

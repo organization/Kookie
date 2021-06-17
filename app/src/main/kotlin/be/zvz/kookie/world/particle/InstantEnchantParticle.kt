@@ -20,7 +20,7 @@ package be.zvz.kookie.world.particle
 import be.zvz.kookie.color.Color
 import be.zvz.kookie.math.Vector3
 import be.zvz.kookie.network.mcpe.protocol.LevelEventPacket
-import be.zvz.kookie.network.mcpe.protocol.types.ParticleIds
+import be.zvz.kookie.world.particle.ParticleIds
 
 class InstantEnchantParticle(val color: Color) : Particle {
     override fun encode(pos: Vector3) =

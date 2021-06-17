@@ -20,7 +20,7 @@ package be.zvz.kookie.world.particle
 import be.zvz.kookie.item.Item
 import be.zvz.kookie.math.Vector3
 import be.zvz.kookie.network.mcpe.protocol.LevelEventPacket
-import be.zvz.kookie.network.mcpe.protocol.types.ParticleIds
+import be.zvz.kookie.world.particle.ParticleIds
 
 class ItemBreakParticle(val item: Item) : Particle {
     override fun encode(pos: Vector3) =
