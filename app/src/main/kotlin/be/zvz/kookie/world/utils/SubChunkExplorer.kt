@@ -40,21 +40,19 @@ class SubChunkExplorer(val world: ChunkManager) {
             chunk = world.getChunk(currentX, currentZ)
             currentChunk = chunk
         }
-        if (chunk == null) {
-            return Status.INVALID
-        }
-
-        if ((currentSubChunk == null) or (currentY != chunkY)) {
-            currentY = chunkY
-            if (currentY in 0..chunk.height) {
-                currentSubChunk = null
-                return Status.INVALID
+        return chunk?.let {
+            if (currentSubChunk == null || currentY != chunkY) {
+                currentY = chunkY
+                if (currentY in 0..chunk.height) {
+                    currentSubChunk = null
+                    Status.INVALID
+                } else {
+                    currentSubChunk = chunk.getSubChunk(currentY)
+                    Status.MOVED
+                }
             }
-
-            currentSubChunk = chunk.getSubChunk(currentY)
-            return Status.MOVED
-        }
-        return Status.OK
+            Status.OK
+        } ?: Status.INVALID
     }
 
     fun isValid() = currentSubChunk != null
