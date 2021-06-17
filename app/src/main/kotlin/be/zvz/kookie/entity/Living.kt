@@ -226,20 +226,17 @@ abstract class Living(location: Location) : Entity(location) {
 
     fun getEffects(): EffectManager = effectManager
 
-    open fun consumeObject(consumable: Any): Boolean {
+    open fun consumeObject(consumable: Consumable): Boolean {
         // TODO: Consumable
         applyConsumptionResult(consumable)
         return true
     }
 
-    open fun applyConsumptionResult(consumable: Any) {
-        /*
-        TODO:
+    open fun applyConsumptionResult(consumable: Consumable) {
         consumable.getAdditionalEffects().forEach {
-        effectManager.add(it)
+            effectManager.add(it)
         }
-         */
-        // TODO: consumable.onConsume(this)
+        consumable.onConsume(this)
     }
 
     open fun jump() {

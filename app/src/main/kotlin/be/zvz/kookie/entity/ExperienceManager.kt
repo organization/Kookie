@@ -15,7 +15,6 @@ class ExperienceManager(private val entity: Human) {
     private var progressAttr: Attribute = fetchAttribute(entity, Attribute.Identifier.EXPERIENCE)
 
     var totalXp: Int = 0
-        private set
 
     var xpCooldown: Long = 0
         private set
