@@ -17,6 +17,10 @@
  */
 package be.zvz.kookie.utils.inline
 
+/**
+ * This works the same as using two repeats.
+ * @see kotlin.repeat
+ */
 inline fun repeat2(times: Int, action: (Int, Int) -> Unit) = repeat2(times, times, action)
 inline fun repeat2(first: Int, second: Int, action: (Int, Int) -> Unit) {
     repeat(first) { i ->
@@ -26,20 +30,15 @@ inline fun repeat2(first: Int, second: Int, action: (Int, Int) -> Unit) {
     }
 }
 
+/**
+ * This works the same as using three repeats.
+ * @see kotlin.repeat
+ */
 inline fun repeat3(times: Int, action: (Int, Int, Int) -> Unit) = repeat3(times, times, times, action)
 inline fun repeat3(first: Int, second: Int, third: Int, action: (Int, Int, Int) -> Unit) {
     repeat2(first, second) { i, j ->
         repeat(third) { k ->
             action(i, j, k)
-        }
-    }
-}
-
-inline fun repeat4(times: Int, action: (Int, Int, Int, Int) -> Unit) = repeat4(times, times, times, times, action)
-inline fun repeat4(first: Int, second: Int, third: Int, fourth: Int, action: (Int, Int, Int, Int) -> Unit) {
-    repeat3(first, second, third) { i, j, k ->
-        repeat(fourth) { l ->
-            action(i, j, k, l)
         }
     }
 }
