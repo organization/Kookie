@@ -113,9 +113,5 @@ class LevelEventPacket : DataPacket(), ClientboundPacket {
             this.data = data
             this.position = pos
         }
-
-        @JvmStatic
-        fun standardParticle(particleId: Int, data: Int, pos: Vector3) =
-            create(EVENT_ADD_PARTICLE_MASK or particleId, data, pos)
     }
 }
