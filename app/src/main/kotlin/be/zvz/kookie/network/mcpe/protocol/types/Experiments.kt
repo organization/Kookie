@@ -18,6 +18,7 @@
 package be.zvz.kookie.network.mcpe.protocol.types
 
 import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
+import be.zvz.kookie.utils.inline.forEachIndexed
 import com.koloboke.collect.map.hash.HashObjObjMaps
 
 class Experiments(
@@ -30,10 +31,7 @@ class Experiments(
     fun hasPreviouslyUsedExperiments(): Boolean = hasPreviouslyUsedExperiments
 
     fun write(output: PacketSerializer) {
-        experiments.forEach { (experimentName, value) ->
-            output.putString(experimentName)
-            output.putBoolean(value)
-        }
+        experiments.forEachIndexed(output::putString, output::putBoolean)
         output.putBoolean(hasPreviouslyUsedExperiments)
     }
 

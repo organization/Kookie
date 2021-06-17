@@ -139,9 +139,7 @@ class CompoundTag : Tag<Map<String, Tag<*>>>() {
     }
 
     override fun makeCopy(): CompoundTag = CompoundTag().let {
-        it.value.forEach { (name, tag) ->
-            value[name] = tag
-        }
+        it.value.forEach(value::put)
         it
     }
 

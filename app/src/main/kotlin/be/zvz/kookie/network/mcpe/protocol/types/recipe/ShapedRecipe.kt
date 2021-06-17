@@ -3,6 +3,7 @@ package be.zvz.kookie.network.mcpe.protocol.types.recipe
 import be.zvz.kookie.network.mcpe.protocol.CraftingDataPacket
 import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 import be.zvz.kookie.network.mcpe.protocol.types.inventory.ItemStackWrapper
+import be.zvz.kookie.utils.inline.forEachValue
 import com.koloboke.collect.map.hash.HashIntObjMaps
 import java.util.UUID
 
@@ -49,8 +50,6 @@ class ShapedRecipe(
 
     override fun encodeInputs(output: PacketSerializer) {
         output.putUnsignedVarInt(inputs.size)
-        inputs.forEach { (_, row) ->
-            row.forEach { (_, column) -> output.putRecipeIngredient(column) }
-        }
+        inputs.forEachValue { it.forEachValue(output::putRecipeIngredient) }
     }
 }

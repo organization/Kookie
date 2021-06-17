@@ -19,6 +19,7 @@ package be.zvz.kookie.permission
 
 import be.zvz.kookie.plugin.Plugin
 import be.zvz.kookie.plugin.PluginException
+import be.zvz.kookie.utils.inline.forEachValue
 import com.koloboke.collect.map.hash.HashIntObjMaps
 import com.koloboke.collect.map.hash.HashObjObjMaps
 import com.koloboke.collect.set.hash.HashObjSets
@@ -87,7 +88,7 @@ class PermissibleBase(rootPermissionsMap: Map<String, Boolean>) : Permissible {
             calculateChildPermissions(perm.children, !isGranted, null, permissions[name])
         }
 
-        attachments.forEach { (_, attachment) ->
+        attachments.forEachValue { attachment ->
             calculateChildPermissions(attachment.permissions, false, attachment, null)
         }
 
