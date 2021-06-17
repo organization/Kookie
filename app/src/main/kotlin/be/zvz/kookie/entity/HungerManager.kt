@@ -21,11 +21,10 @@ class HungerManager(private val entity: Human) {
         val old = hungerAttr.currentValue
         hungerAttr.setValue(new)
 
-        listOf(17, 6, 0).forEach {
+        intArrayOf(17, 6, 0).forEach {
             if ((old > it) != (new > it)) {
                 foodTickTimer = 0
                 return@forEach
-                // FIXME
             }
         }
     }
