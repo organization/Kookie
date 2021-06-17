@@ -79,10 +79,8 @@ class Armor(identifier: ItemIdentifier, name: String, val armorInfo: ArmorTypeIn
     override fun deserializeCompoundTag(tag: CompoundTag) {
         super.deserializeCompoundTag(tag)
         val colorTag = tag.getTag(TAG_CUSTOM_COLOR)
-        customColor = if (colorTag !== null) {
+        customColor = colorTag?.let {
             Color.fromARGB(Binary.unsignInt(colorTag.value as Int))
-        } else {
-            null
         }
     }
 

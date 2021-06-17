@@ -109,7 +109,8 @@ class ClientboundMapItemDataPacket : DataPacket(), ClientboundPacket {
             }
 
             repeat2(width, height) { x, y ->
-                colors.getValue(y)[x] = Color.fromRGBA(Binary.flipIntEndianness(input.getUnsignedVarInt()))
+                colors.getOrPut(y, HashIntObjMaps::newMutableMap)[x] =
+                    Color.fromRGBA(Binary.flipIntEndianness(input.getUnsignedVarInt()))
             }
         }
     }
@@ -183,7 +184,10 @@ class ClientboundMapItemDataPacket : DataPacket(), ClientboundPacket {
 
             repeat2(width, height) { x, y ->
                 // if mojang had any sense this would just be a regular LE Int
-                output.putUnsignedVarInt(Binary.flipIntEndianness(colors.getValue(y).getValue(x).toRGBA()))
+                val color = colors
+                    .getOrPut(y, HashIntObjMaps::newMutableMap)
+                    .getOrPut(x) { Color(0, 0, 0, 0) }
+                output.putUnsignedVarInt(Binary.flipIntEndianness(color.toRGBA()))
             }
         }
     }

@@ -205,9 +205,7 @@ class AvailableCommandsPacket : DataPacket(), ClientboundPacket {
         val overloadCount = input.getUnsignedVarInt()
 
         repeat(overloadCount) { overloadIndex ->
-            if (!overloads.containsKey(overloadIndex)) {
-                overloads[overloadIndex] = HashIntObjMaps.newMutableMap()
-            }
+            val overload = overloads.getOrPut(overloadIndex, HashIntObjMaps::newMutableMap)
             val paramCount = input.getUnsignedVarInt()
             repeat(paramCount) { paramIndex ->
                 val parameter = CommandParameter()
@@ -242,7 +240,7 @@ class AvailableCommandsPacket : DataPacket(), ClientboundPacket {
                         )
                     }
                 }
-                overloads.getValue(overloadIndex)[paramIndex] = parameter
+                overload[paramIndex] = parameter
             }
         }
         return CommandData(name, description, flags, permission, aliases, overloads)
