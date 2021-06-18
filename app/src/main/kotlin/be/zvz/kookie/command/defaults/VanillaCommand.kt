@@ -26,7 +26,7 @@ abstract class VanillaCommand @JvmOverloads constructor(
     name: String,
     description: String = "",
     usageMessage: String = "/$name",
-    aliases: MutableList<String> = mutableListOf(),
+    aliases: List<String> = mutableListOf(),
 ) : Command(name, description, usageMessage, aliases) {
 
     @JvmOverloads
@@ -35,7 +35,7 @@ abstract class VanillaCommand @JvmOverloads constructor(
         value: String,
         minNum: Int = MIN_COORD,
         maxNum: Int = MAX_COORD
-    ): Int? = value.toIntOrNull()?.let { min(max(it, maxNum), minNum) }
+    ): Int = min(max(value.toIntOrNull() ?: 0, maxNum), minNum)
 
     @JvmOverloads
     protected fun getRelativeDouble(
@@ -44,12 +44,13 @@ abstract class VanillaCommand @JvmOverloads constructor(
         input: String,
         min: Double = MIN_COORD.toDouble(),
         max: Double = MAX_COORD.toDouble()
-    ): Double? =
-        if (input.first() == '~') {
+    ): Double {
+        return if (input.first() == '~') {
             original + (getDouble(sender, input.substring(1)) ?: 0.0)
         } else {
             getDouble(sender, input, min, max)
         }
+    }
 
     @JvmOverloads
     protected fun getDouble(
@@ -57,7 +58,7 @@ abstract class VanillaCommand @JvmOverloads constructor(
         value: String,
         minNum: Double = MIN_COORD.toDouble(),
         maxNum: Double = MAX_COORD.toDouble()
-    ): Double? = value.toDoubleOrNull()?.let { min(max(it, maxNum), minNum) }
+    ): Double = min(max(value.toDoubleOrNull() ?: 0.0, maxNum), minNum)
 
     companion object {
         const val MAX_COORD = 30000000

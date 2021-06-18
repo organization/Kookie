@@ -27,13 +27,8 @@ import java.util.jar.JarFile
 
 class Language @JvmOverloads constructor(langStr: String, path: String = "locale", fallback: String = FALLBACK_LANGUAGE) {
     private val langName: String = langStr.lowercase()
-    private val languagePrefs: Properties
-    private val fallbackLang: Properties
-
-    init {
-        languagePrefs = loadLanguage(path, langStr)
-        fallbackLang = loadLanguage(path, fallback)
-    }
+    private val languagePrefs: Properties = loadLanguage(path, langStr)
+    private val fallbackLang: Properties = loadLanguage(path, fallback)
 
     val name: String get() = languagePrefs.getProperty("language.name")!!
     val lang: String get() = langName

@@ -30,7 +30,7 @@ import com.koloboke.collect.map.hash.HashObjIntMaps
 import com.koloboke.collect.map.hash.HashObjObjMaps
 
 @ProtocolIdentify(ProtocolInfo.IDS.AVAILABLE_COMMANDS_PACKET)
-class AvailableCommandsPacket : DataPacket(), ClientboundPacket {
+open class AvailableCommandsPacket : DataPacket(), ClientboundPacket {
 
     val commandData: MutableMap<String, CommandData> = HashObjObjMaps.newMutableMap()
 
@@ -42,31 +42,31 @@ class AvailableCommandsPacket : DataPacket(), ClientboundPacket {
 
     override fun decodePayload(input: PacketSerializer) {
         val enumValues = mutableListOf<String>().apply {
-            repeat(input.getUnsignedVarInt() - 1) {
+            repeat(input.getUnsignedVarInt()) {
                 add(input.getString())
             }
         }
         val postfixes = mutableListOf<String>().apply {
-            repeat(input.getUnsignedVarInt() - 1) {
+            repeat(input.getUnsignedVarInt()) {
                 add(input.getString())
             }
         }
         val enums = mutableListOf<CommandEnum>()
-        repeat(input.getUnsignedVarInt() - 1) {
+        repeat(input.getUnsignedVarInt()) {
             val enum = getEnum(enumValues, input)
             enums.add(enum)
             if (HARDCODED_ENUM_NAMES.containsKey(enum.getEnumName())) {
                 hardCodeEnums.add(enum)
             }
         }
-        repeat(input.getUnsignedVarInt() - 1) {
+        repeat(input.getUnsignedVarInt()) {
             val command = getCommandData(enums, postfixes, input)
             commandData[command.name] = command
         }
-        repeat(input.getUnsignedVarInt() - 1) {
+        repeat(input.getUnsignedVarInt()) {
             softEnums.add(getSoftEnum(input))
         }
-        repeat(input.getUnsignedVarInt() - 1) {
+        repeat(input.getUnsignedVarInt()) {
             enumConstraints.add(getEnumConstraint(enums, enumValues, input))
         }
     }
@@ -125,12 +125,12 @@ class AvailableCommandsPacket : DataPacket(), ClientboundPacket {
 
     override fun handle(handler: PacketHandlerInterface): Boolean = false
 
-    private fun getEnum(enumList: MutableList<String>, input: PacketSerializer): CommandEnum {
+    protected fun getEnum(enumList: List<String>, input: PacketSerializer): CommandEnum {
         val enumName = input.getString()
         val enumValues = mutableListOf<String>()
 
         val listSize = enumList.size
-        repeat(input.getUnsignedVarInt() - 1) {
+        repeat(input.getUnsignedVarInt()) {
             val index = getEnumValueIndex(listSize, input)
             val enumValue = enumList.getOrNull(index) ?: throw PacketDecodeException("Invalid enum value index $index")
             enumValues.add(enumValue)
@@ -138,7 +138,7 @@ class AvailableCommandsPacket : DataPacket(), ClientboundPacket {
         return CommandEnum(enumName, enumValues)
     }
 
-    private fun putEnum(enum: CommandEnum, enumValueMap: MutableMap<String, Int>, output: PacketSerializer) {
+    protected fun putEnum(enum: CommandEnum, enumValueMap: Map<String, Int>, output: PacketSerializer) {
         output.putString(enum.getEnumName())
 
         val values = enum.getEnumValues()
