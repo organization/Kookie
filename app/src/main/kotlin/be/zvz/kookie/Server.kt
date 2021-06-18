@@ -301,7 +301,7 @@ class Server(cwd: Path, dataPath: Path, pluginPath: Path) {
                 }
             }
         } catch (e: Throwable) {
-            logger.error("Crashed while crashing, killing process...")
+            logger.error("Crashed while crashing, killing process...", e)
             exitProcess(1)
         }
     }
