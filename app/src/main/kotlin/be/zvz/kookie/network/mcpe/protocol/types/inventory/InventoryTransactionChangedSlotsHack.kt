@@ -32,9 +32,7 @@ class InventoryTransactionChangedSlotsHack(
         output.putByte(containerId)
         output.putUnsignedVarInt(changedIndexSlotIndexes.size)
 
-        changedIndexSlotIndexes.forEach {
-            output.putByte(it)
-        }
+        changedIndexSlotIndexes.forEach(output::putByte)
     }
 
     companion object {

@@ -59,32 +59,25 @@ object ItemTranslator {
             val stringId = entry.stringId
             val netId = entry.numericId
 
-            when {
-                complexMappings.containsKey(stringId) -> {
-                    val (id, meta) = complexMappings.getValue(stringId)
-                    complexCoreToNetMapping.getValue(id)[meta] = netId
-                    complexNetToCoreMapping[netId] = Pair(id, meta)
-                }
-                simpleMappings.containsKey(stringId) -> {
-                    simpleCoreToNetMapping[simpleMappings.getValue(stringId)] = netId
-                    simpleNetToCoreMapping[netId] = simpleMappings.getValue(stringId)
-                }
-                stringId != "minecraft:unknown" -> {
-                    throw IllegalArgumentException("Unmapped entry $stringId")
-                }
+            complexMappings[stringId]?.let { (id, meta) ->
+                complexCoreToNetMapping.getOrPut(id, HashIntIntMaps::newMutableMap)[meta] = netId
+                complexNetToCoreMapping[netId] = Pair(id, meta)
+            } ?: simpleMappings[stringId]?.let { id ->
+                simpleCoreToNetMapping[id] = netId
+                simpleNetToCoreMapping[netId] = id
+            } ?: if (stringId != "minecraft:unknown") {
+                throw IllegalArgumentException("Unmapped entry $stringId")
             }
         }
     }
 
     @JvmStatic
-    fun toNetworkId(internalId: Int, internalMeta: Int): Pair<Int, Int> = when {
-        complexCoreToNetMapping[internalId]?.containsKey(internalMeta) == true ->
-            Pair(complexCoreToNetMapping.getValue(internalId).getValue(internalMeta), 0)
-        simpleCoreToNetMapping.containsKey(internalId) ->
-            Pair(simpleCoreToNetMapping.getValue(internalId), internalMeta)
-        else ->
-            throw IllegalArgumentException("Unmapped ID/metadata combination $internalId:$internalMeta")
-    }
+    fun toNetworkId(internalId: Int, internalMeta: Int): Pair<Int, Int> =
+        complexCoreToNetMapping[internalId]?.get(internalMeta)?.let {
+            Pair(it, 0)
+        } ?: simpleCoreToNetMapping[internalId]?.let {
+            Pair(it, internalMeta)
+        } ?: throw IllegalArgumentException("Unmapped ID/metadata combination $internalId:$internalMeta")
 
     @JvmStatic
     @JvmOverloads
@@ -93,16 +86,16 @@ object ItemTranslator {
         networkMeta: Int,
         isComplexMapping: AtomicBoolean = AtomicBoolean(false)
     ): Pair<Int, Int> {
-        if (complexNetToCoreMapping.containsKey(networkId)) {
+        complexNetToCoreMapping[networkId]?.let {
             if (networkMeta != 0) {
                 throw IllegalArgumentException("Unexpected non-zero network meta on complex item mapping")
             }
             isComplexMapping.set(true)
-            return complexNetToCoreMapping.getValue(networkId)
+            return it
         }
         isComplexMapping.set(false)
-        if (simpleNetToCoreMapping.containsKey(networkId)) {
-            return Pair(simpleNetToCoreMapping.getValue(networkId), networkMeta)
+        simpleNetToCoreMapping[networkId]?.let {
+            return Pair(it, networkMeta)
         }
         throw IllegalArgumentException("Unmapped network ID/metadata combination $networkId:$networkMeta")
     }

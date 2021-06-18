@@ -18,6 +18,7 @@
 package be.zvz.kookie.world.format.io
 
 import be.zvz.kookie.block.Block
+import be.zvz.kookie.utils.inline.repeat3
 import be.zvz.kookie.world.format.BlockArrayContainer
 import be.zvz.kookie.world.format.PalettedBlockArray
 import kotlin.jvm.internal.Ref
@@ -92,55 +93,47 @@ object SubChunkConverter {
         val id2Idx = Ref.IntRef()
         val metaIdx = Ref.IntRef()
         var unique = 0
-        repeat(16) { x ->
-            repeat(16) { z ->
-                repeat(8) { y ->
-                    getIndex(x, y, z, id1Idx, id2Idx, metaIdx, extraArg)
-                    val metaByte = metaArray[metaIdx.element].code
-                    val id1 = idArray[id1Idx.element].code shl 4 or (metaByte and 0xf)
-                    val id2 = idArray[id2Idx.element].code shl 4 or (metaByte shr 4 or 0xf)
-                    if (!seen[id1]) {
-                        seen[id1] = true
-                        unique++
-                    }
-                    if (!seen[id2]) {
-                        seen[id2] = true
-                        unique++
-                    }
-                }
+        repeat3(16, 8, 16) { x, y, z ->
+            getIndex(x, y, z, id1Idx, id2Idx, metaIdx, extraArg)
+            val metaByte = metaArray[metaIdx.element].code
+            val id1 = idArray[id1Idx.element].code shl 4 or (metaByte and 0xf)
+            val id2 = idArray[id2Idx.element].code shl 4 or (metaByte shr 4 or 0xf)
+            if (!seen[id1]) {
+                seen[id1] = true
+                unique++
+            }
+            if (!seen[id2]) {
+                seen[id2] = true
+                unique++
             }
         }
         val result = BlockArrayContainer<Block>(unique)
         var rX: Int
         var rZ: Int
         var rY: Int
-        repeat(16) { x ->
-            repeat(16) { z ->
-                repeat(8) { y ->
-                    getIndex(x, y, z, id1Idx, id2Idx, metaIdx, extraArg)
-                    val metaByte = metaArray[metaIdx.element].code
-                    if (isYZX) {
-                        rX = y shl 1
-                        rY = x
-                        rZ = z
-                    } else {
-                        rX = x
-                        rY = y shl 1
-                        rZ = z
-                    }
-                    result.set(x, y shl 1, z, mapper(idArray[id1Idx.element].code, metaByte and 0xf))
-                    if (isYZX) {
-                        rX = y shl 1 or 1
-                        rY = x
-                        rZ = z
-                    } else {
-                        rX = x
-                        rY = y shl 1 or 1
-                        rZ = z
-                    }
-                    result.set(rX, rY, rZ, mapper(idArray[id2Idx.element].code, metaByte shr 4 and 0xf))
-                }
+        repeat3(16, 8, 16) { x, y, z ->
+            getIndex(x, y, z, id1Idx, id2Idx, metaIdx, extraArg)
+            val metaByte = metaArray[metaIdx.element].code
+            if (isYZX) {
+                rX = y shl 1
+                rY = x
+                rZ = z
+            } else {
+                rX = x
+                rY = y shl 1
+                rZ = z
             }
+            result.set(x, y shl 1, z, mapper(idArray[id1Idx.element].code, metaByte and 0xf))
+            if (isYZX) {
+                rX = y shl 1 or 1
+                rY = x
+                rZ = z
+            } else {
+                rX = x
+                rY = y shl 1 or 1
+                rZ = z
+            }
+            result.set(rX, rY, rZ, mapper(idArray[id2Idx.element].code, metaByte shr 4 and 0xf))
         }
         return result
     }

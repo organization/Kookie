@@ -94,9 +94,7 @@ abstract class Command @JvmOverloads constructor(
             commandMap = null
 
             activeAliases.clear()
-            aliases.forEachIndexed { index: Int, s: String ->
-                activeAliases[index] = s
-            }
+            aliases.forEachIndexed(activeAliases::set)
 
             label = nextLabel
 

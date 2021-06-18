@@ -88,9 +88,7 @@ class AddActorPacket : DataPacket(), ClientboundPacket {
         output.putEntityMetadata(metadata)
 
         output.putUnsignedVarInt(links.size)
-        links.forEach {
-            output.putEntityLink(it)
-        }
+        links.forEach(output::putEntityLink)
     }
 
     override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleAddActor(this)

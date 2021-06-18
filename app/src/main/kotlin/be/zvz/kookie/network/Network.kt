@@ -51,11 +51,7 @@ class Network(private val server: Server, private val logger: Logger) {
     }
 
     fun removeInterface(networkInterface: NetworkInterface) {
-        if (!interfaces.contains(networkInterface)) {
-            return
-        }
-        interfaces.remove(networkInterface)
-        if (networkInterface is AdvancedNetworkInterface) {
+        if (interfaces.remove(networkInterface) && networkInterface is AdvancedNetworkInterface) {
             networkInterface.shutdown()
         }
     }

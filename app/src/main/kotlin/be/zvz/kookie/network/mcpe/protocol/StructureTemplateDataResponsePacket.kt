@@ -38,9 +38,7 @@ class StructureTemplateDataResponsePacket : DataPacket(), ClientboundPacket {
     override fun encodePayload(output: PacketSerializer) {
         output.putString(structureTemplateName)
         output.putBoolean(namedtag != null)
-        if (namedtag != null) {
-            output.put(namedtag!!.encodedNbt)
-        }
+        namedtag?.let { output.put(it.encodedNbt) }
     }
 
     override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleStructureTemplateDataResponse(this)
