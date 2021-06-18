@@ -17,8 +17,10 @@
  */
 package be.zvz.kookie.network.mcpe.protocol.types.entity
 
+import be.zvz.kookie.entity.Attribute
+
 data class NetworkAttribute(
-    val id: String,
+    val id: Attribute.Identifier,
     val min: Float,
     val max: Float,
     val current: Float,

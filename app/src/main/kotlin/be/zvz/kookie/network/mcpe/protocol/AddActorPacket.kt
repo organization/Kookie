@@ -17,6 +17,7 @@
  */
 package be.zvz.kookie.network.mcpe.protocol
 
+import be.zvz.kookie.entity.Attribute
 import be.zvz.kookie.math.Vector3
 import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
 import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
@@ -51,7 +52,11 @@ class AddActorPacket : DataPacket(), ClientboundPacket {
         headYaw = input.getLFloat()
 
         repeat(input.getUnsignedVarInt()) {
-            val id = input.getString()
+            val idString = input.getString()
+            val id = Attribute.Identifier.from(idString)
+            if (id == Attribute.Identifier.UNKNOWN) {
+                throw PacketDecodeException("Unhandled attribute id : $idString")
+            }
             val min = input.getLFloat()
             val current = input.getLFloat()
             val max = input.getLFloat()
@@ -75,7 +80,7 @@ class AddActorPacket : DataPacket(), ClientboundPacket {
 
         output.putUnsignedVarInt(attributes.size)
         attributes.forEach {
-            output.putString(it.id)
+            output.putString(it.id.fullId)
             output.putLFloat(it.min)
             output.putLFloat(it.current)
             output.putLFloat(it.max)

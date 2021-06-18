@@ -57,7 +57,7 @@ class EventPacket : DataPacket(), ClientboundPacket {
         AGENT_COMMAND(8),
         AGENT_CREATED(9),
         PATTERN_REMOVED(10), // ???
-        COMMANED_EXECUTED(11),
+        COMMAND_EXECUTED(11),
         FISH_BUCKETED(12),
         MOB_BORN(13),
         PET_DIED(14),

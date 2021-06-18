@@ -55,7 +55,7 @@ object ItemTranslator {
                 complexMappings[newId] = Pair(legacyStringToIntMap.getValue(oldId).toInt(), meta.toInt())
             }
         }
-        GlobalItemTypeDictionary.dictionary.getEntires().forEach { entry ->
+        GlobalItemTypeDictionary.dictionary.getEntries().forEach { entry ->
             val stringId = entry.stringId
             val netId = entry.numericId
 
