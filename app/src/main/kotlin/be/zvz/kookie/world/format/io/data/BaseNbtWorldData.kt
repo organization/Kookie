@@ -19,6 +19,9 @@ package be.zvz.kookie.world.format.io.data
 
 import be.zvz.kookie.math.Vector3
 import be.zvz.kookie.nbt.tag.CompoundTag
+import be.zvz.kookie.nbt.tag.FloatTag
+import be.zvz.kookie.nbt.tag.IntTag
+import be.zvz.kookie.world.World
 import be.zvz.kookie.world.format.io.WorldData
 import be.zvz.kookie.world.format.io.exception.CorruptedWorldException
 import be.zvz.kookie.world.format.io.exception.UnsupportedWorldFormatException
@@ -49,6 +52,42 @@ abstract class BaseNbtWorldData(protected val dataPath: Path) : WorldData {
             compoundTag.setInt("SpawnX", value.x.toInt())
             compoundTag.setInt("SpawnY", value.y.toInt())
             compoundTag.setInt("SpawnZ", value.z.toInt())
+        }
+
+    override var difficulty: Int
+        get() = compoundTag.getByte("Difficulty", World.DIFFICULTY_NORMAL)
+        set(value) {
+            compoundTag.setByte("Difficulty", value)
+        }
+
+    override var rainTime: Int
+        get() = compoundTag.getInt("rainTime", World.DIFFICULTY_NORMAL)
+        set(value) {
+            compoundTag.setInt("rainTime", value)
+        }
+
+    override var rainLevel: Float
+        get() = (compoundTag.getTag("rainLevel") as? FloatTag)?.value // BE
+            ?: compoundTag.getByte("raining", 0).toFloat() // JE
+        set(value) {
+            compoundTag.setFloat("rainLevel", value) // BE
+            compoundTag.setByte("raining", value.toInt()) // JE
+        }
+
+    override var lightningTime: Int
+        get() = (compoundTag.getTag("lightningLevel") as? IntTag)?.value // BE
+            ?: compoundTag.getInt("thunderTime", 0) // JE
+        set(value) {
+            compoundTag.setInt("lightningTime", value) // BE
+            compoundTag.setInt("thunderTime", value) // JE
+        }
+
+    override var lightningLevel: Float
+        get() = (compoundTag.getTag("lightningLevel") as? FloatTag)?.value // BE
+            ?: compoundTag.getByte("thundering", 0).toFloat() // JE
+        set(value) {
+            compoundTag.setFloat("lightningLevel", value) // BE
+            compoundTag.setByte("thundering", value.toInt()) // JE
         }
 
     init {

@@ -21,9 +21,7 @@ import be.zvz.kookie.nbt.BigEndianNbtSerializer
 import be.zvz.kookie.nbt.NbtDataException
 import be.zvz.kookie.nbt.TreeRoot
 import be.zvz.kookie.nbt.tag.CompoundTag
-import be.zvz.kookie.nbt.tag.FloatTag
 import be.zvz.kookie.nbt.tag.StringTag
-import be.zvz.kookie.world.World
 import be.zvz.kookie.world.WorldCreationOptions
 import be.zvz.kookie.world.format.io.exception.CorruptedWorldException
 import be.zvz.kookie.world.generator.GeneratorManager
@@ -34,52 +32,6 @@ import kotlin.io.path.inputStream
 import kotlin.io.path.outputStream
 
 class JavaWorldData(dataPath: Path) : BaseNbtWorldData(dataPath) {
-    override var difficulty: Int
-        get() = compoundTag.getByte("Difficulty", World.DIFFICULTY_NORMAL)
-        set(value) {
-            compoundTag.setByte("Difficulty", value)
-        }
-
-    override var rainTime: Int
-        get() = compoundTag.getInt("rainTime", World.DIFFICULTY_NORMAL)
-        set(value) {
-            compoundTag.setInt("rainTime", value)
-        }
-
-    override var rainLevel: Float
-        get() {
-            val rainLevelTag = compoundTag.getTag("rainLevel") // BE
-            return if (rainLevelTag is FloatTag) {
-                rainLevelTag.value
-            } else {
-                compoundTag.getByte("raining", 0).toFloat() // JE
-            }
-        }
-        set(value) {
-            compoundTag.setFloat("rainLevel", value) // BE
-            compoundTag.setByte("raining", value.toInt()) // JE
-        }
-
-    override var lightningTime: Int
-        get() = compoundTag.getInt("lightningTime", World.DIFFICULTY_NORMAL)
-        set(value) {
-            compoundTag.setInt("lightningTime", value)
-        }
-
-    override var lightningLevel: Float
-        get() {
-            val rainLevelTag = compoundTag.getTag("lightningLevel") // BE
-            return if (rainLevelTag is FloatTag) {
-                rainLevelTag.value
-            } else {
-                compoundTag.getByte("thundering", 0).toFloat() // JE
-            }
-        }
-        set(value) {
-            compoundTag.setFloat("lightningLevel", value) // BE
-            compoundTag.setByte("thundering", value.toInt()) // JE
-        }
-
     override fun fix() {
         if (compoundTag.getTag("generatorName") !is StringTag) {
             compoundTag.setString("generatorName", "default")
