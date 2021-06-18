@@ -23,12 +23,14 @@ import be.zvz.kookie.network.mcpe.protocol.types.command.CommandData
 import be.zvz.kookie.network.mcpe.protocol.types.command.CommandEnum
 import be.zvz.kookie.network.mcpe.protocol.types.command.CommandEnumConstraint
 import be.zvz.kookie.network.mcpe.protocol.types.command.CommandParameter
+import be.zvz.kookie.utils.inline.forEachKey
+import be.zvz.kookie.utils.inline.forEachValue
 import com.koloboke.collect.map.hash.HashIntObjMaps
 import com.koloboke.collect.map.hash.HashObjIntMaps
 import com.koloboke.collect.map.hash.HashObjObjMaps
 
 @ProtocolIdentify(ProtocolInfo.IDS.AVAILABLE_COMMANDS_PACKET)
-class AvailableCommandsPacket : DataPacket(), ClientboundPacket {
+open class AvailableCommandsPacket : DataPacket(), ClientboundPacket {
 
     val commandData: MutableMap<String, CommandData> = HashObjObjMaps.newMutableMap()
 
@@ -40,31 +42,31 @@ class AvailableCommandsPacket : DataPacket(), ClientboundPacket {
 
     override fun decodePayload(input: PacketSerializer) {
         val enumValues = mutableListOf<String>().apply {
-            repeat(input.getUnsignedVarInt() - 1) {
+            repeat(input.getUnsignedVarInt()) {
                 add(input.getString())
             }
         }
         val postfixes = mutableListOf<String>().apply {
-            repeat(input.getUnsignedVarInt() - 1) {
+            repeat(input.getUnsignedVarInt()) {
                 add(input.getString())
             }
         }
         val enums = mutableListOf<CommandEnum>()
-        repeat(input.getUnsignedVarInt() - 1) {
+        repeat(input.getUnsignedVarInt()) {
             val enum = getEnum(enumValues, input)
             enums.add(enum)
             if (HARDCODED_ENUM_NAMES.containsKey(enum.getEnumName())) {
                 hardCodeEnums.add(enum)
             }
         }
-        repeat(input.getUnsignedVarInt() - 1) {
+        repeat(input.getUnsignedVarInt()) {
             val command = getCommandData(enums, postfixes, input)
             commandData[command.name] = command
         }
-        repeat(input.getUnsignedVarInt() - 1) {
+        repeat(input.getUnsignedVarInt()) {
             softEnums.add(getSoftEnum(input))
         }
-        repeat(input.getUnsignedVarInt() - 1) {
+        repeat(input.getUnsignedVarInt()) {
             enumConstraints.add(getEnumConstraint(enums, enumValues, input))
         }
     }
@@ -92,56 +94,43 @@ class AvailableCommandsPacket : DataPacket(), ClientboundPacket {
 
         hardCodeEnums.forEach(addEnum)
 
-        commandData.forEach { (_, data) ->
+        commandData.forEachValue { data ->
             data.aliases?.let(addEnum)
 
-            data.overloads.forEach { (_, map) ->
-                map.forEach { (_, commandParameter) ->
-                    commandParameter.enum?.let(addEnum)
-
-                    commandParameter.postfix?.let(addPostfix)
+            data.overloads.forEachValue { map ->
+                map.forEachValue {
+                    it.enum?.let(addEnum)
+                    it.postfix?.let(addPostfix)
                 }
             }
         }
         output.putUnsignedVarInt(enumValueIndexes.size)
-        enumValueIndexes.forEach { (enumValue, _) ->
-            output.putString(enumValue)
-        }
+        enumValueIndexes.forEachKey(output::putString)
 
         output.putUnsignedVarInt(postfixIndexes.size)
-        postfixIndexes.forEach { (postfix, _) ->
-            output.putString(postfix)
-        }
+        postfixIndexes.forEachKey(output::putString)
 
         output.putUnsignedVarInt(enums.size)
-        enums.forEach { (_, commandEnum) ->
-            putEnum(commandEnum, enumValueIndexes, output)
-        }
+        enums.forEachValue { putEnum(it, enumValueIndexes, output) }
 
         output.putUnsignedVarInt(commandData.size)
-        commandData.forEach { (_, commandData) ->
-            putCommandData(commandData, enumIndexes, postfixIndexes, output)
-        }
+        commandData.forEachValue { putCommandData(it, enumIndexes, postfixIndexes, output) }
 
         output.putUnsignedVarInt(softEnums.size)
-        softEnums.forEach {
-            putSoftEnum(it, output)
-        }
+        softEnums.forEach { putSoftEnum(it, output) }
 
         output.putUnsignedVarInt(enumConstraints.size)
-        enumConstraints.forEach {
-            putEnumConstraint(it, enumIndexes, enumValueIndexes, output)
-        }
+        enumConstraints.forEach { putEnumConstraint(it, enumIndexes, enumValueIndexes, output) }
     }
 
     override fun handle(handler: PacketHandlerInterface): Boolean = false
 
-    private fun getEnum(enumList: MutableList<String>, input: PacketSerializer): CommandEnum {
+    protected fun getEnum(enumList: List<String>, input: PacketSerializer): CommandEnum {
         val enumName = input.getString()
         val enumValues = mutableListOf<String>()
 
         val listSize = enumList.size
-        repeat(input.getUnsignedVarInt() - 1) {
+        repeat(input.getUnsignedVarInt()) {
             val index = getEnumValueIndex(listSize, input)
             val enumValue = enumList.getOrNull(index) ?: throw PacketDecodeException("Invalid enum value index $index")
             enumValues.add(enumValue)
@@ -149,7 +138,7 @@ class AvailableCommandsPacket : DataPacket(), ClientboundPacket {
         return CommandEnum(enumName, enumValues)
     }
 
-    private fun putEnum(enum: CommandEnum, enumValueMap: MutableMap<String, Int>, output: PacketSerializer) {
+    protected fun putEnum(enum: CommandEnum, enumValueMap: Map<String, Int>, output: PacketSerializer) {
         output.putString(enum.getEnumName())
 
         val values = enum.getEnumValues()
@@ -205,9 +194,7 @@ class AvailableCommandsPacket : DataPacket(), ClientboundPacket {
         val overloadCount = input.getUnsignedVarInt()
 
         repeat(overloadCount) { overloadIndex ->
-            if (!overloads.containsKey(overloadIndex)) {
-                overloads[overloadIndex] = HashIntObjMaps.newMutableMap()
-            }
+            val overload = overloads.getOrPut(overloadIndex, HashIntObjMaps::newMutableMap)
             val paramCount = input.getUnsignedVarInt()
             repeat(paramCount) { paramIndex ->
                 val parameter = CommandParameter()
@@ -242,7 +229,7 @@ class AvailableCommandsPacket : DataPacket(), ClientboundPacket {
                         )
                     }
                 }
-                overloads.getValue(overloadIndex)[paramIndex] = parameter
+                overload[paramIndex] = parameter
             }
         }
         return CommandData(name, description, flags, permission, aliases, overloads)
@@ -264,9 +251,9 @@ class AvailableCommandsPacket : DataPacket(), ClientboundPacket {
         } ?: output.putLInt(-1)
 
         output.putUnsignedVarInt(data.overloads.size)
-        data.overloads.forEach { (_, overload) ->
+        data.overloads.forEachValue { overload ->
             output.putUnsignedVarInt(overload.size)
-            overload.forEach { (_, parameter) ->
+            overload.forEachValue { parameter ->
                 output.putString(parameter.paramName)
 
                 val type = parameter.enum?.let {
@@ -297,9 +284,7 @@ class AvailableCommandsPacket : DataPacket(), ClientboundPacket {
 
         val values = enum.getEnumValues()
         output.putUnsignedVarInt(values.size)
-        values.forEach {
-            output.putString(it)
-        }
+        values.forEach(output::putString)
     }
 
     private fun getEnumConstraint(
@@ -338,9 +323,7 @@ class AvailableCommandsPacket : DataPacket(), ClientboundPacket {
         output.putLInt(enumValues.getOrDefault(constraint.getAffectedValue(), -1))
         output.putLInt(enumIndexes.getOrDefault(constraint.getEnum().getEnumName(), -1))
         output.putUnsignedVarInt(constraint.getConstraints().size)
-        constraint.getConstraints().forEach {
-            output.putByte(it)
-        }
+        constraint.getConstraints().forEach(output::putByte)
     }
 
     companion object {

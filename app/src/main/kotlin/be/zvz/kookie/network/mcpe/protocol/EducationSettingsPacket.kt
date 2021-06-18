@@ -46,7 +46,7 @@ class EducationSettingsPacket : DataPacket(), ClientboundPacket {
         output.putString(codeBuilderTitle)
         output.putBoolean(canResizeCodeBuilder)
         output.putBoolean(codeBuilderOverrideUri !== null)
-        codeBuilderOverrideUri?.let { output.putString(it) }
+        codeBuilderOverrideUri?.let(output::putString)
         output.putBoolean(hasQuiz)
     }
 

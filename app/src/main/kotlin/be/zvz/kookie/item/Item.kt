@@ -33,6 +33,8 @@ import be.zvz.kookie.nbt.tag.ShortTag
 import be.zvz.kookie.nbt.tag.StringTag
 import be.zvz.kookie.player.Player
 import be.zvz.kookie.utils.Binary
+import be.zvz.kookie.utils.inline.forEachValue
+import be.zvz.kookie.utils.inline.forEachValues
 import com.koloboke.collect.map.hash.HashIntObjMaps
 import com.koloboke.collect.map.hash.HashObjObjMaps
 import java.util.Base64
@@ -56,17 +58,13 @@ open class Item @JvmOverloads constructor(
     protected var canPlaceOn: MutableMap<String, String> = hashMapOf()
         set(value) {
             val map: MutableMap<String, String> = HashObjObjMaps.newMutableMap()
-            value.forEach { (_, value) ->
-                map[value] = value
-            }
+            value.forEachValues(map::put)
             field = map
         }
     protected var canDestroy: MutableMap<String, String> = hashMapOf()
         set(value) {
             val map: MutableMap<String, String> = HashObjObjMaps.newMutableMap()
-            value.forEach { (_, value) ->
-                map[value] = value
-            }
+            value.forEachValues(map::put)
             field = map
         }
     open val maxStackSize: Int = 64
@@ -166,11 +164,11 @@ open class Item @JvmOverloads constructor(
         tag.setTagIf(TAG_DISPLAY, display) { it.isNotEmpty() }
 
         val enchTag = ListTag<CompoundTag>().apply {
-            enchantments.forEach {
+            enchantments.forEachValue {
                 push(
                     CompoundTag.create()
-                        .setShort("id", EnchantmentIdMap.toId(it.value.getType()))
-                        .setShort("lvl", it.value.level)
+                        .setShort("id", EnchantmentIdMap.toId(it.getType()))
+                        .setShort("lvl", it.level)
                 )
             }
         }
@@ -179,16 +177,12 @@ open class Item @JvmOverloads constructor(
         tag.setTagIf(TAG_BLOCK_ENTITY_TAG, getCustomBlockData()?.clone())
 
         val canPlaceOnTag = ListTag<StringTag>().apply {
-            canPlaceOn.forEach { (_, value) ->
-                push(StringTag(value))
-            }
+            canPlaceOn.forEachValue { push(StringTag(it)) }
         }
         tag.setTagIf("CanPlaceOn", canPlaceOnTag) { it.isNotEmpty() }
 
         val canDestroyTag = ListTag<StringTag>().apply {
-            canDestroy.forEach { (_, value) ->
-                push(StringTag(value))
-            }
+            canDestroy.forEachValue { push(StringTag(it)) }
         }
         tag.setTagIf("canDestroy", canDestroyTag) { it.isNotEmpty() }
     }
@@ -315,9 +309,7 @@ open class Item @JvmOverloads constructor(
                 )
             }
 
-            tag.getCompoundTag("tag")?.let {
-                item.setNamedTag(it)
-            }
+            tag.getCompoundTag("tag")?.let(item::setNamedTag)
 
             return item
         }

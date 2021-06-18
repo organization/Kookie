@@ -33,9 +33,7 @@ class ItemStackRequest(
             it.write(out)
         }
         out.putUnsignedVarInt(filterStrings.size)
-        filterStrings.forEach {
-            out.putString(it)
-        }
+        filterStrings.forEach(out::putString)
     }
 
     companion object {

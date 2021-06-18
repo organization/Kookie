@@ -76,19 +76,15 @@ enum class Facing(val value: Int) {
         fun opposite(direction: Int): Int = direction xor FLAG_AXIS_POSITIVE
 
         @JvmStatic
-        fun rotate(direction: Facing, axis: Axis, clockWise: Boolean): Int {
-            if (!CLOCKWISE.containsKey(axis)) {
-                throw RuntimeException("Invalid axis ${direction.value}")
-            }
-            if (!CLOCKWISE.getValue(axis).containsKey(direction)) {
-                throw RuntimeException("Cannot rotate direction ${direction.value} around axis ${axis.value}")
-            }
-            val rotated = CLOCKWISE.getValue(axis).getValue(direction)
-            return if (clockWise) {
-                rotated.value
-            } else {
-                opposite(rotated.value)
-            }
-        }
+        fun rotate(direction: Facing, axis: Axis, clockWise: Boolean): Int =
+            CLOCKWISE[axis]?.let { map ->
+                map[direction]?.let { rotated ->
+                    return if (clockWise) {
+                        rotated.value
+                    } else {
+                        opposite(rotated.value)
+                    }
+                } ?: throw IllegalArgumentException("Cannot rotate direction ${direction.value} around axis ${axis.value}")
+            } ?: throw IllegalArgumentException("Invalid axis ${direction.value}")
     }
 }

@@ -30,6 +30,7 @@ import be.zvz.kookie.network.mcpe.protocol.types.entity.NetworkAttribute
 import be.zvz.kookie.player.Player
 import be.zvz.kookie.player.PlayerInfo
 import be.zvz.kookie.timings.Timings
+import be.zvz.kookie.utils.inline.forEachValue
 import com.nukkitx.network.raknet.RakNetSession
 import com.nukkitx.network.util.DisconnectReason
 import io.netty.buffer.ByteBuf
@@ -76,7 +77,7 @@ class NetworkSession(
             it.doChunkRequest()
             val dirtyAttributes = it.attributeMap.needSend()
             syncAttributes(it, dirtyAttributes)
-            dirtyAttributes.forEach { (_, attribute) ->
+            dirtyAttributes.forEachValue { attribute ->
                 attribute.markSynchronized()
             }
         }

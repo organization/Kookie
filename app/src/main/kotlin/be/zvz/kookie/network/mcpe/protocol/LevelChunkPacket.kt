@@ -50,9 +50,7 @@ class LevelChunkPacket : DataPacket(), ClientboundPacket {
         output.putBoolean(cacheEnabled)
         if (cacheEnabled) {
             output.putUnsignedVarInt(usedBlobHashes.size)
-            usedBlobHashes.forEach {
-                output.putLLong(it)
-            }
+            usedBlobHashes.forEach(output::putLLong)
         }
         output.putString(extraPayload)
     }

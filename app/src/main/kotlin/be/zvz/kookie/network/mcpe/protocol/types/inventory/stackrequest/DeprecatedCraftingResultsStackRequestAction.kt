@@ -26,9 +26,7 @@ class DeprecatedCraftingResultsStackRequestAction(val results: MutableList<ItemS
 
     override fun write(out: PacketSerializer) {
         out.putUnsignedVarInt(results.size)
-        results.forEach {
-            out.putItemStackWithoutStackId(it)
-        }
+        results.forEach(out::putItemStackWithoutStackId)
         out.putByte(iterations)
     }
 

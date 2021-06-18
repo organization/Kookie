@@ -136,9 +136,9 @@ class Config @JvmOverloads constructor(
 
     fun save() {
         val content = when (type) {
-            Type.PROPERTIES -> config.safeText()
-            Type.JSON -> config.safeText()
-            Type.YAML -> config.safeText()
+            Type.PROPERTIES -> config.serialize()
+            Type.JSON -> config.serialize()
+            Type.YAML -> config.serialize()
             Type.ENUM -> config.keys().joinToString("\r\n")
             else -> throw IllegalStateException("Config type is unknown, has not been set or not detected")
         }

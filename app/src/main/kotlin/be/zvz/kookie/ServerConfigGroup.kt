@@ -32,13 +32,7 @@ class ServerConfigGroup(
     fun getProperty(
         variable: String,
         defaultValue: ConfigBrowser = ConfigBrowser.NULL_BROWSER
-    ): ConfigBrowser {
-        if (!propertyCache.containsKey(variable)) {
-            propertyCache[variable] = kookieYml.get(variable)
-        }
-
-        return propertyCache[variable] ?: defaultValue
-    }
+    ): ConfigBrowser = propertyCache.getOrPut(variable) { kookieYml.get(variable, defaultValue) }
 
     @JvmOverloads
     fun getConfigString(variable: String, defaultValue: String = ""): String =

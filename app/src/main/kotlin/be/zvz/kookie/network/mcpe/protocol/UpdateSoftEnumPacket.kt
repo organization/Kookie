@@ -37,9 +37,7 @@ class UpdateSoftEnumPacket : DataPacket(), ClientboundPacket {
     override fun encodePayload(output: PacketSerializer) {
         output.putString(enumName)
         output.putUnsignedVarInt(values.size)
-        values.forEach { v ->
-            output.putString(v)
-        }
+        values.forEach(output::putString)
         output.putByte(type)
     }
 

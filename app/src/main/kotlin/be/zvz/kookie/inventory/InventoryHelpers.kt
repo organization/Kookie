@@ -19,6 +19,7 @@ package be.zvz.kookie.inventory
 
 import be.zvz.kookie.item.Item
 import be.zvz.kookie.item.ItemFactory
+import be.zvz.kookie.utils.inline.forEachValue
 import com.koloboke.collect.map.hash.HashIntObjMaps
 import kotlin.math.max
 import kotlin.math.min
@@ -29,9 +30,9 @@ interface InventoryHelpers : Inventory {
         val checkDamage = !item.hasAnyDamageValue()
         val checkTags = item.hasNamedTag()
 
-        getContents().forEach { (_, i) ->
-            if (item.equals(i, checkDamage, checkTags)) {
-                count -= i.count
+        getContents().forEachValue {
+            if (item.equals(it, checkDamage, checkTags)) {
+                count -= it.count
                 if (count <= 0) {
                     return true
                 }

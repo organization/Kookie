@@ -39,9 +39,7 @@ class EmoteListPacket : DataPacket(), ClientboundPacket, ServerboundPacket {
     override fun encodePayload(output: PacketSerializer) {
         output.putEntityRuntimeId(playerEntityRuntimeId)
         output.putUnsignedVarInt(emoteIds.size)
-        emoteIds.forEach {
-            output.putUUID(it)
-        }
+        emoteIds.forEach(output::putUUID)
     }
 
     override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleEmoteList(this)

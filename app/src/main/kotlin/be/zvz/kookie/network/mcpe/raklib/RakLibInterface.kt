@@ -75,9 +75,7 @@ class RakLibInterface(
     }
 
     override fun unblockAddress(address: InetSocketAddress) {
-        if (blockAddresses.containsKey(address)) {
-            blockAddresses.remove(address)
-        }
+        blockAddresses.remove(address)
     }
 
     override fun setNetwork(network: Network) {

@@ -43,9 +43,7 @@ class BigEndianNbtSerializer : BaseNbtSerializer() {
         val byteBuffer = ByteBuffer.allocate(Int.SIZE_BYTES).apply {
             order(ByteOrder.BIG_ENDIAN)
         }
-        value.forEach {
-            byteBuffer.putInt(it)
-        }
+        value.forEach(byteBuffer::putInt)
         return Binary.toPositiveByteArray(byteBuffer.array()).toString(StandardCharsets.UTF_8)
     }
 
@@ -53,9 +51,7 @@ class BigEndianNbtSerializer : BaseNbtSerializer() {
         val byteBuffer = ByteBuffer.allocate(Long.SIZE_BYTES).apply {
             order(ByteOrder.BIG_ENDIAN)
         }
-        value.forEach {
-            byteBuffer.putLong(it)
-        }
+        value.forEach(byteBuffer::putLong)
         return Binary.toPositiveByteArray(byteBuffer.array()).toString(StandardCharsets.UTF_8)
     }
 

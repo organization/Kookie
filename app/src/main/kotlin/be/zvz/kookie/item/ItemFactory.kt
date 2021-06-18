@@ -140,9 +140,8 @@ object ItemFactory {
         val zero = getListOffset(id, 0)
 
         var item: Item? = when {
-            meta != -1 -> when {
-                list.containsKey(offset) -> list[offset]
-                list.containsKey(zero) -> {
+            meta != -1 ->
+                list[offset] ?: list[zero]?.let {
                     val durableItem = list[zero]
                     if (durableItem is Durable && meta <= durableItem.maxDurability) {
                         val clone = durableItem.clone() as Durable
@@ -152,9 +151,8 @@ object ItemFactory {
                         null
                     }
                 }
-                id < 256 -> ItemBlock(ItemIdentifier(id, meta), BlockFactory.get(if (id < 0) -id else id, meta and 0xf))
-                else -> null
-            }
+                    ?: if (id < 256) ItemBlock(ItemIdentifier(id, meta), BlockFactory.get(if (id < 0) -id else id, meta and 0xf))
+                    else null
             else -> null
         }
 

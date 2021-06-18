@@ -49,8 +49,7 @@ object PermissionManager {
 
     @JvmStatic
     fun unsubscribeFromPermission(permission: String, permissible: Permissible) {
-        if (this.permSubs.containsKey(permission)) {
-            val perm = this.permSubs.getValue(permission)
+        this.permSubs[permission]?.let { perm ->
             perm.remove(permissible.toString())
             if (perm.isEmpty()) {
                 this.permSubs.remove(permission)

@@ -20,7 +20,7 @@ package be.zvz.kookie.command
 interface CommandMap {
     fun registerAll(fallbackPrefix: String, commands: List<Command>)
 
-    fun register(fallbackPrefix: String, command: Command, label: String?): Boolean
+    fun register(fallbackPrefix: String, command: Command, label: String? = null): Boolean
 
     fun dispatch(sender: CommandSender, cmdLine: String): Boolean
 

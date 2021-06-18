@@ -36,9 +36,7 @@ class ResourcePackClientResponsePacket : DataPacket(), ServerboundPacket {
 
     override fun encodePayload(output: PacketSerializer) {
         output.putByte(status)
-        packIds.forEach {
-            output.putString(it)
-        }
+        packIds.forEach(output::putString)
     }
 
     override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleResourcePackClientResponse(this)

@@ -26,11 +26,11 @@ abstract class Command @JvmOverloads constructor(
     val name: String,
     val description: String = "",
     val usageMessage: String = "/$name",
-    var aliases: MutableList<String> = mutableListOf(),
+    var aliases: List<String> = mutableListOf(),
 ) {
     var permission: String = ""
         set(value) {
-            value.split(";").forEach {
+            value.split(';').forEach {
                 if (PermissionManager.getPermission(it) == null) {
                     throw IllegalArgumentException("Cannot use non-existing permission \"$it\"")
                 }
@@ -45,7 +45,8 @@ abstract class Command @JvmOverloads constructor(
     var label: String = ""
         private set
 
-    private var timings: TimingsHandler? = null
+    var timings: TimingsHandler? = null
+        private set
     private val activeAliases: MutableList<String> = mutableListOf()
     private var commandMap: CommandMap? = null
 
@@ -65,45 +66,38 @@ abstract class Command @JvmOverloads constructor(
     }
 
     fun testPermissionSilent(target: CommandSender): Boolean =
-        permission.trim() == "" || permission.split(";").find(target::hasPermission) !== null
+        permission.trim().isEmpty() || permission.split(";").find(target::hasPermission) !== null
 
     fun setLabel(name: String): Boolean {
         nextLabel = name
-        if (!isRegistered()) {
+        return if (!isRegistered()) {
             timings = TimingsHandler("${Timings.INCLUDED_BY_OTHER_TIMINGS_PREFIX}Command: $name")
             label = name
 
-            return true
+            true
+        } else {
+            false
         }
-
-        return false
     }
 
-    fun register(newCommandMap: CommandMap): Boolean {
-        if (allowChangesFrom(newCommandMap)) {
-            commandMap = newCommandMap
-
-            return true
-        }
-
-        return false
+    fun register(newCommandMap: CommandMap): Boolean = if (allowChangesFrom(newCommandMap)) {
+        commandMap = newCommandMap
+        true
+    } else {
+        false
     }
 
-    fun unregister(newCommandMap: CommandMap): Boolean {
-        if (allowChangesFrom(newCommandMap)) {
-            commandMap = null
+    fun unregister(newCommandMap: CommandMap): Boolean = if (allowChangesFrom(newCommandMap)) {
+        commandMap = null
 
-            activeAliases.clear()
-            aliases.forEachIndexed { index: Int, s: String ->
-                activeAliases[index] = s
-            }
+        activeAliases.clear()
+        aliases.forEachIndexed(activeAliases::set)
 
-            label = nextLabel
+        label = nextLabel
 
-            return true
-        }
-
-        return false
+        true
+    } else {
+        false
     }
 
     private fun allowChangesFrom(newCommandMap: CommandMap): Boolean = commandMap == null || commandMap == newCommandMap
@@ -114,8 +108,8 @@ abstract class Command @JvmOverloads constructor(
 
     companion object {
         @JvmStatic
-        fun broadcastMessage(translationKey: String, params: MutableList<String>): Int {
-            return -1 // TODO
+        fun broadcastMessage(translationKey: String, params: List<String>): Int {
+            TODO("Implement method")
         }
     }
 }

@@ -28,6 +28,7 @@ import be.zvz.kookie.network.Network
 import be.zvz.kookie.network.mcpe.protocol.ProtocolInfo
 import be.zvz.kookie.network.mcpe.raklib.RakLibInterface
 import be.zvz.kookie.network.query.QueryInfo
+import be.zvz.kookie.player.Player
 import be.zvz.kookie.utils.Config
 import be.zvz.kookie.utils.config.PropertiesBrowser
 import be.zvz.kookie.world.World
@@ -244,6 +245,10 @@ class Server(cwd: Path, dataPath: Path, pluginPath: Path) {
     }
 
     fun broadcastMessage(message: TranslationContainer, recipients: List<CommandSender>): Int {
+        TODO("Not yet implemented")
+    }
+
+    fun getPlayerByPrefix(prefix: String): Player? {
         TODO("Not yet implemented")
     }
 
