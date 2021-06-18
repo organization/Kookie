@@ -18,7 +18,7 @@
 package be.zvz.kookie.item
 
 import be.zvz.kookie.color.Color
-import be.zvz.kookie.event.EntityDamageEvent
+import be.zvz.kookie.event.entity.EntityDamageEvent
 import be.zvz.kookie.item.enchantment.ProtectionEnchantment
 import be.zvz.kookie.item.enchantment.VanillaEnchantments
 import be.zvz.kookie.math.Vector3

@@ -17,4 +17,31 @@
  */
 package be.zvz.kookie.event
 
-abstract class Event
+abstract class Event {
+
+    val eventName: String? = null
+        get() {
+            return field ?: this::class.java.simpleName
+        }
+
+    fun call() {
+        if (eventCallDepth >= MAX_EVENT_CAL_DEPTH) {
+            throw RuntimeException("Recursive event call detected (reached max depth of $MAX_EVENT_CAL_DEPTH calls)")
+        }
+        ++eventCallDepth
+
+        try {
+            EventPriority.ALL.forEach {
+                HandlerListManager.handlers.forEach {
+                }
+            }
+        } finally {
+            --eventCallDepth
+        }
+    }
+
+    companion object {
+        private const val MAX_EVENT_CAL_DEPTH = 50
+        private var eventCallDepth = 1
+    }
+}

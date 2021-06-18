@@ -17,7 +17,7 @@
  */
 package be.zvz.kookie.item.enchantment
 
-import be.zvz.kookie.event.EntityDamageEvent
+import be.zvz.kookie.event.entity.EntityDamageEvent
 import com.koloboke.collect.map.hash.HashIntIntMaps
 
 class ProtectionEnchantment(

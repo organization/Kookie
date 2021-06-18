@@ -15,7 +15,9 @@
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  */
-package be.zvz.kookie.event
+package be.zvz.kookie.event.entity
+
+import be.zvz.kookie.event.Event
 
 // TODO: Event
 class EntityDamageEvent : Event() {
