@@ -37,7 +37,7 @@ class InstantDamageEffect @JvmOverloads constructor(
     override fun applyEffect(entity: Living, instance: EffectInstance, potency: Float, source: Entity?) {
         // TODO: val damage = (4 shl instance.amplifier) * potency
         if (source != null) {
-            val sourceOwner = source.getOwningEntity()
+            val sourceOwner = source.owningEntity
             if (sourceOwner != null) {
                 // TODO: EntityDamageByChildEntityEvent(sourceOwner, source, entity, EntityDamageEvent.CAUSE_MAGIC, damage)
             } else {
