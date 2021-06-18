@@ -21,7 +21,7 @@ import be.zvz.kookie.color.Color
 import be.zvz.kookie.entity.Entity
 import be.zvz.kookie.entity.Living
 
-class LevitationEffect(
+class LevitationEffect @JvmOverloads constructor(
     internalRuntimeId: Int,
     name: String,
     color: Color,

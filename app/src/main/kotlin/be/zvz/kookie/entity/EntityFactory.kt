@@ -31,6 +31,7 @@ object EntityFactory {
         // TODO: register default entities on here
     }
 
+    @JvmStatic
     fun register(
         clazz: Class<out Entity>,
         creationFunc: (world: World, nbt: CompoundTag) -> Entity,
@@ -46,6 +47,7 @@ object EntityFactory {
         this.saveNames[clazz] = saveNames.first()
     }
 
+    @JvmStatic
     fun createFromData(world: World, nbt: CompoundTag): Entity? {
         val saveId = nbt.getTag("id")
         return if (saveId is StringTag) {
@@ -55,6 +57,7 @@ object EntityFactory {
         }
     }
 
+    @JvmStatic
     fun injectSaveId(clazz: Class<out Entity>, saveData: CompoundTag) {
         if (saveNames.containsKey(clazz)) {
             saveData.setTag("id", StringTag(saveNames.getValue(clazz)))
@@ -63,6 +66,7 @@ object EntityFactory {
         }
     }
 
+    @JvmStatic
     fun getSaveId(clazz: Class<out Entity>): String = if (saveNames.containsKey(clazz)) {
         saveNames.getValue(clazz)
     } else {

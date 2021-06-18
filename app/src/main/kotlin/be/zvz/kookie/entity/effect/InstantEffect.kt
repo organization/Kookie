@@ -19,7 +19,7 @@ package be.zvz.kookie.entity.effect
 
 import be.zvz.kookie.color.Color
 
-open class InstantEffect(
+open class InstantEffect @JvmOverloads constructor(
     internalRuntimeId: Int,
     name: String,
     color: Color,

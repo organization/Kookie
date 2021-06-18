@@ -20,7 +20,7 @@ package be.zvz.kookie.entity.effect
 import be.zvz.kookie.color.Color
 import be.zvz.kookie.entity.Living
 
-class AbsorptionEffect(
+class AbsorptionEffect @JvmOverloads constructor(
     internalRuntimeId: Int,
     name: String,
     color: Color,

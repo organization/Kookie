@@ -19,8 +19,11 @@ package be.zvz.kookie.entity
 
 import kotlin.math.min
 
-data class EntitySizeInfo(val height: Float, val width: Float, var eyeHeight: Float? = null) {
-
+data class EntitySizeInfo @JvmOverloads constructor(
+    val height: Float,
+    val width: Float,
+    var eyeHeight: Float? = null
+) {
     init {
         eyeHeight = eyeHeight ?: min(height / 2 + 0.1F, height)
     }

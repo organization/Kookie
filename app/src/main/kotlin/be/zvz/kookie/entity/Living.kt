@@ -326,6 +326,7 @@ abstract class Living(location: Location) : Entity(location) {
         broadcastAnimation(HurtAnimation(this))
     }
 
+    @JvmOverloads
     open fun knockback(x: Float, y: Float, z: Float, base: Double = 0.4) {
         var f = sqrt(x * x + z * z)
         if (f <= 0) {

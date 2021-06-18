@@ -21,7 +21,7 @@ import be.zvz.kookie.color.Color
 import be.zvz.kookie.entity.Entity
 import be.zvz.kookie.entity.Living
 
-class InstantHealthEffect(
+class InstantHealthEffect @JvmOverloads constructor(
     internalRuntimeId: Int,
     name: String,
     color: Color,

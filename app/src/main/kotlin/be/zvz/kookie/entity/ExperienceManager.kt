@@ -40,6 +40,7 @@ class ExperienceManager(private val entity: Human) {
 
     fun setXpLevel(level: Int): Boolean = setXpAndProgress(level, null)
 
+    @JvmOverloads
     fun addXpLevels(amount: Int, playSound: Boolean = true): Boolean {
         val oldLevel = getXpLevel()
         if (setXpLevel(oldLevel + amount)) {
@@ -69,6 +70,7 @@ class ExperienceManager(private val entity: Human) {
         return setXpAndProgress(newLevel.toInt(), newLevel - newLevel.toInt())
     }
 
+    @JvmOverloads
     fun addXp(amount: Int, playSound: Boolean = true): Boolean {
         val oldLevel = getXpLevel()
         val oldTotal = getCurrentTotalXp()
@@ -172,6 +174,7 @@ class ExperienceManager(private val entity: Human) {
         resetXpCooldown()
     }
 
+    @JvmOverloads
     fun resetXpCooldown(value: Long = 2) {
         xpCooldown = value
     }

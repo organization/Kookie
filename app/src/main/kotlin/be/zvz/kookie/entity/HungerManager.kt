@@ -109,6 +109,7 @@ class HungerManager(private val entity: Human) {
         return amount
     }
 
+    @JvmOverloads
     fun tick(tickDiff: Long = 1) {
         if (!entity.isAlive() || !enabled) {
             return

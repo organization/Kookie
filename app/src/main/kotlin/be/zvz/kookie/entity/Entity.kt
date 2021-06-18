@@ -355,6 +355,7 @@ abstract class Entity @JvmOverloads constructor(var location: Location, nbt: Com
         properties.setGenericFlag(EntityMetadataFlags.WALLCLIMBING, canClimbWalls)
     }
 
+    @JvmOverloads
     fun sendData(targets: MutableMap<Long, Player>?, data: MutableMap<Int, MetadataProperty>? = null) {
         val target = targets ?: hasSpawned
         var sendData = data ?: getAllNetworkData()
@@ -453,6 +454,7 @@ abstract class Entity @JvmOverloads constructor(var location: Location, nbt: Com
 
     open fun getOffsetPosition(vector: Vector3): Vector3 = vector
 
+    @JvmOverloads
     open fun broadcastMovement(teleport: Boolean = false) {
         val packet = MoveActorAbsolutePacket.create(
             entityRuntimeId,
@@ -480,6 +482,7 @@ abstract class Entity @JvmOverloads constructor(var location: Location, nbt: Com
 
     open fun hasGravity(): Boolean = gravityEnabled
 
+    @JvmOverloads
     open fun setHasGravityEnabled(v: Boolean = true) {
         gravityEnabled = v
     }
@@ -993,6 +996,7 @@ abstract class Entity @JvmOverloads constructor(var location: Location, nbt: Com
         this.motion = motion.add(motion)
     }
 
+    @JvmOverloads
     open fun teleport(pos: Vector3, yaw: Double? = null, pitch: Double? = null): Boolean {
         val yaw = if (pos is Location) {
             if (yaw == null) {
@@ -1090,6 +1094,7 @@ abstract class Entity @JvmOverloads constructor(var location: Location, nbt: Com
         }
     }
 
+    @JvmOverloads
     open fun despawnFrom(player: Player, send: Boolean = true) {
         val id = player.getId()
         if (hasSpawned.containsKey(id)) {
@@ -1142,6 +1147,7 @@ abstract class Entity @JvmOverloads constructor(var location: Location, nbt: Com
         lastDamageCause = null
     }
 
+    @JvmOverloads
     fun broadcastAnimation(animation: Animation, targets: List<Player>? = null) {
         // TODO: server.broadcastPackets(if (targets == null) getViewers() else targets, animation.encode())
     }
@@ -1149,6 +1155,7 @@ abstract class Entity @JvmOverloads constructor(var location: Location, nbt: Com
     /**
      * TODO: Sound
      */
+    @JvmOverloads
     fun broadcastSound(sound: Any, targets: List<Player>? = null) {
         if (!silent) {
             // TODO: server.broadcastPackets(if (targets == null) getViewers() else targets, sound.encode(location))

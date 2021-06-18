@@ -59,6 +59,7 @@ object EntityDataHelper {
     }
 
     @JvmStatic
+    @JvmOverloads
     fun createBaseNBT(pos: Vector3, motion: Vector3? = null, yaw: Double = 0.0, pitch: Double = 0.0): CompoundTag {
         val nbt = CompoundTag.create()
         nbt.setTag(
@@ -93,6 +94,8 @@ object EntityDataHelper {
         return nbt
     }
 
+    @JvmStatic
+    @JvmOverloads
     fun createBaseNBT(location: Location, motion: Vector3? = null): CompoundTag =
         createBaseNBT(location.asVector3(), motion, location.yaw, location.pitch)
 
@@ -104,6 +107,7 @@ object EntityDataHelper {
      * @see Entity.spawnTo
      */
     @JvmStatic
+    @JvmOverloads
     fun initDefaults(entity: Entity, nbt: CompoundTag? = null) {
         entity.recalculateBoundingBox()
         entity.resetLastMovement()

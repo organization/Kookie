@@ -22,7 +22,7 @@ import be.zvz.kookie.entity.Entity
 import be.zvz.kookie.entity.Human
 import be.zvz.kookie.entity.Living
 
-class HungerEffect(
+class HungerEffect @JvmOverloads constructor(
     internalRuntimeId: Int,
     name: String,
     color: Color,

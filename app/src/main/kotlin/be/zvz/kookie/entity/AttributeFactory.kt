@@ -43,10 +43,13 @@ object AttributeFactory {
         register(AttributeId.LAVA_MOVEMENT, 0F, Float.MAX_VALUE, 0.02F, true)
     }
 
+    @JvmStatic
     fun get(id: AttributeId): Attribute? = attributes[id]
 
+    @JvmStatic
     fun mustGet(id: AttributeId): Attribute = attributes[id]!!
 
+    @JvmStatic
     fun register(id: AttributeId, minValue: Float, maxValue: Float, defaultValue: Float, shouldSend: Boolean) {
         attributes[id] = Attribute(id, minValue, maxValue, defaultValue, shouldSend)
     }
