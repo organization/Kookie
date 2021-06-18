@@ -98,6 +98,13 @@ abstract class Living(location: Location) : Entity(location) {
             field = value
         }
 
+    override var maxHealth: Int
+        set(amount) {
+            healthAttr.maxValue = amount.toFloat()
+            healthAttr.defaultValue = amount.toFloat()
+        }
+        get() = healthAttr.maxValue.toInt()
+
     override fun initEntity(nbt: CompoundTag) {
         super.initEntity(nbt)
         effectManager = EffectManager(this)
@@ -146,13 +153,6 @@ abstract class Living(location: Location) : Entity(location) {
             }
         }
     }
-
-    override var maxHealth: Int
-        set(amount) {
-            healthAttr.maxValue = amount.toFloat()
-            healthAttr.defaultValue = amount.toFloat()
-        }
-        get() = healthAttr.maxValue.toInt()
 
     override fun addAttributes() {
         attributeMap.apply {
