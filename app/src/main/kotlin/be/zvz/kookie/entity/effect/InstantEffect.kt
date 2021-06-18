@@ -15,14 +15,24 @@
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  */
-package be.zvz.kookie.network.mcpe.protocol.types.entity
+package be.zvz.kookie.entity.effect
 
-import be.zvz.kookie.entity.Attribute
+import be.zvz.kookie.color.Color
 
-data class NetworkAttribute(
-    val id: Attribute.Identifier,
-    val min: Float,
-    val max: Float,
-    val current: Float,
-    val default: Float
-)
+open class InstantEffect @JvmOverloads constructor(
+    internalRuntimeId: Int,
+    name: String,
+    color: Color,
+    bad: Boolean = false,
+    hasBubbles: Boolean = true
+) : Effect(
+    internalRuntimeId,
+    name,
+    color,
+    bad,
+    hasBubbles
+) {
+    override val defaultDuration: Int = 1
+
+    override fun canTick(instance: EffectInstance): Boolean = true
+}

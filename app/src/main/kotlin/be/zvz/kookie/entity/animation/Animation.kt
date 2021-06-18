@@ -15,14 +15,10 @@
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  */
-package be.zvz.kookie.network.mcpe.protocol.types.entity
+package be.zvz.kookie.entity.animation
 
-import be.zvz.kookie.entity.Attribute
+import be.zvz.kookie.network.mcpe.protocol.ClientboundPacket
 
-data class NetworkAttribute(
-    val id: Attribute.Identifier,
-    val min: Float,
-    val max: Float,
-    val current: Float,
-    val default: Float
-)
+interface Animation {
+    fun encode(): List<ClientboundPacket>
+}

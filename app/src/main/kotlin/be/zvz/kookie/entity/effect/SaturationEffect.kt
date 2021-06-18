@@ -19,26 +19,29 @@ package be.zvz.kookie.entity.effect
 
 import be.zvz.kookie.color.Color
 import be.zvz.kookie.entity.Entity
+import be.zvz.kookie.entity.Human
 import be.zvz.kookie.entity.Living
 
-open class Effect @JvmOverloads constructor(
-    val internalRuntimeId: Int,
-    val name: String,
-    val color: Color,
-    val bad: Boolean = false,
-    val hasBubbles: Boolean = true
+class SaturationEffect @JvmOverloads constructor(
+    internalRuntimeId: Int,
+    name: String,
+    color: Color,
+    bad: Boolean = false,
+    hasBubbles: Boolean = false
+) : Effect(
+    internalRuntimeId,
+    name,
+    color,
+    bad,
+    hasBubbles
 ) {
-    open val defaultDuration: Int = 600
-
-    open fun canTick(instance: EffectInstance): Boolean = false
-
-    @JvmOverloads
-    open fun applyEffect(entity: Living, instance: EffectInstance, potency: Float = 1.0F, source: Entity? = null) {
-    }
-
-    open fun add(entity: Living, instance: EffectInstance) {
-    }
-
-    open fun remove(entity: Living, instance: EffectInstance) {
+    override fun applyEffect(entity: Living, instance: EffectInstance, potency: Float, source: Entity?) {
+        if (entity is Human) {
+            /*
+            TODO:
+            entity.hungerManager.addFood(instance.effectLevel)
+            entity.hungerManager.addSaturation(instance.effectLevel * 2)
+             */
+        }
     }
 }
