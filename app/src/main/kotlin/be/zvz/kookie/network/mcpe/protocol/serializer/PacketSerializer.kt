@@ -17,6 +17,7 @@
  */
 package be.zvz.kookie.network.mcpe.protocol.serializer
 
+import be.zvz.kookie.entity.Attribute
 import be.zvz.kookie.math.Vector3
 import be.zvz.kookie.nbt.LittleEndianNbtSerializer
 import be.zvz.kookie.nbt.NbtDataException
@@ -624,7 +625,7 @@ class PacketSerializer @JvmOverloads constructor(
             putLFloat(it.max)
             putLFloat(it.current)
             putLFloat(it.default)
-            putString(it.id)
+            putString(it.id.fullId)
         }
     }
 
@@ -635,7 +636,11 @@ class PacketSerializer @JvmOverloads constructor(
             val max = getLFloat()
             val current = getLFloat()
             val default = getLFloat()
-            val id = getString()
+            val idString = getString()
+            val id = Attribute.Identifier.from(idString)
+            if (id == Attribute.Identifier.UNKNOWN) {
+                throw PacketDecodeException("Unhandled attribute id : $idString")
+            }
             list.add(
                 NetworkAttribute(
                     id,

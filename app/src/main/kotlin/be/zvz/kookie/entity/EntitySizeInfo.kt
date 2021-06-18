@@ -15,14 +15,20 @@
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  */
-package be.zvz.kookie.network.mcpe.protocol.types.entity
+package be.zvz.kookie.entity
 
-import be.zvz.kookie.entity.Attribute
+import kotlin.math.min
 
-data class NetworkAttribute(
-    val id: Attribute.Identifier,
-    val min: Float,
-    val max: Float,
-    val current: Float,
-    val default: Float
-)
+data class EntitySizeInfo @JvmOverloads constructor(
+    val height: Float,
+    val width: Float,
+    var eyeHeight: Float? = null
+) {
+    init {
+        eyeHeight = eyeHeight ?: min(height / 2 + 0.1F, height)
+    }
+
+    fun scale(newScale: Float): EntitySizeInfo {
+        return EntitySizeInfo(height * newScale, width * newScale, eyeHeight!! * newScale)
+    }
+}

@@ -23,9 +23,13 @@ import be.zvz.kookie.nbt.NbtStreamReader
 import be.zvz.kookie.nbt.NbtStreamWriter
 
 class ListTag<T> @JvmOverloads constructor(
-    override val value: MutableList<Tag<T>> = mutableListOf(),
+    value: List<Tag<T>> = listOf(),
     private var tagType: NBT.TagType = NBT.TagType.NOTHING
 ) : Tag<List<Tag<T>>>() {
+    private val list: MutableList<Tag<T>> = value.toMutableList()
+
+    override val value: List<Tag<T>>
+        get() = list
 
     init {
         value.forEach { tag ->
@@ -47,14 +51,14 @@ class ListTag<T> @JvmOverloads constructor(
         if (tag.getTagType() !== tagType) {
             throw NbtException("Expected TagType ${tagType.name}, got ${tag.getTagType().name}")
         }
-        value.add(tag)
+        list.add(tag)
     }
 
     fun get(index: Int): Tag<T>? = value.getOrNull(index)
 
     override fun makeCopy(): ListTag<T> = ListTag(
         mutableListOf<Tag<T>>().apply {
-            value.forEach {
+            list.forEach {
                 add(it)
             }
         }
@@ -62,8 +66,8 @@ class ListTag<T> @JvmOverloads constructor(
 
     override fun write(writer: NbtStreamWriter) {
         writer.writeByte(tagType.value)
-        writer.writeInt(value.size)
-        value.forEach { tag ->
+        writer.writeInt(list.size)
+        list.forEach { tag ->
             tag.write(writer)
         }
     }
@@ -72,7 +76,7 @@ class ListTag<T> @JvmOverloads constructor(
         @JvmStatic
         fun read(reader: NbtStreamReader, tracker: ReaderTracker): ListTag<*> {
             var tagType = NBT.TagType.from(reader.readByte())
-            val value = mutableListOf<Tag<Any>>()
+            val value = mutableListOf<Tag<*>>()
             val size = reader.readInt()
 
             if (size > 0) {
@@ -81,13 +85,13 @@ class ListTag<T> @JvmOverloads constructor(
                 }
                 tracker.protectDepth {
                     repeat(size) {
-                        value.add(NBT.createTag(tagType, reader, tracker) as Tag<Any>)
+                        value.add(NBT.createTag(tagType, reader, tracker))
                     }
                 }
             } else {
                 tagType = NBT.TagType.NOTHING
             }
-            return ListTag(value, tagType)
+            return ListTag(value.filterIsInstance<Tag<Any>>(), tagType)
         }
     }
 }

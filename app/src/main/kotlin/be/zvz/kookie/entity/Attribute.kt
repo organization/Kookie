@@ -17,8 +17,11 @@
  */
 package be.zvz.kookie.entity
 
+import kotlin.math.max
+import kotlin.math.min
+
 class Attribute @JvmOverloads constructor(
-    val id: String,
+    val id: Identifier,
     minValue: Float,
     maxValue: Float,
     defaultValue: Float,
@@ -72,7 +75,50 @@ class Attribute @JvmOverloads constructor(
     fun isDesynchronized(): Boolean = shouldSend && desynchronized
 
     @JvmOverloads
+    fun setValue(value: Float, fit: Boolean = false, forceSend: Boolean = false) {
+        if (value !in minValue..maxValue && !fit) {
+            throw IllegalArgumentException("Value $value is outside the range $minValue - $maxValue")
+        }
+
+        val minMaxValue = min(max(value, minValue), maxValue)
+        if (currentValue != minMaxValue) {
+            desynchronized = true
+            currentValue = minMaxValue
+        } else if (forceSend) {
+            desynchronized = true
+        }
+    }
+
+    @JvmOverloads
     fun markSynchronized(synced: Boolean = true) {
         desynchronized = !synced
+    }
+
+    enum class Identifier(val id: String) {
+        UNKNOWN(""),
+        ABSORPTION("absorption"),
+        SATURATION("player.saturation"),
+        EXHAUSTION("player.exhaustion"),
+        KNOCKBACK_RESISTANCE("knockback_resistance"),
+        HEALTH("health"),
+        MOVEMENT_SPEED("movement"),
+        FOLLOW_RANGE("follow_range"),
+        HUNGER("player.hunger"),
+        ATTACK_DAMAGE("attack_damage"),
+        EXPERIENCE_LEVEL("player.level"),
+        EXPERIENCE("player.experience"),
+        UNDERWATER_MOVEMENT("underwater_movement"),
+        LUCK("luck"),
+        FALL_DAMAGE("fall_damage"),
+        HORSE_JUMP_STRENGTH("horse.jump_strength"),
+        ZOMBIE_SPAWN_REINFORCEMENTS("zombie.spawn_reinforcements"),
+        LAVA_MOVEMENT("lava_movement");
+
+        val fullId = "minecraft:$id"
+
+        companion object {
+            private val VALUES = values()
+            fun from(value: String) = VALUES.firstOrNull { it.id == value || it.fullId == value } ?: UNKNOWN
+        }
     }
 }

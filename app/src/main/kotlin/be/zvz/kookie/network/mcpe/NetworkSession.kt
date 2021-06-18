@@ -128,7 +128,7 @@ class NetworkSession(
     fun handleBuffer(buffer: ByteBuf) {
     }
 
-    fun syncAttributes(entity: Living, attributes: Map<String, Attribute>) {
+    fun syncAttributes(entity: Living, attributes: Map<Attribute.Identifier, Attribute>) {
         if (attributes.isNotEmpty()) {
             val networkAttributes: MutableList<NetworkAttribute> = mutableListOf()
             attributes.forEach { (id, attribute) ->
