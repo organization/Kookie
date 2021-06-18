@@ -44,10 +44,8 @@ class WitherEffect @JvmOverloads constructor(
     }
 
     override fun applyEffect(entity: Living, instance: EffectInstance, potency: Float, source: Entity?) {
-        /*
-        TODO:
-        val ev = EntityDamageEvent(entity, EntityDamageEvent.CAUSE_MAGIC, 1)
-		entity.attack(ev)
+        /** TODO: Implements after implemented EntityDamageEvent
+         * entity.attack(EntityDamageEvent(entity, EntityDamageEvent.CAUSE_MAGIC, 1))
          */
     }
 }

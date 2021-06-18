@@ -35,7 +35,7 @@ class InstantDamageEffect @JvmOverloads constructor(
     hasBubbles
 ) {
     override fun applyEffect(entity: Living, instance: EffectInstance, potency: Float, source: Entity?) {
-        val damage = (4 shl instance.amplifier) * potency
+        // TODO: val damage = (4 shl instance.amplifier) * potency
         if (source != null) {
             val sourceOwner = source.getOwningEntity()
             if (sourceOwner != null) {

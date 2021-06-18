@@ -35,9 +35,7 @@ class HungerEffect @JvmOverloads constructor(
     bad,
     hasBubbles
 ) {
-    override fun canTick(instance: EffectInstance): Boolean {
-        return true
-    }
+    override fun canTick(instance: EffectInstance): Boolean = true
 
     override fun applyEffect(entity: Living, instance: EffectInstance, potency: Float, source: Entity?) {
         if (entity is Human) {

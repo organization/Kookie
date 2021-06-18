@@ -48,14 +48,10 @@ object EntityFactory {
     }
 
     @JvmStatic
-    fun createFromData(world: World, nbt: CompoundTag): Entity? {
-        val saveId = nbt.getTag("id")
-        return if (saveId is StringTag) {
-            creationFuncs[saveId.value]?.invoke(world, nbt)
-        } else {
-            null
+    fun createFromData(world: World, nbt: CompoundTag): Entity? =
+        (nbt.getTag("id") as? StringTag)?.let {
+            creationFuncs[it.value]?.invoke(world, nbt)
         }
-    }
 
     @JvmStatic
     fun injectSaveId(clazz: Class<out Entity>, saveData: CompoundTag) {

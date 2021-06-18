@@ -36,7 +36,12 @@ class InstantHealthEffect @JvmOverloads constructor(
 ) {
     override fun applyEffect(entity: Living, instance: EffectInstance, potency: Float, source: Entity?) {
         if (entity.getHealth() < entity.maxHealth) {
-            // TODO: entity.heal(EntityRegainHealthEvent(entity, (4 shl instance.amplifier) * potency, EntityRegainHealthEvent.CAUSE_MAGIC)
+            /** TODO: Implements after implemented EntityRegainHealthEvent
+             * entity.heal(
+             *     EntityRegainHealthEvent(entity, (4 shl instance.amplifier) * potency,
+             *     EntityRegainHealthEvent.CAUSE_MAGIC
+             * )
+             */
         }
     }
 }

@@ -27,7 +27,9 @@ class SlownessEffect @JvmOverloads constructor(
     bad: Boolean = false,
     hasBubbles: Boolean = true
 ) : Effect(
-    internalRuntimeId, name, color,
+    internalRuntimeId,
+    name,
+    color,
     bad,
     hasBubbles
 ) {

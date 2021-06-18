@@ -42,13 +42,10 @@ class Player(
     skin: Skin,
     location: Location
 ) : Human(skin, location), CommandSender {
-    override val language: Language
-        get() = server.language
+    override val language: Language get() = server.language
     val username = playerInfo.getUsername()
     var displayName = username
-    override val name: String
-        get() = username
-
+    override val name: String get() = username
     override val permissionRecalculationCallbacks: Set<(changedPermissionsOldValues: Map<String, Boolean>) -> Unit>
         get() = TODO("Not yet implemented")
 

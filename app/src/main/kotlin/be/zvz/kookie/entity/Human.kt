@@ -102,7 +102,7 @@ open class Human(var skin: Skin, location: Location) : Living(location) {
         if (nameTag is StringTag) {
             this.nameTag = nameTag.value
         }
-        // FIXME: is this correct?
+        // TODO: is this correct?
         uuid = UUID.nameUUIDFromBytes(
             (getId().toString() + skin.skinData + this.nameTag).toByteArray(StandardCharsets.UTF_8)
         )
@@ -195,10 +195,10 @@ open class Human(var skin: Skin, location: Location) : Living(location) {
         xpManager.totalXp = nbt.getInt("XpTotal", 0)
 
         val xpSeedTag = nbt.getTag("XpSeed")
-        if (xpSeedTag is IntTag) {
-            xpSeed = xpSeedTag.value
+        xpSeed = if (xpSeedTag is IntTag) {
+            xpSeedTag.value
         } else {
-            xpSeed = Math.random(-0x7fffffff - 1, 0x7fffffff)
+            Math.random(-0x7fffffff - 1, 0x7fffffff)
         }
     }
 
@@ -255,13 +255,13 @@ open class Human(var skin: Skin, location: Location) : Living(location) {
         for (i in 0..slotCount) {
             val item = inventory.getItem(i - 9)
             if (!item.isNull()) {
-                // FIXME: inventoryTag.push(item.nbtSerialize(i))
+                // TODO: inventoryTag.push(item.nbtSerialize(i))
             }
         }
         for (i in 100..104) {
             val item = armorInventory.getItem(i - 100)
             if (!item.isNull()) {
-                // FIXME: inventoryTag.push(item.nbtSerialize(i))
+                // TODO: inventoryTag.push(item.nbtSerialize(i))
             }
         }
         val offHandItem = offHandInventory.getItem(0)
@@ -277,7 +277,7 @@ open class Human(var skin: Skin, location: Location) : Living(location) {
                 items.add(item.nbtSerialize(i))
             }
         }
-        // FIXME: nbt.setTag("EnderChestInventory", ListTag<CompoundTag>(items, NBT.TagType.COMPOUND))
+        // TODO: nbt.setTag("EnderChestInventory", ListTag<CompoundTag>(items, NBT.TagType.COMPOUND))
         nbt.setTag(
             "Skin",
             CompoundTag.create().apply {
@@ -337,26 +337,19 @@ open class Human(var skin: Skin, location: Location) : Living(location) {
         }
     }
 
-    override fun getOffsetPosition(vector: Vector3): Vector3 {
-        return vector.add(0.0, 1.621, 0.0)
-    }
+    override fun getOffsetPosition(vector: Vector3): Vector3 = vector.add(0.0, 1.621, 0.0)
 
     companion object {
         @JvmStatic
-        fun parseSkinNBT(nbt: CompoundTag): Skin {
-            val skinTag = nbt.getCompoundTag("Skin")
-            skinTag.let {
-                if (it == null) {
-                    throw IllegalStateException("Missing skin data")
-                }
-                return Skin(
+        fun parseSkinNBT(nbt: CompoundTag): Skin =
+            nbt.getCompoundTag("Skin")?.let {
+                Skin(
                     it.getString("Name"),
                     it.getTag("Data")?.value as String,
                     it.getTag("CapeData")?.value as String,
                     it.getString("GeometryName"),
                     it.getTag("GeometryData")?.value as String
                 )
-            }
-        }
+            } ?: throw IllegalStateException("Missing skin data")
     }
 }

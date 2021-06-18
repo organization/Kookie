@@ -104,8 +104,8 @@ class ExperienceManager(private val entity: Human) {
         } 
          */
 
-        // FIXME: level = ev.getNewLevel()
-        // FIXME: progress = ev.getNewProgress()
+        // TODO: level = ev.getNewLevel()
+        // TODO: progress = ev.getNewProgress()
 
         level?.let {
             levelAttr.setValue(it.toFloat())
@@ -161,12 +161,16 @@ class ExperienceManager(private val entity: Human) {
                 xpValue -= ceil((repairAmount / 2).toDouble()).toInt()
             }
 
-            if (index == mainHandIndex) {
-                entity.inventory.setItemInHand(repairItem)
-            } else if (index == offHandIndex) {
-                entity.offHandInventory.setItem(0, repairItem)
-            } else {
-                entity.armorInventory.setItem(index, repairItem)
+            when (index) {
+                mainHandIndex -> {
+                    entity.inventory.setItemInHand(repairItem)
+                }
+                offHandIndex -> {
+                    entity.offHandInventory.setItem(0, repairItem)
+                }
+                else -> {
+                    entity.armorInventory.setItem(index, repairItem)
+                }
             }
         }
 

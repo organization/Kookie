@@ -87,7 +87,7 @@ class HungerManager(private val entity: Human) {
          */
         var exhaustion = getExhaustion()
         // TODO: exhaustion += ev.getAmount()
-        // FIXME: replace exhaustion += amount to ev.getAmount()
+        // TODO: replace exhaustion += amount to ev.getAmount()
         exhaustion += amount
         while (exhaustion >= 4F) {
             exhaustion -= 4F
@@ -105,7 +105,7 @@ class HungerManager(private val entity: Human) {
         }
         setExhaustion(exhaustion)
         // TODO: return ev.getAmount()
-        // FIXME: replace return amount to return ev.getAmount()
+        // TODO: replace return amount to return ev.getAmount()
         return amount
     }
 

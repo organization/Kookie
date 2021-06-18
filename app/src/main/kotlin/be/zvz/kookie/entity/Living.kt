@@ -112,8 +112,8 @@ abstract class Living(location: Location) : Entity(location) {
 
         armorInventory.getListeners().add(
             CallbackInventoryListener.onAnyChange {
-                getViewers().forEach { (_, it) ->
-                    // TODO: it.session.onMobArmorChange(this)
+                getViewers().forEach { (_, viewer) ->
+                    // TODO: viewer.session.onMobArmorChange(this)
                 }
             }
         )
@@ -253,28 +253,25 @@ abstract class Living(location: Location) : Entity(location) {
         val jumpBoost = effectManager.get(VanillaEffects.JUMP_BOOST.effect)
         val damage = ceil(fallDistance - 3 - (jumpBoost?.effectLevel ?: 0))
         if (damage > 0) {
-            /*
-            TODO:
-            val ev = ENtityDamageEvent(this, EntityDamageEvent.CAUSE_FALL, damage)
-            attack(ev)
-
-            broadcastSound(
-                if (damage > 4) EntityLongFallSound(this) else EntityShortFallSound(this)
-            )
+            /** TODO: Implements after implemented EntityDamageEvent
+             * val ev = EntityDamageEvent(this, EntityDamageEvent.CAUSE_FALL, damage)
+             * attack(ev)
+             *
+             * broadcastSound(
+             *     if (damage > 4) EntityLongFallSound(this) else EntityShortFallSound(this)
+             * )
              */
         } else {
-            /*
-            TODO:
-            var fallBlockPos = location.floor()
-            var fallBlock = world.getBlockAt(fallBlockPos)
-            if (fallBlock.getId() == BlockLegacyIds.AIR.id) {
-                fallBlockPos = fallBlockPos.subtract(0, 1, 0)
-                fallBlock = world.getBlock(fallBlockPos)
-            }
-            if (fallBlock.getId() != BlockLegacyIds.AIR.id) {
-                // TODO: broadcastSound(EntityLandSound(this, fallBlock))
-            }
-            
+            /** TODO: Implements after implemented World methods
+             * var fallBlockPos = location.floor()
+             * var fallBlock = world.getBlockAt(fallBlockPos)
+             * if (fallBlock.getId() == BlockLegacyIds.AIR.id) {
+             *     fallBlockPos = fallBlockPos.subtract(0, 1, 0)
+             *     fallBlock = world.getBlock(fallBlockPos)
+             * }
+             * if (fallBlock.getId() != BlockLegacyIds.AIR.id) {
+             *     broadcastSound(EntityLandSound(this, fallBlock))
+             * }
              */
         }
     }
@@ -351,18 +348,16 @@ abstract class Living(location: Location) : Entity(location) {
     }
 
     override fun onDeath() {
-        /*
-        TODO:
-        $ev = new EntityDeathEvent($this, $this->getDrops(), $this->getXpDropAmount());
-		$ev->call();
-		foreach($ev->getDrops() as $item){
-			$this->getWorld()->dropItem($this->location, $item);
-		}
-
-		//TODO: check death conditions (must have been damaged by player < 5 seconds from death)
-		$this->getWorld()->dropExperience($this->location, $ev->getXpDropAmount());
-
-		$this->startDeathAnimation();
+        /** TODO: Implements after implemented EntityDeathEvent
+         * $ev = new EntityDeathEvent($this, $this->getDrops(), $this->getXpDropAmount());
+         * $ev->call();
+         * foreach($ev->getDrops() as $item){
+         *     $this->getWorld()->dropItem($this->location, $item);
+         * }
+         * //TODO: check death conditions (must have been damaged by player < 5 seconds from death)
+         * $this->getWorld()->dropExperience($this->location, $ev->getXpDropAmount());
+         *
+         * $this->startDeathAnimation();
          */
     }
 
@@ -393,10 +388,8 @@ abstract class Living(location: Location) : Entity(location) {
             }
             if (isInsideOfSolid()) {
                 hasUpdate = true
-                /*
-                TODO:
-                val ev = EntityDamageEvent(this, EntityDamageEvent.CAUSE_SUFFOCATION, 1)
-                attack(ev)
+                /** TODO: Implements after implemented EntityDamageEvent
+                 *  attack(EntityDamageEvent(this, EntityDamageEvent.CAUSE_SUFFOCATION, 1))
                  */
             }
             if (doAirSupplyTick(tickDiff)) {
@@ -449,10 +442,8 @@ abstract class Living(location: Location) : Entity(location) {
     open fun isBreathing(): Boolean = breathing
 
     open fun onAirExpired() {
-        /*
-        TODO:
-        val ev = EntityDamageEvent(this, EntityDamageEvent.CAUSE_DROWNING, 2)
-        attack(ev)
+        /** TODO: Implements after implemented EntityDamageEvent
+         * attack(EntityDamageEvent(this, EntityDamageEvent.CAUSE_DROWNING, 2))
          */
     }
 
@@ -474,27 +465,26 @@ abstract class Living(location: Location) : Entity(location) {
             getDirectionVector(),
             maxDistance.toDouble()
         ).forEach {
-            /*
-            TODO:
-            val block = world.getBlockAt(it.x, it.y, it.z)
-            blocks[nextIndex++] = block
-
-            if (maxLength != 0 && blocks.size > maxLength) {
-                blocks.removeFirst()
-                --nextIndex
-            }
-
-            val id = block.getId()
-
-            if (transparent.isEmpty()) {
-                if (id != 0){
-                    return@forEach
-                }
-            } else {
-                if (!transparent.containsKey(id)){
-                    return@forEach
-                }
-            }
+            /** TODO: Implements after implemented World methods
+             * val block = world.getBlockAt(it.x, it.y, it.z)
+             * blocks[nextIndex++] = block
+             *
+             * if (maxLength != 0 && blocks.size > maxLength) {
+             *     blocks.removeFirst()
+             *     --nextIndex
+             * }
+             *
+             * val id = block.getId()
+             *
+             * if (transparent.isEmpty()) {
+             *     if (id != 0){
+             *         return@forEach
+             *     }
+             * } else {
+             *     if (!transparent.containsKey(id)){
+             *         return@forEach
+             *     }
+             * }
              */
         }
         return blocks

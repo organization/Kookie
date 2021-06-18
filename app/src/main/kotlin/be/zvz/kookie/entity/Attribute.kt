@@ -77,7 +77,7 @@ class Attribute @JvmOverloads constructor(
     @JvmOverloads
     fun setValue(value: Float, fit: Boolean = false, forceSend: Boolean = false) {
         var value = value
-        if (value > maxValue || value < minValue) {
+        if (value !in minValue..maxValue) {
             if (!fit) {
                 throw IllegalArgumentException("Value $value is outside the range $minValue - $maxValue")
             }

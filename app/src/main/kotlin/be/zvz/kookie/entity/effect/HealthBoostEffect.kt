@@ -33,7 +33,6 @@ class HealthBoostEffect @JvmOverloads constructor(
     bad,
     hasBubbles
 ) {
-
     override fun add(entity: Living, instance: EffectInstance) {
         entity.maxHealth = entity.maxHealth + 4 * instance.effectLevel
     }

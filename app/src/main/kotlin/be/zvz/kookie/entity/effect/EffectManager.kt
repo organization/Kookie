@@ -23,8 +23,7 @@ import com.koloboke.collect.map.hash.HashIntObjMaps
 import kotlin.math.abs
 
 data class EffectManager(val entity: Living) {
-
-    protected var effects: MutableMap<Int, EffectInstance> = HashIntObjMaps.newMutableMap()
+    private var effects: MutableMap<Int, EffectInstance> = HashIntObjMaps.newMutableMap()
 
     var bubbleColor: Color = Color(0, 0, 0, 0)
         private set
@@ -96,24 +95,22 @@ data class EffectManager(val entity: Living) {
                 cancelled = true
             }
         }
-        /*
-        val ev = EntityEffectAddEvent(entity, effect, oldEffect)
-        if (cancelled) {
-        event.cancel()
-        }
-        ev.call()
-
-        if (ev.isCancelled()) {
-        return false
-        }
+        /** TODO: Implements after implemented EntityEffectAddEvent
+         * val ev = EntityEffectAddEvent(entity, effect, oldEffect)
+         * if (cancelled) {
+         *      event.cancel()
+         * }
+         * ev.call()
+         *
+         * if (ev.isCancelled()) {
+         *     return false
+         * }
          */
         oldEffect?.effectType?.remove(entity, oldEffect)
 
         effect.effectType.add(entity, effect)
 
-        effectAddHooks.forEach {
-            (it)(effect, oldEffect != null)
-        }
+        effectAddHooks.forEach { it(effect, oldEffect != null) }
         effects[index] = effect
         recalculateEffectColor()
         return true

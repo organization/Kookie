@@ -28,7 +28,13 @@ class PoisonEffect @JvmOverloads constructor(
     bad: Boolean = false,
     hasBubbles: Boolean = true,
     val fatal: Boolean = false
-) : Effect(internalRuntimeId, name, color, bad, hasBubbles) {
+) : Effect(
+    internalRuntimeId,
+    name,
+    color,
+    bad,
+    hasBubbles
+) {
 
     override fun canTick(instance: EffectInstance): Boolean {
         val interval = 25 shr instance.amplifier

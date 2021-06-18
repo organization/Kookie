@@ -26,9 +26,8 @@ class EffectInstance @JvmOverloads constructor(
     amplifier: Int = 0,
     val visible: Boolean = true,
     val ambient: Boolean = false,
-    val overrideColor: Color = effectType.color
+    var color: Color = effectType.color
 ) {
-
     var duration: Int = duration
         set(value) {
             if (value !in 0..Int.MAX_VALUE) {
@@ -45,12 +44,9 @@ class EffectInstance @JvmOverloads constructor(
             field = value
         }
 
-    var color: Color
-
     init {
-        color = overrideColor ?: effectType.color
-        this.duration = if (duration < 0) effectType.defaultDuration else duration
-        // FIXME: duration should be null on PMMP (if null, fill it with default duration)
+        this.duration = duration.takeUnless { it < 0 } ?: effectType.defaultDuration
+        // TODO: duration should be null on PMMP (if null, fill it with default duration)
     }
 
     fun resetColor() {

@@ -26,8 +26,13 @@ class AbsorptionEffect @JvmOverloads constructor(
     color: Color,
     bad: Boolean = false,
     hasBubbles: Boolean = true
-) : Effect(internalRuntimeId, name, color, bad, hasBubbles) {
-
+) : Effect(
+    internalRuntimeId,
+    name,
+    color,
+    bad,
+    hasBubbles
+) {
     override fun add(entity: Living, instance: EffectInstance) {
         val new = 4 * instance.effectLevel
         if (new > entity.getAbsorption()) {
