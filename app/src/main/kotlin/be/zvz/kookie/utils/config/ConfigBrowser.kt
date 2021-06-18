@@ -213,6 +213,8 @@ abstract class ConfigBrowser protected constructor(private val node: JsonNode?) 
 
     fun safeText(): String = text() ?: ""
 
+    fun serialize(): String = mapper.writeValueAsString(node)
+
     fun format(): String? = node?.let {
         try {
             mapper.writeValueAsString(node)

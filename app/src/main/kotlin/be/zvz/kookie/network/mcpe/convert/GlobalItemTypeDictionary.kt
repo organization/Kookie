@@ -27,7 +27,7 @@ object GlobalItemTypeDictionary {
 
     init {
         val data = Json.jsonMapper.readValue(
-            this::class.java.getResourceAsStream("vanilla/required_item_list.json"),
+            this::class.java.getResourceAsStream("/vanilla/required_item_list.json"),
             object : TypeReference<Map<String, Map<String, String>>>() {}
         )
 

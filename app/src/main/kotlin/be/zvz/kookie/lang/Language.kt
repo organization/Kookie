@@ -17,35 +17,20 @@
  */
 package be.zvz.kookie.lang
 
-import be.zvz.kookie.constant.CorePaths
 import com.koloboke.collect.map.hash.HashObjObjMaps
 import org.apache.commons.io.FilenameUtils
-import org.ini4j.Ini
-import org.ini4j.IniPreferences
-import java.nio.file.Path
-import java.nio.file.Paths
-import java.util.prefs.Preferences
-import kotlin.io.path.exists
-import kotlin.io.path.isDirectory
-import kotlin.io.path.listDirectoryEntries
+import java.io.BufferedReader
+import java.io.File
+import java.io.InputStreamReader
+import java.util.Properties
+import java.util.jar.JarFile
 
-class Language @JvmOverloads constructor(langStr: String, path: String? = null, fallback: String = FALLBACK_LANGUAGE) {
+class Language @JvmOverloads constructor(langStr: String, path: String = "locale", fallback: String = FALLBACK_LANGUAGE) {
     private val langName: String = langStr.lowercase()
-    private val languagePrefs: Preferences
-    private val fallbackLang: Preferences
+    private val languagePrefs: Properties = loadLanguage(path, langStr)
+    private val fallbackLang: Properties = loadLanguage(path, fallback)
 
-    init {
-        val pathObj = if (path === null) {
-            CorePaths.RESOURCE_PATH
-        } else {
-            Paths.get(path)
-        }.resolve("locale")
-
-        languagePrefs = loadLanguage(pathObj, langStr)
-        fallbackLang = loadLanguage(pathObj, fallback)
-    }
-
-    val name: String get() = languagePrefs.get("language.name", null)
+    val name: String get() = languagePrefs.getProperty("language.name")!!
     val lang: String get() = langName
 
     private fun getBaseText(str: String, onlyPrefix: String? = null): String = get(str).apply {
@@ -101,7 +86,7 @@ class Language @JvmOverloads constructor(langStr: String, path: String? = null, 
         replacedStr
     }
 
-    private fun internalGet(id: String): String? = languagePrefs.get(id, fallbackLang.get(id, null))
+    private fun internalGet(id: String): String? = languagePrefs.getProperty(id, fallbackLang.getProperty(id))
     fun get(id: String): String = internalGet(id) ?: id
 
     @JvmOverloads
@@ -152,36 +137,54 @@ class Language @JvmOverloads constructor(langStr: String, path: String? = null, 
 
         @JvmStatic
         @JvmOverloads
-        fun getLanguageList(pathStr: String = ""): Map<String, String> {
-            val path = if (pathStr.isEmpty()) {
-                CorePaths.RESOURCE_PATH
-            } else {
-                Paths.get(pathStr)
-            }.resolve("locale")
-
+        fun getLanguageList(pathStr: String = "locale"): Map<String, String> {
             val result = HashObjObjMaps.newUpdatableMap<String, String>()
 
-            if (path.isDirectory()) {
-                path.listDirectoryEntries("*.ini").forEach {
-                    val code = FilenameUtils.removeExtension(path.fileName.toString())
-                    val prefs = loadLanguage(it, code)
-                    if (prefs.nodeExists("language.name")) {
-                        result[code] = prefs.get("language.name", null) // if the node does not exist, throw NPE
+            val jarFile = File(this::class.java.protectionDomain.codeSource.location.path)
+
+            mutableListOf<String>().apply {
+                if (jarFile.isFile) { // Run with JAR file
+                    val jar = JarFile(jarFile)
+                    val entries = jar.entries() // gives ALL entries in jar
+                    while (entries.hasMoreElements()) {
+                        val name: String = entries.nextElement().name
+                        if (name.startsWith("$pathStr/") && name.endsWith(".ini")) { // filter according to the path
+                            add(FilenameUtils.getBaseName(name))
+                        }
                     }
+                    jar.close()
+                } else { // Run with IDE
+                    this::class.java.getResource("/$pathStr")?.let {
+                        val apps = File(it.toURI())
+                        apps.listFiles()?.forEach { file ->
+                            if (file.path.endsWith(".ini")) {
+                                add(FilenameUtils.getBaseName(file.path))
+                            }
+                        }
+                    }
+                }
+            }.forEach { lang ->
+                val prefs = loadLanguage(pathStr, lang)
+                if (prefs.containsKey("language.name")) {
+                    result[lang] = prefs.getProperty("language.name")
                 }
             }
 
-            return result
+            return result.ifEmpty {
+                throw LanguageNotFoundException("Language directory $pathStr does not exist or is not a directory")
+            }
         }
 
-        private fun loadLanguage(path: Path, name: String): Preferences {
-            val iniPath = path.resolve("$name.ini")
-            if (iniPath.exists()) {
-                return IniPreferences(Ini(iniPath.toFile()))
-            } else {
-                val languageCode = FilenameUtils.removeExtension(iniPath.fileName.toString())
-                throw LanguageNotFoundException("Language \"$languageCode\" not found")
-            }
+        private fun loadLanguage(localeDir: String, name: String): Properties {
+            this::class.java.getResourceAsStream("/$localeDir/$name.ini")?.use {
+                return Properties().apply {
+                    InputStreamReader(it, Charsets.UTF_8).use { isr ->
+                        BufferedReader(isr).use { br ->
+                            load(br)
+                        }
+                    }
+                }
+            } ?: throw LanguageNotFoundException("Language \"$name\" not found")
         }
     }
 

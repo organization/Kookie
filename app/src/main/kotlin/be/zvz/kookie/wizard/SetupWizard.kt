@@ -49,7 +49,7 @@ class SetupWizard(private val dataPath: Path) {
         var langStr: String?
         do {
             langStr = getInput("Language", "eng").lowercase()
-            if (langs.containsKey(langStr)) {
+            if (!langs.containsKey(langStr)) {
                 logger.error("Couldn't find the language")
                 langStr = null
             }
