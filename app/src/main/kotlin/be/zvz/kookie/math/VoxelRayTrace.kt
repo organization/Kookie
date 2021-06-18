@@ -20,9 +20,9 @@ object VoxelRayTrace {
 
         val radius = start.distance(end)
 
-        val stepX = directionVector.x.compareTo(0.0).toDouble()
-        val stepY = directionVector.y.compareTo(0.0).toDouble()
-        val stepZ = directionVector.z.compareTo(0.0).toDouble()
+        val stepX = directionVector.x.compareTo(0).toDouble()
+        val stepY = directionVector.y.compareTo(0).toDouble()
+        val stepZ = directionVector.z.compareTo(0).toDouble()
 
         var tMaxX = rayTraceDistanceToBoundary(start.x, directionVector.x)
         var tMaxY = rayTraceDistanceToBoundary(start.y, directionVector.y)
@@ -59,18 +59,18 @@ object VoxelRayTrace {
 
     @JvmStatic
     fun rayTraceDistanceToBoundary(s: Double, ds: Double): Double {
-        var s = s
-        var ds = ds
         if (ds == 0.0) {
             return Double.POSITIVE_INFINITY
         }
-        if (ds < 0) {
-            s = -s
-            ds = -ds
-            if (floor(s) == s) {
+        var sT = s
+        var dsT = ds
+        if (dsT < 0) {
+            sT = -sT
+            dsT = -dsT
+            if (floor(sT) == sT) {
                 return 0.0
             }
         }
-        return (1 - (s - floor(s))) / ds
+        return (1 - (sT - floor(sT))) / dsT
     }
 }

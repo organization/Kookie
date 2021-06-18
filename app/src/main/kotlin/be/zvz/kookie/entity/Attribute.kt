@@ -76,17 +76,14 @@ class Attribute @JvmOverloads constructor(
 
     @JvmOverloads
     fun setValue(value: Float, fit: Boolean = false, forceSend: Boolean = false) {
-        var value = value
-        if (value !in minValue..maxValue) {
-            if (!fit) {
-                throw IllegalArgumentException("Value $value is outside the range $minValue - $maxValue")
-            }
+        if (value !in minValue..maxValue && !fit) {
+            throw IllegalArgumentException("Value $value is outside the range $minValue - $maxValue")
         }
-        value = min(max(value, minValue), maxValue)
 
-        if (currentValue != value) {
+        val minMaxValue = min(max(value, minValue), maxValue)
+        if (currentValue != minMaxValue) {
             desynchronized = true
-            currentValue = value
+            currentValue = minMaxValue
         } else if (forceSend) {
             desynchronized = true
         }

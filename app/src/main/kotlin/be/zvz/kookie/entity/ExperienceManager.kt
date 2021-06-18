@@ -127,8 +127,8 @@ class ExperienceManager(private val entity: Human) {
     fun canPickUpXp(): Boolean = xpCooldown == 0L
 
     fun onPickUpXp(xpValue: Int) {
-        var mainHandIndex = -1
-        var offHandIndex = -2
+        val mainHandIndex = -1
+        val offHandIndex = -2
 
         var xpValue = xpValue
 

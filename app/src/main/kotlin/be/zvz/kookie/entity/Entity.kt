@@ -40,6 +40,7 @@ import be.zvz.kookie.timings.TimingsHandler
 import be.zvz.kookie.world.Position
 import be.zvz.kookie.world.World
 import com.koloboke.collect.map.hash.HashLongObjMaps
+import org.slf4j.LoggerFactory
 import kotlin.math.PI
 import kotlin.math.abs
 import kotlin.math.cos
@@ -48,6 +49,7 @@ import kotlin.math.pow
 import kotlin.math.sin
 
 abstract class Entity @JvmOverloads constructor(var location: Location, nbt: CompoundTag? = null) {
+    private val logger = LoggerFactory.getLogger(Entity::class.java)
 
     var nbt: CompoundTag = nbt ?: CompoundTag()
 
@@ -151,6 +153,18 @@ abstract class Entity @JvmOverloads constructor(var location: Location, nbt: Com
 
     abstract val entityNetworkIdentifier: EntityIds
 
+    val owningEntity: Entity?
+        get() {
+            TODO("Should be implemented with World")
+        }
+
+    val targetEntity: Entity?
+        get() {
+            TODO("Should be implemented with world")
+        }
+
+    abstract val initialSizeInfo: EntitySizeInfo
+
     init {
         location = location.asLocation()
 
@@ -202,7 +216,7 @@ abstract class Entity @JvmOverloads constructor(var location: Location, nbt: Com
     open fun initEntity(nbt: CompoundTag) {
         // JLS 7 17.5
         timings = Timings.getEntityTimings(this)
-        size = getInitialSizeInfo()
+        size = initialSizeInfo
 
         fireTicks = nbt.getShort("Fire", 0).toLong()
         onGround = nbt.getByte("OnGround", 0) != 0
@@ -232,16 +246,6 @@ abstract class Entity @JvmOverloads constructor(var location: Location, nbt: Com
         compoundTag.setShort("Fire", fireTicks.toInt())
         compoundTag.setByte("OnGround", if (onGround) 1 else 0)
     }
-
-    fun getOwningEntity(): Entity? {
-        TODO("Should be implemented with World")
-    }
-
-    fun getTargetEntity(): Entity? {
-        TODO("Should be implemented with world")
-    }
-
-    abstract fun getInitialSizeInfo(): EntitySizeInfo
 
     open fun attack(source: Any) {
         TODO("Requires event implementation")
@@ -605,16 +609,18 @@ abstract class Entity @JvmOverloads constructor(var location: Location, nbt: Com
         if (angle < 0) {
             angle += 360.0
         }
-        if ((0 <= angle && angle < 45) || (315 <= angle && angle < 360)) {
-            return Facing.SOUTH
+        return when {
+            0 <= angle && angle < 45 || 315 <= angle && angle < 360 -> {
+                Facing.SOUTH
+            }
+            45 <= angle && angle < 135 -> {
+                Facing.WEST
+            }
+            135 <= angle && angle < 255 -> {
+                Facing.NORTH
+            }
+            else -> Facing.EAST
         }
-        if (45 <= angle && angle < 135) {
-            return Facing.WEST
-        }
-        if (135 <= angle && angle < 255) {
-            return Facing.NORTH
-        }
-        return Facing.EAST
     }
 
     fun getDirectionVector(): Vector3 {
@@ -630,47 +636,46 @@ abstract class Entity @JvmOverloads constructor(var location: Location, nbt: Com
     }
 
     open fun onUpdate(currentTick: Long): Boolean {
-        if (closed) {
-            return false
-        }
-
-        val tickDiff = currentTick - lastUpdate
-        if (tickDiff <= 0) {
-            if (!justCreated) {
-                // TODO: make logger public? 
-                // server.logger.debug("Expected tick difference of at least 1, got $tickDiff for " + this::class.java.simpleName)
+        return if (closed) {
+            false
+        } else {
+            val tickDiff = currentTick - lastUpdate
+            if (tickDiff <= 0) {
+                if (!justCreated) {
+                    logger.debug("Expected tick difference of at least 1, got $tickDiff for " + this::class.java.simpleName)
+                }
+                return true
             }
-            return true
-        }
-        lastUpdate = currentTick
+            lastUpdate = currentTick
 
-        if (isAlive()) {
-            if (onDeathUpdate(tickDiff)) {
-                flagForDespawn()
+            if (isAlive()) {
+                if (onDeathUpdate(tickDiff)) {
+                    flagForDespawn()
+                }
+                return true
             }
-            return true
-        }
 
-        timings.startTiming()
+            timings.startTiming()
 
-        if (hasMovementUpdate()) {
-            tryChangeMovement()
-            motion = motion.withComponents(
-                if (abs(motion.x) <= MOTION_THRESHOLD) 0 else null,
-                if (abs(motion.y) <= MOTION_THRESHOLD) 0 else null,
-                if (abs(motion.z) <= MOTION_THRESHOLD) 0 else null
-            )
-            if (motion.x != 0.0 || motion.y != 0.0 || motion.z != 0.0) {
-                move(motion.x, motion.y, motion.z)
+            if (hasMovementUpdate()) {
+                tryChangeMovement()
+                motion = motion.withComponents(
+                    if (abs(motion.x) <= MOTION_THRESHOLD) 0 else null,
+                    if (abs(motion.y) <= MOTION_THRESHOLD) 0 else null,
+                    if (abs(motion.z) <= MOTION_THRESHOLD) 0 else null
+                )
+                if (motion.x != 0.0 || motion.y != 0.0 || motion.z != 0.0) {
+                    move(motion.x, motion.y, motion.z)
+                }
+                forceMovementUpdate = false
             }
-            forceMovementUpdate = false
-        }
-        updateMovement()
+            updateMovement()
 
-        Timings.getEntityTimings(this).startTiming()
-        val hasUpdate = entityBaseTick(tickDiff)
-        // TODO: Timings.entityBaseTick.stopTiming()
-        return hasUpdate
+            Timings.getEntityTimings(this).startTiming()
+            val hasUpdate = entityBaseTick(tickDiff)
+            // TODO: Timings.entityBaseTick.stopTiming()
+            hasUpdate
+        }
     }
 
     open fun onNearByBlockChange() {
@@ -755,7 +760,7 @@ abstract class Entity @JvmOverloads constructor(var location: Location, nbt: Com
         } else {
             ySize *= STEP_CLIP_MULTIPLIER
 
-            var moveBB = boundingBox.clone()
+            val moveBB = boundingBox.clone()
 
             assert(abs(dx) <= 20 && abs(dy) <= 20 && abs(dz) <= 20)
 
@@ -1135,9 +1140,7 @@ abstract class Entity @JvmOverloads constructor(var location: Location, nbt: Com
         // TODO: server.broadcastPackets(if (targets == null) getViewers() else targets, animation.encode())
     }
 
-    /**
-     * TODO: Sound
-     */
+    // TODO: Sound
     @JvmOverloads
     fun broadcastSound(sound: Any, targets: List<Player>? = null) {
         if (!silent) {

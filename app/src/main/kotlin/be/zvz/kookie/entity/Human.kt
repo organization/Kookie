@@ -49,7 +49,8 @@ open class Human(var skin: Skin, location: Location) : Living(location) {
 
     override val entityNetworkIdentifier = EntityIds.PLAYER
 
-    override fun getInitialSizeInfo(): EntitySizeInfo = EntitySizeInfo(1.8F, 0.6F, 1.62F)
+    override val initialSizeInfo: EntitySizeInfo
+        get() = EntitySizeInfo(1.8F, 0.6F, 1.62F)
 
     open lateinit var inventory: PlayerInventory
 

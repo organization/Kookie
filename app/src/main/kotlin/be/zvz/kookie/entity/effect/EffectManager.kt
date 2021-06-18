@@ -131,7 +131,7 @@ data class EffectManager(val entity: Living) {
     }
 
     fun recalculateEffectColor() {
-        val colors: MutableList<Color> = mutableListOf()
+        val colors = mutableListOf<Color>()
         var ambient = true
 
         effects.forEach { (_, effect) ->
