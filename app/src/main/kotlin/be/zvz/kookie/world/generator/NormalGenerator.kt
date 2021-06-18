@@ -107,10 +107,7 @@ class NormalGenerator(seed: Long, preset: String) : Generator(seed, preset) {
                             biome
                         } else {
                             val index = World.chunkHash(absoluteX + sx, absoluteZ + sz)
-                            if (!biomeCache.containsKey(index)) {
-                                biomeCache[index] = pickBiome(absoluteX + sx, absoluteZ + sz)
-                            }
-                            biomeCache[index]!!
+                            biomeCache.getOrPut(index) { pickBiome(absoluteX + sx, absoluteZ + sz) }
                         }
 
                         minSum += (adjacent.minElevation - 1) * weight
