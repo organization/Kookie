@@ -31,7 +31,6 @@ import be.zvz.kookie.nbt.tag.CompoundTag
 import be.zvz.kookie.nbt.tag.ListTag
 import be.zvz.kookie.nbt.tag.ShortTag
 import be.zvz.kookie.nbt.tag.StringTag
-import be.zvz.kookie.nbt.tag.Tag
 import be.zvz.kookie.player.Player
 import be.zvz.kookie.utils.Binary
 import com.koloboke.collect.map.hash.HashIntObjMaps
@@ -157,7 +156,7 @@ open class Item @JvmOverloads constructor(
 
         display.setStringIf(TAG_DISPLAY_NAME, customName) { it.isNotEmpty() }
 
-        val loreTag = ListTag<String>().apply {
+        val loreTag = ListTag<StringTag>().apply {
             lore.forEach {
                 push(StringTag(it))
             }
@@ -166,7 +165,7 @@ open class Item @JvmOverloads constructor(
 
         tag.setTagIf(TAG_DISPLAY, display) { it.isNotEmpty() }
 
-        val enchTag = ListTag<Map<String, Tag<*>>>().apply {
+        val enchTag = ListTag<CompoundTag>().apply {
             enchantments.forEach {
                 push(
                     CompoundTag.create()
@@ -179,14 +178,14 @@ open class Item @JvmOverloads constructor(
 
         tag.setTagIf(TAG_BLOCK_ENTITY_TAG, getCustomBlockData()?.clone())
 
-        val canPlaceOnTag = ListTag<String>().apply {
+        val canPlaceOnTag = ListTag<StringTag>().apply {
             canPlaceOn.forEach { (_, value) ->
                 push(StringTag(value))
             }
         }
         tag.setTagIf("CanPlaceOn", canPlaceOnTag) { it.isNotEmpty() }
 
-        val canDestroyTag = ListTag<String>().apply {
+        val canDestroyTag = ListTag<StringTag>().apply {
             canDestroy.forEach { (_, value) ->
                 push(StringTag(value))
             }

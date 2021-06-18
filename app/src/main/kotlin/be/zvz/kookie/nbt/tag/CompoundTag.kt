@@ -24,7 +24,9 @@ import be.zvz.kookie.nbt.NbtStreamReader
 import be.zvz.kookie.nbt.NbtStreamWriter
 import com.koloboke.collect.map.hash.HashObjObjMaps
 
-class CompoundTag : Tag<Map<String, Tag<*>>>() {
+typealias CompoundType = Map<String, Tag<*>>
+
+class CompoundTag : Tag<CompoundType>() {
     override val value = HashObjObjMaps.newMutableMap<String, Tag<*>>()
 
     override fun getTagType(): NBT.TagType {

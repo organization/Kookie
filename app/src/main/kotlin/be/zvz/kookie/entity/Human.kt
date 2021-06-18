@@ -263,13 +263,13 @@ open class Human(var skin: Skin, location: Location) : Living(location) {
         for (i in 0..slotCount) {
             val item = inventory.getItem(i - 9)
             if (!item.isNull()) {
-                // TODO: inventoryTag.push(item.nbtSerialize(i))
+                inventoryTag.push(item.nbtSerialize(i))
             }
         }
         for (i in 100..104) {
             val item = armorInventory.getItem(i - 100)
             if (!item.isNull()) {
-                // TODO: inventoryTag.push(item.nbtSerialize(i))
+                inventoryTag.push(item.nbtSerialize(i))
             }
         }
         val offHandItem = offHandInventory.getItem(0)
@@ -285,7 +285,7 @@ open class Human(var skin: Skin, location: Location) : Living(location) {
                 items.add(item.nbtSerialize(i))
             }
         }
-        // TODO: nbt.setTag("EnderChestInventory", ListTag<CompoundTag>(items, NBT.TagType.COMPOUND))
+        nbt.setTag("EnderChestInventory", ListTag(items, NBT.TagType.COMPOUND))
         nbt.setTag(
             "Skin",
             CompoundTag.create().apply {

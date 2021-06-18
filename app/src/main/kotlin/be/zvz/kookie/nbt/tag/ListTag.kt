@@ -22,13 +22,13 @@ import be.zvz.kookie.nbt.NbtException
 import be.zvz.kookie.nbt.NbtStreamReader
 import be.zvz.kookie.nbt.NbtStreamWriter
 
-class ListTag<T> @JvmOverloads constructor(
-    value: List<Tag<T>> = listOf(),
+class ListTag<T : Tag<*>> @JvmOverloads constructor(
+    value: List<T> = listOf(),
     private var tagType: NBT.TagType = NBT.TagType.NOTHING
-) : Tag<List<Tag<T>>>() {
-    private val list: MutableList<Tag<T>> = value.toMutableList()
+) : Tag<List<T>>() {
+    private val list: MutableList<T> = value.toMutableList()
 
-    override val value: List<Tag<T>>
+    override val value: List<T>
         get() = list
 
     init {
@@ -47,17 +47,17 @@ class ListTag<T> @JvmOverloads constructor(
         return NBT.TagType.LIST
     }
 
-    fun push(tag: Tag<T>) {
+    fun push(tag: T) {
         if (tag.getTagType() !== tagType) {
             throw NbtException("Expected TagType ${tagType.name}, got ${tag.getTagType().name}")
         }
         list.add(tag)
     }
 
-    fun get(index: Int): Tag<T>? = value.getOrNull(index)
+    fun get(index: Int): T? = value.getOrNull(index)
 
     override fun makeCopy(): ListTag<T> = ListTag(
-        mutableListOf<Tag<T>>().apply {
+        mutableListOf<T>().apply {
             list.forEach {
                 add(it)
             }
@@ -91,7 +91,7 @@ class ListTag<T> @JvmOverloads constructor(
             } else {
                 tagType = NBT.TagType.NOTHING
             }
-            return ListTag(value.filterIsInstance<Tag<Any>>(), tagType)
+            return ListTag(value, tagType)
         }
     }
 }
