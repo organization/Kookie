@@ -67,7 +67,14 @@ open class Human(var skin: Skin, location: Location) : Living(location) {
     var xpSeed: Int = 0
 
     fun sendSkin(targets: List<Player>) {
-        // TODO: server.broadcastPackets(targets.ifEmpty { getViewers() }, PlayerSkinPacket.create(uuid, SkinAdapterSingleton.adapter.toSkinData(skin)))
+        /* TODO: server.broadcastPackets
+        server.broadcastPackets(
+            targets.ifEmpty {
+                getViewers()
+            },
+            PlayerSkinPacket.create(uuid, SkinAdapterSingleton.adapter!!.toSkinData(skin))
+        )
+        */
     }
 
     override fun jump() {

@@ -112,6 +112,7 @@ object EntityDataHelper {
         entity.recalculateBoundingBox()
         entity.resetLastMovement()
         entity.addAttributes()
+        // TODO: world.addEntity(entity)
         entity.initEntity(nbt ?: CompoundTag.create())
         entity.initialized = true
     }

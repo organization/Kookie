@@ -49,13 +49,13 @@ class EffectInstance @JvmOverloads constructor(
         // TODO: duration should be null on PMMP (if null, fill it with default duration)
     }
 
+    val effectLevel: Int get() = amplifier + 1
+
     fun resetColor() {
         color = effectType.color
     }
 
     fun hasExpired(): Boolean = duration <= 0
-
-    val effectLevel: Int get() = amplifier + 1
 
     fun decreaseDuration(tickDiff: Int): EffectInstance = this.apply {
         duration = max(0, duration - tickDiff)

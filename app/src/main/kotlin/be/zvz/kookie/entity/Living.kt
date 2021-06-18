@@ -162,6 +162,13 @@ abstract class Living(location: Location) : Entity(location) {
         }
     }
 
+    override var maxHealth: Int
+        set(amount) {
+            healthAttr.maxValue = amount.toFloat()
+            healthAttr.defaultValue = amount.toFloat()
+        }
+        get() = healthAttr.maxValue.toInt()
+
     override fun setHealth(amount: Float) {
         val wasAlive = isAlive()
         super.setHealth(amount)
@@ -170,13 +177,6 @@ abstract class Living(location: Location) : Entity(location) {
             broadcastAnimation(RespawnAnimation(this))
         }
     }
-
-    override var maxHealth: Int
-        set(amount) {
-            healthAttr.maxValue = amount.toFloat()
-            healthAttr.defaultValue = amount.toFloat()
-        }
-        get() = healthAttr.maxValue.toInt()
 
     open fun getAbsorption(): Float = absorptionAttr.currentValue
 

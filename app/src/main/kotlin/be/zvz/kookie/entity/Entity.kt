@@ -181,8 +181,6 @@ abstract class Entity @JvmOverloads constructor(var location: Location, nbt: Com
             Vector3()
         }
 
-        // TODO: world.addEntity(this)
-
         // TODO: lastUpdate = server.tick
 
         // TODO: EntitySpawnEvent call

@@ -57,7 +57,7 @@ open class Vector3 @JvmOverloads constructor(var x: Double = 0.0, var y: Double 
     operator fun div(len: Double): Vector3 = divide(len)
     fun divide(len: Int): Vector3 = divide(len.toDouble())
     fun divide(len: Double): Vector3 =
-        if (len == 0.0) throw RuntimeException("Division by zero") else Vector3(x / len, y / len, z / len)
+        if (len == 0.0) throw ArithmeticException("Division by zero") else Vector3(x / len, y / len, z / len)
 
     fun ceil(): Vector3 = Vector3(ceil(x), ceil(y), ceil(z))
     fun floor(): Vector3 = Vector3(floor(x), floor(y), floor(z))
