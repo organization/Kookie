@@ -22,6 +22,7 @@ import be.zvz.kookie.block.tile.Tile
 import be.zvz.kookie.entity.Entity
 import be.zvz.kookie.math.Vector3
 import be.zvz.kookie.player.Player
+import be.zvz.kookie.utils.inline.forEachValue
 import be.zvz.kookie.world.biome.BiomeIds
 import com.koloboke.collect.map.hash.HashIntObjMaps
 
@@ -111,14 +112,12 @@ class Chunk @JvmOverloads constructor(
     fun getTile(x: Int, y: Int, z: Int) = tiles[blockHash(x, y, z)]
 
     fun onUnload() {
-        entities.forEach { (_, entity) ->
+        entities.forEachValue { entity ->
             if (entity !is Player) {
                 TODO("Implements after implemented Entity::close()")
             }
         }
-        tiles.forEach { (_, tile) ->
-            tile.close()
-        }
+        tiles.forEachValue(Tile::close)
     }
 
     fun getDirtyFlag(flag: Int) = dirtyFlags and flag != 0

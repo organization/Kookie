@@ -18,6 +18,7 @@
 package be.zvz.kookie.world
 
 import be.zvz.kookie.Server
+import be.zvz.kookie.utils.inline.forEachValue
 import be.zvz.kookie.world.format.io.WorldProviderManager
 import com.koloboke.collect.map.hash.HashIntObjMaps
 import java.nio.file.Path
@@ -28,7 +29,7 @@ class WorldManager(private val server: Server, val dataPath: String, val provide
     var autoSave: Boolean = true
         set(value) {
             field = value
-            worlds.forEach { (_, world) ->
+            worlds.forEachValue { world ->
                 world.autoSave = true
             }
         }
@@ -42,7 +43,7 @@ class WorldManager(private val server: Server, val dataPath: String, val provide
     fun getWorld(id: Int): World? = worlds[id]
 
     fun getWorldByName(name: String): World? {
-        worlds.forEach { (_, world) ->
+        worlds.forEachValue { world ->
             if (world.folderName == name) {
                 return world
             }

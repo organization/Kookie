@@ -26,6 +26,7 @@ import be.zvz.kookie.math.AxisAlignedBB
 import be.zvz.kookie.math.Facing
 import be.zvz.kookie.math.Vector3
 import be.zvz.kookie.utils.Union
+import be.zvz.kookie.utils.inline.forEachValue
 import be.zvz.kookie.world.utils.SubChunkExplorer
 import be.zvz.kookie.world.utils.repeat3
 import com.koloboke.collect.map.hash.HashLongObjMaps
@@ -166,7 +167,7 @@ open class Explosion @JvmOverloads constructor(
         val airBlock = VanillaBlocks.AIR.block
 
         /* TODO: Implements after implemented World methods and TNT
-         * affectedBlocks.forEach { (_, block) ->
+         * affectedBlocks.forEachValue { block ->
          *     val blockPos: Position = block.pos
          *     if (block is TNT) {
          *         block.ignite(Random.nextInt(10, 30))
@@ -183,7 +184,7 @@ open class Explosion @JvmOverloads constructor(
          * }
          */
 
-        affectedBlocks.forEach { (_, block) ->
+        affectedBlocks.forEachValue { block ->
             val blockPos: Position = block.pos
             Facing.ALL.forEach { side ->
                 val sideBlock = blockPos.getSide(side)
@@ -196,9 +197,7 @@ open class Explosion @JvmOverloads constructor(
                          * ev.call()
                          * if (!ev.isCancelled()) {
                          *     world.getNearbyEntities(AxisAlignedBB.one().offset(sideX, sideY, sideZ).expand(1, 1, 1))
-                         *         .forEach { entity ->
-                         *             entity.onNearbyBlockChange()
-                         *         }
+                         *         .forEach(Entity::onNearbyBlockChange)
                          * }
                          * ev.getBlock().onNearbyBlockChange()
                          */
