@@ -39,7 +39,7 @@ class Language @JvmOverloads constructor(langStr: String, path: String? = null, 
             CorePaths.RESOURCE_PATH
         } else {
             Paths.get(path)
-        }
+        }.resolve("locale")
 
         languagePrefs = loadLanguage(pathObj, langStr)
         fallbackLang = loadLanguage(pathObj, fallback)
@@ -157,7 +157,7 @@ class Language @JvmOverloads constructor(langStr: String, path: String? = null, 
                 CorePaths.RESOURCE_PATH
             } else {
                 Paths.get(pathStr)
-            }
+            }.resolve("locale")
 
             val result = HashObjObjMaps.newUpdatableMap<String, String>()
 
