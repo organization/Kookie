@@ -34,7 +34,7 @@ class Chunk @JvmOverloads constructor(
     val NBTtiles: MutableList<Tile> = mutableListOf(),
     val biomeIds: BiomeArray = BiomeArray.fill(BiomeIds.OCEAN.id),
     val heightMap: HeightArray = HeightArray.fill(subChunks.size * 16)
-) {
+) : Cloneable {
     var dirtyFlags: Int = 0
     val tiles = HashIntObjMaps.newMutableMap<Tile>()
     val entities = HashIntObjMaps.newMutableMap<Entity>()
@@ -144,6 +144,13 @@ class Chunk @JvmOverloads constructor(
             setDirtyFlag(DIRTY_FLAG_TERRAIN, true)
         }
     }
+
+    public override fun clone() = Chunk(
+        subChunks = subChunks.map(SubChunk::clone).toMutableList(),
+        // we don't bother cloning entities or tiles since it's impractical to do so (too many dependencies)
+        biomeIds = biomeIds.clone(),
+        heightMap = heightMap.clone()
+    )
 
     companion object {
         const val DIRTY_FLAG_TERRAIN = 1 shl 0
