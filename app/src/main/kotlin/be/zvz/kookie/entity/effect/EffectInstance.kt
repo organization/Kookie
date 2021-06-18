@@ -59,7 +59,7 @@ class EffectInstance @JvmOverloads constructor(
 
     fun hasExpired(): Boolean = duration <= 0
 
-    val effectLevel: Int = amplifier + 1
+    val effectLevel: Int get() = amplifier + 1
 
     fun decreaseDuration(tickDiff: Int): EffectInstance = this.apply {
         duration = max(0, duration - tickDiff)
