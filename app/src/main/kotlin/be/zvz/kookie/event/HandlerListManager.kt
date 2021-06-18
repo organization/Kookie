@@ -39,8 +39,10 @@ object HandlerListManager {
         )!! // TODO: unchecked cast
     }
 
-    private fun isValid(clazz: Class<*>): Boolean =
-        Modifier.isAbstract(clazz.modifiers) || clazz.getAnnotation(AllowAbstract::class.java) != null
+    private fun isValid(clazz: Class<*>): Boolean {
+        val annotation = clazz.getAnnotation(AllowAbstract::class.java)
+        return !Modifier.isAbstract(clazz.modifiers) || annotation?.allowed ?: false
+    }
 
     private fun resolveNearestHandleableParent(clazz: Class<out Event>): Class<*>? {
         var parent = clazz.superclass
