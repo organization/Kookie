@@ -147,6 +147,13 @@ abstract class Living(location: Location) : Entity(location) {
         }
     }
 
+    override var maxHealth: Int
+        set(amount) {
+            healthAttr.maxValue = amount.toFloat()
+            healthAttr.defaultValue = amount.toFloat()
+        }
+        get() = healthAttr.maxValue.toInt()
+
     override fun addAttributes() {
         attributeMap.apply {
             healthAttr = AttributeFactory.mustGet(Attribute.Identifier.HEALTH)
@@ -161,13 +168,6 @@ abstract class Living(location: Location) : Entity(location) {
             add(absorptionAttr)
         }
     }
-
-    override var maxHealth: Int
-        set(amount) {
-            healthAttr.maxValue = amount.toFloat()
-            healthAttr.defaultValue = amount.toFloat()
-        }
-        get() = healthAttr.maxValue.toInt()
 
     override fun setHealth(amount: Float) {
         val wasAlive = isAlive()
