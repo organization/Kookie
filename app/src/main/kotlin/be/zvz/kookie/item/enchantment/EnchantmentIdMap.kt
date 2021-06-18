@@ -64,5 +64,5 @@ object EnchantmentIdMap {
 
     @JvmStatic
     fun toId(enchantment: Enchantment): Int = enchToId[enchantment.internalRuntimeId]
-        ?: throw Exception("Enchantment does not have a mapped ID")
+        ?: throw NoSuchElementException("Enchantment does not have a mapped ID")
 }

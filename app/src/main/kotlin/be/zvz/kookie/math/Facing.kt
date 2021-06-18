@@ -84,7 +84,7 @@ enum class Facing(val value: Int) {
                     } else {
                         opposite(rotated.value)
                     }
-                } ?: throw RuntimeException("Cannot rotate direction ${direction.value} around axis ${axis.value}")
-            } ?: throw RuntimeException("Invalid axis ${direction.value}")
+                } ?: throw IllegalArgumentException("Cannot rotate direction ${direction.value} around axis ${axis.value}")
+            } ?: throw IllegalArgumentException("Invalid axis ${direction.value}")
     }
 }
