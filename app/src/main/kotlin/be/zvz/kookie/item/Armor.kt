@@ -25,6 +25,7 @@ import be.zvz.kookie.math.Vector3
 import be.zvz.kookie.nbt.tag.CompoundTag
 import be.zvz.kookie.player.Player
 import be.zvz.kookie.utils.Binary
+import be.zvz.kookie.utils.inline.forEachValue
 import java.util.Random
 
 class Armor(identifier: ItemIdentifier, name: String, val armorInfo: ArmorTypeInfo) : Durable(identifier, name) {
@@ -37,10 +38,10 @@ class Armor(identifier: ItemIdentifier, name: String, val armorInfo: ArmorTypeIn
     fun getEnchantmentProtectionFactor(event: EntityDamageEvent): Int {
         var epf = 0
 
-        enchantments.forEach { (_, instance) ->
-            val type = instance.enchantment
+        enchantments.forEachValue {
+            val type = it.enchantment
             if (type is ProtectionEnchantment && type.isApplicable(event)) {
-                epf += type.getProtectionFactor(instance.level)
+                epf += type.getProtectionFactor(it.level)
             }
         }
 
@@ -79,10 +80,8 @@ class Armor(identifier: ItemIdentifier, name: String, val armorInfo: ArmorTypeIn
     override fun deserializeCompoundTag(tag: CompoundTag) {
         super.deserializeCompoundTag(tag)
         val colorTag = tag.getTag(TAG_CUSTOM_COLOR)
-        customColor = if (colorTag !== null) {
+        customColor = colorTag?.let {
             Color.fromARGB(Binary.unsignInt(colorTag.value as Int))
-        } else {
-            null
         }
     }
 

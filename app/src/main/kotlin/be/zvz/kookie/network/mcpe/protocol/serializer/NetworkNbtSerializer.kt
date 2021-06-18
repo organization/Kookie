@@ -45,7 +45,7 @@ class NetworkNbtSerializer : BaseNbtSerializer() {
 
     override fun writeIntArray(v: IntArray) {
         writeInt(v.size) // varInt
-        v.forEach { value -> writeInt(value) }
+        v.forEach(this::writeInt)
     }
 
     override fun readLongArray(): LongArray {
@@ -57,6 +57,6 @@ class NetworkNbtSerializer : BaseNbtSerializer() {
 
     override fun writeLongArray(v: LongArray) {
         writeInt(v.size) // varInt
-        v.forEach { value -> writeLong(value) }
+        v.forEach(this::writeLong)
     }
 }

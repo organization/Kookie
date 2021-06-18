@@ -33,13 +33,9 @@ class BlockTransaction(val world: ChunkManager) {
         addBlockAt(pos.x.toInt(), pos.y.toInt(), pos.z.toInt(), state)
 
     fun addBlockAt(x: Int, y: Int, z: Int, state: Block): BlockTransaction = this.apply {
-        if (!blocks.containsKey(x)) {
-            blocks[x] = HashIntObjMaps.newMutableMap()
-        }
-        if (!blocks.getValue(x).containsKey(y)) {
-            blocks.getValue(x)[y] = HashIntObjMaps.newMutableMap()
-        }
-        blocks.getValue(x).getValue(y)[z] = state
+        blocks
+            .getOrPut(x, HashIntObjMaps::newMutableMap)
+            .getOrPut(y, HashIntObjMaps::newMutableMap)[z] = state
     }
 
     fun fetchBlock(pos: Vector3): Block = fetchBlockAt(pos.x.toInt(), pos.y.toInt(), pos.z.toInt())

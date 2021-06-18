@@ -58,9 +58,7 @@ class ListTag<T : Tag<*>> @JvmOverloads constructor(
 
     override fun makeCopy(): ListTag<T> = ListTag(
         mutableListOf<T>().apply {
-            list.forEach {
-                add(it)
-            }
+            value.forEach(this::add)
         }
     )
 

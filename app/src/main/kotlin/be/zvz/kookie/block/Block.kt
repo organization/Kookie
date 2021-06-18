@@ -66,7 +66,7 @@ open class Block(val idInfo: BlockIdentifier, val name: String, val breakInfo: B
     fun getFullId(): Int = (getId() shl 4) or getMeta()
 
     fun asItem(): Item = ItemFactory.get(
-        idInfo.itemId!!,
+        idInfo.itemId,
         idInfo.variant or (writeStateToMeta() and getNonPersistentStateBitmask().inv())
     )
 
@@ -284,7 +284,9 @@ open class Block(val idInfo: BlockIdentifier, val name: String, val breakInfo: B
 
     fun getHorizontalSides() = sequence {
         pos.sidesAroundAxis(Axis.Y).forEach {
-            yield(pos.world!!.getBlock(it.second))
+            pos.world?.let { world ->
+                yield(world.getBlock(it.second))
+            }
         }
     }
 
@@ -313,7 +315,7 @@ open class Block(val idInfo: BlockIdentifier, val name: String, val breakInfo: B
     override fun toString(): String = "Block[$name] (${getId()}:${getMeta()})"
 
     /** Checks for collision against an AxisAlignedBB */
-    fun collidesWithBB(bb: AxisAlignedBB): Boolean = collisionBoxes?.find { bb.intersectsWith(it) } !== null
+    fun collidesWithBB(bb: AxisAlignedBB): Boolean = collisionBoxes?.find(bb::intersectsWith) !== null
 
     /**
      * Called when an entity's bounding box clips inside this block's cell. Note that the entity may not be intersecting

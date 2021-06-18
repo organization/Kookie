@@ -62,9 +62,7 @@ class TextPacket : DataPacket(), ClientboundPacket, ServerboundPacket {
         if (type in TYPE_TRANSLATION..TYPE_JUKEBOX_POPUP) {
             output.putString(message)
             output.putUnsignedVarInt(parameters.size)
-            parameters.forEach {
-                output.putString(it)
-            }
+            parameters.forEach(output::putString)
         }
         output.putString(xboxUserId)
         output.putString(platformChatId)

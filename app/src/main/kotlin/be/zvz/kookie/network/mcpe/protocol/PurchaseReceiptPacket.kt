@@ -32,9 +32,7 @@ class PurchaseReceiptPacket : DataPacket(), ServerboundPacket {
 
     override fun encodePayload(output: PacketSerializer) {
         output.putUnsignedVarInt(entries.size)
-        entries.forEach { entry ->
-            output.putString(entry)
-        }
+        entries.forEach(output::putString)
     }
 
     override fun handle(handler: PacketHandlerInterface): Boolean = handler.handlePurchaseReceipt(this)
