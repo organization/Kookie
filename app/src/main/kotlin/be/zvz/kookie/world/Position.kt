@@ -42,11 +42,11 @@ open class Position @JvmOverloads constructor(
     fun isValid(): Boolean = world?.let {
         if (it.closed) {
             world = null
-            null
+            false
         } else {
-            world
+            true
         }
-    } !== null
+    } ?: false
 
     override fun getSide(side: Facing, step: Int) = fromObject(super.getSide(side, step), world)
 

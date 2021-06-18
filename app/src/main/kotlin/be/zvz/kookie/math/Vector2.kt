@@ -49,7 +49,7 @@ class Vector2 @JvmOverloads constructor(var x: Double = 0.0, var y: Double = 0.0
     operator fun div(len: Double): Vector2 = divide(len)
     fun divide(len: Int): Vector2 = divide(len.toDouble())
     fun divide(len: Double): Vector2 =
-        if (len == 0.0) throw RuntimeException("Division by zero")
+        if (len == 0.0) throw ArithmeticException("Division by zero")
         else Vector2(x / len, y / len)
 
     fun ceil(): Vector2 = Vector2(ceil(x), ceil(y))
@@ -73,4 +73,6 @@ class Vector2 @JvmOverloads constructor(var x: Double = 0.0, var y: Double = 0.0
     }
 
     fun dot(v: Vector2): Double = x * v.x + y * v.y
+
+    public override fun clone(): Vector2 = super.clone() as Vector2
 }

@@ -20,17 +20,17 @@ package be.zvz.kookie.entity
 import com.koloboke.collect.map.hash.HashObjObjMaps
 
 class AttributeMap {
-    private val attributes = HashObjObjMaps.newMutableMap<String, Attribute>()
+    private val attributes = HashObjObjMaps.newMutableMap<Attribute.Identifier, Attribute>()
 
     fun add(attribute: Attribute) {
         attributes[attribute.id] = attribute
     }
 
-    fun get(id: String): Attribute? = attributes[id]
+    fun get(id: Attribute.Identifier): Attribute? = attributes[id]
 
-    fun getAll(): Map<String, Attribute> = attributes
+    fun getAll(): Map<Attribute.Identifier, Attribute> = attributes
 
-    fun needSend(): Map<String, Attribute> = attributes.filter { (_, attribute) ->
+    fun needSend(): Map<Attribute.Identifier, Attribute> = attributes.filter { (_, attribute) ->
         attribute.isSyncable() && attribute.isDesynchronized()
     }
 }

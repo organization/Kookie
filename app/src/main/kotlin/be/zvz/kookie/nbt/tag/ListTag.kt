@@ -22,10 +22,14 @@ import be.zvz.kookie.nbt.NbtException
 import be.zvz.kookie.nbt.NbtStreamReader
 import be.zvz.kookie.nbt.NbtStreamWriter
 
-class ListTag<T> @JvmOverloads constructor(
-    override val value: MutableList<Tag<T>> = mutableListOf(),
+class ListTag<T : Tag<*>> @JvmOverloads constructor(
+    value: List<T> = listOf(),
     private var tagType: NBT.TagType = NBT.TagType.NOTHING
-) : Tag<List<Tag<T>>>() {
+) : Tag<List<T>>() {
+    private val list: MutableList<T> = value.toMutableList()
+
+    override val value: List<T>
+        get() = list
 
     init {
         value.forEach { tag ->
@@ -43,18 +47,18 @@ class ListTag<T> @JvmOverloads constructor(
         return NBT.TagType.LIST
     }
 
-    fun push(tag: Tag<T>) {
+    fun push(tag: T) {
         if (tag.getTagType() !== tagType) {
             throw NbtException("Expected TagType ${tagType.name}, got ${tag.getTagType().name}")
         }
-        value.add(tag)
+        list.add(tag)
     }
 
-    fun get(index: Int): Tag<T>? = value.getOrNull(index)
+    fun get(index: Int): T? = value.getOrNull(index)
 
     override fun makeCopy(): ListTag<T> = ListTag(
-        mutableListOf<Tag<T>>().apply {
-            value.forEach {
+        mutableListOf<T>().apply {
+            list.forEach {
                 add(it)
             }
         }
@@ -62,8 +66,8 @@ class ListTag<T> @JvmOverloads constructor(
 
     override fun write(writer: NbtStreamWriter) {
         writer.writeByte(tagType.value)
-        writer.writeInt(value.size)
-        value.forEach { tag ->
+        writer.writeInt(list.size)
+        list.forEach { tag ->
             tag.write(writer)
         }
     }
@@ -72,7 +76,7 @@ class ListTag<T> @JvmOverloads constructor(
         @JvmStatic
         fun read(reader: NbtStreamReader, tracker: ReaderTracker): ListTag<*> {
             var tagType = NBT.TagType.from(reader.readByte())
-            val value = mutableListOf<Tag<Any>>()
+            val value = mutableListOf<Tag<*>>()
             val size = reader.readInt()
 
             if (size > 0) {
@@ -81,7 +85,7 @@ class ListTag<T> @JvmOverloads constructor(
                 }
                 tracker.protectDepth {
                     repeat(size) {
-                        value.add(NBT.createTag(tagType, reader, tracker) as Tag<Any>)
+                        value.add(NBT.createTag(tagType, reader, tracker))
                     }
                 }
             } else {

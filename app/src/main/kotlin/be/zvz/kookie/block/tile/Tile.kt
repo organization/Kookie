@@ -26,7 +26,7 @@ import be.zvz.kookie.world.Position
 import be.zvz.kookie.world.World
 
 abstract class Tile(world: World, pos: Vector3) {
-    protected val timings = Timings.getTileEntityTimings(this)
+    protected val timings by lazy { Timings.getTileEntityTimings(this) }
 
     val pos = Position.fromObject(pos, world)
     val closed: Boolean = false

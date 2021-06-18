@@ -21,7 +21,7 @@ import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 
 class ItemStackResponseSlotInfo(
     val slot: Int,
-    val horbarSlot: Int,
+    val hotbarSlot: Int,
     val count: Int,
     val itemStackId: Int,
     val customName: String,
@@ -29,7 +29,7 @@ class ItemStackResponseSlotInfo(
 ) {
     fun write(output: PacketSerializer) {
         output.putByte(slot)
-        output.putByte(horbarSlot)
+        output.putByte(hotbarSlot)
         output.putByte(count)
         output.writeGenericTypeNetworkId(itemStackId)
         output.putString(customName)
@@ -40,7 +40,7 @@ class ItemStackResponseSlotInfo(
         @JvmStatic
         fun read(input: PacketSerializer) = ItemStackResponseSlotInfo(
             slot = input.getByte(),
-            horbarSlot = input.getByte(),
+            hotbarSlot = input.getByte(),
             count = input.getByte(),
             itemStackId = input.readGenericTypeNetworkId(),
             customName = input.getString(),

@@ -31,7 +31,6 @@ import be.zvz.kookie.nbt.tag.CompoundTag
 import be.zvz.kookie.nbt.tag.ListTag
 import be.zvz.kookie.nbt.tag.ShortTag
 import be.zvz.kookie.nbt.tag.StringTag
-import be.zvz.kookie.nbt.tag.Tag
 import be.zvz.kookie.player.Player
 import be.zvz.kookie.utils.Binary
 import com.koloboke.collect.map.hash.HashIntObjMaps
@@ -157,7 +156,7 @@ open class Item @JvmOverloads constructor(
 
         display.setStringIf(TAG_DISPLAY_NAME, customName) { it.isNotEmpty() }
 
-        val loreTag = ListTag<String>().apply {
+        val loreTag = ListTag<StringTag>().apply {
             lore.forEach {
                 push(StringTag(it))
             }
@@ -166,7 +165,7 @@ open class Item @JvmOverloads constructor(
 
         tag.setTagIf(TAG_DISPLAY, display) { it.isNotEmpty() }
 
-        val enchTag = ListTag<Map<String, Tag<*>>>().apply {
+        val enchTag = ListTag<CompoundTag>().apply {
             enchantments.forEach {
                 push(
                     CompoundTag.create()
@@ -179,14 +178,14 @@ open class Item @JvmOverloads constructor(
 
         tag.setTagIf(TAG_BLOCK_ENTITY_TAG, getCustomBlockData()?.clone())
 
-        val canPlaceOnTag = ListTag<String>().apply {
+        val canPlaceOnTag = ListTag<StringTag>().apply {
             canPlaceOn.forEach { (_, value) ->
                 push(StringTag(value))
             }
         }
         tag.setTagIf("CanPlaceOn", canPlaceOnTag) { it.isNotEmpty() }
 
-        val canDestroyTag = ListTag<String>().apply {
+        val canDestroyTag = ListTag<StringTag>().apply {
             canDestroy.forEach { (_, value) ->
                 push(StringTag(value))
             }
@@ -277,39 +276,6 @@ open class Item @JvmOverloads constructor(
         return result
     }
 
-    fun nbtDeserialize(tag: CompoundTag): Item {
-        val idTag = tag.getTag("id")
-        if (idTag == null || tag.getTag("Count") == null) {
-            return ItemFactory.air()
-        }
-
-        val count = Binary.unsignByte(tag.getByte("Count"))
-        val meta = tag.getShort("Damage", 0)
-
-        val item: Item = when (idTag) {
-            is ShortTag -> ItemFactory.get(idTag.value, meta, count)
-            is StringTag -> {
-                val id = LegacyStringToItemParser.parseId(idTag.value)
-
-                if (id === null) {
-                    ItemFactory.air()
-                } else {
-                    ItemFactory.get(id, meta, count)
-                }
-            }
-            else -> throw IllegalArgumentException(
-                "Item CompoundTag ID must be an instance of StringTag or ShortTag, " +
-                    "${idTag::class.java.simpleName} given"
-            )
-        }
-
-        tag.getCompoundTag("tag")?.let {
-            item.setNamedTag(it)
-        }
-
-        return item
-    }
-
     public override fun clone(): Item = (super.clone() as Item).also {
         it.nbt = nbt.clone() as CompoundTag
         it.blockEntityTag = blockEntityTag?.clone() as? CompoundTag
@@ -321,5 +287,39 @@ open class Item @JvmOverloads constructor(
         const val TAG_BLOCK_ENTITY_TAG = "BlockEntityTag"
         const val TAG_DISPLAY_NAME = "Name"
         const val TAG_DISPLAY_LORE = "Lore"
+
+        @JvmStatic
+        fun nbtDeserialize(tag: CompoundTag): Item {
+            val idTag = tag.getTag("id")
+            if (idTag == null || tag.getTag("Count") == null) {
+                return ItemFactory.air()
+            }
+
+            val count = Binary.unsignByte(tag.getByte("Count"))
+            val meta = tag.getShort("Damage", 0)
+
+            val item: Item = when (idTag) {
+                is ShortTag -> ItemFactory.get(idTag.value, meta, count)
+                is StringTag -> {
+                    val id = LegacyStringToItemParser.parseId(idTag.value)
+
+                    if (id === null) {
+                        ItemFactory.air()
+                    } else {
+                        ItemFactory.get(id, meta, count)
+                    }
+                }
+                else -> throw IllegalArgumentException(
+                    "Item CompoundTag ID must be an instance of StringTag or ShortTag, " +
+                        "${idTag::class.java.simpleName} given"
+                )
+            }
+
+            tag.getCompoundTag("tag")?.let {
+                item.setNamedTag(it)
+            }
+
+            return item
+        }
     }
 }
