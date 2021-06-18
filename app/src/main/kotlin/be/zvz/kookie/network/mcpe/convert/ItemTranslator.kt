@@ -31,9 +31,9 @@ object ItemTranslator {
     private val complexNetToCoreMapping: MutableMap<Int, Pair<Int, Int>> = HashIntObjMaps.newMutableMap()
 
     init {
-        val data = JsonBrowser().parse(this::class.java.getResourceAsStream("vanilla/r16_to_current_item_map.json"))
+        val data = JsonBrowser().parse(this::class.java.getResourceAsStream("/vanilla/r16_to_current_item_map.json"))
         val legacyStringToIntMap = JsonBrowser().parse(
-            this::class.java.getResourceAsStream("vanilla/item_id_map.json")
+            this::class.java.getResourceAsStream("/vanilla/item_id_map.json")
         ).toMap<String, String>()
 
         val simpleMappings: MutableMap<String, Int> = HashObjIntMaps.newMutableMap()
