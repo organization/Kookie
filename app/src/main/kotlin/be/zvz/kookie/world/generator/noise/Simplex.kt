@@ -129,14 +129,14 @@ class Simplex(
         // Determine which simplex we are in.
         val (i1, j1, k1, i2, j2, k2) = when {
             x0 >= y0 -> when {
-                y0 >= z0 -> listOf(1, 0, 0, 1, 1, 0) // X Y Z order
-                x0 >= z0 -> listOf(1, 0, 0, 1, 0, 1) // X Z Y order
-                else -> listOf(0, 0, 1, 1, 0, 1) // Z X Y order
+                y0 >= z0 -> Data(1, 0, 0, 1, 1, 0) // X Y Z order
+                x0 >= z0 -> Data(1, 0, 0, 1, 0, 1) // X Z Y order
+                else -> Data(0, 0, 1, 1, 0, 1) // Z X Y order
             }
             else -> when {
-                y0 < z0 -> listOf(0, 0, 1, 0, 1, 1) // Z Y X order
-                x0 < z0 -> listOf(0, 1, 0, 0, 1, 1) // Y Z X order
-                else -> listOf(0, 1, 0, 1, 1, 0) // Y X Z order
+                y0 < z0 -> Data(0, 0, 1, 0, 1, 1) // Z Y X order
+                x0 < z0 -> Data(0, 1, 0, 0, 1, 1) // Y Z X order
+                else -> Data(0, 1, 0, 1, 1, 0) // Y X Z order
             }
         }
 
@@ -191,6 +191,8 @@ class Simplex(
         return 32.0F * n
     }
 
+    private data class Data(val i1: Int, val j1: Int, val k1: Int, val i2: Int, val j2: Int, val k2: Int)
+
     companion object {
         val GRAD3 = arrayOf(
             intArrayOf(1, 1, 0), intArrayOf(-1, 1, 0), intArrayOf(1, -1, 0), intArrayOf(-1, -1, 0),
@@ -205,5 +207,3 @@ class Simplex(
         const val G3 = 1.0F / 6.0F
     }
 }
-
-private operator fun <E> List<E>.component6() = this[5]
