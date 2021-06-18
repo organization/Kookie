@@ -25,17 +25,6 @@ object Math {
     }
 
     @JvmStatic
-    fun maxFromList(list: List<Float>): Float {
-        var max = Float.MIN_VALUE
-        list.forEach {
-            if (it > max) {
-                max = it
-            }
-        }
-        return max
-    }
-
-    @JvmStatic
     fun random(min: Int, max: Int): Int {
         val rand = Random()
         return rand.nextInt(max - min + 1) + min

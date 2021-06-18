@@ -69,6 +69,6 @@ object ExperienceUtils {
         if (x.isEmpty()) {
             throw AssertionError("Expected at least 1 solution")
         }
-        return Math.maxFromList(x)
+        return x.maxOrNull() ?: Float.MIN_VALUE
     }
 }
