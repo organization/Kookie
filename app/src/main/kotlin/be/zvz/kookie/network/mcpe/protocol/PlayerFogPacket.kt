@@ -41,9 +41,7 @@ class PlayerFogPacket : DataPacket(), ClientboundPacket {
 
     override fun encodePayload(output: PacketSerializer) {
         output.putUnsignedVarInt(fogLayers.size)
-        fogLayers.forEach { fogLayer ->
-            output.putString(fogLayer)
-        }
+        fogLayers.forEach(output::putString)
     }
 
     override fun handle(handler: PacketHandlerInterface): Boolean = handler.handlePlayerFog(this)

@@ -23,8 +23,11 @@ open class BlockIdentifier @JvmOverloads constructor(
     itemId: Int? = null,
     val tileClass: String? = null
 ) {
-    val itemId: Int? = itemId
+    private val _itemId: Int? = itemId
         get() = field ?: if (blockId > 255) 255 - blockId else blockId
+
+    val itemId: Int
+        get(): Int = _itemId ?: if (blockId > 255) 255 - blockId else blockId
 
     open fun getAllBlockIds(): List<Int> = listOf(blockId)
 }

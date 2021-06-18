@@ -42,9 +42,7 @@ open class ConsoleCommandSender(
     override fun sendMessage(message: String) = sendRawMessage(language.translateString(message))
 
     private fun sendRawMessage(text: String) {
-        text.split("\n").forEach {
-            logger.info(it)
-        }
+        text.split("\n").forEach(logger::info)
     }
 
     override fun getScreenLineHeight(): Int = lineHeight ?: Int.MAX_VALUE

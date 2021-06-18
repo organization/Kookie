@@ -161,9 +161,7 @@ class StartGamePacket : DataPacket(), ClientboundPacket {
         output.putLInt(limitedWorldLength)
         output.putBoolean(isNewNether)
         output.putBoolean(experimentalGameplayOverride != null)
-        if (experimentalGameplayOverride != null) {
-            output.putBoolean(experimentalGameplayOverride!!)
-        }
+        experimentalGameplayOverride?.let(output::putBoolean)
         output.putString(levelId)
         output.putString(worldName)
         output.putString(premiumWorldTemplateId)

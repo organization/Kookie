@@ -39,16 +39,16 @@ open class SimpleInventory(size: Int) : BaseInventory() {
     }
 
     override fun internalSetContents(items: Map<Int, Item>) {
-        repeat(size) {
-            if (items.containsKey(it)) {
-                clear(it)
-            } else {
-                setItem(it, items.getValue(it))
+        repeat(size) { index ->
+            items[index]?.let { item ->
+                setItem(index, item)
+            } ?: run {
+                clear(index)
             }
         }
     }
 
     override fun internalSetItem(index: Int, item: Item) {
-        slots[index] = if (item.isNull()) null else item
+        slots[index] = item.takeIf { !it.isNull() }
     }
 }

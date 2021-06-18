@@ -26,7 +26,7 @@ class TranslationContainer @JvmOverloads constructor(
     val params: List<String> = mutableListOf<String>().apply {
         array.forEach { raw ->
             raw.use(
-                { add(it) },
+                this::add,
                 { add(it.toString()) },
                 { add(it.toString()) },
             )

@@ -27,9 +27,7 @@ class ShapelessRecipe(
 
     override fun encodeInputs(output: PacketSerializer) {
         output.putUnsignedVarInt(inputs.size)
-        inputs.forEach {
-            output.putRecipeIngredient(it)
-        }
+        inputs.forEach(output::putRecipeIngredient)
     }
 
     companion object {

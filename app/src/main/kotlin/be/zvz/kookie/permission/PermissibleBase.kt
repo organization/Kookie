@@ -19,6 +19,7 @@ package be.zvz.kookie.permission
 
 import be.zvz.kookie.plugin.Plugin
 import be.zvz.kookie.plugin.PluginException
+import be.zvz.kookie.utils.inline.forEachValue
 import com.koloboke.collect.map.hash.HashIntObjMaps
 import com.koloboke.collect.map.hash.HashObjObjMaps
 import com.koloboke.collect.set.hash.HashObjSets
@@ -45,11 +46,7 @@ class PermissibleBase(rootPermissionsMap: Map<String, Boolean>) : Permissible {
 
     override fun isPermissionSet(name: String): Boolean = permissions.containsKey(name)
 
-    override fun hasPermission(name: String): Boolean = if (isPermissionSet(name)) {
-        permissions.getValue(name).value
-    } else {
-        false
-    }
+    override fun hasPermission(name: String): Boolean = permissions[name]?.value ?: false
 
     override fun addAttachment(plugin: Plugin, name: String?, value: Boolean?): PermissionAttachment {
         if (!plugin.enabled) {
@@ -68,8 +65,7 @@ class PermissibleBase(rootPermissionsMap: Map<String, Boolean>) : Permissible {
     }
 
     override fun removeAttachment(attachment: PermissionAttachment) {
-        if (attachments.containsKey(attachment.hashCode())) {
-            attachments.remove(attachment.hashCode())
+        attachments.remove(attachment.hashCode())?.let {
             attachment.unsubscribePermissible(this)
             attachment.removalCallback?.attachmentRemoved(this, attachment)
             recalculatePermissions()
@@ -92,7 +88,7 @@ class PermissibleBase(rootPermissionsMap: Map<String, Boolean>) : Permissible {
             calculateChildPermissions(perm.children, !isGranted, null, permissions[name])
         }
 
-        attachments.forEach { (_, attachment) ->
+        attachments.forEachValue { attachment ->
             calculateChildPermissions(attachment.permissions, false, attachment, null)
         }
 

@@ -53,9 +53,7 @@ class LegacySkinAdapter : SkinAdapter {
 
     override fun fromSkinData(data: SkinData): Skin {
         if (data.persona) {
-            val arr = ByteArray(3).apply {
-                Random().nextBytes(this)
-            }
+            val arr = ByteArray(3).apply(Random()::nextBytes)
             return Skin("Standard_Custom", ("$arr\\xff").repeat(2048))
         }
         val capeData = if (data.personaCapeOnClassic) {

@@ -61,9 +61,7 @@ class CompoundTag : Tag<CompoundType>() {
     }
 
     fun removeTag(vararg names: String) {
-        names.forEach {
-            value.remove(it)
-        }
+        names.forEach(value::remove)
     }
 
     @JvmOverloads
@@ -143,9 +141,7 @@ class CompoundTag : Tag<CompoundType>() {
     }
 
     override fun makeCopy(): CompoundTag = CompoundTag().let {
-        it.value.forEach { (name, tag) ->
-            value[name] = tag
-        }
+        it.value.forEach(value::put)
         it
     }
 

@@ -35,9 +35,10 @@ class ProtectionEnchantment(
     init {
         var index = 0
         applicableDamageTypes?.let { list ->
-            this.applicableDamageTypes = HashIntIntMaps.newMutableMap()
-            list.forEach {
-                this.applicableDamageTypes!![it] = index++
+            this.applicableDamageTypes = HashIntIntMaps.newMutableMap().apply {
+                list.forEach { type ->
+                    this[type] = index++
+                }
             }
         }
     }
