@@ -13,7 +13,6 @@
 
     <root level="INFO">
         <appender-ref ref="Console"/>
-        <appender-ref ref="Sentry"/>
     </root>
 
 </configuration>
