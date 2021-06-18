@@ -31,6 +31,8 @@ import be.zvz.kookie.network.query.QueryInfo
 import be.zvz.kookie.utils.Config
 import be.zvz.kookie.utils.config.PropertiesBrowser
 import be.zvz.kookie.world.World
+import be.zvz.kookie.world.WorldManager
+import be.zvz.kookie.world.format.io.WorldProviderManager
 import ch.qos.logback.classic.Logger
 import org.apache.commons.io.IOUtils
 import org.slf4j.LoggerFactory
@@ -42,6 +44,10 @@ import kotlin.concurrent.thread
 import kotlin.io.path.createDirectories
 import kotlin.io.path.exists
 import kotlin.io.path.setPosixFilePermissions
+import kotlin.math.max
+import kotlin.math.min
+import kotlin.math.round
+import kotlin.system.exitProcess
 import ch.qos.logback.classic.Level as LoggerLevel
 
 class Server(cwd: Path, dataPath: Path, pluginPath: Path) {
@@ -51,12 +57,16 @@ class Server(cwd: Path, dataPath: Path, pluginPath: Path) {
      *
      */
     private var tickCounter: Int = 0
-    private var nextTick: Float = 0F
+    private var nextTick: Long = 0
     private val tickAverage: FloatArray = FloatArray(20) { 20F }
     private val useAverage: FloatArray = FloatArray(20) { 0F }
     private var currentTPS: Float = 20F
     private var currentUse: Float = 0F
     private val startTime: Date
+    var isRunning: Boolean = true
+        private set
+    private var hasStopped: Boolean = false
+        private set
 
     private var doTitleTick = true
     private val logger = LoggerFactory.getLogger(Server::class.java)
@@ -65,6 +75,8 @@ class Server(cwd: Path, dataPath: Path, pluginPath: Path) {
     private var onlineMode = true
     private var networkCompressionAsync = true
     val memoryManager: MemoryManager
+
+    val worldManager: WorldManager
 
     private val network = Network(this, logger)
 
@@ -103,7 +115,6 @@ class Server(cwd: Path, dataPath: Path, pluginPath: Path) {
                 }
             }
         }
-
         configGroup = ServerConfigGroup(
             Config(dataPath.resolve("kookie.yml"), Config.Type.YAML),
             Config(
@@ -197,6 +208,9 @@ class Server(cwd: Path, dataPath: Path, pluginPath: Path) {
         }
 
         memoryManager = MemoryManager(this)
+        // TODO: provider manager
+        val providerManager = WorldProviderManager()
+        worldManager = WorldManager(this, worldsPath.toString(), providerManager)
 
         network.addInterface(
             RakLibInterface(
@@ -211,6 +225,8 @@ class Server(cwd: Path, dataPath: Path, pluginPath: Path) {
         thread(isDaemon = true, name = "${VersionInfo.NAME}-console") {
             console.start()
         }
+        tickProcessor()
+        forceShutdown()
     }
 
     fun getDataPath(): Path = CorePaths.PATH
@@ -229,6 +245,169 @@ class Server(cwd: Path, dataPath: Path, pluginPath: Path) {
 
     fun broadcastMessage(message: TranslationContainer, recipients: List<CommandSender>): Int {
         TODO("Not yet implemented")
+    }
+
+    private fun tickProcessor() {
+        nextTick = System.currentTimeMillis()
+
+        while (isRunning) {
+            tick()
+        }
+    }
+
+    fun forceShutdown() {
+        if (hasStopped) {
+            return
+        }
+        if (doTitleTick) {
+            print(0x1b.toChar() + "]0;" + 0x17.toChar())
+        }
+        try {
+            if (!isRunning) {
+                // TODO: sendUsage(SendUsageTask.Type.CLOSE)
+            }
+            hasStopped = true
+            shutdown()
+
+            /*
+            TODO:
+
+            logger.debug("Disabling all plugins")
+            pluginManager.disablePlugins()
+
+            logger.debug("Unloading all worlds")
+            worldManager.worlds.apply {
+                val iterator = iterator()
+                while (iterator.hasNext()) {
+                    worldManager.unloadWorld(iterator.next(), true)
+                }
+            }
+
+            logger.debug("Removing event handlers")
+            HandlerListManager.global().unregisterAll()
+
+            logger.debug("Shutting down async task worker pool")
+            asyncPool.shutdown()
+             */
+
+            network.getSessionManager().close(configGroup.getProperty("settomgs.shutdown-message").toString())
+            configGroup.save()
+            // console.shutdown()
+            logger.debug("Stopping network interfaces")
+            network.interfaces.apply {
+                val iterator = iterator()
+                while (iterator.hasNext()) {
+                    network.removeInterface(iterator.next())
+                }
+            }
+        } catch (e: Throwable) {
+            logger.error("Crashed while crashing, killing process...")
+            exitProcess(1)
+        }
+    }
+
+    fun shutdown() {
+        isRunning = false
+    }
+
+    private fun tick() {
+        val tickTime = System.currentTimeMillis()
+        if ((tickTime - nextTick) < -0.025) { // 1 tick
+            return
+        }
+
+        // TODO: Timings.serverTick.startTiming()
+
+        // TODO: Timings.scheduler.startTiming()
+        // TODO: pluginManager.tickSchedulers(tickCounter)
+        // TODO: Timings.scheduler.stopTiming()
+
+        // TODO: Timings.scheduleAsync.startTiming()
+        // TODO: asyncPool.collectTasks()
+        // TODO: Timings.scheduleAsync.stopTiming()
+
+        // TODO: worldManager.tick()
+
+        // TODO: Timings.connection.startTiming()
+        // TODO: network.tick()
+
+        if (tickCounter % 20 == 0) {
+            if (doTitleTick) {
+                doTitleTick()
+            }
+
+            /*
+            TODO:
+            val ev = QueryRegenerateEvent(QueryInfo(this))
+            ev.call()
+            queryInfo = ev.getQueryInfo()
+             */
+
+            // TODO: network.updateName()
+            // TODO: network.bandwidthTracker.rotateAverageHistory()
+        }
+
+        /*
+        TODO:
+        if (sendUsageTicker > 0 && --sendUsageTicker == 0) {
+            sendUsageTicker = 6000
+            sendUsage(SendUsageTask.Type.STATUS) // TODO: this should be enum
+        }
+
+         */
+        if (tickCounter % 100 == 0) {
+            worldManager.worlds.forEach { (_, world) ->
+                // TODO: world.clearCache()
+            }
+            /*
+            TODO:
+             if (getTicksPerSecondAverage() < 12) {
+                logger.warn(language.translateString("pocketmine.server.tickOverload"))
+            }
+             */
+        }
+
+        memoryManager.check()
+
+        // TODO: Timings.serverTick.stopTiming()
+
+        val now = System.currentTimeMillis()
+        currentTPS = min(20F, 1 / max(0.001F, (now - tickTime).toFloat()))
+        currentUse = min(1F, (now - tickTime) / 0.05F)
+
+        // TODO: TimingsHandler.tick(currentTPS <= profileingTickRate)
+
+        val idx = tickCounter % 20
+        tickAverage[idx] = currentTPS
+        useAverage[idx] = currentUse
+
+        if ((nextTick - tickTime) < -1) {
+            nextTick = tickTime
+        } else {
+            nextTick += 0.05.toLong()
+        }
+    }
+
+    private fun doTitleTick() {
+        // TODO: Timings.titleTick.startTiming()
+        val runtime = Runtime.getRuntime()
+        val used = round((runtime.totalMemory() - runtime.freeMemory()).toDouble() / 1024 / 1024)
+
+        val online = 0 // TODO: playerList
+        val connecting = 0 // TODO: network.getConnectionCount() - online
+        // val bandwidthStats = network.getBandwidthTracker()
+        print(
+            0x1b.toChar() + "]0;" + VersionInfo.NAME +
+                " | Online $online/$maxPlayers" +
+                (if (connecting > 0) "(+$connecting connecting)" else "") +
+                " | Memory $used" +
+                // TODO: " | U " + round(bandwidthStats.send.getAverageBytes() / 1024) +
+                // TODO: " D " + round(bandwidthStats.receive.getAverageBytes() / 1024) +
+                // TODO: " kB/s "
+                // TODO: " | TPS " + getTicksPerSecondAverage()
+                // TODO: " | Load " + getTickUsageAverage() +
+                0x07.toChar()
+        )
     }
 
     companion object {

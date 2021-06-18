@@ -25,7 +25,7 @@ import java.net.InetSocketAddress
 
 class Network(private val server: Server, private val logger: Logger) {
 
-    private val interfaces = mutableListOf<NetworkInterface>()
+    val interfaces = mutableListOf<NetworkInterface>()
 
     private val bannedIps = HashMap<InetSocketAddress, Int>()
 
