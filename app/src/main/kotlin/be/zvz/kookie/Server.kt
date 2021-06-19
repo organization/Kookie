@@ -67,7 +67,7 @@ class Server(cwd: Path, dataPath: Path, pluginPath: Path) {
     private var networkCompressionAsync = true
     val memoryManager: MemoryManager
 
-    private val network = Network(this, logger)
+    private val network: Network
 
     var language: Language
         private set
@@ -198,6 +198,8 @@ class Server(cwd: Path, dataPath: Path, pluginPath: Path) {
         }
 
         memoryManager = MemoryManager(this)
+
+        network = Network(this, logger)
 
         network.addInterface(
             RakLibInterface(
