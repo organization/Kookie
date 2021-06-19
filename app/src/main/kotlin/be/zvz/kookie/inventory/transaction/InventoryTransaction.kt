@@ -27,7 +27,7 @@ import com.koloboke.collect.map.hash.HashObjObjMaps
 import kotlin.math.min
 
 class InventoryTransaction(val source: Player, actions: MutableList<InventoryAction>) {
-    var actions: MutableList<InventoryAction> = mutableListOf().apply {
+    var actions: MutableList<InventoryAction> = mutableListOf<InventoryAction>().apply {
         actions.forEach {
             addAction(it)
         }
