@@ -18,42 +18,35 @@
 package be.zvz.kookie.event
 
 import be.zvz.kookie.plugin.Plugin
+import be.zvz.kookie.utils.inline.forEachValue
 import com.koloboke.collect.map.hash.HashObjObjMaps
 
 class HandlerList @JvmOverloads constructor(
     val clazz: Class<out Event>,
     val parentHandlerList: HandlerList? = null
 ) {
-    var handlerSlots: MutableMap<EventPriority, MutableList<RegisteredListener>> =
+    var handlerSlots: MutableMap<EventPriority, MutableSet<RegisteredListener>> =
         HashObjObjMaps.newMutableMap()
         private set
 
     fun register(listener: RegisteredListener) {
-        if (handlerSlots.getOrPut(listener.priority) {
-            mutableListOf()
-        }.contains(listener)
-        ) {
+        if (!handlerSlots.getOrPut(listener.priority, ::mutableSetOf).add(listener)) {
             throw IllegalStateException(
                 "This listener is already registered to priority ${listener.priority.priority} of event ${clazz.simpleName}"
             )
         }
-        handlerSlots.getOrPut(listener.priority) {
-            mutableListOf()
-        }.add(listener)
     }
 
     fun registerAll(vararg listeners: RegisteredListener) {
-        listeners.forEach {
-            register(it)
-        }
+        listeners.forEach(this::register)
     }
 
     fun unregister(obj: Plugin) {
-        val iter = handlerSlots.iterator()
-        while (iter.hasNext()) {
-            val (priority, list) = iter.next()
-            list.forEach {
-                if (it.plugin == obj) {
+        handlerSlots.forEachValue { slot ->
+            val iter = slot.iterator()
+            while (iter.hasNext()) {
+                val listener = iter.next()
+                if (listener.plugin == obj) {
                     iter.remove()
                 }
             }
@@ -61,26 +54,18 @@ class HandlerList @JvmOverloads constructor(
     }
 
     fun unregister(obj: Listener) {
-        val iter = handlerSlots.iterator()
-        while (iter.hasNext()) {
-            val (priority, list) = iter.next()
-            list.forEach {
-                iter.remove()
-            }
-        }
+        // TODO
     }
 
     fun unregister(obj: RegisteredListener) {
-        if (handlerSlots[obj.priority]?.contains(obj) == true) {
-            handlerSlots[obj.priority]?.remove(obj)
-        }
+        handlerSlots[obj.priority]?.remove(obj)
     }
 
     fun clear() {
         handlerSlots = HashObjObjMaps.newMutableMap()
     }
 
-    fun getListenersByPriority(priority: EventPriority): MutableList<RegisteredListener>? = handlerSlots[priority]
+    fun getListenersByPriority(priority: EventPriority): MutableSet<RegisteredListener>? = handlerSlots[priority]
 
     fun getParent(): HandlerList? = parentHandlerList
 }
