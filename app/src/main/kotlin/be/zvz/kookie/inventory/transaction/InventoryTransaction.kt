@@ -67,7 +67,7 @@ class InventoryTransaction(val source: Player, actions: MutableList<InventoryAct
             try {
                 it.validate(source)
             } catch (e: TransactionValidationException) {
-                throw TransactionValidationException("${it::class.java.simpleName}: " + e.message)
+                throw TransactionValidationException(it, e)
             }
             if (!it.sourceItem.isNull()) {
                 haveItems.add(it.sourceItem)
