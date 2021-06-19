@@ -67,3 +67,69 @@ inline fun <K, V> Map<out K, V>.forEachValue(action: (V) -> Unit) {
 inline fun <K, V> Map<out K, V>.forEachValues(action: (V, V) -> Unit) {
     for (element in this) action(element.value, element.value)
 }
+
+/**
+ * Returns the first key matching the given predicate, or null if no such element was found.
+ * Unlike [Map.firstNotNullOfOrNull], we returns [K] as arguments instead of [Map.Entry].
+ */
+inline fun <K, V> Map<out K, V>.search(predicate: (K, V) -> Boolean): K? {
+    this.forEachIndexed { k, v -> if (predicate(k, v)) return k }
+    return null
+}
+
+/**
+ * Returns the first key matching the given predicate, or null if no such element was found.
+ * Unlike [Map.search], we provide [K] as arguments instead of [K] and [V].
+ */
+inline fun <K, V> Map<out K, V>.searchByKey(predicate: (K) -> Boolean): K? {
+    this.forEachKey { k -> if (predicate(k)) return k }
+    return null
+}
+
+/** Returns the first key matching the given value, or null if no such element was found.*/
+inline fun <K, V> Map<out K, V>.searchByKey(find: K): K? = this.searchByKey { it == find }
+
+/**
+ * Returns the first key matching the given predicate, or null if no such element was found.
+ * Unlike [Map.search], we provide [V] as arguments instead of [K] and [V].
+ */
+inline fun <K, V> Map<out K, V>.searchByValue(predicate: (V) -> Boolean): K? {
+    this.forEachIndexed { k, v -> if (predicate(v)) return k }
+    return null
+}
+
+/** Returns the first key matching the given value, or null if no such element was found.*/
+inline fun <K, V> Map<out K, V>.searchByValue(find: V): K? = this.searchByValue { it == find }
+
+/**
+ * Returns the first value matching the given predicate, or null if no such element was found.
+ * Unlike [Map.firstNotNullOfOrNull], we returns [V] as arguments instead of [Map.Entry].
+ */
+inline fun <K, V> Map<out K, V>.find(predicate: (K, V) -> Boolean): V? {
+    this.forEachIndexed { k, v -> if (predicate(k, v)) return v }
+    return null
+}
+
+/**
+ * Returns the first value matching the given predicate, or null if no such element was found.
+ * Unlike [Map.find], we provide [K] as arguments instead of [K] and [V].
+ */
+inline fun <K, V> Map<out K, V>.findByKey(predicate: (K) -> Boolean): V? {
+    this.forEachIndexed { k, v -> if (predicate(k)) return v }
+    return null
+}
+
+/** Returns the first value matching the given value, or null if no such element was found.*/
+inline fun <K, V> Map<out K, V>.findByKey(find: K): V? = this.findByKey { it == find }
+
+/**
+ * Returns the first value matching the given predicate, or null if no such element was found.
+ * Unlike [Map.find], we provide [V] as arguments instead of [K] and [V].
+ */
+inline fun <K, V> Map<out K, V>.findByValue(predicate: (V) -> Boolean): V? {
+    this.forEachValue { v -> if (predicate(v)) return v }
+    return null
+}
+
+/** Returns the first value matching the given value, or null if no such element was found.*/
+inline fun <K, V> Map<out K, V>.findByValue(find: V): V? = this.findByValue { it == find }
