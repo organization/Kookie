@@ -25,9 +25,9 @@ class RegisteredListener(
     val priority: EventPriority,
     val plugin: Plugin,
     val handleCancelled: Boolean,
-    val timings: TimingsHandler
+    val timings: TimingsHandler,
+    val listener: Listener? = null,
 ) {
-
     fun callEvent(event: Event) {
         if (event is Cancellable && event.isCancelled && !handleCancelled) {
             return

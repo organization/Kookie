@@ -54,7 +54,15 @@ class HandlerList @JvmOverloads constructor(
     }
 
     fun unregister(obj: Listener) {
-        // TODO
+        handlerSlots.forEachValue { slot ->
+            val iter = slot.iterator()
+            while (iter.hasNext()) {
+                val listener = iter.next()
+                if (listener.listener == obj) {
+                    iter.remove()
+                }
+            }
+        }
     }
 
     fun unregister(obj: RegisteredListener) {
