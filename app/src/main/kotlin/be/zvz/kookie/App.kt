@@ -31,7 +31,7 @@ import kotlin.system.exitProcess
 class App {
     private val logger = LoggerFactory.getLogger(App::class.java)
 
-    fun start() {
+    fun start(): Int {
         val cwd = CorePaths.PATH
         val dataPath = cwd.resolve("data").apply {
             if (!exists()) {
@@ -77,7 +77,7 @@ class App {
 
         lockFilePath.deleteIfExists()
 
-        exitProcess(exitCode)
+        return exitCode
     }
 
     companion object {
@@ -86,5 +86,5 @@ class App {
 }
 
 fun main() {
-    App().start()
+    exitProcess(App().start())
 }
