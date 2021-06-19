@@ -20,12 +20,12 @@ package be.zvz.kookie.data.bedrock
 import be.zvz.kookie.entity.effect.Effect
 import be.zvz.kookie.entity.effect.VanillaEffects
 import com.koloboke.collect.map.hash.HashIntObjMaps
-import com.koloboke.collect.map.hash.HashObjObjMaps
+import com.koloboke.collect.map.hash.HashObjIntMaps
 
 object EffectIdMap {
 
     private val idToEffect: MutableMap<Int, Effect> = HashIntObjMaps.newMutableMap()
-    private val effectToId: MutableMap<Effect, Int> = HashObjObjMaps.newMutableMap()
+    private val effectToId: MutableMap<Effect, Int> = HashObjIntMaps.newMutableMap()
 
     init {
         register(EffectIds.SPEED, VanillaEffects.SPEED)

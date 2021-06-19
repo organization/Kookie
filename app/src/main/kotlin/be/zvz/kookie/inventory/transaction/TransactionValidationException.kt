@@ -15,22 +15,6 @@
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  */
-package be.zvz.kookie.network.mcpe.protocol.types
+package be.zvz.kookie.inventory.transaction
 
-import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
-
-class Enchant(val id: Int, val level: Int) {
-
-    fun write(output: PacketSerializer) {
-        output.putByte(id)
-        output.putByte(level)
-    }
-
-    companion object {
-        @JvmStatic
-        fun read(input: PacketSerializer) = Enchant(
-            id = input.getByte(),
-            level = input.getByte()
-        )
-    }
-}
+class TransactionValidationException(message: String, override val cause: Throwable? = null) : RuntimeException(message)

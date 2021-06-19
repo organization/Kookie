@@ -37,27 +37,11 @@ inline fun <K, V> Map<out K, V>.forEachIndexed(actionK: (K) -> Unit, actionV: (V
 }
 
 /**
- * Performs the given [action] on each key
- * Unlike [Map.forEach], we provide [K] as arguments instead of [Map.Entry].
- */
-inline fun <K, V> Map<out K, V>.forEachKey(action: (K) -> Unit) {
-    for (element in this) action(element.key)
-}
-
-/**
  * Performs the given [action] on each key (given twice)
  * Unlike [Map.forEach], we provide [K] and [K] as arguments instead of [Map.Entry].
  */
 inline fun <K, V> Map<out K, V>.forEachKeys(action: (K, K) -> Unit) {
     for (element in this) action(element.key, element.key)
-}
-
-/**
- * Performs the given [action] on each value
- * Unlike [Map.forEach], we provide [V] as arguments instead of [Map.Entry].
- */
-inline fun <K, V> Map<out K, V>.forEachValue(action: (V) -> Unit) {
-    for (element in this) action(element.value)
 }
 
 /**

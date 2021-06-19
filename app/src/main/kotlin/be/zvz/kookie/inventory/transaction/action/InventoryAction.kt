@@ -15,22 +15,22 @@
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  */
-package be.zvz.kookie.network.mcpe.protocol.types
+package be.zvz.kookie.inventory.transaction.action
 
-import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
+import be.zvz.kookie.inventory.transaction.InventoryTransaction
+import be.zvz.kookie.item.Item
+import be.zvz.kookie.player.Player
 
-class Enchant(val id: Int, val level: Int) {
+abstract class InventoryAction(val sourceItem: Item, val targetItem: Item) {
 
-    fun write(output: PacketSerializer) {
-        output.putByte(id)
-        output.putByte(level)
+    abstract fun validate(player: Player)
+
+    open fun onAddToTransaction(transaction: InventoryTransaction) {
     }
 
-    companion object {
-        @JvmStatic
-        fun read(input: PacketSerializer) = Enchant(
-            id = input.getByte(),
-            level = input.getByte()
-        )
+    open fun onPreExecute(source: Player): Boolean {
+        return true
     }
+
+    abstract fun execute(player: Player)
 }
