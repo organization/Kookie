@@ -9,6 +9,4 @@ class PlayerCreationEvent(val session: NetworkSession) : Event() {
     var baseClass: Class<out Player> = Player::class.java
 
     var playerClass: Class<out Player> = Player::class.java
-
-    
 }
