@@ -90,13 +90,13 @@ class Server(cwd: Path, dataPath: Path, pluginPath: Path) {
             playersPath.createDirectories()
             playersPath.setPosixFilePermissions(FilePermission.perm777)
         }
-        if (pluginPath.exists()) {
+        if (!pluginPath.exists()) {
             pluginPath.createDirectories()
             pluginPath.setPosixFilePermissions(FilePermission.perm777)
         }
 
         logger.info("Loading server configuration")
-        val kookieDataPath = pluginPath.resolve("kookie.yml")
+        val kookieDataPath = dataPath.resolve("kookie.yml")
         if (!kookieDataPath.exists()) {
             kookieDataPath.toFile().outputStream().use { fos ->
                 BufferedOutputStream(fos).use {
