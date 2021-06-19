@@ -99,7 +99,7 @@ class InventoryTransaction(val source: Player, actions: MutableList<InventoryAct
         }
     }
 
-    protected fun squashDuplicateSlotChanges() {
+    private fun squashDuplicateSlotChanges() {
         val slotChanges: MutableMap<String, MutableList<InventoryAction>> = HashObjObjMaps.newMutableMap()
         val inventories: MutableMap<String, Inventory> = HashObjObjMaps.newMutableMap()
         val slots: MutableMap<String, Int> = HashObjIntMaps.newMutableMap()
