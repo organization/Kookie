@@ -40,9 +40,9 @@ class InventoryTransactionChangedSlotsHack(
         fun read(input: PacketSerializer) = InventoryTransactionChangedSlotsHack(
             containerId = input.getByte(),
             changedIndexSlotIndexes = run {
-                val list = mutableListOf<Int>()
-                repeat(input.getUnsignedVarInt(), list::add)
-                list
+                mutableListOf<Int>().apply {
+                    repeat(input.getUnsignedVarInt(), this::add)
+                }
             }
         )
     }
