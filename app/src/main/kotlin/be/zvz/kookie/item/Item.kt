@@ -33,7 +33,6 @@ import be.zvz.kookie.nbt.tag.ShortTag
 import be.zvz.kookie.nbt.tag.StringTag
 import be.zvz.kookie.player.Player
 import be.zvz.kookie.utils.Binary
-import be.zvz.kookie.utils.inline.forEachValue
 import be.zvz.kookie.utils.inline.forEachValues
 import com.koloboke.collect.map.hash.HashIntObjMaps
 import com.koloboke.collect.map.hash.HashObjObjMaps
@@ -164,7 +163,7 @@ open class Item @JvmOverloads constructor(
         tag.setTagIf(TAG_DISPLAY, display) { it.isNotEmpty() }
 
         val enchTag = ListTag<CompoundTag>().apply {
-            enchantments.forEachValue {
+            enchantments.values.forEach {
                 push(
                     CompoundTag.create()
                         .setShort("id", EnchantmentIdMap.toId(it.getType()))
@@ -177,12 +176,12 @@ open class Item @JvmOverloads constructor(
         tag.setTagIf(TAG_BLOCK_ENTITY_TAG, getCustomBlockData()?.clone())
 
         val canPlaceOnTag = ListTag<StringTag>().apply {
-            canPlaceOn.forEachValue { push(StringTag(it)) }
+            canPlaceOn.values.forEach { push(StringTag(it)) }
         }
         tag.setTagIf("CanPlaceOn", canPlaceOnTag) { it.isNotEmpty() }
 
         val canDestroyTag = ListTag<StringTag>().apply {
-            canDestroy.forEachValue { push(StringTag(it)) }
+            canDestroy.values.forEach { push(StringTag(it)) }
         }
         tag.setTagIf("canDestroy", canDestroyTag) { it.isNotEmpty() }
     }

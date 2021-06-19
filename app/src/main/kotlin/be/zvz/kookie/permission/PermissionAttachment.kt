@@ -19,7 +19,6 @@ package be.zvz.kookie.permission
 
 import be.zvz.kookie.plugin.Plugin
 import be.zvz.kookie.plugin.PluginException
-import be.zvz.kookie.utils.inline.forEachValue
 import com.koloboke.collect.map.hash.HashIntObjMaps
 import com.koloboke.collect.map.hash.HashObjObjMaps
 
@@ -37,7 +36,7 @@ class PermissionAttachment(val plugin: Plugin) {
     val subscribers: MutableMap<Int, Permissible> = HashIntObjMaps.newMutableMap()
 
     private fun recalculatePermissibles() {
-        subscribers.forEachValue { value ->
+        subscribers.values.forEach { value ->
             value.recalculatePermissions()
         }
     }

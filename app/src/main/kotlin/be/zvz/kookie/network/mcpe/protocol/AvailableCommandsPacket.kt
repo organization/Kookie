@@ -23,8 +23,6 @@ import be.zvz.kookie.network.mcpe.protocol.types.command.CommandData
 import be.zvz.kookie.network.mcpe.protocol.types.command.CommandEnum
 import be.zvz.kookie.network.mcpe.protocol.types.command.CommandEnumConstraint
 import be.zvz.kookie.network.mcpe.protocol.types.command.CommandParameter
-import be.zvz.kookie.utils.inline.forEachKey
-import be.zvz.kookie.utils.inline.forEachValue
 import com.koloboke.collect.map.hash.HashIntObjMaps
 import com.koloboke.collect.map.hash.HashObjIntMaps
 import com.koloboke.collect.map.hash.HashObjObjMaps
@@ -94,27 +92,27 @@ open class AvailableCommandsPacket : DataPacket(), ClientboundPacket {
 
         hardCodeEnums.forEach(addEnum)
 
-        commandData.forEachValue { data ->
+        commandData.values.forEach { data ->
             data.aliases?.let(addEnum)
 
-            data.overloads.forEachValue { map ->
-                map.forEachValue {
+            data.overloads.values.forEach { map ->
+                map.values.forEach {
                     it.enum?.let(addEnum)
                     it.postfix?.let(addPostfix)
                 }
             }
         }
         output.putUnsignedVarInt(enumValueIndexes.size)
-        enumValueIndexes.forEachKey(output::putString)
+        enumValueIndexes.keys.forEach(output::putString)
 
         output.putUnsignedVarInt(postfixIndexes.size)
-        postfixIndexes.forEachKey(output::putString)
+        postfixIndexes.keys.forEach(output::putString)
 
         output.putUnsignedVarInt(enums.size)
-        enums.forEachValue { putEnum(it, enumValueIndexes, output) }
+        enums.values.forEach { putEnum(it, enumValueIndexes, output) }
 
         output.putUnsignedVarInt(commandData.size)
-        commandData.forEachValue { putCommandData(it, enumIndexes, postfixIndexes, output) }
+        commandData.values.forEach { putCommandData(it, enumIndexes, postfixIndexes, output) }
 
         output.putUnsignedVarInt(softEnums.size)
         softEnums.forEach { putSoftEnum(it, output) }
@@ -251,9 +249,9 @@ open class AvailableCommandsPacket : DataPacket(), ClientboundPacket {
         } ?: output.putLInt(-1)
 
         output.putUnsignedVarInt(data.overloads.size)
-        data.overloads.forEachValue { overload ->
+        data.overloads.values.forEach { overload ->
             output.putUnsignedVarInt(overload.size)
-            overload.forEachValue { parameter ->
+            overload.values.forEach { parameter ->
                 output.putString(parameter.paramName)
 
                 val type = parameter.enum?.let {
