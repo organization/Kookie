@@ -54,27 +54,7 @@ enum class EventPriority(val priority: Int) {
     MONITOR(0);
 
     companion object {
-        private val VALUES = values()
-
-        @JvmStatic
-        fun from(value: Int): EventPriority? = VALUES.firstOrNull { it.priority == value }
-        fun from(value: String): EventPriority? = when (value.uppercase()) {
-            "LOWEST" -> LOWEST
-            "LOW" -> LOW
-            "NORMAL" -> NORMAL
-            "HIGH" -> HIGH
-            "HIGHEST" -> HIGHEST
-            "MONITOR" -> MONITOR
-            else -> null
-        }
-
-        val ALL: List<EventPriority> = listOf(
-            LOWEST,
-            LOW,
-            NORMAL,
-            HIGH,
-            HIGHEST,
-            MONITOR
-        )
+        val ALL: Array<EventPriority> = values()
+        @JvmStatic fun from(value: Int) = ALL.firstOrNull { it.priority == value }
     }
 }
