@@ -15,22 +15,24 @@
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  */
-package be.zvz.kookie.network.mcpe.protocol.types
+package be.zvz.kookie.inventory.transaction.action
 
-import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
+import be.zvz.kookie.item.Item
+import be.zvz.kookie.item.ItemFactory
+import be.zvz.kookie.player.Player
 
-class Enchant(val id: Int, val level: Int) {
+class DestroyItemAction(targetItem: Item) : InventoryAction(ItemFactory.air(), targetItem) {
 
-    fun write(output: PacketSerializer) {
-        output.putByte(id)
-        output.putByte(level)
+    override fun validate(player: Player) {
+        /*
+       TODO:
+       if (player.hasFiniteResources()) {
+           throw TransactionValidationException("Player has finite resources, cannot create items")
+       }
+        */
     }
 
-    companion object {
-        @JvmStatic
-        fun read(input: PacketSerializer) = Enchant(
-            id = input.getByte(),
-            level = input.getByte()
-        )
+    override fun execute(player: Player) {
+        // NOOP
     }
 }
