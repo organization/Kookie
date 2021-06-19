@@ -38,6 +38,9 @@ class World(val server: Server, val folderName: String) : ChunkManager {
     val worldId: Int = worldIdCounter++
     var autoSave: Boolean = true
 
+    override val minY: Int get() = TODO("Not yet implemented")
+    override val maxY: Int get() = TODO("Not yet implemented")
+
     var closed: Boolean = false
         private set
 
@@ -74,14 +77,6 @@ class World(val server: Server, val folderName: String) : ChunkManager {
     }
 
     override fun setChunk(chunkX: Int, chunkZ: Int, chunk: Chunk) {
-        TODO("Not yet implemented")
-    }
-
-    override fun getMinY(): Int {
-        TODO("Not yet implemented")
-    }
-
-    override fun getMaxY(): Int {
         TODO("Not yet implemented")
     }
 
