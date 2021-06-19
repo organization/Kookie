@@ -17,9 +17,65 @@
  */
 package be.zvz.kookie.event.entity
 
-import be.zvz.kookie.event.Event
+import be.zvz.kookie.entity.Entity
+import com.koloboke.collect.map.hash.HashObjObjMaps
+import kotlin.math.max
 
-// TODO: Event
-class EntityDamageEvent : Event() {
-    val cause: Int = 0
+open class EntityDamageEvent(
+    entity: Entity,
+    var cause: Type,
+    var damage: Float,
+    val modifiers: MutableMap<ModifierType, Float> = HashObjObjMaps.newMutableMap()
+) : EntityEvent(entity) {
+
+    var baseDamage: Float = damage
+    val originalBase: Float = damage
+    val originals: MutableMap<ModifierType, Float> = modifiers
+
+    var attackCooldown: Int = 0
+
+    fun getOriginalBaseDamage(): Float = originalBase
+
+    fun getOriginalModifier(type: ModifierType): Float = originals[type] ?: 0F
+
+    fun isApplicable(type: ModifierType): Boolean = modifiers.containsKey(type)
+
+    fun getFinalDamage(): Float = max(0F, baseDamage + modifiers.values.sum())
+
+    fun canBeReducedByArmor(): Boolean = when (cause) {
+        Type.FIRE_TICK, Type.SUFFOCATION, Type.DROWNING, Type.STARVATION, Type.FALL, Type.VOID, Type.MAGIC, Type.SUICIDE -> false
+        else -> true
+    }
+
+    enum class Type(cause: Int) {
+        CONTACT(0),
+        ENTITY_ATTACK(1),
+        PROJECTILE(2),
+        SUFFOCATION(3),
+        FALL(4),
+        FIRE(5),
+        FIRE_TICK(6),
+        LAVA(7),
+        DROWNING(8),
+        BLOCK_EXPLOSION(9),
+        ENTITY_EXPLOSION(10),
+        VOID(11),
+        SUICIDE(12),
+        MAGIC(13),
+        CUSTOM(14),
+        STARVATION(15)
+    }
+
+    enum class ModifierType(type: Int) {
+        ARMOR(1),
+        STRENGTH(2),
+        WEAKNESS(3),
+        RESISTANCE(4),
+        ABSORPTION(5),
+        ARMOR_ENCHANTMENTS(6),
+        CRITICAL(7),
+        TOTEM(8),
+        WEAPON_ENCHANTMENTS(9),
+        PREVIOUS_DAMAGE_COOLDOWN(10)
+    }
 }
