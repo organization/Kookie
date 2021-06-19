@@ -22,7 +22,7 @@ import be.zvz.kookie.entity.Living
 import be.zvz.kookie.entity.effect.VanillaEffects
 import com.koloboke.collect.map.hash.HashObjObjMaps
 
-open class EntityDamageByEntityEvent(
+open class EntityDamageByEntityEvent @JvmOverloads constructor(
     private val damagerEntity: Entity,
     entity: Entity,
     cause: Type,

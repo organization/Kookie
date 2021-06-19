@@ -25,6 +25,7 @@ object HandlerListManager {
     var handlers: MutableMap<Class<out Event>, HandlerList> = HashObjObjMaps.newMutableMap()
 
     @JvmStatic
+    @JvmOverloads
     fun unregisterAll(obj: Any? = null) {
         when (obj) {
             is Plugin -> {

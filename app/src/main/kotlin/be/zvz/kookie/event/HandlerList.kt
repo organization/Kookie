@@ -20,7 +20,10 @@ package be.zvz.kookie.event
 import be.zvz.kookie.plugin.Plugin
 import com.koloboke.collect.map.hash.HashObjObjMaps
 
-class HandlerList(val clazz: Class<out Event>, val parentHandlerList: HandlerList? = null) {
+class HandlerList @JvmOverloads constructor(
+    val clazz: Class<out Event>,
+    val parentHandlerList: HandlerList? = null
+) {
     var handlerSlots: MutableMap<EventPriority, MutableList<RegisteredListener>> =
         HashObjObjMaps.newMutableMap()
         private set

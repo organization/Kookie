@@ -22,7 +22,7 @@ import be.zvz.kookie.event.Cancellable
 import be.zvz.kookie.item.Item
 import be.zvz.kookie.player.Player
 
-class BlockBreakEvent(
+class BlockBreakEvent @JvmOverloads constructor(
     val player: Player,
     block: Block,
     val item: Item,

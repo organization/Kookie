@@ -20,7 +20,7 @@ package be.zvz.kookie.event.player
 import be.zvz.kookie.command.CommandSender
 import be.zvz.kookie.player.Player
 
-class PlayerChatEvent(
+class PlayerChatEvent @JvmOverloads constructor(
     player: Player,
     var message: String,
     var recipients: List<CommandSender> = mutableListOf(),

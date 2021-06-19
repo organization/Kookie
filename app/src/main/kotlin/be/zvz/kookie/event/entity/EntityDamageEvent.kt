@@ -21,7 +21,7 @@ import be.zvz.kookie.entity.Entity
 import com.koloboke.collect.map.hash.HashObjObjMaps
 import kotlin.math.max
 
-open class EntityDamageEvent(
+open class EntityDamageEvent @JvmOverloads constructor(
     entity: Entity,
     var cause: Type,
     var damage: Float,

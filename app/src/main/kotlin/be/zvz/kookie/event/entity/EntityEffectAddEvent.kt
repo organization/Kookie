@@ -20,7 +20,7 @@ package be.zvz.kookie.event.entity
 import be.zvz.kookie.entity.Entity
 import be.zvz.kookie.entity.effect.EffectInstance
 
-class EntityEffectAddEvent(
+class EntityEffectAddEvent @JvmOverloads constructor(
     entity: Entity,
     effect: EffectInstance,
     val oldEffect: EffectInstance? = null

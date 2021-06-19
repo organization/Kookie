@@ -20,7 +20,7 @@ package be.zvz.kookie.event.entity
 import be.zvz.kookie.entity.Entity
 import com.koloboke.collect.map.hash.HashObjObjMaps
 
-class EntityDamageByChildEntityEvent(
+class EntityDamageByChildEntityEvent @JvmOverloads constructor(
     damagerEntity: Entity,
     entity: Entity,
     cause: Type,

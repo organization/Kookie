@@ -23,7 +23,7 @@ import be.zvz.kookie.item.Item
 import be.zvz.kookie.math.Vector3
 import be.zvz.kookie.player.Player
 
-class PlayerInteractEvent(
+class PlayerInteractEvent @JvmOverloads constructor(
     player: Player,
     val item: Item,
     val block: Block,
