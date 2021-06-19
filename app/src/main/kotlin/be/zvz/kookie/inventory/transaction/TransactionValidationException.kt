@@ -17,4 +17,4 @@
  */
 package be.zvz.kookie.inventory.transaction
 
-class TransactionValidationException(message: String) : RuntimeException(message)
+class TransactionValidationException(message: String, previous: Throwable) : RuntimeException(message, previous)
