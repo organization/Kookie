@@ -17,4 +17,4 @@
  */
 package be.zvz.kookie.inventory.transaction
 
-class TransactionValidationException(message: String, override val cause: Throwable? = null) : RuntimeException(message, previous)
+class TransactionValidationException(message: String, override val cause: Throwable? = null) : RuntimeException(message)
