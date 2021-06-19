@@ -28,11 +28,18 @@ abstract class Event {
         if (eventCallDepth >= MAX_EVENT_CAL_DEPTH) {
             throw RuntimeException("Recursive event call detected (reached max depth of $MAX_EVENT_CAL_DEPTH calls)")
         }
+        val handlerList = HandlerListManager.getListFor(this::class.java)
+
         ++eventCallDepth
 
         try {
             EventPriority.ALL.forEach {
-                HandlerListManager.handlers.forEach {
+                var currentList: HandlerList? = handlerList
+                while (currentList != null) {
+                    currentList.getListenersByPriority(it)?.forEach { listener ->
+                        listener.callEvent(this)
+                    }
+                    currentList = currentList.getParent()
                 }
             }
         } finally {

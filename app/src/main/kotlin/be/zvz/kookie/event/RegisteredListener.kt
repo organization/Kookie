@@ -12,5 +12,11 @@ class RegisteredListener(
 ) {
 
     fun callEvent(event: Event) {
+        if (event is Cancellable && event.isCancelled && !handleCancelled) {
+            return
+        }
+        timings.startTiming()
+        (handler)(event)
+        timings.stopTiming()
     }
 }
