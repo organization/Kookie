@@ -66,7 +66,7 @@ object CraftingManagerFromDataHelper {
         }
         recipes["smelting"].let {
             Json.jsonMapper.convertValue<List<FurnaceRecipeData>>(it).forEach { recipe ->
-                if (recipe.block != "furnace"){
+                if (recipe.block != "furnace") {
                     return@forEach
                 }
                 result.furnaceRecipeManager.register(FurnaceRecipe(
