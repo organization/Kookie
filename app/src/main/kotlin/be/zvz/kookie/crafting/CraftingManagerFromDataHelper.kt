@@ -69,10 +69,12 @@ object CraftingManagerFromDataHelper {
                 if (recipe.block != "furnace") {
                     return@forEach
                 }
-                result.furnaceRecipeManager.register(FurnaceRecipe(
-                    ItemFactory.get(recipe.input.id, recipe.input.damage, 1),
-                    ItemFactory.get(recipe.output.id, recipe.output.damage, 1)
-                ))
+                result.furnaceRecipeManager.register(
+                    FurnaceRecipe(
+                        ItemFactory.get(recipe.input.id, recipe.input.damage, 1),
+                        ItemFactory.get(recipe.output.id, recipe.output.damage, 1)
+                    )
+                )
             }
         }
         return result
