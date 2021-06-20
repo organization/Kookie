@@ -11,7 +11,7 @@ class ShapedRecipe(shape: List<String>, ingredientList: MutableMap<String, Item>
 
     val ingredientList: MutableMap<String, Item> = HashObjObjMaps.newMutableMap()
 
-    var results: MutableList<Item> = mutableListOf()
+    var results: List<Item> = mutableListOf()
         private set
 
     var width: Int = 0

@@ -1,6 +1,9 @@
 package be.zvz.kookie.crafting
 
 import be.zvz.kookie.item.Item
+import com.fasterxml.jackson.core.JsonFactory
+import com.fasterxml.jackson.core.JsonParser
+import com.fasterxml.jackson.databind.ObjectMapper
 import com.koloboke.collect.map.hash.HashObjObjMaps
 
 class CraftingManager {
@@ -21,7 +24,60 @@ class CraftingManager {
         }
     }
 
+    fun registerShapedRecipe(recipe: ShapedRecipe) {
+        shapedRecipes.getOrPut(hashOutputs(recipe.results)) {
+            mutableListOf()
+        }.add(recipe)
+    }
+
+    fun registerShapelessRecipe(recipe: ShapelessRecipe) {
+        shapelessRecipes.getOrPut(hashOutputs(recipe.results)) {
+            mutableListOf()
+        }.add(recipe)
+    }
+
+    fun matchRecipe(grid: CraftingGrid, outputs: MutableList<Item>): CraftingRecipe? {
+        val outputHash = hashOutputs(outputs)
+
+        if (shapedRecipes.containsKey(outputHash)) {
+            shapelessRecipes.getValue(outputHash).forEach {
+                if (it.matchesCraftingGrid(grid)) {
+                    return it
+                }
+            }
+        }
+        if (shapelessRecipes.containsKey(outputHash)) {
+            shapelessRecipes.getValue(outputHash).forEach {
+                if (it.matchesCraftingGrid(grid)) {
+                    return it
+                }
+            }
+        }
+        return null
+    }
+
+    suspend fun matchRecipeByOutputs(outputs: List<Item>) = sequence<CraftingRecipe> {
+        val outputHash = hashOutputs(outputs)
+        if (shapedRecipes.containsKey(outputHash)) {
+            shapelessRecipes.getValue(outputHash).forEach {
+                yield(it)
+            }
+        }
+        if (shapelessRecipes.containsKey(outputHash)) {
+            shapelessRecipes.getValue(outputHash).forEach {
+                yield(it)
+            }
+        }
+    }
+
     companion object {
+        private val mapper = ObjectMapper(
+            JsonFactory().apply {
+                enable(JsonParser.Feature.ALLOW_COMMENTS)
+                enable(JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES)
+            }
+        )
+
         @JvmStatic
         fun sort(i1: Item, i2: Item): Int {
             var retval = i1.getId().compareTo(i2.getId())
@@ -35,7 +91,7 @@ class CraftingManager {
         }
 
         @JvmStatic
-        private fun pack(items: MutableList<Item>): MutableList<Item> {
+        private fun pack(items: List<Item>): MutableList<Item> {
             val result = mutableListOf<Item>()
             items.forEachIndexed index@{ index, item ->
                 result.forEach {
@@ -50,9 +106,7 @@ class CraftingManager {
         }
 
         @JvmStatic
-        private fun hashOutputs(outputs: MutableList<Item>): String {
-            /*
-            TODO:
+        private fun hashOutputs(outputs: List<Item>): String {
             val outputs = pack(outputs)
             outputs.sortWith(
                 Comparator { item, item2 ->
@@ -62,9 +116,7 @@ class CraftingManager {
             outputs.forEach { o ->
                 o.count = 1
             }
-
-             */
-            return ""
+            return mapper.writeValueAsString(outputs)
         }
     }
 }
