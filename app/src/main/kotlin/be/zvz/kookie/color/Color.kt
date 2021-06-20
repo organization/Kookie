@@ -19,8 +19,8 @@ package be.zvz.kookie.color
 
 import java.awt.Color as AwtColor
 
-class Color(r: Int, g: Int, b: Int, a: Int = 0xff) {
-    private val awtColor = AwtColor(r, g, b, a)
+class Color(val awtColor: AwtColor) {
+    @JvmOverloads constructor(r: Int, g: Int, b: Int, a: Int = 0xff) : this(AwtColor(r, g, b, a))
 
     val red: Int
         get() = awtColor.red
