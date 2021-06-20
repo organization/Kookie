@@ -20,8 +20,6 @@ package be.zvz.kookie.color
 import java.awt.Color as AwtColor
 
 class Color(val awtColor: AwtColor) {
-    @JvmOverloads constructor(r: Int, g: Int, b: Int, a: Int = 0xff) : this(AwtColor(r, g, b, a))
-
     val red: Int
         get() = awtColor.red
 
@@ -33,6 +31,9 @@ class Color(val awtColor: AwtColor) {
 
     val alpha: Int
         get() = awtColor.alpha
+
+    @JvmOverloads
+    constructor(r: Int, g: Int, b: Int, a: Int = 0xff) : this(AwtColor(r, g, b, a))
 
     fun toARGB(): Int {
         return (this.alpha shl 24) or (this.red shl 16) or (this.green shl 8) or this.blue
