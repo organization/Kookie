@@ -22,7 +22,7 @@ import com.koloboke.collect.map.hash.HashObjObjMaps
 import java.lang.reflect.Modifier
 
 object HandlerListManager {
-    var handlers: MutableMap<Class<out Event>, HandlerList> = HashObjObjMaps.newMutableMap()
+    var handlers: MutableMap<Class<*>, HandlerList> = HashObjObjMaps.newMutableMap()
 
     @JvmStatic
     @JvmOverloads
@@ -41,7 +41,7 @@ object HandlerListManager {
         }
     }
 
-    fun getListFor(event: Class<out Event>): HandlerList {
+    fun getListFor(event: Class<*>): HandlerList {
         if (handlers.contains(event)) {
             return handlers.getValue(event)
         }
@@ -51,10 +51,9 @@ object HandlerListManager {
             )
         }
         val parent = resolveNearestHandleableParent(event)
-        return handlers.put(
-            event,
-            HandlerList(event, if (parent != null) getListFor(parent as Class<out Event>) else null)
-        )!! // TODO: unchecked cast
+        val handlerList = HandlerList(event, if (parent !== null) getListFor(parent) else null)
+        handlers[event] = handlerList
+        return handlerList
     }
 
     private fun isValid(clazz: Class<*>): Boolean {
@@ -62,7 +61,7 @@ object HandlerListManager {
         return !Modifier.isAbstract(clazz.modifiers) || annotation?.allowed ?: false
     }
 
-    private fun resolveNearestHandleableParent(clazz: Class<out Event>): Class<*>? {
+    private fun resolveNearestHandleableParent(clazz: Class<*>): Class<*>? {
         var parent = clazz.superclass
         while (parent !== null) {
             if (isValid(parent)) {
