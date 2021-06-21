@@ -23,6 +23,7 @@ import be.zvz.kookie.network.mcpe.protocol.DataPacket
 import be.zvz.kookie.network.mcpe.protocol.ProtocolIdentify
 import be.zvz.kookie.network.mcpe.protocol.ProtocolInfo
 import be.zvz.kookie.player.Player
+import be.zvz.kookie.scheduler.TaskHandler
 import com.koloboke.collect.map.hash.HashObjObjMaps
 
 object Timings {
@@ -31,8 +32,10 @@ object Timings {
     private val timings: MutableMap<String, TimingsHandler> = HashObjObjMaps.newMutableMap()
 
     private val entityTimings: MutableMap<String, TimingsHandler> = HashObjObjMaps.newMutableMap()
+    private val pluginTaskTimings: MutableMap<String, TimingsHandler> = HashObjObjMaps.newMutableMap()
 
-    val tickEntity = TimingsHandler(INCLUDED_BY_OTHER_TIMINGS_PREFIX + "tickEntity")
+    var schedulerSync = TimingsHandler(INCLUDED_BY_OTHER_TIMINGS_PREFIX + "Scheduler - Sync Tasks")
+    var tickEntity = TimingsHandler(INCLUDED_BY_OTHER_TIMINGS_PREFIX + "tickEntity")
 
     @JvmStatic
     fun getTileEntityTimings(tile: Tile): TimingsHandler {
@@ -78,8 +81,22 @@ object Timings {
         return exist
     }
 
+    fun getScheduledTaskTimings(task: TaskHandler, period: Int): TimingsHandler {
+        val name = "Task: ${task.ownerName} Runnable: ${task.taskName}" + if (period > 0) {
+            "(interval:$period)"
+        } else {
+            "(Single)"
+        }
+
+        if (!pluginTaskTimings.containsKey(name)) {
+            pluginTaskTimings[name] = TimingsHandler(name, schedulerSync)
+        }
+
+        return pluginTaskTimings.getValue(name)
+    }
+
     fun getEntityTimings(entity: Entity): TimingsHandler {
-        var entityType = entity::class.java.simpleName
+        val entityType = entity::class.java.simpleName
         if (!entityTimings.containsKey(entityType)) {
             if (entity is Player) {
                 entityTimings[entityType] = TimingsHandler(
@@ -91,6 +108,6 @@ object Timings {
                 )
             }
         }
-        return entityTimings[entityType]!!
+        return entityTimings.getValue(entityType)
     }
 }
