@@ -6,8 +6,11 @@ import be.zvz.kookie.inventory.transaction.action.InventoryAction
 import be.zvz.kookie.item.Item
 import be.zvz.kookie.player.Player
 
-class CraftingTransaction(source: Player, val craftingManager: CraftingManager, actions: MutableList<InventoryAction>) :
-    InventoryTransaction(source, actions) {
+class CraftingTransaction(
+    source: Player,
+    val craftingManager: CraftingManager,
+    actions: MutableList<InventoryAction>
+) : InventoryTransaction(source, actions) {
 
     val recipe: CraftingRecipe? = null
     var repetitions: Int? = null
@@ -104,7 +107,9 @@ class CraftingTransaction(source: Player, val craftingManager: CraftingManager, 
             }
         }
         if (recipe != null) {
-            throw TransactionValidationException("Unable to match a recipe to transaction (tried to match against $failed recipes")
+            throw TransactionValidationException(
+                "Unable to match a recipe to transaction (tried to match against $failed recipes"
+            )
         }
     }
 
