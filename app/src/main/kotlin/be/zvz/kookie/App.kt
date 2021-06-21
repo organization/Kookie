@@ -33,12 +33,6 @@ class App {
 
     fun start(): Int {
         val cwd = CorePaths.PATH
-        val dataPath = cwd.resolve("data").apply {
-            if (!exists()) {
-                createDirectories()
-                setPosixFilePermissions(FilePermission.perm777)
-            }
-        }
         val pluginPath = cwd.resolve("plugins").apply {
             if (!exists()) {
                 createDirectories()
@@ -67,7 +61,7 @@ class App {
             }
 
             try {
-                Server(cwd, dataPath, pluginPath)
+                Server(cwd, pluginPath)
             } catch (e: Throwable) {
                 logger.error("Critical Error", e)
             }

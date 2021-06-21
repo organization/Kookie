@@ -45,7 +45,7 @@ import kotlin.io.path.exists
 import kotlin.io.path.setPosixFilePermissions
 import ch.qos.logback.classic.Level as LoggerLevel
 
-class Server(cwd: Path, dataPath: Path, pluginPath: Path) {
+class Server(dataPath: Path, pluginPath: Path) {
 
     /**
      * Counts the ticks since the server start
