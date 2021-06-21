@@ -18,7 +18,6 @@
 package be.zvz.kookie.event
 
 import be.zvz.kookie.plugin.Plugin
-import be.zvz.kookie.utils.inline.forEachValue
 import com.koloboke.collect.map.hash.HashObjObjMaps
 
 class HandlerList @JvmOverloads constructor(
@@ -42,7 +41,7 @@ class HandlerList @JvmOverloads constructor(
     }
 
     fun unregister(obj: Plugin) {
-        handlerSlots.forEachValue { slot ->
+        handlerSlots.forEach { (_, slot) ->
             val iter = slot.iterator()
             while (iter.hasNext()) {
                 val listener = iter.next()
@@ -54,7 +53,7 @@ class HandlerList @JvmOverloads constructor(
     }
 
     fun unregister(obj: Listener) {
-        handlerSlots.forEachValue { slot ->
+        handlerSlots.forEach { (_, slot) ->
             val iter = slot.iterator()
             while (iter.hasNext()) {
                 val listener = iter.next()
