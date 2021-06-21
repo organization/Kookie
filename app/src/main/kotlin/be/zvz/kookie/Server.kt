@@ -100,7 +100,7 @@ class Server(cwd: Path, dataPath: Path, pluginPath: Path) {
         if (!kookieDataPath.exists()) {
             kookieDataPath.toFile().outputStream().use { fos ->
                 BufferedOutputStream(fos).use {
-                    IOUtils.copy(this::class.java.getResourceAsStream("kookie.yml"), it)
+                    IOUtils.copy(this::class.java.getResourceAsStream("/kookie.yml"), it)
                 }
             }
         }
