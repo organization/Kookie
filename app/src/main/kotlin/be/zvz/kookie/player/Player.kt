@@ -19,6 +19,7 @@ package be.zvz.kookie.player
 
 import be.zvz.kookie.Server
 import be.zvz.kookie.command.CommandSender
+import be.zvz.kookie.crafting.CraftingGrid
 import be.zvz.kookie.entity.Human
 import be.zvz.kookie.entity.Location
 import be.zvz.kookie.entity.Skin
@@ -48,6 +49,8 @@ class Player(
     override val name: String get() = username
     override val permissionRecalculationCallbacks: Set<(changedPermissionsOldValues: Map<String, Boolean>) -> Unit>
         get() = TODO("Not yet implemented")
+    lateinit var craftingGrid: CraftingGrid
+        private set
 
     fun doChunkRequest() {
         TODO("Not yet implemented")
