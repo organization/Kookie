@@ -24,9 +24,8 @@ class HandlerList @JvmOverloads constructor(
     private val clazz: Class<*>,
     private val parentHandlerList: HandlerList? = null
 ) {
-    var handlerSlots: MutableMap<EventPriority, MutableSet<RegisteredListener>> =
+    val handlerSlots: MutableMap<EventPriority, MutableSet<RegisteredListener>> =
         HashObjObjMaps.newMutableMap()
-        private set
 
     fun register(listener: RegisteredListener) {
         if (!handlerSlots.getOrPut(listener.priority, ::mutableSetOf).add(listener)) {
@@ -69,10 +68,10 @@ class HandlerList @JvmOverloads constructor(
     }
 
     fun clear() {
-        handlerSlots = HashObjObjMaps.newMutableMap()
+        handlerSlots.clear()
     }
 
-    fun getListenersByPriority(priority: EventPriority): MutableSet<RegisteredListener>? = handlerSlots[priority]
+    fun getListenersByPriority(priority: EventPriority): MutableSet<RegisteredListener> = handlerSlots.getValue(priority)
 
     fun getParent(): HandlerList? = parentHandlerList
 }

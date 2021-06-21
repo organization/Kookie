@@ -22,7 +22,7 @@ import com.koloboke.collect.map.hash.HashObjObjMaps
 import java.lang.reflect.Modifier
 
 object HandlerListManager {
-    var handlers: MutableMap<Class<*>, HandlerList> = HashObjObjMaps.newMutableMap()
+    private val handlers: MutableMap<Class<*>, HandlerList> = HashObjObjMaps.newMutableMap()
 
     @JvmStatic
     @JvmOverloads
@@ -42,7 +42,7 @@ object HandlerListManager {
     }
 
     fun getListFor(event: Class<*>): HandlerList {
-        if (handlers.contains(event)) {
+        if (handlers.containsKey(event)) {
             return handlers.getValue(event)
         }
         if (!isValid(event)) {
@@ -50,10 +50,9 @@ object HandlerListManager {
                 "Event must be non-abstract or have the ${AllowAbstract::class.java.simpleName} annotation"
             )
         }
-        val parent = resolveNearestHandleableParent(event)
-        val handlerList = HandlerList(event, if (parent !== null) getListFor(parent) else null)
-        handlers[event] = handlerList
-        return handlerList
+        return HandlerList(event, resolveNearestHandleableParent(event)?.let(::getListFor)).apply {
+            handlers[event] = this
+        }
     }
 
     private fun isValid(clazz: Class<*>): Boolean {
