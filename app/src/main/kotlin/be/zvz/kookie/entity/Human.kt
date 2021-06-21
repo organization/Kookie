@@ -260,13 +260,13 @@ open class Human(var skin: Skin, location: Location) : Living(location) {
         nbt.setTag("Inventory", inventoryTag)
 
         var slotCount = inventory.size + inventory.getHotbarSize()
-        for (i in 0..slotCount) {
+        repeat(slotCount) { i ->
             val item = inventory.getItem(i - 9)
             if (!item.isNull()) {
                 inventoryTag.push(item.nbtSerialize(i))
             }
         }
-        for (i in 100..104) {
+        for (i in 100 until 104) {
             val item = armorInventory.getItem(i - 100)
             if (!item.isNull()) {
                 inventoryTag.push(item.nbtSerialize(i))
@@ -279,7 +279,7 @@ open class Human(var skin: Skin, location: Location) : Living(location) {
         val items: MutableList<CompoundTag> = mutableListOf()
 
         slotCount = enderInventory.size
-        for (i in 0..slotCount) {
+        repeat(slotCount) { i ->
             val item = enderInventory.getItem(i)
             if (!item.isNull()) {
                 items.add(item.nbtSerialize(i))
