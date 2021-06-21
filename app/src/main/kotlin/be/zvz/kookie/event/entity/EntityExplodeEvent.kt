@@ -26,7 +26,7 @@ class EntityExplodeEvent(
     entity: Entity,
     val position: Position,
     var blocks: MutableList<Block>,
-    yield: Float
+    val yield: Float
 ) : EntityEvent(entity), Cancellable {
     override var isCancelled: Boolean = false
 }
