@@ -26,7 +26,7 @@ import com.koloboke.collect.map.hash.HashObjIntMaps
 import com.koloboke.collect.map.hash.HashObjObjMaps
 import kotlin.math.min
 
-class InventoryTransaction(val source: Player, actions: MutableList<InventoryAction>) {
+open class InventoryTransaction(val source: Player, actions: MutableList<InventoryAction>) {
     var actions: MutableList<InventoryAction> = mutableListOf<InventoryAction>().apply {
         actions.forEach {
             addAction(it)
@@ -97,7 +97,7 @@ class InventoryTransaction(val source: Player, actions: MutableList<InventoryAct
         }
     }
 
-    private fun squashDuplicateSlotChanges() {
+    protected fun squashDuplicateSlotChanges() {
         val slotChanges: MutableMap<String, MutableList<InventoryAction>> = HashObjObjMaps.newMutableMap()
         val inventories: MutableMap<String, Inventory> = HashObjObjMaps.newMutableMap()
         val slots: MutableMap<String, Int> = HashObjIntMaps.newMutableMap()
@@ -166,7 +166,7 @@ class InventoryTransaction(val source: Player, actions: MutableList<InventoryAct
         return findResultItem(candidate!!.targetItem, newList)
     }
 
-    fun validate() {
+    open suspend fun validate() {
         squashDuplicateSlotChanges()
 
         val haveItems: MutableList<Item> = mutableListOf()
@@ -183,7 +183,7 @@ class InventoryTransaction(val source: Player, actions: MutableList<InventoryAct
         }
     }
 
-    fun callExecuteEvent(): Boolean {
+    open fun callExecuteEvent(): Boolean {
         /*
         TODO:
         val ev = InventoryTransactionEvent(this)
@@ -193,7 +193,7 @@ class InventoryTransaction(val source: Player, actions: MutableList<InventoryAct
         return false // FIXME
     }
 
-    fun execute() {
+    suspend fun execute() {
         if (hasExecuted) {
             throw TransactionValidationException("Transaction has already been executed")
         }
