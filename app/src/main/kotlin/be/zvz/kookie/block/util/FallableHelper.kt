@@ -2,7 +2,7 @@ package be.zvz.kookie.block.util
 
 import be.zvz.kookie.world.Position
 
-interface FallableTrait {
+interface FallableHelper {
     fun getPos(): Position
     fun getId(): Int
     fun getMeta(): Int
