@@ -22,7 +22,7 @@ import org.jmailen.gradle.kotlinter.tasks.LintTask
 
 plugins {
     // Apply the org.jetbrains.kotlin.jvm Plugin to add support for Kotlin.
-    id("org.jetbrains.kotlin.jvm") version "1.5.10"
+    kotlin("jvm") version "1.5.10"
 
     // Apply the application plugin to add support for building a CLI application in Java.
     application
@@ -33,8 +33,10 @@ plugins {
     id("com.github.johnrengelman.shadow") version "7.0.0"
 }
 
+val tag = System.getenv("VERSION_TAG") ?: "SNAPSHOT"
+
 group = "be.zvz"
-version = "0.0.1-SNAPSHOT"
+version = "0.0.1-$tag"
 java.sourceCompatibility = JavaVersion.VERSION_1_8
 
 repositories {
@@ -111,6 +113,7 @@ dependencies {
 
     // Use the Kotlin JUnit integration.
     testImplementation(group = "org.jetbrains.kotlin", name = "kotlin-test-junit")
+    implementation(kotlin("stdlib-jdk8"))
 }
 
 tasks.create<LintTask>("ktLint") {
@@ -148,4 +151,12 @@ tasks {
     build {
         dependsOn(shadowJar)
     }
+}
+val compileKotlin: KotlinCompile by tasks
+compileKotlin.kotlinOptions {
+    jvmTarget = "1.8"
+}
+val compileTestKotlin: KotlinCompile by tasks
+compileTestKotlin.kotlinOptions {
+    jvmTarget = "1.8"
 }
