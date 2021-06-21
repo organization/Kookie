@@ -14,7 +14,7 @@ class Anvil(
     private var damage: Int = 0
 
     override fun writeStateToMeta(): Int {
-        //not yet implemented
+        //TODO: not yet implemented
     }
 
     override fun readStateFromData(id: Int, stateMeta: Int) {
