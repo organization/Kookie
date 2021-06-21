@@ -30,7 +30,7 @@ class CraftingTransaction(
 ) : InventoryTransaction(source, actions) {
 
     val recipe: CraftingRecipe? = null
-    var repetitions: Int? = null
+    var repetitions: Int = 0
 
     val inputs: MutableList<Item> = mutableListOf()
     val outputs: MutableList<Item> = mutableListOf()
@@ -118,14 +118,14 @@ class CraftingTransaction(
         craftingManager.matchRecipeByOutputs(outputs).forEach {
             try {
                 repetitions = matchRecipeItems(outputs, it.getResultFor(source.craftingGrid).toMutableList(), false)
-                matchRecipeItems(inputs, it.getIngredientList().toMutableList(), true, repetitions!!)
-            } catch (e: TransactionValidationException) {
+                matchRecipeItems(inputs, it.getIngredientList().toMutableList(), true, repetitions)
+            } catch (_: TransactionValidationException) {
                 ++failed
             }
         }
         if (recipe != null) {
             throw TransactionValidationException(
-                "Unable to match a recipe to transaction (tried to match against $failed recipes"
+                "Unable to match a recipe to transaction (tried to match against $failed recipes)"
             )
         }
     }
