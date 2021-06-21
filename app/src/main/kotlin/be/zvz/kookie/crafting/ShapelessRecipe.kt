@@ -23,7 +23,7 @@ class ShapelessRecipe(ingredients: List<Item>, results: List<Item>) : CraftingRe
 
     var ingredients: MutableList<Item> = mutableListOf()
 
-    var results: List<Item>
+    var results: List<Item> = results.toList()
 
     init {
         ingredients.forEach {
@@ -34,7 +34,6 @@ class ShapelessRecipe(ingredients: List<Item>, results: List<Item>) : CraftingRe
                 this.ingredients.add(it.pop())
             }
         }
-        this.results = results.toList()
     }
 
     override fun getIngredientList(): List<Item> {
