@@ -23,7 +23,7 @@ class ShapelessRecipe(ingredients: List<Item>, results: List<Item>) : CraftingRe
 
     var ingredients: MutableList<Item> = mutableListOf()
 
-    var results: List<Item> = listOf()
+    var results: List<Item>
 
     init {
         ingredients.forEach {

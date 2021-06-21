@@ -53,7 +53,7 @@ class CraftingManager {
         }.add(recipe)
     }
 
-    fun matchRecipe(grid: CraftingGrid, outputs: MutableList<Item>): CraftingRecipe? {
+    fun matchRecipe(grid: CraftingGrid, outputs: List<Item>): CraftingRecipe? {
         val outputHash = hashOutputs(outputs)
 
         if (shapedRecipes.containsKey(outputHash)) {
