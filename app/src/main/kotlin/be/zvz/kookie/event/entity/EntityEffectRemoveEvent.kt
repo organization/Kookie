@@ -24,10 +24,8 @@ class EntityEffectRemoveEvent(entity: Entity, effect: EffectInstance) : EntityEf
     override var isCancelled: Boolean = false
         get() = super.isCancelled
         set(value) {
-            if (value) {
-                if (effect.duration <= 0) {
-                    throw IllegalStateException("Removal of expired effects cannot be cancelled")
-                }
+            if (value && effect.duration <= 0) {
+                throw IllegalStateException("Removal of expired effects cannot be cancelled")
             }
             field = value
         }
