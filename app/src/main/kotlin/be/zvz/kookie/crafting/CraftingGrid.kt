@@ -41,10 +41,10 @@ class CraftingGrid(val holder: Player, val gridWidth: Int) : SimpleInventory(gri
         var minY = Int.MAX_VALUE
         var maxY = 0
 
-        var empty: Boolean = true
+        var empty = true
 
-        for (y in 0..gridWidth) {
-            for (x in 0..gridWidth) {
+        repeat(gridWidth) { x ->
+            repeat(gridWidth) { y ->
                 if (!isSlotEmpty(y * gridWidth + x)) {
                     minX = min(minX, x)
                     maxX = max(maxX, x)

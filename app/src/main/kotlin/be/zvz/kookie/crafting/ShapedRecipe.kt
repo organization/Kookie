@@ -54,7 +54,7 @@ class ShapedRecipe(shape: List<String>, ingredientList: MutableMap<String, Item>
                     "Shaped recipe rows must all have the same length (expected $width, got ${row.length})"
                 )
             }
-            for (x in 0..width) {
+            repeat(width) { x ->
                 if (row[x] != ' ' && !ingredientList.containsKey(row[x].toString())) {
                     throw IllegalArgumentException("No item specified for symbol '${row[0]}'")
                 }
@@ -74,8 +74,8 @@ class ShapedRecipe(shape: List<String>, ingredientList: MutableMap<String, Item>
     override fun getIngredientList(): List<Item> {
         val result = mutableListOf<Item>()
 
-        for (y in 0..height) {
-            for (x in 0..width) {
+        repeat(height) { y ->
+            repeat(width) { x ->
                 val ingredient = getIngredient(x, y)
                 if (!ingredient.isNull()) {
                     result.add(ingredient)
@@ -97,8 +97,8 @@ class ShapedRecipe(shape: List<String>, ingredientList: MutableMap<String, Item>
     }
 
     private fun matchInputMap(grid: CraftingGrid, reverse: Boolean): Boolean {
-        for (y in 0..height) {
-            for (x in 0..width) {
+        repeat(height) { y ->
+            repeat(width) { x ->
                 val given = getIngredient(if (reverse) width - x - 1 else x, y)
                 val required = getIngredient(x, y)
                 if (!required.equals(

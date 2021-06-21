@@ -116,10 +116,10 @@ class InternalPalettedBlockArray<Block> internal constructor(private val bitsPer
 
     override fun set(x: Int, y: Int, z: Int, v: Block): Boolean {
         var offset = -1
-        for (i in 0 until nextPaletteIndex) {
+        repeat(nextPaletteIndex) { i ->
             if (palette[i] == v) {
                 offset = i
-                break
+                return@repeat
             }
         }
 
