@@ -79,7 +79,7 @@ class Server(cwd: Path, dataPath: Path, pluginPath: Path) {
 
     val worldManager: WorldManager
 
-    private val network = Network(this, logger)
+    private var network = Network(this, logger)
 
     var language: Language
         private set
@@ -102,13 +102,13 @@ class Server(cwd: Path, dataPath: Path, pluginPath: Path) {
             playersPath.createDirectories()
             playersPath.setPosixFilePermissions(FilePermission.perm777)
         }
-        if (pluginPath.exists()) {
+        if (!pluginPath.exists()) {
             pluginPath.createDirectories()
             pluginPath.setPosixFilePermissions(FilePermission.perm777)
         }
 
         logger.info("Loading server configuration")
-        val kookieDataPath = pluginPath.resolve("kookie.yml")
+        val kookieDataPath = dataPath.resolve("kookie.yml")
         if (!kookieDataPath.exists()) {
             kookieDataPath.toFile().outputStream().use { fos ->
                 BufferedOutputStream(fos).use {
@@ -212,6 +212,8 @@ class Server(cwd: Path, dataPath: Path, pluginPath: Path) {
         // TODO: provider manager
         val providerManager = WorldProviderManager()
         worldManager = WorldManager(this, worldsPath.toString(), providerManager)
+
+        network = Network(this, logger)
 
         network.addInterface(
             RakLibInterface(
