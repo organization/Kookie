@@ -17,16 +17,10 @@
  */
 package be.zvz.kookie.scheduler
 
-import java.util.concurrent.Callable
+import java.util.concurrent.FutureTask
 
-abstract class AsyncTask<T> : Callable<T> {
+class AsyncTask<T>(onRun: Runnable, result: T) : FutureTask<T>(onRun, result) {
     private var submitted = false
-
-    final override fun call(): T {
-        return onRun()
-    }
-
-    abstract fun onRun(): T
 
     fun setSubmitted() {
         submitted = true

@@ -18,10 +18,10 @@
 package be.zvz.kookie.event
 
 import be.zvz.kookie.Server
+import be.zvz.kookie.scheduler.AsyncTask
 import org.slf4j.LoggerFactory
 import java.util.concurrent.CancellationException
 import java.util.concurrent.ExecutionException
-import java.util.concurrent.FutureTask
 
 object EventFactory {
     private val log = LoggerFactory.getLogger(this::class.java)
@@ -31,17 +31,16 @@ object EventFactory {
         } else {
             val serverInstance = Server.instance
             if (event.isAsynchronous) {
-                // TODO: serverInstance.pluginManager.callEvent(event)
+                serverInstance.pluginManager.callEvent(event)
                 return event
             } else {
-                val task = object : FutureTask<T>(
+                val task = AsyncTask(
                     {
-                        // TODO: serverInstance.pluginManager::callEvent
+                        serverInstance.pluginManager.callEvent(event)
                     },
                     event
-                ) {
-                    // TODO: callEvent
-                }
+                )
+                serverInstance.asyncPool.submit(task)
                 return try {
                     task.get()
                 } catch (e: InterruptedException) {

@@ -26,7 +26,7 @@ class AsyncPool(
     maxPoolSize: Int,
 ) {
     private val scheduledThreadPool = Executors.newScheduledThreadPool(maxPoolSize)
-    fun <T> submit(task: AsyncTask<T>): Future<T>? {
+    fun <T> submit(task: AsyncTask<T>): Future<*>? {
         if (task.isSubmitted()) {
             throw IllegalArgumentException("Cannot submit the same AsyncTask instance more than once")
         }
@@ -34,7 +34,7 @@ class AsyncPool(
         return scheduledThreadPool.submit(task)
     }
 
-    fun <T> schedule(id: Long, task: AsyncTask<T>, delay: Long, timeunit: TimeUnit): ScheduledFuture<T>? {
+    fun <T> schedule(task: AsyncTask<T>, delay: Long, timeunit: TimeUnit): ScheduledFuture<*>? {
         if (task.isSubmitted()) {
             throw IllegalArgumentException("Cannot schedule the same AsyncTask instance more than once")
         }
