@@ -19,7 +19,7 @@ package be.zvz.kookie.scheduler
 
 import java.util.concurrent.FutureTask
 
-class AsyncTask<T>(onRun: Runnable, internal val result: T) : FutureTask<T>(onRun, result) {
+class AsyncTask<T>(onRun: Runnable, internal val result: T?) : FutureTask<T>(onRun, result) {
     private var submitted = false
 
     fun setSubmitted() {

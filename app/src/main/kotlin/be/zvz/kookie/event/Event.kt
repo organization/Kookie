@@ -18,6 +18,7 @@
 package be.zvz.kookie.event
 
 import be.zvz.kookie.Server
+import be.zvz.kookie.scheduler.AsyncTask
 
 abstract class Event @JvmOverloads constructor(
     val isAsynchronous: Boolean = false
@@ -42,7 +43,7 @@ abstract class Event @JvmOverloads constructor(
         }
 
         if (isAsynchronous) {
-            fire()
+            Server.instance.asyncPool.submit(AsyncTask(fire, null))
         } else {
             synchronized(Server.instance.pluginManager) {
                 fire()
