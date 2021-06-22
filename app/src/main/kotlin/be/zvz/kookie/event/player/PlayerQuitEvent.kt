@@ -17,6 +17,7 @@
  */
 package be.zvz.kookie.event.player
 
+import be.zvz.kookie.event.HandlerList
 import be.zvz.kookie.lang.TranslationContainer
 import be.zvz.kookie.player.Player
 
@@ -28,4 +29,10 @@ class PlayerQuitEvent(player: Player, quitMessage: Any) : PlayerEvent(player) {
             }
             field = value
         }
+    override val handlers: HandlerList
+        get() = handlerList
+
+    companion object {
+        private val handlerList = HandlerList(PlayerQuitEvent::class.java)
+    }
 }

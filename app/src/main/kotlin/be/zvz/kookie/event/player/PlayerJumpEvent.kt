@@ -17,6 +17,14 @@
  */
 package be.zvz.kookie.event.player
 
+import be.zvz.kookie.event.HandlerList
 import be.zvz.kookie.player.Player
 
-class PlayerJumpEvent(player: Player) : PlayerEvent(player)
+class PlayerJumpEvent(player: Player) : PlayerEvent(player) {
+    override val handlers: HandlerList
+        get() = handlerList
+
+    companion object {
+        private val handlerList = HandlerList(PlayerJumpEvent::class.java)
+    }
+}

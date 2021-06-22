@@ -18,8 +18,15 @@
 package be.zvz.kookie.event.world
 
 import be.zvz.kookie.event.Cancellable
+import be.zvz.kookie.event.HandlerList
 import be.zvz.kookie.world.World
 
 class WorldUnloadEvent(world: World) : WorldEvent(world), Cancellable {
     override var isCancelled: Boolean = false
+    override val handlers: HandlerList
+        get() = handlerList
+
+    companion object {
+        private val handlerList = HandlerList(WorldUnloadEvent::class.java)
+    }
 }

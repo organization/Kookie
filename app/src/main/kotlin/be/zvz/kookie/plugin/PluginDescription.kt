@@ -20,4 +20,6 @@ package be.zvz.kookie.plugin
 // TODO: PluginDescription
 class PluginDescription {
     val name: String = ""
+    val version: String = ""
+    val fullName: String = "$name v$version"
 }

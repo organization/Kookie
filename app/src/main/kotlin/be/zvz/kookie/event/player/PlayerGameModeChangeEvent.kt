@@ -18,9 +18,16 @@
 package be.zvz.kookie.event.player
 
 import be.zvz.kookie.event.Cancellable
+import be.zvz.kookie.event.HandlerList
 import be.zvz.kookie.player.GameMode
 import be.zvz.kookie.player.Player
 
 class PlayerGameModeChangeEvent(player: Player, val newGameMode: GameMode) : PlayerEvent(player), Cancellable {
     override var isCancelled: Boolean = false
+    override val handlers: HandlerList
+        get() = handlerList
+
+    companion object {
+        private val handlerList = HandlerList(PlayerGameModeChangeEvent::class.java)
+    }
 }

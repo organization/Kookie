@@ -17,7 +17,15 @@
  */
 package be.zvz.kookie.event.server
 
+import be.zvz.kookie.event.HandlerList
 import be.zvz.kookie.network.mcpe.NetworkSession
 import be.zvz.kookie.network.mcpe.protocol.ServerboundPacket
 
-class DataPacketReceiveEvent(val origin: NetworkSession, val packet: ServerboundPacket) : ServerEvent()
+class DataPacketReceiveEvent(val origin: NetworkSession, val packet: ServerboundPacket) : ServerEvent() {
+    override val handlers: HandlerList
+        get() = handlerList
+
+    companion object {
+        private val handlerList = HandlerList(DataPacketReceiveEvent::class.java)
+    }
+}

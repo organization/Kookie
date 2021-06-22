@@ -18,8 +18,11 @@
 package be.zvz.kookie.event.entity
 
 import be.zvz.kookie.entity.Entity
+import be.zvz.kookie.event.HandlerList
 
 class EntityRegainHealthEvent(entity: Entity, var amount: Float, var regainReason: Type) : EntityEvent(entity) {
+    override val handlers: HandlerList
+        get() = handlerList
 
     enum class Type(cause: Int) {
         REGEN(0),
@@ -27,5 +30,9 @@ class EntityRegainHealthEvent(entity: Entity, var amount: Float, var regainReaso
         MAGIC(2),
         CUSTOM(3),
         SATURATION(4)
+    }
+
+    companion object {
+        private val handlerList = HandlerList(EntityRegainHealthEvent::class.java)
     }
 }

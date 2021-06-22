@@ -17,6 +17,14 @@
  */
 package be.zvz.kookie.event.plugin
 
+import be.zvz.kookie.event.HandlerList
 import be.zvz.kookie.plugin.Plugin
 
-class PluginEnableEvent(plugin: Plugin) : PluginEvent(plugin)
+class PluginEnableEvent(plugin: Plugin) : PluginEvent(plugin) {
+    override val handlers: HandlerList
+        get() = handlerList
+
+    companion object {
+        private val handlerList = HandlerList(PluginEnableEvent::class.java)
+    }
+}

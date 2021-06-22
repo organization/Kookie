@@ -18,11 +18,15 @@
 package be.zvz.kookie.event.player
 
 import be.zvz.kookie.event.Cancellable
+import be.zvz.kookie.event.HandlerList
 import be.zvz.kookie.player.Player
 
 // TODO: Implement this when WritableBook is exist
 class PlayerEditBookEvent(player: Player) : PlayerEvent(player), Cancellable {
     override var isCancelled: Boolean = false
+
+    override val handlers: HandlerList
+        get() = handlerList
 
     enum class Action(action: Int) {
         REPLACE_PAGE(0),
@@ -30,5 +34,9 @@ class PlayerEditBookEvent(player: Player) : PlayerEvent(player), Cancellable {
         DELETE_PAGE(2),
         SWAP_PAGE(3),
         SIGN_BOOK(4)
+    }
+
+    companion object {
+        private val handlerList = HandlerList(PlayerEditBookEvent::class.java)
     }
 }

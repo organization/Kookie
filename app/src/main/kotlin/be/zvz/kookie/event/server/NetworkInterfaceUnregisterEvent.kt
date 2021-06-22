@@ -17,6 +17,14 @@
  */
 package be.zvz.kookie.event.server
 
+import be.zvz.kookie.event.HandlerList
 import be.zvz.kookie.network.NetworkInterface
 
-class NetworkInterfaceUnregisterEvent(networkInterface: NetworkInterface) : NetworkInterfaceEvent(networkInterface)
+class NetworkInterfaceUnregisterEvent(networkInterface: NetworkInterface) : NetworkInterfaceEvent(networkInterface) {
+    override val handlers: HandlerList
+        get() = handlerList
+
+    companion object {
+        private val handlerList = HandlerList(NetworkInterfaceUnregisterEvent::class.java)
+    }
+}

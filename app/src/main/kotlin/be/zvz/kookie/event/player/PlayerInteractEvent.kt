@@ -19,6 +19,7 @@ package be.zvz.kookie.event.player
 
 import be.zvz.kookie.block.Block
 import be.zvz.kookie.event.Cancellable
+import be.zvz.kookie.event.HandlerList
 import be.zvz.kookie.item.Item
 import be.zvz.kookie.math.Vector3
 import be.zvz.kookie.player.Player
@@ -31,9 +32,15 @@ class PlayerInteractEvent @JvmOverloads constructor(
     val face: Action = Action.RIGHT_CLICK_BLOCK
 ) : PlayerEvent(player), Cancellable {
     override var isCancelled: Boolean = false
+    override val handlers: HandlerList
+        get() = handlerList
 
     enum class Action(id: Int) {
         LEFT_CLICK_BLOCK(0),
         RIGHT_CLICK_BLOCK(1)
+    }
+
+    companion object {
+        private val handlerList = HandlerList(PlayerInteractEvent::class.java)
     }
 }

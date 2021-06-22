@@ -18,6 +18,7 @@
 package be.zvz.kookie.event.player
 
 import be.zvz.kookie.block.Block
+import be.zvz.kookie.event.HandlerList
 import be.zvz.kookie.item.Item
 import be.zvz.kookie.player.Player
 
@@ -33,4 +34,11 @@ class PlayerBucketFillEvent(
     blockFace,
     bucket,
     itemInHand
-)
+) {
+    override val handlers: HandlerList
+        get() = handlerList
+
+    companion object {
+        private val handlerList = HandlerList(PlayerBucketFillEvent::class.java)
+    }
+}

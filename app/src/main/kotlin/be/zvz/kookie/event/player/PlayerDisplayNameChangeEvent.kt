@@ -17,6 +17,14 @@
  */
 package be.zvz.kookie.event.player
 
+import be.zvz.kookie.event.HandlerList
 import be.zvz.kookie.player.Player
 
-class PlayerDisplayNameChangeEvent(player: Player, val oldName: String, val newName: String) : PlayerEvent(player)
+class PlayerDisplayNameChangeEvent(player: Player, val oldName: String, val newName: String) : PlayerEvent(player) {
+    override val handlers: HandlerList
+        get() = handlerList
+
+    companion object {
+        private val handlerList = HandlerList(PlayerDisplayNameChangeEvent::class.java)
+    }
+}

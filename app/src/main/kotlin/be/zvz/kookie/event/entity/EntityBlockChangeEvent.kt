@@ -20,7 +20,15 @@ package be.zvz.kookie.event.entity
 import be.zvz.kookie.block.Block
 import be.zvz.kookie.entity.Entity
 import be.zvz.kookie.event.Cancellable
+import be.zvz.kookie.event.HandlerList
 
 class EntityBlockChangeEvent(entity: Entity, val block: Block, val to: Block) : EntityEvent(entity), Cancellable {
     override var isCancelled: Boolean = false
+
+    override val handlers: HandlerList
+        get() = handlerList
+
+    companion object {
+        private val handlerList = HandlerList(EntityBlockChangeEvent::class.java)
+    }
 }

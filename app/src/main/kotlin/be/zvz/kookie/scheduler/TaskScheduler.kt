@@ -1,5 +1,6 @@
 package be.zvz.kookie.scheduler
 
+import com.koloboke.collect.set.hash.HashObjSets
 import java.util.PriorityQueue
 
 open class TaskScheduler(
@@ -9,7 +10,7 @@ open class TaskScheduler(
     protected val queue: PriorityQueue<Pair<Long, TaskHandler>> = PriorityQueue { first, second ->
         -(first.first - second.first).toInt()
     }
-    protected val tasks = hashSetOf<TaskHandler>()
+    protected val tasks = HashObjSets.newMutableSet<TaskHandler>()
     protected var currentTick = 0L
 
     fun scheduleTask(task: Task): TaskHandler {

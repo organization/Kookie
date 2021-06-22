@@ -18,6 +18,7 @@
 package be.zvz.kookie.event.entity
 
 import be.zvz.kookie.entity.Entity
+import be.zvz.kookie.event.HandlerList
 import com.koloboke.collect.map.hash.HashObjObjMaps
 import kotlin.math.max
 
@@ -33,6 +34,9 @@ open class EntityDamageEvent @JvmOverloads constructor(
     val originals: MutableMap<ModifierType, Float> = modifiers
 
     var attackCooldown: Int = 0
+
+    override val handlers: HandlerList
+        get() = handlerList
 
     fun getOriginalBaseDamage(): Float = originalBase
 
@@ -77,5 +81,9 @@ open class EntityDamageEvent @JvmOverloads constructor(
         TOTEM(8),
         WEAPON_ENCHANTMENTS(9),
         PREVIOUS_DAMAGE_COOLDOWN(10)
+    }
+
+    companion object {
+        private val handlerList = HandlerList(EntityDamageEvent::class.java)
     }
 }
