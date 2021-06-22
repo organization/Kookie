@@ -57,24 +57,23 @@ open class TaskScheduler(
 
     fun mainThreadHeartbeat(currentTick: Long) {
         this.currentTick = currentTick
-        queue.apply {
-            val iterator = iterator()
-            while (iterator.hasNext()) {
-                val task = iterator.next()
-                if (task.second.nextRun <= currentTick) {
-                    if (task.second.isCancelled) {
-                        tasks.remove(task.second)
-                        iterator.remove()
-                        continue
-                    }
-                    task.second.run()
-                    if (!task.second.isCancelled && task.second.period > 0) {
-                        task.second.nextRun = currentTick + task.second.period
-                        // FIXME: queue.insert(task, currentTick + task.period)??????????????
-                    } else {
-                        task.second.remove()
-                        iterator.remove()
-                    }
+        val iterator = queue.iterator()
+        while (iterator.hasNext()) {
+            val task = iterator.next()
+            if (task.second.nextRun <= currentTick) {
+                if (task.second.isCancelled) {
+                    tasks.remove(task.second)
+                    iterator.remove()
+                    continue
+                }
+                task.second.run()
+                if (!task.second.isCancelled && task.second.period > 0) {
+                    task.second.nextRun = currentTick + task.second.period
+                    queue.add(Pair(currentTick + task.second.period, task.second))
+                    iterator.remove()
+                } else {
+                    task.second.remove()
+                    iterator.remove()
                 }
             }
         }
