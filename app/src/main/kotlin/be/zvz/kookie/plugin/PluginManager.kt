@@ -77,7 +77,4 @@ class PluginManager {
             )
         )
     }
-
-    fun callEvent(event: Event) {
-    }
 }

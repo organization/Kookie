@@ -31,12 +31,12 @@ object EventFactory {
         } else {
             val serverInstance = Server.instance
             if (event.isAsynchronous) {
-                serverInstance.pluginManager.callEvent(event)
+                event.call()
                 return event
             } else {
                 val task = AsyncTask(
                     {
-                        serverInstance.pluginManager.callEvent(event)
+                        event.call()
                     },
                     event
                 )

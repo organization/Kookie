@@ -17,6 +17,8 @@
  */
 package be.zvz.kookie.event
 
+import be.zvz.kookie.Server
+
 abstract class Event @JvmOverloads constructor(
     val isAsynchronous: Boolean = false
 ) {
@@ -27,4 +29,24 @@ abstract class Event @JvmOverloads constructor(
         }
 
     abstract val handlers: HandlerList
+
+    fun call() {
+        val fire = {
+            handlers.getRegisteredListeners().forEach {
+                if (!it.plugin.enabled) {
+                    return@forEach
+                }
+
+                it.callEvent(this)
+            }
+        }
+
+        if (isAsynchronous) {
+            fire()
+        } else {
+            synchronized(Server.instance.pluginManager) {
+                fire()
+            }
+        }
+    }
 }
