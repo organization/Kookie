@@ -33,12 +33,6 @@ class App {
 
     fun start(): Int {
         val cwd = CorePaths.PATH
-        val dataPath = cwd.resolve("data").apply {
-            if (!exists()) {
-                createDirectories()
-                setPosixFilePermissions(FilePermission.perm777)
-            }
-        }
         val pluginPath = cwd.resolve("plugins").apply {
             if (!exists()) {
                 createDirectories()
@@ -51,7 +45,7 @@ class App {
             } else {
                 logger.error("Another instance is already using this folder ($this)")
                 logger.error("Please stop the other server first before running a new one.")
-                exitProcess(1)
+                return 1
             }
         }
 
@@ -67,7 +61,7 @@ class App {
             }
 
             try {
-                Server(cwd, dataPath, pluginPath)
+                Server(cwd, pluginPath)
             } catch (e: Throwable) {
                 logger.error("Critical Error", e)
             }

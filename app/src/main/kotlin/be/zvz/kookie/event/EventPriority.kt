@@ -54,7 +54,7 @@ enum class EventPriority(val priority: Int) {
     MONITOR(0);
 
     companion object {
-        val ALL: Array<EventPriority> = values()
-        @JvmStatic fun from(value: Int) = ALL.firstOrNull { it.priority == value }
+        val ALL = values()
+        @JvmStatic fun from(value: Int) = ALL.first { it.priority == value }
     }
 }

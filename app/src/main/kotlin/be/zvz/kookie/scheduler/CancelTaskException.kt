@@ -15,11 +15,6 @@
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  */
-package be.zvz.kookie.plugin
+package be.zvz.kookie.scheduler
 
-// TODO: PluginDescription
-class PluginDescription {
-    val name: String = ""
-    val version: String = ""
-    val fullName: String = "$name v$version"
-}
+class CancelTaskException : RuntimeException()

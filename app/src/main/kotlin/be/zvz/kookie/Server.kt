@@ -29,6 +29,8 @@ import be.zvz.kookie.network.mcpe.protocol.ProtocolInfo
 import be.zvz.kookie.network.mcpe.raklib.RakLibInterface
 import be.zvz.kookie.network.query.QueryInfo
 import be.zvz.kookie.player.Player
+import be.zvz.kookie.plugin.PluginManager
+import be.zvz.kookie.scheduler.AsyncPool
 import be.zvz.kookie.utils.Config
 import be.zvz.kookie.utils.config.PropertiesBrowser
 import be.zvz.kookie.world.World
@@ -43,9 +45,10 @@ import kotlin.concurrent.thread
 import kotlin.io.path.createDirectories
 import kotlin.io.path.exists
 import kotlin.io.path.setPosixFilePermissions
+import kotlin.math.max
 import ch.qos.logback.classic.Level as LoggerLevel
 
-class Server(cwd: Path, dataPath: Path, pluginPath: Path) {
+class Server(dataPath: Path, pluginPath: Path) {
 
     /**
      * Counts the ticks since the server start
@@ -66,6 +69,8 @@ class Server(cwd: Path, dataPath: Path, pluginPath: Path) {
     private var onlineMode = true
     private var networkCompressionAsync = true
     val memoryManager: MemoryManager
+    val pluginManager: PluginManager
+    val asyncPool: AsyncPool
 
     private val network: Network
 
@@ -100,7 +105,7 @@ class Server(cwd: Path, dataPath: Path, pluginPath: Path) {
         if (!kookieDataPath.exists()) {
             kookieDataPath.toFile().outputStream().use { fos ->
                 BufferedOutputStream(fos).use {
-                    IOUtils.copy(this::class.java.getResourceAsStream("kookie.yml"), it)
+                    IOUtils.copy(this::class.java.getResourceAsStream("/kookie.yml"), it)
                 }
             }
         }
@@ -214,6 +219,24 @@ class Server(cwd: Path, dataPath: Path, pluginPath: Path) {
         thread(isDaemon = true, name = "${VersionInfo.NAME}-console") {
             console.start()
         }
+
+        pluginManager = PluginManager()
+
+        asyncPool = AsyncPool(
+            configGroup.getProperty("settings.async-workers").text().run {
+                var poolSize = 2
+                if (this ?: "auto" == "auto") {
+                    val processors = Runtime.getRuntime().availableProcessors() - 2
+
+                    if (processors > 0) {
+                        poolSize = max(1, processors)
+                    }
+                } else {
+                    poolSize = max(1, poolSize)
+                }
+                poolSize
+            }
+        )
     }
 
     fun getDataPath(): Path = CorePaths.PATH

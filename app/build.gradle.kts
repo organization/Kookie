@@ -67,6 +67,9 @@ dependencies {
     implementation(group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version = "1.5.0-native-mt")
     implementation(group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-jdk8", version = "1.5.0-native-mt")
 
+    // RxKotlin
+    implementation(group = "io.reactivex.rxjava3", name = "rxkotlin", version = "3.0.1")
+
     // jline (console)
     implementation(group = "org.jline", name = "jline", version = "3.20.0")
     implementation(group = "net.minecrell", name = "terminalconsoleappender", version = "1.2.0")
@@ -86,7 +89,7 @@ dependencies {
     // Logger
     implementation(group = "org.slf4j", name = "slf4j-api", version = "1.7.31")
     implementation(group = "ch.qos.logback", name = "logback-classic", version = "1.2.3")
-    implementation(group = "org.fusesource.jansi", name = "jansi", version = "2.3.3")
+    implementation(group = "org.fusesource.jansi", name = "jansi", version = "1.18")
 
     // netty
     implementation(group = "io.netty", name = "netty-all", version = "4.1.65.Final")

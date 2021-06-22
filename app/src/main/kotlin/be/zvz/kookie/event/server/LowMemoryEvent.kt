@@ -21,7 +21,7 @@ class LowMemoryEvent @JvmOverloads constructor(
     val memory: Int,
     val memoryLimit: Int,
     val triggerCount: Int = 0
-) {
+) : ServerEvent() {
     fun getMemoryFreed(): Long {
         val runtime = Runtime.getRuntime()
         return memory - runtime.totalMemory()

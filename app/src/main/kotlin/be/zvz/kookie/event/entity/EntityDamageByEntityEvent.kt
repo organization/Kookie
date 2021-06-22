@@ -20,14 +20,14 @@ package be.zvz.kookie.event.entity
 import be.zvz.kookie.entity.Entity
 import be.zvz.kookie.entity.Living
 import be.zvz.kookie.entity.effect.VanillaEffects
-import com.koloboke.collect.map.hash.HashObjObjMaps
+import com.koloboke.collect.map.hash.HashObjFloatMaps
 
 open class EntityDamageByEntityEvent @JvmOverloads constructor(
-    private val damagerEntity: Entity,
+    damagerEntity: Entity,
     entity: Entity,
     cause: Type,
     damage: Float,
-    modifiers: MutableMap<EntityDamageEvent.ModifierType, Float> = HashObjObjMaps.newMutableMap(),
+    modifiers: MutableMap<ModifierType, Float> = HashObjFloatMaps.newMutableMap(),
     var knockBack: Float
 ) : EntityDamageEvent(entity, cause, damage, modifiers) {
     val damager: Entity? = damagerEntity

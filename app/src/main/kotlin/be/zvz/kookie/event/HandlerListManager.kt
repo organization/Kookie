@@ -21,28 +21,29 @@ import be.zvz.kookie.plugin.Plugin
 import com.koloboke.collect.map.hash.HashObjObjMaps
 import java.lang.reflect.Modifier
 
-object HandlerListManager {
-    var handlers: MutableMap<Class<out Event>, HandlerList> = HashObjObjMaps.newMutableMap()
+internal object HandlerListManager {
+    private val handlers: MutableMap<Class<out Event>, HandlerList> = HashObjObjMaps.newMutableMap()
 
-    @JvmStatic
-    @JvmOverloads
-    fun unregisterAll(obj: Any? = null) {
-        when (obj) {
-            is Plugin -> {
-                handlers.forEach { (_, it) ->
-                    it.unregister(obj)
-                }
-            }
-            else -> {
-                handlers.forEach { (_, it) ->
-                    it.clear()
-                }
-            }
+    fun unregisterAll(obj: Plugin) {
+        handlers.forEach { (_, it) ->
+            it.unregister(obj)
+        }
+    }
+
+    fun unregisterAll(obj: Listener) {
+        handlers.forEach { (_, it) ->
+            it.unregister(obj)
+        }
+    }
+
+    fun unregisterAll() {
+        handlers.forEach { (_, it) ->
+            it.clear()
         }
     }
 
     fun getListFor(event: Class<out Event>): HandlerList {
-        if (handlers.contains(event)) {
+        if (handlers.containsKey(event)) {
             return handlers.getValue(event)
         }
         if (!isValid(event)) {
@@ -50,26 +51,13 @@ object HandlerListManager {
                 "Event must be non-abstract or have the ${AllowAbstract::class.java.simpleName} annotation"
             )
         }
-        val parent = resolveNearestHandleableParent(event)
-        return handlers.put(
-            event,
-            HandlerList(event, if (parent != null) getListFor(parent as Class<out Event>) else null)
-        )!! // TODO: unchecked cast
+        return HandlerList(event).apply {
+            handlers[event] = this
+        }
     }
 
-    private fun isValid(clazz: Class<*>): Boolean {
+    private fun isValid(clazz: Class<out Event>): Boolean {
         val annotation = clazz.getAnnotation(AllowAbstract::class.java)
         return !Modifier.isAbstract(clazz.modifiers) || annotation?.allowed ?: false
-    }
-
-    private fun resolveNearestHandleableParent(clazz: Class<out Event>): Class<*>? {
-        var parent = clazz.superclass
-        while (parent !== null) {
-            if (isValid(parent)) {
-                return parent
-            }
-            parent = parent.superclass
-        }
-        return null
     }
 }

@@ -70,7 +70,7 @@ class SetupWizard(private val dataPath: Path) {
         config.set("language", langStr)
         config.save()
 
-        if (getInput(lang.get("skip_installer"), "n", "y/N") === "y") {
+        if (getInput(lang.get("skip_installer"), "n", "y/N") == "y") {
             printIpDetails()
             return true
         }

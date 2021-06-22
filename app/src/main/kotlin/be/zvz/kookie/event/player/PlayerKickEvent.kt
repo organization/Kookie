@@ -23,6 +23,7 @@ import be.zvz.kookie.player.Player
 
 class PlayerKickEvent(player: Player, var reason: String, quitMessage: Any) : PlayerEvent(player), Cancellable {
     override var isCancelled: Boolean = false
+
     var quitMessage: Any = quitMessage
         set(value) {
             if (value !is TranslationContainer || value !is String) {

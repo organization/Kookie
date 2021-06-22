@@ -33,7 +33,7 @@ class RegisteredListener(
             return
         }
         timings.startTiming()
-        (handler)(event)
+        handler(event)
         timings.stopTiming()
     }
 }

@@ -19,19 +19,16 @@ package be.zvz.kookie.event
 
 import be.zvz.kookie.plugin.Plugin
 import com.koloboke.collect.map.hash.HashObjObjMaps
+import com.koloboke.collect.set.hash.HashObjSets
 
-class HandlerList @JvmOverloads constructor(
-    val clazz: Class<out Event>,
-    val parentHandlerList: HandlerList? = null
-) {
-    var handlerSlots: MutableMap<EventPriority, MutableSet<RegisteredListener>> =
+class HandlerList(private val eventClazz: Class<out Event>) {
+    private val handlerSlots: MutableMap<EventPriority, MutableSet<RegisteredListener>> =
         HashObjObjMaps.newMutableMap()
-        private set
 
     fun register(listener: RegisteredListener) {
-        if (!handlerSlots.getOrPut(listener.priority, ::mutableSetOf).add(listener)) {
+        if (!handlerSlots.getOrPut(listener.priority, HashObjSets::newMutableSet).add(listener)) {
             throw IllegalStateException(
-                "This listener is already registered to priority ${listener.priority.priority} of event ${clazz.simpleName}"
+                "This listener is already registered to priority ${listener.priority.priority} of event ${eventClazz.simpleName}"
             )
         }
     }
@@ -69,10 +66,9 @@ class HandlerList @JvmOverloads constructor(
     }
 
     fun clear() {
-        handlerSlots = HashObjObjMaps.newMutableMap()
+        handlerSlots.clear()
     }
 
-    fun getListenersByPriority(priority: EventPriority): MutableSet<RegisteredListener>? = handlerSlots[priority]
-
-    fun getParent(): HandlerList? = parentHandlerList
+    fun getListenersByPriority(priority: EventPriority): Set<RegisteredListener> = handlerSlots.getValue(priority)
+    fun isEmpty(): Boolean = handlerSlots.values.isEmpty()
 }

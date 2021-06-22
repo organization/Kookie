@@ -15,11 +15,21 @@
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  */
-package be.zvz.kookie.plugin
+package be.zvz.kookie.scheduler
 
-// TODO: PluginDescription
-class PluginDescription {
-    val name: String = ""
-    val version: String = ""
-    val fullName: String = "$name v$version"
+abstract class Task {
+    open val name: String
+        get() = this::class.java.simpleName
+
+    var handler: TaskHandler? = null
+        set(value) {
+            if (field === null || value === null) {
+                field = value
+            }
+        }
+
+    @Throws(CancelTaskException::class)
+    abstract fun onRun()
+
+    open fun onCancel() {}
 }
