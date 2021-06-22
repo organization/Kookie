@@ -18,7 +18,6 @@
 package be.zvz.kookie.event
 
 import be.zvz.kookie.Server
-import be.zvz.kookie.scheduler.AsyncTask
 
 abstract class Event @JvmOverloads constructor(
     val isAsynchronous: Boolean = false
@@ -29,19 +28,21 @@ abstract class Event @JvmOverloads constructor(
             return field ?: this::class.java.simpleName
         }
 
-    fun call() {
+    internal fun call() {
         val fire = {
-            HandlerListManager.getListFor(this::class.java).getRegisteredListeners().forEach {
-                if (!it.plugin.enabled) {
-                    return@forEach
-                }
+            EventPriority.ALL.forEach { priority ->
+                HandlerListManager.getListFor(this::class.java).getListenersByPriority(priority).forEach listeners@{
+                    if (!it.plugin.enabled) {
+                        return@listeners
+                    }
 
-                it.callEvent(this)
+                    it.callEvent(this)
+                }
             }
         }
 
         if (isAsynchronous) {
-            Server.instance.asyncPool.submit(AsyncTask(fire, null))
+            fire()
         } else {
             synchronized(Server.instance.pluginManager) {
                 fire()

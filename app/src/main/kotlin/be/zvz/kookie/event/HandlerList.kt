@@ -70,9 +70,5 @@ class HandlerList(private val eventClazz: Class<out Event>) {
     }
 
     fun getListenersByPriority(priority: EventPriority): Set<RegisteredListener> = handlerSlots.getValue(priority)
-    fun getRegisteredListeners(): List<RegisteredListener> = mutableListOf<RegisteredListener>().apply {
-        handlerSlots.values.forEach {
-            it.forEach(::add)
-        }
-    }
+    fun isEmpty(): Boolean = handlerSlots.values.isEmpty()
 }

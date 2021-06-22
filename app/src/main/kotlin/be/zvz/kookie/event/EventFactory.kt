@@ -26,7 +26,7 @@ import java.util.concurrent.ExecutionException
 object EventFactory {
     private val log = LoggerFactory.getLogger(this::class.java)
     fun <T : Event> callEvent(event: T): T {
-        if (HandlerListManager.getListFor(event::class.java).getRegisteredListeners().isEmpty()) {
+        if (HandlerListManager.getListFor(event::class.java).isEmpty()) {
             return event
         } else {
             val serverInstance = Server.instance
