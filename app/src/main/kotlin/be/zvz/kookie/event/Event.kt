@@ -17,4 +17,36 @@
  */
 package be.zvz.kookie.event
 
-abstract class Event
+import be.zvz.kookie.Server
+
+abstract class Event @JvmOverloads constructor(
+    val isAsynchronous: Boolean = false
+) {
+
+    val eventName: String? = null
+        get() {
+            return field ?: this::class.java.simpleName
+        }
+
+    internal fun call() {
+        val fire = {
+            EventPriority.ALL.forEach { priority ->
+                HandlerListManager.getListFor(this::class.java).getListenersByPriority(priority).forEach listeners@{
+                    if (!it.plugin.enabled) {
+                        return@listeners
+                    }
+
+                    it.callEvent(this)
+                }
+            }
+        }
+
+        if (isAsynchronous) {
+            fire()
+        } else {
+            synchronized(Server.instance.pluginManager) {
+                fire()
+            }
+        }
+    }
+}
