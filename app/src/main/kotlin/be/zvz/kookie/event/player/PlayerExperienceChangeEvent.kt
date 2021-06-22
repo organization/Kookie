@@ -18,7 +18,6 @@
 package be.zvz.kookie.event.player
 
 import be.zvz.kookie.entity.Human
-import be.zvz.kookie.event.HandlerList
 import be.zvz.kookie.event.entity.EntityEvent
 
 class PlayerExperienceChangeEvent(
@@ -27,11 +26,4 @@ class PlayerExperienceChangeEvent(
     val oldProgress: Float,
     var newLevel: Int?,
     var newProgress: Int?
-) : EntityEvent(human) {
-    override val handlers: HandlerList
-        get() = handlerList
-
-    companion object {
-        private val handlerList = HandlerList(PlayerExperienceChangeEvent::class.java)
-    }
-}
+) : EntityEvent(human)

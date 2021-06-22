@@ -17,7 +17,6 @@
  */
 package be.zvz.kookie.event.player
 
-import be.zvz.kookie.event.HandlerList
 import be.zvz.kookie.lang.TranslationContainer
 import be.zvz.kookie.player.Player
 
@@ -29,11 +28,4 @@ class PlayerJoinEvent(player: Player, joinMessage: Any) : PlayerEvent(player) {
             }
             field = value
         }
-
-    override val handlers: HandlerList
-        get() = handlerList
-
-    companion object {
-        private val handlerList = HandlerList(PlayerJoinEvent::class.java)
-    }
 }

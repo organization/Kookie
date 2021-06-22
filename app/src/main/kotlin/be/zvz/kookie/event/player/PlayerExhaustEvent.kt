@@ -19,14 +19,10 @@ package be.zvz.kookie.event.player
 
 import be.zvz.kookie.entity.Human
 import be.zvz.kookie.event.Cancellable
-import be.zvz.kookie.event.HandlerList
 import be.zvz.kookie.event.entity.EntityEvent
 
 class PlayerExhaustEvent(human: Human, var amount: Float, var cause: Type) : EntityEvent(human), Cancellable {
     override var isCancelled: Boolean = false
-
-    override val handlers: HandlerList
-        get() = handlerList
 
     enum class Type(cause: Int) {
         ATTACK(1),
@@ -40,9 +36,5 @@ class PlayerExhaustEvent(human: Human, var amount: Float, var cause: Type) : Ent
         JUMPING(9),
         SPRINT_JUMPING(10),
         CUSTOM(11)
-    }
-
-    companion object {
-        private val handlerList = HandlerList(PlayerExhaustEvent::class.java)
     }
 }

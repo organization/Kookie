@@ -20,7 +20,6 @@ package be.zvz.kookie.event.entity
 import be.zvz.kookie.block.Block
 import be.zvz.kookie.entity.Entity
 import be.zvz.kookie.event.Cancellable
-import be.zvz.kookie.event.HandlerList
 import be.zvz.kookie.world.Position
 
 class EntityExplodeEvent(
@@ -30,10 +29,4 @@ class EntityExplodeEvent(
     val yield: Float
 ) : EntityEvent(entity), Cancellable {
     override var isCancelled: Boolean = false
-    override val handlers: HandlerList
-        get() = handlerList
-
-    companion object {
-        private val handlerList = HandlerList(EntityExplodeEvent::class.java)
-    }
 }

@@ -19,14 +19,7 @@ package be.zvz.kookie.event.server
 
 import be.zvz.kookie.command.CommandSender
 import be.zvz.kookie.event.Cancellable
-import be.zvz.kookie.event.HandlerList
 
 class CommandEvent(var command: String, val sender: CommandSender) : ServerEvent(), Cancellable {
-    override val handlers: HandlerList
-        get() = handlerList
     override var isCancelled: Boolean = false
-
-    companion object {
-        private val handlerList = HandlerList(CommandEvent::class.java)
-    }
 }

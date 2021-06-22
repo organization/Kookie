@@ -19,7 +19,6 @@ package be.zvz.kookie.event.entity
 
 import be.zvz.kookie.block.Block
 import be.zvz.kookie.entity.Entity
-import be.zvz.kookie.event.HandlerList
 import com.koloboke.collect.map.hash.HashObjObjMaps
 
 class EntityDamageByBlockEvent @JvmOverloads constructor(
@@ -33,11 +32,4 @@ class EntityDamageByBlockEvent @JvmOverloads constructor(
     cause,
     damage,
     modifiers,
-) {
-    override val handlers: HandlerList
-        get() = handlerList
-
-    companion object {
-        private val handlerList = HandlerList(EntityDamageByBlockEvent::class.java)
-    }
-}
+)

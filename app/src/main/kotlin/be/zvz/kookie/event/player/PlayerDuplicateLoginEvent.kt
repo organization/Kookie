@@ -18,15 +18,8 @@
 package be.zvz.kookie.event.player
 
 import be.zvz.kookie.event.Event
-import be.zvz.kookie.event.HandlerList
 import be.zvz.kookie.network.mcpe.NetworkSession
 
 class PlayerDuplicateLoginEvent(val connectingSession: NetworkSession, val existingSession: NetworkSession) : Event() {
     var disconnectMessage: String = "Logged in from another location"
-    override val handlers: HandlerList
-        get() = handlerList
-
-    companion object {
-        private val handlerList = HandlerList(PlayerDuplicateLoginEvent::class.java)
-    }
 }

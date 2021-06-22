@@ -19,7 +19,6 @@ package be.zvz.kookie.event.block
 
 import be.zvz.kookie.block.Block
 import be.zvz.kookie.event.Cancellable
-import be.zvz.kookie.event.HandlerList
 import be.zvz.kookie.item.Item
 import be.zvz.kookie.player.Player
 
@@ -32,10 +31,4 @@ class BlockBreakEvent @JvmOverloads constructor(
     var xpDropAmount: Int = 0
 ) : BlockEvent(block), Cancellable {
     override var isCancelled: Boolean = false
-    override val handlers: HandlerList
-        get() = handlerList
-
-    companion object {
-        private val handlerList = HandlerList(BlockBreakEvent::class.java)
-    }
 }

@@ -19,15 +19,7 @@ package be.zvz.kookie.event.entity
 
 import be.zvz.kookie.entity.Entity
 import be.zvz.kookie.event.Cancellable
-import be.zvz.kookie.event.HandlerList
 
 open class EntityCombustEvent(entity: Entity, var duration: Int) : EntityEvent(entity), Cancellable {
     override var isCancelled: Boolean = false
-
-    override val handlers: HandlerList
-        get() = handlerList
-
-    companion object {
-        private val handlerList = HandlerList(EntityCombustEvent::class.java)
-    }
 }

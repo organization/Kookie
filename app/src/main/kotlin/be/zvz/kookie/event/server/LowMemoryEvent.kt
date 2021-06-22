@@ -17,22 +17,13 @@
  */
 package be.zvz.kookie.event.server
 
-import be.zvz.kookie.event.HandlerList
-
 class LowMemoryEvent @JvmOverloads constructor(
     val memory: Int,
     val memoryLimit: Int,
     val triggerCount: Int = 0
 ) : ServerEvent() {
-    override val handlers: HandlerList
-        get() = handlerList
-
     fun getMemoryFreed(): Long {
         val runtime = Runtime.getRuntime()
         return memory - runtime.totalMemory()
-    }
-
-    companion object {
-        private val handlerList = HandlerList(LowMemoryEvent::class.java)
     }
 }

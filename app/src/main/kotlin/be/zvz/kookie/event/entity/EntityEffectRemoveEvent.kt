@@ -19,7 +19,6 @@ package be.zvz.kookie.event.entity
 
 import be.zvz.kookie.entity.Entity
 import be.zvz.kookie.entity.effect.EffectInstance
-import be.zvz.kookie.event.HandlerList
 
 class EntityEffectRemoveEvent(entity: Entity, effect: EffectInstance) : EntityEffectEvent(entity, effect) {
     override var isCancelled: Boolean = false
@@ -30,11 +29,4 @@ class EntityEffectRemoveEvent(entity: Entity, effect: EffectInstance) : EntityEf
             }
             field = value
         }
-
-    override val handlers: HandlerList
-        get() = handlerList
-
-    companion object {
-        private val handlerList = HandlerList(EntityEffectRemoveEvent::class.java)
-    }
 }

@@ -18,7 +18,6 @@
 package be.zvz.kookie.event.player
 
 import be.zvz.kookie.command.CommandSender
-import be.zvz.kookie.event.HandlerList
 import be.zvz.kookie.player.Player
 
 class PlayerChatEvent @JvmOverloads constructor(
@@ -26,11 +25,4 @@ class PlayerChatEvent @JvmOverloads constructor(
     var message: String,
     var recipients: List<CommandSender> = mutableListOf(),
     var format: String = "chat.type.text"
-) : PlayerEvent(player) {
-    override val handlers: HandlerList
-        get() = handlerList
-
-    companion object {
-        private val handlerList = HandlerList(PlayerChatEvent::class.java)
-    }
-}
+) : PlayerEvent(player)

@@ -29,11 +29,9 @@ abstract class Event @JvmOverloads constructor(
             return field ?: this::class.java.simpleName
         }
 
-    abstract val handlers: HandlerList
-
     fun call() {
         val fire = {
-            handlers.getRegisteredListeners().forEach {
+            HandlerListManager.getListFor(this::class.java).getRegisteredListeners().forEach {
                 if (!it.plugin.enabled) {
                     return@forEach
                 }

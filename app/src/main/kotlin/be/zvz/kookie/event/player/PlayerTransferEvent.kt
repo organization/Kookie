@@ -18,15 +18,8 @@
 package be.zvz.kookie.event.player
 
 import be.zvz.kookie.event.Cancellable
-import be.zvz.kookie.event.HandlerList
 import be.zvz.kookie.player.Player
 
 class PlayerTransferEvent(player: Player, var address: String, var port: Int) : PlayerEvent(player), Cancellable {
     override var isCancelled: Boolean = false
-    override val handlers: HandlerList
-        get() = handlerList
-
-    companion object {
-        private val handlerList = HandlerList(PlayerTransferEvent::class.java)
-    }
 }

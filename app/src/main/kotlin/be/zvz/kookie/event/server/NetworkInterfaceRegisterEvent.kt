@@ -18,16 +18,8 @@
 package be.zvz.kookie.event.server
 
 import be.zvz.kookie.event.Cancellable
-import be.zvz.kookie.event.HandlerList
 import be.zvz.kookie.network.NetworkInterface
 
 class NetworkInterfaceRegisterEvent(networkInterface: NetworkInterface) : NetworkInterfaceEvent(networkInterface), Cancellable {
     override var isCancelled: Boolean = false
-
-    override val handlers: HandlerList
-        get() = handlerList
-
-    companion object {
-        private val handlerList = HandlerList(NetworkInterfaceRegisterEvent::class.java)
-    }
 }

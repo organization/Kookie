@@ -20,7 +20,6 @@ package be.zvz.kookie.event.entity
 import be.zvz.kookie.entity.Entity
 import be.zvz.kookie.entity.Living
 import be.zvz.kookie.entity.effect.VanillaEffects
-import be.zvz.kookie.event.HandlerList
 import com.koloboke.collect.map.hash.HashObjFloatMaps
 
 open class EntityDamageByEntityEvent @JvmOverloads constructor(
@@ -36,9 +35,6 @@ open class EntityDamageByEntityEvent @JvmOverloads constructor(
             // FIXME: Damager should be long type, and must return entity.world.findEntity(field)
             return if (field?.isClosed() == true) null else field
         }
-
-    override val handlers: HandlerList
-        get() = handlerList
 
     init {
         addAttackerModifiers(damagerEntity)
@@ -56,9 +52,5 @@ open class EntityDamageByEntityEvent @JvmOverloads constructor(
                 modifiers[ModifierType.WEAKNESS] = -(baseDamage * 0.2F * weekness.effectLevel)
             }
         }
-    }
-
-    companion object {
-        private val handlerList = HandlerList(EntityDamageByEntityEvent::class.java)
     }
 }

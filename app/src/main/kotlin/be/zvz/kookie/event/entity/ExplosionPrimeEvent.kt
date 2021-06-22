@@ -19,16 +19,9 @@ package be.zvz.kookie.event.entity
 
 import be.zvz.kookie.entity.Entity
 import be.zvz.kookie.event.Cancellable
-import be.zvz.kookie.event.HandlerList
 
 class ExplosionPrimeEvent(entity: Entity, var force: Float) : EntityEvent(entity), Cancellable {
     override var isCancelled: Boolean = false
-    override val handlers: HandlerList
-        get() = handlerList
 
     var isBlockBreaking: Boolean = false
-
-    companion object {
-        private val handlerList = HandlerList(ExplosionPrimeEvent::class.java)
-    }
 }

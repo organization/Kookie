@@ -18,13 +18,5 @@
 package be.zvz.kookie.event.entity
 
 import be.zvz.kookie.entity.Entity
-import be.zvz.kookie.event.HandlerList
 
-class EntityDespawnEvent(entity: Entity) : EntityEvent(entity) {
-    override val handlers: HandlerList
-        get() = handlerList
-
-    companion object {
-        private val handlerList = HandlerList(EntityDespawnEvent::class.java)
-    }
-}
+class EntityDespawnEvent(entity: Entity) : EntityEvent(entity)

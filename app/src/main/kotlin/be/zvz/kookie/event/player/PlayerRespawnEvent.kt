@@ -17,15 +17,7 @@
  */
 package be.zvz.kookie.event.player
 
-import be.zvz.kookie.event.HandlerList
 import be.zvz.kookie.player.Player
 import be.zvz.kookie.world.Position
 
-class PlayerRespawnEvent(player: Player, var respawnPosition: Position) : PlayerEvent(player) {
-    override val handlers: HandlerList
-        get() = handlerList
-
-    companion object {
-        private val handlerList = HandlerList(PlayerRespawnEvent::class.java)
-    }
-}
+class PlayerRespawnEvent(player: Player, var respawnPosition: Position) : PlayerEvent(player)

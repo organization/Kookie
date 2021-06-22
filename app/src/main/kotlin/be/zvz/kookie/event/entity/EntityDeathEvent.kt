@@ -18,18 +18,10 @@
 package be.zvz.kookie.event.entity
 
 import be.zvz.kookie.entity.Living
-import be.zvz.kookie.event.HandlerList
 import be.zvz.kookie.item.Item
 
 open class EntityDeathEvent @JvmOverloads constructor(
     entity: Living,
     var drops: MutableList<Item> = mutableListOf(),
     var xp: Int = 0
-) : EntityEvent(entity) {
-    override val handlers: HandlerList
-        get() = handlerList
-
-    companion object {
-        private val handlerList = HandlerList(EntityDeathEvent::class.java)
-    }
-}
+) : EntityEvent(entity)

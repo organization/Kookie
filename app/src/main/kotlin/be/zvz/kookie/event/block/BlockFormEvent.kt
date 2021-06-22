@@ -18,13 +18,5 @@
 package be.zvz.kookie.event.block
 
 import be.zvz.kookie.block.Block
-import be.zvz.kookie.event.HandlerList
 
-class BlockFormEvent(block: Block) : BlockEvent(block) {
-    override val handlers: HandlerList
-        get() = handlerList
-
-    companion object {
-        private val handlerList = HandlerList(BlockFormEvent::class.java)
-    }
-}
+class BlockFormEvent(block: Block) : BlockEvent(block)

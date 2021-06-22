@@ -19,7 +19,6 @@ package be.zvz.kookie.event.player
 
 import be.zvz.kookie.event.Cancellable
 import be.zvz.kookie.event.Event
-import be.zvz.kookie.event.HandlerList
 import be.zvz.kookie.player.PlayerInfo
 import com.koloboke.collect.map.hash.HashObjObjMaps
 
@@ -30,8 +29,6 @@ class PlayerPreLoginEvent(val info: PlayerInfo, val ip: String, val port: Int, v
         get() {
             return !isAllowed()
         }
-    override val handlers: HandlerList
-        get() = handlerList
 
     var kickReasons: MutableMap<Reason, String> = HashObjObjMaps.newMutableMap()
 
@@ -78,6 +75,5 @@ class PlayerPreLoginEvent(val info: PlayerInfo, val ip: String, val port: Int, v
             Reason.SERVER_WHITELISTED,
             Reason.BANNED
         )
-        private val handlerList = HandlerList(PlayerPreLoginEvent::class.java)
     }
 }

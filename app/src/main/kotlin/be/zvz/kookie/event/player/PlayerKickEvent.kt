@@ -18,14 +18,11 @@
 package be.zvz.kookie.event.player
 
 import be.zvz.kookie.event.Cancellable
-import be.zvz.kookie.event.HandlerList
 import be.zvz.kookie.lang.TranslationContainer
 import be.zvz.kookie.player.Player
 
 class PlayerKickEvent(player: Player, var reason: String, quitMessage: Any) : PlayerEvent(player), Cancellable {
     override var isCancelled: Boolean = false
-    override val handlers: HandlerList
-        get() = handlerList
 
     var quitMessage: Any = quitMessage
         set(value) {
@@ -34,8 +31,4 @@ class PlayerKickEvent(player: Player, var reason: String, quitMessage: Any) : Pl
             }
             field = value
         }
-
-    companion object {
-        private val handlerList = HandlerList(PlayerKickEvent::class.java)
-    }
 }

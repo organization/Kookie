@@ -18,7 +18,6 @@
 package be.zvz.kookie.event.player
 
 import be.zvz.kookie.entity.Living
-import be.zvz.kookie.event.HandlerList
 import be.zvz.kookie.event.entity.EntityDeathEvent
 import be.zvz.kookie.item.Item
 import be.zvz.kookie.player.Player
@@ -28,12 +27,6 @@ class PlayerDeathEvent @JvmOverloads constructor(
     drops: MutableList<Item> = mutableListOf(),
     xp: Int = 0
 ) : EntityDeathEvent(player, drops, xp) {
-    override val handlers: HandlerList
-        get() = handlerList
 
     fun getPlayer(): Player = entity as Player
-
-    companion object {
-        private val handlerList = HandlerList(PlayerDeathEvent::class.java)
-    }
 }

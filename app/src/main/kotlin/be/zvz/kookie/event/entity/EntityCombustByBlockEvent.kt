@@ -19,17 +19,9 @@ package be.zvz.kookie.event.entity
 
 import be.zvz.kookie.block.Block
 import be.zvz.kookie.entity.Entity
-import be.zvz.kookie.event.HandlerList
 
 class EntityCombustByBlockEvent(
     val combuster: Block,
     combustee: Entity,
     duration: Int
-) : EntityCombustEvent(combustee, duration) {
-    override val handlers: HandlerList
-        get() = handlerList
-
-    companion object {
-        private val handlerList = HandlerList(EntityCombustEvent::class.java)
-    }
-}
+) : EntityCombustEvent(combustee, duration)

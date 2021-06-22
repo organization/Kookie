@@ -17,14 +17,6 @@
  */
 package be.zvz.kookie.event.world
 
-import be.zvz.kookie.event.HandlerList
 import be.zvz.kookie.world.World
 
-class WorldInitEvent(world: World) : WorldEvent(world) {
-    override val handlers: HandlerList
-        get() = handlerList
-
-    companion object {
-        private val handlerList = HandlerList(WorldInitEvent::class.java)
-    }
-}
+class WorldInitEvent(world: World) : WorldEvent(world)

@@ -18,16 +18,9 @@
 package be.zvz.kookie.event.player
 
 import be.zvz.kookie.event.Cancellable
-import be.zvz.kookie.event.HandlerList
 import be.zvz.kookie.item.Item
 import be.zvz.kookie.player.Player
 
 class PlayerItemHeldEvent(player: Player, val item: Item, hotbarSlot: Int) : PlayerEvent(player), Cancellable {
     override var isCancelled: Boolean = false
-    override val handlers: HandlerList
-        get() = handlerList
-
-    companion object {
-        private val handlerList = HandlerList(PlayerItemHeldEvent::class.java)
-    }
 }

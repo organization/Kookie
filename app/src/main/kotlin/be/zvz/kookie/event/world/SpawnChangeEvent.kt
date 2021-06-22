@@ -17,15 +17,7 @@
  */
 package be.zvz.kookie.event.world
 
-import be.zvz.kookie.event.HandlerList
 import be.zvz.kookie.world.Position
 import be.zvz.kookie.world.World
 
-class SpawnChangeEvent(world: World, val previousSpawn: Position) : WorldEvent(world) {
-    override val handlers: HandlerList
-        get() = handlerList
-
-    companion object {
-        private val handlerList = HandlerList(SpawnChangeEvent::class.java)
-    }
-}
+class SpawnChangeEvent(world: World, val previousSpawn: Position) : WorldEvent(world)

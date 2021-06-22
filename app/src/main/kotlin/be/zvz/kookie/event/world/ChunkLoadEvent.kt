@@ -17,7 +17,6 @@
  */
 package be.zvz.kookie.event.world
 
-import be.zvz.kookie.event.HandlerList
 import be.zvz.kookie.world.World
 import be.zvz.kookie.world.format.Chunk
 
@@ -27,11 +26,4 @@ class ChunkLoadEvent(
     chunkZ: Int,
     chunk: Chunk,
     val isNewLoaded: Boolean
-) : ChunkEvent(world, chunkX, chunkZ, chunk) {
-    override val handlers: HandlerList
-        get() = handlerList
-
-    companion object {
-        private val handlerList = HandlerList(ChunkLoadEvent::class.java)
-    }
-}
+) : ChunkEvent(world, chunkX, chunkZ, chunk)
