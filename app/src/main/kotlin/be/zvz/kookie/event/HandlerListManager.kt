@@ -21,27 +21,28 @@ import be.zvz.kookie.plugin.Plugin
 import com.koloboke.collect.map.hash.HashObjObjMaps
 import java.lang.reflect.Modifier
 
-object HandlerListManager {
-    private val handlers: MutableMap<Class<*>, HandlerList> = HashObjObjMaps.newMutableMap()
+internal object HandlerListManager {
+    private val handlers: MutableMap<Class<out Event>, HandlerList> = HashObjObjMaps.newMutableMap()
 
-    @JvmStatic
-    @JvmOverloads
-    fun unregisterAll(obj: Any? = null) {
-        when (obj) {
-            is Plugin -> {
-                handlers.forEach { (_, it) ->
-                    it.unregister(obj)
-                }
-            }
-            else -> {
-                handlers.forEach { (_, it) ->
-                    it.clear()
-                }
-            }
+    fun unregisterAll(obj: Plugin) {
+        handlers.forEach { (_, it) ->
+            it.unregister(obj)
         }
     }
 
-    fun getListFor(event: Class<*>): HandlerList {
+    fun unregisterAll(obj: Listener) {
+        handlers.forEach { (_, it) ->
+            it.unregister(obj)
+        }
+    }
+
+    fun unregisterAll() {
+        handlers.forEach { (_, it) ->
+            it.clear()
+        }
+    }
+
+    fun getListFor(event: Class<out Event>): HandlerList {
         if (handlers.containsKey(event)) {
             return handlers.getValue(event)
         }
@@ -50,24 +51,13 @@ object HandlerListManager {
                 "Event must be non-abstract or have the ${AllowAbstract::class.java.simpleName} annotation"
             )
         }
-        return HandlerList(event, resolveNearestHandleableParent(event)?.let(::getListFor)).apply {
+        return HandlerList(event).apply {
             handlers[event] = this
         }
     }
 
-    private fun isValid(clazz: Class<*>): Boolean {
+    private fun isValid(clazz: Class<out Event>): Boolean {
         val annotation = clazz.getAnnotation(AllowAbstract::class.java)
         return !Modifier.isAbstract(clazz.modifiers) || annotation?.allowed ?: false
-    }
-
-    private fun resolveNearestHandleableParent(clazz: Class<*>): Class<*>? {
-        var parent = clazz.superclass
-        while (parent !== null) {
-            if (isValid(parent)) {
-                return parent
-            }
-            parent = parent.superclass
-        }
-        return null
     }
 }

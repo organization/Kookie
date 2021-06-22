@@ -45,7 +45,7 @@ class App {
             } else {
                 logger.error("Another instance is already using this folder ($this)")
                 logger.error("Please stop the other server first before running a new one.")
-                exitProcess(1)
+                return 1
             }
         }
 

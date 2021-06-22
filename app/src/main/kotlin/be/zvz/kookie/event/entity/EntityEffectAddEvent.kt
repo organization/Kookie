@@ -25,7 +25,6 @@ class EntityEffectAddEvent @JvmOverloads constructor(
     effect: EffectInstance,
     val oldEffect: EffectInstance? = null
 ) : EntityEffectEvent(entity, effect) {
-
     fun willModify(): Boolean = hasOldEffect()
 
     fun hasOldEffect(): Boolean = oldEffect != null

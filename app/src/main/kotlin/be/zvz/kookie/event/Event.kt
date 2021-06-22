@@ -17,7 +17,12 @@
  */
 package be.zvz.kookie.event
 
-abstract class Event {
+import be.zvz.kookie.Server
+import be.zvz.kookie.scheduler.AsyncTask
+
+abstract class Event @JvmOverloads constructor(
+    val isAsynchronous: Boolean = false
+) {
 
     val eventName: String? = null
         get() {
@@ -25,30 +30,22 @@ abstract class Event {
         }
 
     fun call() {
-        if (eventCallDepth >= MAX_EVENT_CAL_DEPTH) {
-            throw EventException("Recursive event call detected (reached max depth of $MAX_EVENT_CAL_DEPTH calls)")
-        }
-        val handlerList = HandlerListManager.getListFor(this::class.java)
-
-        ++eventCallDepth
-
-        try {
-            EventPriority.ALL.forEach {
-                var currentList: HandlerList? = handlerList
-                while (currentList != null) {
-                    currentList.getListenersByPriority(it)?.forEach { listener ->
-                        listener.callEvent(this)
-                    }
-                    currentList = currentList.getParent()
+        val fire = {
+            HandlerListManager.getListFor(this::class.java).getRegisteredListeners().forEach {
+                if (!it.plugin.enabled) {
+                    return@forEach
                 }
-            }
-        } finally {
-            --eventCallDepth
-        }
-    }
 
-    companion object {
-        private const val MAX_EVENT_CAL_DEPTH = 50
-        private var eventCallDepth = 1
+                it.callEvent(this)
+            }
+        }
+
+        if (isAsynchronous) {
+            Server.instance.asyncPool.submit(AsyncTask(fire, null))
+        } else {
+            synchronized(Server.instance.pluginManager) {
+                fire()
+            }
+        }
     }
 }
