@@ -47,7 +47,7 @@ class Anvil(
                     facing, Axis.Y ,false
                 )
             ),
-            1/8)
+            1/8.0)
     )
 
     override fun tickFalling(): Block? = null
