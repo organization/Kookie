@@ -19,6 +19,7 @@ package be.zvz.kookie
 
 import be.zvz.kookie.constant.CorePaths
 import be.zvz.kookie.constant.FilePermission
+import be.zvz.kookie.utils.OS
 import be.zvz.kookie.wizard.SetupWizard
 import org.slf4j.LoggerFactory
 import kotlin.io.path.createDirectories
@@ -36,7 +37,9 @@ class App {
         val pluginPath = cwd.resolve("plugins").apply {
             if (!exists()) {
                 createDirectories()
-                setPosixFilePermissions(FilePermission.perm777)
+                if (OS.isPosixCompliant) {
+                    setPosixFilePermissions(FilePermission.perm777)
+                }
             }
         }
         val lockFilePath = cwd.resolve("server.lock").apply {

@@ -32,6 +32,7 @@ import be.zvz.kookie.player.Player
 import be.zvz.kookie.plugin.PluginManager
 import be.zvz.kookie.scheduler.AsyncPool
 import be.zvz.kookie.utils.Config
+import be.zvz.kookie.utils.OS
 import be.zvz.kookie.utils.config.PropertiesBrowser
 import be.zvz.kookie.world.World
 import ch.qos.logback.classic.Logger
@@ -88,16 +89,22 @@ class Server(dataPath: Path, pluginPath: Path) {
         val worldsPath = dataPath.resolve("worlds")
         if (!worldsPath.exists()) {
             worldsPath.createDirectories()
-            worldsPath.setPosixFilePermissions(FilePermission.perm777)
+            if (OS.isPosixCompliant) {
+                worldsPath.setPosixFilePermissions(FilePermission.perm777)
+            }
         }
         val playersPath = dataPath.resolve("players")
         if (!playersPath.exists()) {
             playersPath.createDirectories()
-            playersPath.setPosixFilePermissions(FilePermission.perm777)
+            if (OS.isPosixCompliant) {
+                playersPath.setPosixFilePermissions(FilePermission.perm777)
+            }
         }
         if (!pluginPath.exists()) {
             pluginPath.createDirectories()
-            pluginPath.setPosixFilePermissions(FilePermission.perm777)
+            if (OS.isPosixCompliant) {
+                pluginPath.setPosixFilePermissions(FilePermission.perm777)
+            }
         }
 
         logger.info("Loading server configuration")
