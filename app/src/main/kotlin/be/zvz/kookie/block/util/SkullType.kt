@@ -15,19 +15,13 @@
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  */
-package be.zvz.kookie.item
+package be.zvz.kookie.block.util
 
-import be.zvz.kookie.entity.Living
-import be.zvz.kookie.entity.effect.EffectInstance
-
-abstract class Food(identifier: ItemIdentifier, name: String) : Item(identifier, name), FoodSourceItem {
-
-    override val requiresHunger: Boolean = true
-
-    override fun getResidue(): Item = ItemFactory.air()
-
-    override fun getAdditionalEffects(): List<EffectInstance> = listOf()
-
-    override fun onConsume(consumer: Living) {
-    }
+enum class SkullType(val displayName: String, val magicNumber: Int) {
+    SKELETON("Skeleton Skull", 0),
+    WITHER_SKELETON("Wither Skeleton Skull", 1),
+    ZOMBIE("Zombie Head", 2),
+    PLAYER("Player Head", 3),
+    CREEPER("Creeper Head", 4),
+    DRAGON("Dragon Head", 5),
 }

@@ -25,8 +25,7 @@ import kotlin.random.Random
 class ChorusFruit(identifier: ItemIdentifier, name: String) : Food(identifier, name) {
     override val foodRestore: Int = 4
     override val saturationRestore: Float = 2.4F
-
-    override fun requiresHunger(): Boolean = false
+    override val requiresHunger: Boolean = false
 
     override fun onConsume(consumer: Living) {
         val world = consumer.world

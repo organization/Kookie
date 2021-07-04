@@ -20,14 +20,13 @@ package be.zvz.kookie.item
 import be.zvz.kookie.entity.Living
 import be.zvz.kookie.entity.effect.EffectInstance
 
-abstract class Food(identifier: ItemIdentifier, name: String) : Item(identifier, name), FoodSourceItem {
-
-    override val requiresHunger: Boolean = true
-
-    override fun getResidue(): Item = ItemFactory.air()
-
-    override fun getAdditionalEffects(): List<EffectInstance> = listOf()
+class Potion(identifier: ItemIdentifier, name: String, val potionType: PotionType) : Item(identifier, name), ConsumableItem {
+    override fun getAdditionalEffects(): List<EffectInstance> = potionType.effectsGetter()
 
     override fun onConsume(consumer: Living) {
+    }
+
+    override fun getResidue(): Item {
+        TODO("Not yet implemented")
     }
 }
