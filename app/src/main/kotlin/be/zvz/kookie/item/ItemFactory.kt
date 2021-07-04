@@ -116,7 +116,7 @@ object ItemFactory {
         register(GoldenAppleEnchanted(ItemIdentifier(ItemIds.ENCHANTED_GOLDEN_APPLE.id, 0), "Enchanted Golden Apple"))
         register(GoldenCarrot(ItemIdentifier(ItemIds.GOLDEN_CARROT.id, 0), "Golden Carrot"))
         register(Item(ItemIdentifier(ItemIds.BLAZE_POWDER.id, 0), "Blaze Powder"))
-        register(Item(ItemIdentifier(ItemIds.BLEACH.id, 0), "Bleach")) //EDU
+        register(Item(ItemIdentifier(ItemIds.BLEACH.id, 0), "Bleach")) // EDU
 
         register(Item(ItemIdentifier(ItemIds.BONE.id, 0), "Bone"))
         register(Item(ItemIdentifier(ItemIds.BRICK.id, 0), "Brick"))
@@ -133,9 +133,9 @@ object ItemFactory {
         register(Item(ItemIdentifier(ItemIds.COMPOUND.id, 8), "Magnesium Oxide"))
         register(Item(ItemIdentifier(ItemIds.COMPOUND.id, 9), "Sodium Acetate"))
         register(Item(ItemIdentifier(ItemIds.COMPOUND.id, 10), "Luminol"))
-        register(Item(ItemIdentifier(ItemIds.COMPOUND.id, 11), "Charcoal")) //??? maybe bug
+        register(Item(ItemIdentifier(ItemIds.COMPOUND.id, 11), "Charcoal")) // ??? maybe bug
 
-        register(Item(ItemIdentifier(ItemIds.COMPOUND.id, 12), "Sugar")) //??? maybe bug
+        register(Item(ItemIdentifier(ItemIds.COMPOUND.id, 12), "Sugar")) // ??? maybe bug
 
         register(Item(ItemIdentifier(ItemIds.COMPOUND.id, 13), "Aluminium Oxide"))
         register(Item(ItemIdentifier(ItemIds.COMPOUND.id, 14), "Boron Trioxide"))
@@ -150,7 +150,7 @@ object ItemFactory {
         register(Item(ItemIdentifier(ItemIds.COMPOUND.id, 23), "Cerium Chloride"))
         register(Item(ItemIdentifier(ItemIds.COMPOUND.id, 24), "Tungsten Chloride"))
         register(Item(ItemIdentifier(ItemIds.COMPOUND.id, 25), "Calcium Chloride"))
-        register(Item(ItemIdentifier(ItemIds.COMPOUND.id, 26), "Water")) //???
+        register(Item(ItemIdentifier(ItemIds.COMPOUND.id, 26), "Water")) // ???
 
         register(Item(ItemIdentifier(ItemIds.COMPOUND.id, 27), "Glue"))
         register(Item(ItemIdentifier(ItemIds.COMPOUND.id, 28), "Hypochlorite"))
@@ -213,7 +213,7 @@ object ItemFactory {
         register(ItemBlock(ItemIdentifier(ItemIds.SPRUCE_DOOR.id, 0), VanillaBlocks.SPRUCE_DOOR.block))
         register(ItemBlock(ItemIdentifier(ItemIds.SUGARCANE.id, 0), VanillaBlocks.SUGARCANE.block))
 
-        //the meta values for buckets are intentionally hardcoded because block IDs will change in the future
+        // the meta values for buckets are intentionally hardcoded because block IDs will change in the future
         val waterBucket =
             LiquidBucket(ItemIdentifier(ItemIds.BUCKET.id, 8), "Water Bucket") // TODO: Liquid block (VanillaBlocks.WATER.block)
         register(waterBucket)
