@@ -17,24 +17,25 @@
  */
 package be.zvz.kookie.item
 
+import be.zvz.kookie.entity.Entity
 import be.zvz.kookie.entity.Location
 import be.zvz.kookie.math.Vector3
 import be.zvz.kookie.player.Player
 
 abstract class ProjectileItem(identifier: ItemIdentifier, vanillaName: String = "Unknown") : Item(identifier, vanillaName) {
-    abstract val throwForce: Float
+    abstract val throwForce: Double
 
-    protected abstract fun createEntity(location: Location, thrower: Player): Throwable
+    protected abstract fun createEntity(location: Location, thrower: Player): Entity // TODO: return entity.projectile.Throwable
 
     override fun onClickAir(player: Player, directionVector: Vector3): ItemUseResult {
         val location = player.location
 
         val projectile = createEntity(Location.fromObject(player.getEyePos(), player.world, location.yaw, location.pitch), player)
-        // TODO: setMotion of projectile
+        projectile.setMotion(directionVector.multiply(throwForce))
 
         // TODO: Call ProjectileLaunchEvent
 
-        // TODO: spawnToAll
+        projectile.spawnToAll()
 
         // TODO: addSound
 

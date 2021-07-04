@@ -447,8 +447,8 @@ object ItemFactory {
                         null
                     }
                 }
-                ?: if (id < 256) ItemBlock(ItemIdentifier(id, meta), BlockFactory.get(if (id < 0) -id else id, meta and 0xf))
-                else null
+                    ?: if (id < 256) ItemBlock(ItemIdentifier(id, meta), BlockFactory.get(if (id < 0) -id else id, meta and 0xf))
+                    else null
             else -> null
         }
 

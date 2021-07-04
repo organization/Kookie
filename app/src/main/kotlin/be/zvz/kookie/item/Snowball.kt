@@ -17,14 +17,15 @@
  */
 package be.zvz.kookie.item
 
+import be.zvz.kookie.entity.Entity
 import be.zvz.kookie.entity.Location
 import be.zvz.kookie.player.Player
 
 class Snowball(identifier: ItemIdentifier, vanillaName: String = "Unknown") : ProjectileItem(identifier, vanillaName) {
     override val maxStackSize: Int = 16
-    override val throwForce: Float = 1.5F
+    override val throwForce: Double = 1.5
 
-    override fun createEntity(location: Location, thrower: Player): Throwable {
+    override fun createEntity(location: Location, thrower: Player): Entity {
         TODO("Not yet implemented")
     }
 }
