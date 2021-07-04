@@ -17,7 +17,7 @@
  */
 package be.zvz.kookie.item
 
-enum class VanillaItems(val block: Item) {
+enum class VanillaItems(val item: Item) {
     ACACIA_BOAT(ItemFactory.get(333, 4)),
     APPLE(ItemFactory.get(260)),
     ARROW(ItemFactory.get(262)),

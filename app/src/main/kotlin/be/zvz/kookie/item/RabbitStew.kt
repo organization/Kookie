@@ -22,5 +22,5 @@ class RabbitStew(identifier: ItemIdentifier, name: String) : Food(identifier, na
     override val foodRestore: Int = 10
     override val saturationRestore: Float = 12F
 
-    override fun getResidue(): Item = TODO("return VanillaItems.BOWL")
+    override fun getResidue(): Item = VanillaItems.BOWL.item
 }

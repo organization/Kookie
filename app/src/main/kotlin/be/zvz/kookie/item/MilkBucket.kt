@@ -23,7 +23,7 @@ import be.zvz.kookie.entity.effect.EffectInstance
 class MilkBucket(identifier: ItemIdentifier, name: String) : Item(identifier, name), ConsumableItem {
     override val maxStackSize: Int = 1
 
-    override fun getResidue(): Item = TODO("return VanillaItems.BUCKET")
+    override fun getResidue(): Item = VanillaItems.BUCKET.item
     override fun getAdditionalEffects(): List<EffectInstance> = emptyList()
 
     override fun onConsume(consumer: Living) {

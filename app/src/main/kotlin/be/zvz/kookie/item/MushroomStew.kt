@@ -22,5 +22,5 @@ class MushroomStew(identifier: ItemIdentifier, name: String) : Food(identifier, 
     override val foodRestore: Int = 6
     override val saturationRestore: Float = 7.2F
 
-    override fun getResidue(): Item = TODO("return VanillaItems.BOWL")
+    override fun getResidue(): Item = VanillaItems.BOWL.item
 }

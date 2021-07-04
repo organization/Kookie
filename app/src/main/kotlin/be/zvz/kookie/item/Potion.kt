@@ -26,7 +26,5 @@ class Potion(identifier: ItemIdentifier, name: String, val potionType: PotionTyp
     override fun onConsume(consumer: Living) {
     }
 
-    override fun getResidue(): Item {
-        TODO("Not yet implemented")
-    }
+    override fun getResidue(): Item = VanillaItems.GLASS_BOTTLE.item
 }
