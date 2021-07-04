@@ -23,8 +23,7 @@ import be.zvz.kookie.entity.effect.EffectInstance
 class Potion(identifier: ItemIdentifier, name: String, val potionType: PotionType) : Item(identifier, name), ConsumableItem {
     override fun getAdditionalEffects(): List<EffectInstance> = potionType.effectsGetter()
 
-    override fun onConsume(consumer: Living) {
-    }
+    override fun onConsume(consumer: Living) {}
 
     override fun getResidue(): Item = VanillaItems.GLASS_BOTTLE.item
 }

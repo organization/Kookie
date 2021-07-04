@@ -39,23 +39,23 @@ class ChorusFruit(identifier: ItemIdentifier, name: String) : Food(identifier, n
         val maxY = minY + 16
         val maxZ = minZ + 16
 
-        for (i in 0 until 16) {
+        repeat(16) {
             val x = Random.nextInt(minX, maxX)
             var y = Random.nextInt(minY, maxY)
             val z = Random.nextInt(minZ, maxZ)
 
             while (y >= 0 && !world.getBlock(Vector3(x, y, z)).isSolid()) --y
-            if (y < 0) continue
+            if (y < 0) return@repeat
 
             val blockUp = world.getBlock(Vector3(x, y + 1, z))
             val blockUp2 = world.getBlock(Vector3(x, y + 2, z))
-            if (blockUp.isSolid() || blockUp2.isSolid()) continue // TODO: check blockUp(2) is Liquid
+            if (blockUp.isSolid() || blockUp2.isSolid()) return@repeat // TODO: check blockUp(2) is Liquid
 
             // TODO: addSound at both source and destination
 
             consumer.teleport(Vector3(x + 0.5, y + 1.0, z + 0.5))
 
-            break
+            return
         }
     }
 }
