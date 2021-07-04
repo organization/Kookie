@@ -26,7 +26,7 @@ object LegacyStringToItemParser {
     private val map: MutableMap<String, Int>
 
     init {
-        val mappingRaw = this::class.java.getResourceAsStream("item_from_string_bc_map.json")
+        val mappingRaw = this::class.java.getResourceAsStream("/vanilla/item_from_string_bc_map.json")
         map = Json.jsonMapper.readValue(mappingRaw, object : TypeReference<MutableMap<String, Int>>() {})
     }
 
