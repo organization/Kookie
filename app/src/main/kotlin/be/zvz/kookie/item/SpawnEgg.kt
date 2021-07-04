@@ -24,7 +24,7 @@ import be.zvz.kookie.player.Player
 import be.zvz.kookie.world.World
 import kotlin.random.Random
 
-abstract class SpawnEgg(identifier: ItemIdentifier, vanillaName: String = "Unknown") : ProjectileItem(identifier, vanillaName) {
+abstract class SpawnEgg(identifier: ItemIdentifier, vanillaName: String = "Unknown") : Item(identifier, vanillaName) {
     protected abstract fun createEntity(world: World, pos: Vector3, yaw: Float, pitch: Float): Entity
 
     override fun onInteractBlock(

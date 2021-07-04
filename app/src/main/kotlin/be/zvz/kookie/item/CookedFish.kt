@@ -17,9 +17,7 @@
  */
 package be.zvz.kookie.item
 
-import be.zvz.kookie.block.util.RecordType
-
-class Record(identifier: ItemIdentifier, val recordType: RecordType, vanillaName: String = "Unknown") :
-    Item(identifier, vanillaName) {
-    override val maxStackSize: Int = 1
+class CookedFish(identifier: ItemIdentifier, name: String) : Food(identifier, name) {
+    override val foodRestore: Int = 5
+    override val saturationRestore: Float = 6F
 }

@@ -22,8 +22,8 @@ import be.zvz.kookie.block.BlockFactory
 import be.zvz.kookie.math.Axis
 import be.zvz.kookie.math.Facing
 
-class ItemBlockWallOrFloor(identifier: ItemIdentifier, name: String, val floorVariant: Block, val wallVariant: Block) :
-    Item(identifier, name) {
+class ItemBlockWallOrFloor(identifier: ItemIdentifier, val floorVariant: Block, val wallVariant: Block) :
+    Item(identifier, floorVariant.name) {
     override fun getBlock(clickedFace: Int?): Block {
         if (clickedFace != null && Facing.axis(clickedFace) != Axis.Y.value) {
             return BlockFactory.fromFullBlock(wallVariant.getFullId())
