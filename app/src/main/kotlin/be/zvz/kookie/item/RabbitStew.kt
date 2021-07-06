@@ -17,17 +17,10 @@
  */
 package be.zvz.kookie.item
 
-import be.zvz.kookie.entity.Living
-import be.zvz.kookie.entity.effect.EffectInstance
+class RabbitStew(identifier: ItemIdentifier, name: String) : Food(identifier, name) {
+    override val maxStackSize: Int = 1
+    override val foodRestore: Int = 10
+    override val saturationRestore: Float = 12F
 
-abstract class Food(identifier: ItemIdentifier, name: String) : Item(identifier, name), FoodSourceItem {
-
-    override val requiresHunger: Boolean = true
-
-    override fun getResidue(): Item = ItemFactory.air()
-
-    override fun getAdditionalEffects(): List<EffectInstance> = listOf()
-
-    override fun onConsume(consumer: Living) {
-    }
+    override fun getResidue(): Item = VanillaItems.BOWL.item
 }
