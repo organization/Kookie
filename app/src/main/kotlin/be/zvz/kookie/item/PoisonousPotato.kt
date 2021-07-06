@@ -26,7 +26,7 @@ class PoisonousPotato(identifier: ItemIdentifier, name: String) : Food(identifie
     override val saturationRestore: Float = 1.2F
 
     override fun getAdditionalEffects(): List<EffectInstance> {
-        if (Random.nextInt(0, 100) > 40) return mutableListOf(
+        if (Random.nextInt(0, 100) > 40) return listOf(
             EffectInstance(VanillaEffects.POISON.effect, 100)
         )
         return emptyList()
