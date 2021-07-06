@@ -26,7 +26,6 @@ import be.zvz.kookie.math.AxisAlignedBB
 import be.zvz.kookie.math.Facing
 import be.zvz.kookie.math.Vector3
 import be.zvz.kookie.utils.Union
-import be.zvz.kookie.utils.inline.forEachValue
 import be.zvz.kookie.utils.inline.repeat3
 import be.zvz.kookie.world.utils.SubChunkExplorer
 import com.koloboke.collect.map.hash.HashLongObjMaps
@@ -184,7 +183,7 @@ open class Explosion @JvmOverloads constructor(
          * }
          */
 
-        affectedBlocks.forEachValue { block ->
+        affectedBlocks.values.forEach { block ->
             val blockPos: Position = block.pos
             Facing.ALL.forEach { side ->
                 val sideBlock = blockPos.getSide(side)
