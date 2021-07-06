@@ -153,7 +153,7 @@ abstract class Entity @JvmOverloads constructor(var location: Location, nbt: Com
 
     abstract val entityNetworkIdentifier: EntityIds
 
-    val owningEntity: Entity?
+    var owningEntity: Entity? = null
         get() {
             TODO("Should be implemented with World")
         }
@@ -633,7 +633,7 @@ abstract class Entity @JvmOverloads constructor(var location: Location, nbt: Com
         return Vector2(-cos(Math.toRadians(location.yaw) - PI), -sin(Math.toRadians(location.yaw) - PI)).normalize()
     }
 
-    open fun onUpdate(currentTick: Long): Boolean {
+    open suspend fun onUpdate(currentTick: Long): Boolean {
         return if (closed) {
             false
         } else {
@@ -740,7 +740,7 @@ abstract class Entity @JvmOverloads constructor(var location: Location, nbt: Com
         return false
     }
 
-    open fun move(dx: Double, dy: Double, dz: Double) {
+    open suspend fun move(dx: Double, dy: Double, dz: Double) {
         var dx = dx
         var dy = dy
         var dz = dz
