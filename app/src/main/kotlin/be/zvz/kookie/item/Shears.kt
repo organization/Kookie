@@ -17,17 +17,20 @@
  */
 package be.zvz.kookie.item
 
-import be.zvz.kookie.entity.Living
 import be.zvz.kookie.entity.effect.EffectInstance
+import be.zvz.kookie.entity.effect.VanillaEffects
+import kotlin.random.Random
 
-abstract class Food(identifier: ItemIdentifier, name: String) : Item(identifier, name), FoodSourceItem {
+class Shears(identifier: ItemIdentifier, name: String) : Food(identifier, name) {
+    override val foodRestore: Int = 4
+    override val saturationRestore: Float = 0.8F
 
-    override val requiresHunger: Boolean = true
-
-    override fun getResidue(): Item = ItemFactory.air()
-
-    override fun getAdditionalEffects(): List<EffectInstance> = listOf()
-
-    override fun onConsume(consumer: Living) {
+    override fun getAdditionalEffects(): List<EffectInstance> {
+        if (Random.nextFloat() <= 0.8) {
+            return mutableListOf(
+                EffectInstance(VanillaEffects.HUNGER.effect, 600)
+            )
+        }
+        return emptyList()
     }
 }

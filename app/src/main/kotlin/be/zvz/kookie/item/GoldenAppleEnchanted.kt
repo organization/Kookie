@@ -17,17 +17,18 @@
  */
 package be.zvz.kookie.item
 
-import be.zvz.kookie.entity.Living
 import be.zvz.kookie.entity.effect.EffectInstance
+import be.zvz.kookie.entity.effect.VanillaEffects
 
-abstract class Food(identifier: ItemIdentifier, name: String) : Item(identifier, name), FoodSourceItem {
-
+class GoldenAppleEnchanted(identifier: ItemIdentifier, vanillaName: String = "Unknown") : Food(identifier, vanillaName) {
+    override val foodRestore: Int = 4
+    override val saturationRestore: Float = 9.6F
     override val requiresHunger: Boolean = true
 
-    override fun getResidue(): Item = ItemFactory.air()
-
-    override fun getAdditionalEffects(): List<EffectInstance> = listOf()
-
-    override fun onConsume(consumer: Living) {
-    }
+    override fun getAdditionalEffects(): List<EffectInstance> = listOf(
+        EffectInstance(VanillaEffects.REGENERATION.effect, 600, 4),
+        EffectInstance(VanillaEffects.ABSORPTION.effect, 2400, 3),
+        EffectInstance(VanillaEffects.RESISTANCE.effect, 6000),
+        EffectInstance(VanillaEffects.FIRE_RESISTANCE.effect, 6000),
+    )
 }

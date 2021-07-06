@@ -17,17 +17,20 @@
  */
 package be.zvz.kookie.item
 
-import be.zvz.kookie.entity.Living
-import be.zvz.kookie.entity.effect.EffectInstance
+import be.zvz.kookie.block.Block
+import be.zvz.kookie.math.Vector3
+import be.zvz.kookie.player.Player
 
-abstract class Food(identifier: ItemIdentifier, name: String) : Item(identifier, name), FoodSourceItem {
+class Bucket(identifier: ItemIdentifier, vanillaName: String = "Unknown") : Item(identifier, vanillaName) {
+    override val maxStackSize: Int = 16
 
-    override val requiresHunger: Boolean = true
-
-    override fun getResidue(): Item = ItemFactory.air()
-
-    override fun getAdditionalEffects(): List<EffectInstance> = listOf()
-
-    override fun onConsume(consumer: Living) {
+    override fun onInteractBlock(
+        player: Player,
+        blockReplace: Block,
+        blockClicked: Block,
+        face: Int,
+        clickVector: Vector3
+    ): ItemUseResult {
+        TODO("Bucket Not yet implemented")
     }
 }

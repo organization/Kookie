@@ -19,7 +19,6 @@ package be.zvz.kookie.item
 
 import be.zvz.kookie.utils.Json
 import com.fasterxml.jackson.core.type.TypeReference
-import java.lang.NumberFormatException
 
 object LegacyStringToItemParser {
 

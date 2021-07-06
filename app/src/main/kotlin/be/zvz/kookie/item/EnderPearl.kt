@@ -17,17 +17,16 @@
  */
 package be.zvz.kookie.item
 
-import be.zvz.kookie.entity.Living
-import be.zvz.kookie.entity.effect.EffectInstance
+import be.zvz.kookie.entity.Entity
+import be.zvz.kookie.entity.Location
+import be.zvz.kookie.player.Player
 
-abstract class Food(identifier: ItemIdentifier, name: String) : Item(identifier, name), FoodSourceItem {
+class EnderPearl(identifier: ItemIdentifier, vanillaName: String = "Unknown") : ProjectileItem(identifier, vanillaName) {
+    override val maxStackSize: Int = 16
+    override val throwForce: Double = 1.5
+    override val cooldownTicks: Int = 20
 
-    override val requiresHunger: Boolean = true
-
-    override fun getResidue(): Item = ItemFactory.air()
-
-    override fun getAdditionalEffects(): List<EffectInstance> = listOf()
-
-    override fun onConsume(consumer: Living) {
+    override fun createEntity(location: Location, thrower: Player): Entity {
+        TODO("Not yet implemented")
     }
 }

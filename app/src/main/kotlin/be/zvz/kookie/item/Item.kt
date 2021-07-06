@@ -72,6 +72,7 @@ open class Item @JvmOverloads constructor(
     open val defensePoints: Int = 0
     open val blockToolType = BlockToolType.NONE
     open val blockToolHarvestLevel = 0
+    open val cooldownTicks = 0
 
     fun hasCustomBlockData(): Boolean = this.blockEntityTag != null
 
