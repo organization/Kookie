@@ -19,30 +19,168 @@ package be.zvz.kookie.world
 
 import be.zvz.kookie.Server
 import be.zvz.kookie.block.Block
+import be.zvz.kookie.block.BlockFactory
 import be.zvz.kookie.block.tile.Tile
 import be.zvz.kookie.entity.Entity
 import be.zvz.kookie.math.Morton2D
 import be.zvz.kookie.math.Morton3D
 import be.zvz.kookie.math.Vector3
+import be.zvz.kookie.network.mcpe.protocol.ClientboundPacket
 import be.zvz.kookie.player.Player
+import be.zvz.kookie.scheduler.AsyncPool
+import be.zvz.kookie.utils.Promise
 import be.zvz.kookie.world.format.Chunk
+import be.zvz.kookie.world.format.io.WritableWorldProvider
+import be.zvz.kookie.world.generator.Generator
+import be.zvz.kookie.world.generator.GeneratorManager
+import be.zvz.kookie.world.light.BlockLightUpdate
+import be.zvz.kookie.world.light.SkyLightUpdate
 import com.koloboke.collect.map.hash.HashIntObjMaps
+import com.koloboke.collect.map.hash.HashLongFloatMaps
+import com.koloboke.collect.map.hash.HashLongIntMaps
+import com.koloboke.collect.map.hash.HashLongObjMaps
+import com.koloboke.collect.map.hash.HashObjIntMaps
+import com.koloboke.collect.set.hash.HashIntSets
+import com.koloboke.collect.set.hash.HashLongSets
+import com.koloboke.collect.set.hash.HashObjSets
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
+import java.util.LinkedList
+import java.util.PriorityQueue
+import java.util.Queue
+import kotlin.math.max
+import kotlin.math.min
+import kotlin.reflect.KClass
 
-class World(val server: Server, val folderName: String) : ChunkManager {
+class World(
+    val server: Server,
+    val folderName: String,
+    private val provider: WritableWorldProvider,
+    private val workerPool: AsyncPool
+) :
+    ChunkManager {
     val players: MutableList<Player> = mutableListOf()
     val entities: MutableList<Entity> = mutableListOf()
+
     private val entityLastKnownPositions: MutableMap<Int, Vector3> = HashIntObjMaps.newMutableMap()
+
     private val updateEntities: MutableList<Entity> = mutableListOf()
     private var blockCache: MutableMap<Int, MutableMap<Int, Block>> = HashIntObjMaps.newMutableMap()
+
     private var sendTimeTicker: Int = 0
+
     val worldId: Int = worldIdCounter++
+
+    private var providerGarbageCollectionTicker: Int = 0
+
+    override val minY: Int = provider.worldMinY
+    override val maxY: Int = provider.worldMaxY
+
+    private val tickingLoaders: MutableMap<TickingChunkLoader, Int> = HashObjIntMaps.newMutableMap()
+    private val chunkLoaders: MutableMap<Long, MutableSet<ChunkLoader>> = HashLongObjMaps.newMutableMap()
+
+    private val chunkListeners: MutableMap<Long, MutableSet<ChunkListener>> = HashLongObjMaps.newMutableMap()
+    private val playerChunkListeners: MutableMap<Long, MutableSet<ClientboundPacket>> = HashLongObjMaps.newMutableMap()
+
+    private var packetBuffersByChunk: MutableMap<Long, MutableList<Chunk>> = HashLongObjMaps.newMutableMap()
+    private var unloadQueue: MutableMap<Long, Float> = HashLongFloatMaps.newMutableMap()
+
+    var time: Long = provider.worldData.time
+        set(value) {
+            field = value
+            TODO("Implements sendTime()")
+        }
+    var stopTime: Boolean = false
+        set(value) {
+            field = value
+            TODO("Implements sendTime()")
+        }
+
+    var sunAnglePercentage: Float = 0F
+        private set
+    var skyLightReduction: Int = 0
+        private set
+
+    val displayName: String = provider.worldData.name
+
+    val chunks: MutableMap<Long, Chunk> = HashLongObjMaps.newMutableMap()
+    private var changedBlocks: MutableMap<Long, MutableMap<Long, Chunk>> = HashLongObjMaps.newMutableMap()
+
+    private val scheduledBlockUpdateQueue: PriorityQueue<Pair<Long, Vector3>> = PriorityQueue { first, second ->
+        -(first.first - second.first).toInt()
+    }
+    private var scheduledBlockUpdateQueueIndex: MutableMap<Long, Int> = HashLongIntMaps.newMutableMap()
+
+    private val neighbourBlockUpdateQueue: Queue<Long> = LinkedList()
+    private val neighbourBlockUpdateQueueIndex: MutableSet<Long> = HashLongSets.newMutableSet()
+
+    private val activeChunkPopulationTasks: MutableSet<Long> = HashLongSets.newMutableSet()
+    private val chunkLock: MutableSet<Long> = HashLongSets.newMutableSet()
+    private val maxConcurrentChunkPopulationTasks: Int =
+        server.configGroup.getProperty("chunk-generation.population-queue-size").asLong(2).toInt()
+    private var chunkPopulationRequestMap: MutableMap<Long, Promise<Chunk>> = HashLongObjMaps.newMutableMap()
+    private var chunkPopulationRequestQueue: Queue<Long> = LinkedList()
+    private val generatorRegisteredWorkers: MutableSet<Int> = HashIntSets.newMutableSet()
+
     var autoSave: Boolean = true
 
-    override val minY: Int get() = TODO("Not yet implemented")
-    override val maxY: Int get() = TODO("Not yet implemented")
+    var sleepTicks: Int = 0
+
+    val chunkTickRadius: Int =
+        min(
+            max(2, server.configGroup.getConfigLong("view-distance", 8)).toInt(),
+            max(1, server.configGroup.getProperty("chunk-ticking.tick-radius").asLong(4).toInt())
+        )
+    val chunksPerTick: Int = server.configGroup.getProperty("chunk-ticking.per-tick").asLong(40).toInt()
+    val tickedBlocksPerSubchunkPerTick: Int = server.configGroup.getProperty("chunk-ticking.blocks-per-subchunk-per-tick")
+        .asLong(DEFAULT_TICKED_BLOCKS_PER_SUBCHUNK_PER_TICK.toLong()).toInt()
+    private val randomTickBlocks: MutableSet<Long> = HashLongSets.newMutableSet()
+
+    val timings = WorldTimings(this)
+    var worldRateTime: Float = 0f
+    var doingTick: Boolean = false
+        private set
+
+    private val generator: KClass<out Generator> = GeneratorManager.getGenerator(provider.worldData.generatorName, true)
 
     var closed: Boolean = false
         private set
+    val unloadCallbacks: MutableSet<() -> Unit> = HashObjSets.newMutableSet()
+
+    private var blockLightUpdate: BlockLightUpdate? = null
+    private var skyLightUpdate: SkyLightUpdate? = null
+
+    val logger: Logger = LoggerFactory.getLogger("World: $displayName")
+
+    init {
+        logger.info(server.language.translateString("pocketmine.level.preparing", listOf(displayName)))
+        addOnUnloadCallback {
+            logger.debug("Cancelling unfulfilled generation requests")
+            chunkPopulationRequestMap.values.forEach { it.reject() }
+            chunkPopulationRequestMap.clear()
+        }
+
+        val dontTickBlocks: MutableSet<Int> = HashIntSets.newMutableSet()
+        server.configGroup.getProperty("chunk-ticking.disable-block-ticking")
+            .toMap<Int, String>().keys.forEach(dontTickBlocks::add)
+
+        BlockFactory.getAllKnownStates().forEach { (_, state) ->
+            if (dontTickBlocks.contains(state.getId()) && state.ticksRandomly()) {
+                randomTickBlocks.add(state.getFullId())
+            }
+        }
+        /**
+         * TODO: Implements after implemented WorldPool::addWorkerStartHook() and WorldPool::removeWorkerStartHook()
+         *
+         * val workerStartHook = { workerId: Int ->
+         *     if (generatorRegisteredWorkers.remove(workerId)) {
+         *         logger.debug("Worker $workerId with previously registered generator restarted, flagging as unregistered")
+         *     }
+         * }
+         * workerPool.addWorkerStartHook(workerStartHook)
+         * addOnUnloadCallback { workerPool.removeWorkerStartHook(workerStartHook) }
+         */
+    }
 
     fun getOrLoadChunkAtPosition(pos: Vector3): Chunk? {
         TODO("Chunk not yet implemented")
@@ -84,6 +222,9 @@ class World(val server: Server, val folderName: String) : ChunkManager {
         TODO("Not yet implemented")
     }
 
+    fun addOnUnloadCallback(callback: () -> Unit) = unloadCallbacks.add(callback)
+    fun removeOnUnloadCallback(callback: () -> Unit) = unloadCallbacks.remove(callback)
+
     companion object {
         const val DIFFICULTY_PEACEFUL = 0
         const val DIFFICULTY_EASY = 1
@@ -113,6 +254,8 @@ class World(val server: Server, val folderName: String) : ChunkManager {
         private const val BLOCKHASH_XZ_SIGN_SHIFT = 64 - MORTON3D_BIT_SIZE - BLOCKHASH_XZ_EXTRA_BITS
         private const val BLOCKHASH_X_SHIFT = BLOCKHASH_Y_BITS
         private const val BLOCKHASH_Z_SHIFT = BLOCKHASH_X_SHIFT + BLOCKHASH_XZ_EXTRA_BITS
+
+        private const val DEFAULT_TICKED_BLOCKS_PER_SUBCHUNK_PER_TICK = 3
 
         fun blockHash(x: Int, y: Int, z: Int): Long {
             val shiftedY = y + BLOCKHASH_Y_OFFSET
