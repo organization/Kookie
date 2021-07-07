@@ -78,7 +78,7 @@ dependencies {
     implementation(group = "com.fasterxml.jackson.module", name = "jackson-module-kotlin", version = "2.12.3")
     implementation(group = "com.fasterxml.jackson.module", name = "jackson-module-afterburner", version = "2.12.3")
     implementation(group = "com.fasterxml.jackson.dataformat", name = "jackson-dataformat-yaml", version = "2.12.3")
-    implementation(group = "com.fasterxml.jackson.dataformat", name = "jackson-dataformat-properties", version = "2.12.3")
+    implementation(group = "com.fasterxml.jackson.dataformat", name = "jackson-dataformat-properties", version = "2.12.4")
 
     // Apache commons IO
     implementation(group = "commons-io", name = "commons-io", version = "2.10.0")
