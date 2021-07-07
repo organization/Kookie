@@ -17,17 +17,12 @@
  */
 package be.zvz.kookie.item
 
-import be.zvz.kookie.entity.Living
-import be.zvz.kookie.entity.effect.EffectInstance
+import be.zvz.kookie.block.Block
+import be.zvz.kookie.block.VanillaBlocks
 
-abstract class Food(identifier: ItemIdentifier, name: String) : Item(identifier, name), FoodSourceItem {
+class Carrot(identifier: ItemIdentifier, name: String) : Food(identifier, name) {
+    override val foodRestore: Int = 3
+    override val saturationRestore: Float = 4.8F
 
-    override val requiresHunger: Boolean = true
-
-    override fun getResidue(): Item = ItemFactory.air()
-
-    override fun getAdditionalEffects(): List<EffectInstance> = listOf()
-
-    override fun onConsume(consumer: Living) {
-    }
+    override fun getBlock(clickedFace: Int?): Block = VanillaBlocks.CARROTS.block
 }

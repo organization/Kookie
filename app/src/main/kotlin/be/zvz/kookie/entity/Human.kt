@@ -87,7 +87,7 @@ open class Human(var skin: Skin, location: Location) : Living(location) {
     }
 
     override fun consumeObject(consumable: Consumable): Boolean {
-        if (consumable is FoodSource && consumable.requiresHunger() && !hungerManager.isHungry()) {
+        if (consumable is FoodSource && consumable.requiresHunger && !hungerManager.isHungry()) {
             return false
         }
         return super.consumeObject(consumable)

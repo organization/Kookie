@@ -15,19 +15,13 @@
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  */
-package be.zvz.kookie.item
+package be.zvz.kookie.block.util
 
-import be.zvz.kookie.entity.Living
-import be.zvz.kookie.entity.effect.EffectInstance
-
-abstract class Food(identifier: ItemIdentifier, name: String) : Item(identifier, name), FoodSourceItem {
-
-    override val requiresHunger: Boolean = true
-
-    override fun getResidue(): Item = ItemFactory.air()
-
-    override fun getAdditionalEffects(): List<EffectInstance> = listOf()
-
-    override fun onConsume(consumer: Living) {
-    }
+enum class TreeType(val type: Int) {
+    OAK(0),
+    SPRUCE(1),
+    BIRCH(2),
+    JUNGLE(3),
+    ACACIA(4),
+    DARK_OAK(5),
 }

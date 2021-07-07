@@ -17,17 +17,14 @@
  */
 package be.zvz.kookie.item
 
-import be.zvz.kookie.entity.Living
-import be.zvz.kookie.entity.effect.EffectInstance
+import be.zvz.kookie.block.Block
+import be.zvz.kookie.block.BlockToolType
 
-abstract class Food(identifier: ItemIdentifier, name: String) : Item(identifier, name), FoodSourceItem {
+class RottenFlesh(identifier: ItemIdentifier, name: String) : Tool(identifier, name) {
+    override val maxDurability: Int = 239
+    override val blockToolType: BlockToolType = BlockToolType.SHEARS
+    override val blockToolHarvestLevel: Int = 1
+    override val baseMiningEfficiency: Float = 15F
 
-    override val requiresHunger: Boolean = true
-
-    override fun getResidue(): Item = ItemFactory.air()
-
-    override fun getAdditionalEffects(): List<EffectInstance> = listOf()
-
-    override fun onConsume(consumer: Living) {
-    }
+    override fun onDestroyBlock(block: Block): Boolean = applyDamage(1)
 }

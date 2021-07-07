@@ -20,14 +20,13 @@ package be.zvz.kookie.item
 import be.zvz.kookie.entity.Living
 import be.zvz.kookie.entity.effect.EffectInstance
 
-abstract class Food(identifier: ItemIdentifier, name: String) : Item(identifier, name), FoodSourceItem {
+class MilkBucket(identifier: ItemIdentifier, name: String) : Item(identifier, name), ConsumableItem {
+    override val maxStackSize: Int = 1
 
-    override val requiresHunger: Boolean = true
-
-    override fun getResidue(): Item = ItemFactory.air()
-
-    override fun getAdditionalEffects(): List<EffectInstance> = listOf()
+    override fun getResidue(): Item = VanillaItems.BUCKET.item
+    override fun getAdditionalEffects(): List<EffectInstance> = emptyList()
 
     override fun onConsume(consumer: Living) {
+        consumer.getEffects().clear()
     }
 }
