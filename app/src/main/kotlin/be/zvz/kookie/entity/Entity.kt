@@ -361,7 +361,7 @@ abstract class Entity @JvmOverloads constructor(var location: Location, nbt: Com
         // TODO: var sendData = data ?: getAllNetworkData()
 
         target.forEach { (_, player) ->
-            // TODO: player.session.syncActorData()
+            // TODO: player.networkSession.syncActorData()
         }
     }
 
@@ -1042,7 +1042,7 @@ abstract class Entity @JvmOverloads constructor(var location: Location, nbt: Com
         }
         pk.metadata = getAllNetworkData()
 
-        player.session.sendDataPacket(pk)
+        player.networkSession.sendDataPacket(pk)
     }
 
     open fun spawnTo(player: Player) {
@@ -1085,7 +1085,7 @@ abstract class Entity @JvmOverloads constructor(var location: Location, nbt: Com
         val id = player.getId()
         if (hasSpawned.containsKey(id)) {
             if (send) {
-                // TODO: player.session.onEntityRemoved(this)
+                // TODO: player.networkSession.onEntityRemoved(this)
             }
             hasSpawned.remove(id)
         }
