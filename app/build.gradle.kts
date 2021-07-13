@@ -81,7 +81,7 @@ dependencies {
     implementation(group = "com.fasterxml.jackson.dataformat", name = "jackson-dataformat-properties", version = "2.12.4")
 
     // Apache commons IO
-    implementation(group = "commons-io", name = "commons-io", version = "2.10.0")
+    implementation(group = "commons-io", name = "commons-io", version = "2.11.0")
 
     // jna
     implementation(group = "net.java.dev.jna", name = "jna", version = "5.8.0")
