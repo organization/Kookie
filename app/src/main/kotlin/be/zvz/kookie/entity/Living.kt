@@ -120,7 +120,7 @@ abstract class Living(location: Location) : Entity(location) {
         armorInventory.getListeners().add(
             CallbackInventoryListener.onAnyChange {
                 getViewers().forEach { (_, viewer) ->
-                    // TODO: viewer.session.onMobArmorChange(this)
+                    // TODO: viewer.networkSession.onMobArmorChange(this)
                 }
             }
         )
@@ -500,7 +500,7 @@ abstract class Living(location: Location) : Entity(location) {
 
     override fun sendSpawnPacket(player: Player) {
         super.sendSpawnPacket(player)
-        // TODO: player.session.onMobArmorChange(this)
+        // TODO: player.networkSession.onMobArmorChange(this)
     }
 
     override fun syncNetworkData(properties: EntityMetadataCollection) {

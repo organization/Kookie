@@ -70,7 +70,7 @@ class LevelSoundEventPacket : DataPacket(), ClientboundPacket, ServerboundPacket
         }
     }
 
-    enum class Sound(sound: Int) {
+    enum class Sound(val sound: Int) {
         ITEM_USE_ON(0),
         HIT(1),
         STEP(2),

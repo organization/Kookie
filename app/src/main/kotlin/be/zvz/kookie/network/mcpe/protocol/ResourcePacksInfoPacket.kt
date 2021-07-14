@@ -32,12 +32,14 @@ class ResourcePacksInfoPacket : DataPacket(), ClientboundPacket {
      * Currently only Windows10 edition is supported
      */
     var hasScript: Boolean = false
+    var forceServerPacks: Boolean = false
     val behaviorPackEntries = mutableListOf<BehaviorPackEntry>()
     val resourcePackEntries = mutableListOf<ResourcePackEntry>()
 
     override fun decodePayload(input: PacketSerializer) {
         mustAccept = input.getBoolean()
         hasScript = input.getBoolean()
+        forceServerPacks = input.getBoolean()
         val behaviorPackCount = input.getLShort()
         repeat(behaviorPackCount) {
             behaviorPackEntries.add(BehaviorPackEntry.read(input))
@@ -51,6 +53,7 @@ class ResourcePacksInfoPacket : DataPacket(), ClientboundPacket {
     override fun encodePayload(output: PacketSerializer) {
         output.putBoolean(mustAccept)
         output.putBoolean(hasScript)
+        output.putBoolean(forceServerPacks)
         output.putLShort(behaviorPackEntries.size)
         behaviorPackEntries.forEach {
             it.write(output)

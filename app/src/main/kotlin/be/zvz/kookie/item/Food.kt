@@ -22,7 +22,7 @@ import be.zvz.kookie.entity.effect.EffectInstance
 
 abstract class Food(identifier: ItemIdentifier, name: String) : Item(identifier, name), FoodSourceItem {
 
-    override fun requiresHunger(): Boolean = true
+    override val requiresHunger: Boolean = true
 
     override fun getResidue(): Item = ItemFactory.air()
 

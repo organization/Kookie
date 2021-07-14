@@ -27,12 +27,14 @@ class NpcRequestPacket : DataPacket(), ServerboundPacket {
     var requestType: Int = 0
     lateinit var commandString: String
     var actionType: Int = 0
+    lateinit var sceneName: String
 
     override fun decodePayload(input: PacketSerializer) {
         entityRuntimeId = input.getEntityRuntimeId()
         requestType = input.getByte()
         commandString = input.getString()
         actionType = input.getByte()
+        sceneName = input.getString()
     }
 
     override fun encodePayload(output: PacketSerializer) {
@@ -40,6 +42,7 @@ class NpcRequestPacket : DataPacket(), ServerboundPacket {
         output.putByte(requestType)
         output.putString(commandString)
         output.putByte(actionType)
+        output.putString(sceneName)
     }
 
     override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleNpcRequest(this)
@@ -51,5 +54,6 @@ class NpcRequestPacket : DataPacket(), ServerboundPacket {
         const val REQUEST_SET_NAME = 3
         const val REQUEST_SET_SKIN = 4
         const val REQUEST_SET_INTERACTION_TEXT = 5
+        const val REQUEST_EXECUTE_OPENING_COMMANDS = 6
     }
 }

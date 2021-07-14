@@ -22,7 +22,7 @@ import org.jmailen.gradle.kotlinter.tasks.LintTask
 
 plugins {
     // Apply the org.jetbrains.kotlin.jvm Plugin to add support for Kotlin.
-    kotlin("jvm") version "1.5.20"
+    kotlin("jvm") version "1.5.21"
 
     // Apply the application plugin to add support for building a CLI application in Java.
     application
@@ -64,8 +64,8 @@ dependencies {
     implementation(group = "org.jetbrains.kotlin", name = "kotlin-stdlib-jdk8")
 
     // Kotlin coroutines
-    implementation(group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version = "1.5.0-native-mt")
-    implementation(group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-jdk8", version = "1.5.0-native-mt")
+    implementation(group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version = "1.5.1")
+    implementation(group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-jdk8", version = "1.5.1")
 
     // RxKotlin
     implementation(group = "io.reactivex.rxjava3", name = "rxkotlin", version = "3.0.1")
@@ -75,13 +75,13 @@ dependencies {
     implementation(group = "net.minecrell", name = "terminalconsoleappender", version = "1.2.0")
 
     // Jackson
-    implementation(group = "com.fasterxml.jackson.module", name = "jackson-module-kotlin", version = "2.12.3")
-    implementation(group = "com.fasterxml.jackson.module", name = "jackson-module-afterburner", version = "2.12.3")
-    implementation(group = "com.fasterxml.jackson.dataformat", name = "jackson-dataformat-yaml", version = "2.12.3")
-    implementation(group = "com.fasterxml.jackson.dataformat", name = "jackson-dataformat-properties", version = "2.12.3")
+    implementation(group = "com.fasterxml.jackson.module", name = "jackson-module-kotlin", version = "2.12.4")
+    implementation(group = "com.fasterxml.jackson.module", name = "jackson-module-afterburner", version = "2.12.4")
+    implementation(group = "com.fasterxml.jackson.dataformat", name = "jackson-dataformat-yaml", version = "2.12.4")
+    implementation(group = "com.fasterxml.jackson.dataformat", name = "jackson-dataformat-properties", version = "2.12.4")
 
     // Apache commons IO
-    implementation(group = "commons-io", name = "commons-io", version = "2.10.0")
+    implementation(group = "commons-io", name = "commons-io", version = "2.11.0")
 
     // jna
     implementation(group = "net.java.dev.jna", name = "jna", version = "5.8.0")
