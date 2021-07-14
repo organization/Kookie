@@ -22,7 +22,7 @@ import org.jmailen.gradle.kotlinter.tasks.LintTask
 
 plugins {
     // Apply the org.jetbrains.kotlin.jvm Plugin to add support for Kotlin.
-    kotlin("jvm") version "1.5.20"
+    kotlin("jvm") version "1.5.21"
 
     // Apply the application plugin to add support for building a CLI application in Java.
     application
@@ -81,7 +81,7 @@ dependencies {
     implementation(group = "com.fasterxml.jackson.dataformat", name = "jackson-dataformat-properties", version = "2.12.4")
 
     // Apache commons IO
-    implementation(group = "commons-io", name = "commons-io", version = "2.10.0")
+    implementation(group = "commons-io", name = "commons-io", version = "2.11.0")
 
     // jna
     implementation(group = "net.java.dev.jna", name = "jna", version = "5.8.0")
