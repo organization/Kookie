@@ -28,6 +28,8 @@ class SetTitlePacket : DataPacket(), ClientboundPacket {
     var fadeInTime: Int = 0
     var stayTime: Int = 0
     var fadeOutTime: Int = 0
+    lateinit var xuid: String
+    lateinit var platformOnlineId: String
 
     override fun decodePayload(input: PacketSerializer) {
         type = input.getVarInt()
@@ -35,6 +37,8 @@ class SetTitlePacket : DataPacket(), ClientboundPacket {
         fadeInTime = input.getVarInt()
         stayTime = input.getVarInt()
         fadeOutTime = input.getVarInt()
+        xuid = input.getString()
+        platformOnlineId = input.getString()
     }
 
     override fun encodePayload(output: PacketSerializer) {
@@ -43,6 +47,8 @@ class SetTitlePacket : DataPacket(), ClientboundPacket {
         output.putVarInt(fadeInTime)
         output.putVarInt(stayTime)
         output.putVarInt(fadeOutTime)
+        output.putString(xuid)
+        output.putString(platformOnlineId)
     }
 
     override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleSetTitle(this)
