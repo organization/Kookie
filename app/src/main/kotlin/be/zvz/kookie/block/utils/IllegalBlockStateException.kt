@@ -15,13 +15,11 @@
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  */
-package be.zvz.kookie.block.util
+package be.zvz.kookie.block.utils
 
-enum class TreeType(val type: Int) {
-    OAK(0),
-    SPRUCE(1),
-    BIRCH(2),
-    JUNGLE(3),
-    ACACIA(4),
-    DARK_OAK(5),
+class IllegalBlockStateException : IllegalArgumentException {
+    constructor() : super()
+    constructor(s: String) : super(s)
+    constructor(message: String?, cause: Throwable?) : super(message, cause)
+    constructor(cause: Throwable?) : super(cause)
 }

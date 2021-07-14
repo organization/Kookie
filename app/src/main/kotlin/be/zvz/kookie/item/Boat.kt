@@ -17,7 +17,7 @@
  */
 package be.zvz.kookie.item
 
-import be.zvz.kookie.block.util.TreeType
+import be.zvz.kookie.block.utils.TreeType
 
 class Boat(identifier: ItemIdentifier, vanillaName: String = "Unknown", val woodType: TreeType) : Item(identifier, vanillaName) {
     override val fuelTime: Int = 1200 // 400 in PC

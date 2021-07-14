@@ -1,4 +1,4 @@
-package be.zvz.kookie.block.util
+package be.zvz.kookie.block.utils
 
 import be.zvz.kookie.world.Position
 

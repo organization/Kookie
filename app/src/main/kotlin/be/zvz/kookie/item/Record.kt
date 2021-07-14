@@ -17,7 +17,7 @@
  */
 package be.zvz.kookie.item
 
-import be.zvz.kookie.block.util.RecordType
+import be.zvz.kookie.block.utils.RecordType
 
 class Record(identifier: ItemIdentifier, val recordType: RecordType, vanillaName: String = "Unknown") :
     Item(identifier, vanillaName) {

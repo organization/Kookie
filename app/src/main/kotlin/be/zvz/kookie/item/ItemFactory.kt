@@ -19,8 +19,8 @@ package be.zvz.kookie.item
 
 import be.zvz.kookie.block.BlockFactory
 import be.zvz.kookie.block.VanillaBlocks
-import be.zvz.kookie.block.util.RecordType
-import be.zvz.kookie.block.util.SkullType
+import be.zvz.kookie.block.utils.RecordType
+import be.zvz.kookie.block.utils.SkullType
 import be.zvz.kookie.entity.Entity
 import be.zvz.kookie.inventory.ArmorInventory
 import be.zvz.kookie.math.Vector3

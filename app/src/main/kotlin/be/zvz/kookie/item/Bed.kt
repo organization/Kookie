@@ -19,7 +19,7 @@ package be.zvz.kookie.item
 
 import be.zvz.kookie.block.Block
 import be.zvz.kookie.block.VanillaBlocks
-import be.zvz.kookie.block.util.DyeColor
+import be.zvz.kookie.block.utils.DyeColor
 
 class Bed(identifier: ItemIdentifier, vanillaName: String = "Unknown", val color: DyeColor) : Item(identifier, vanillaName) {
     override val maxStackSize: Int = 1

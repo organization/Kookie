@@ -1,9 +1,9 @@
-package be.zvz.kookie.block.util
+package be.zvz.kookie.block.utils
 
 import be.zvz.kookie.math.Axis
 import be.zvz.kookie.math.Facing
 
-interface HorizontalFacingHelper {
+interface HorizontalFacing {
     companion object {
         var facing: Facing = Facing.NORTH
             get() = Facing.NORTH

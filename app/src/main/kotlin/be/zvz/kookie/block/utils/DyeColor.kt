@@ -15,7 +15,7 @@
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  */
-package be.zvz.kookie.block.util
+package be.zvz.kookie.block.utils
 
 import be.zvz.kookie.color.Color
 

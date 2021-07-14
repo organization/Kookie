@@ -19,7 +19,7 @@ package be.zvz.kookie.item
 
 import be.zvz.kookie.block.Block
 import be.zvz.kookie.block.VanillaBlocks
-import be.zvz.kookie.block.util.SkullType
+import be.zvz.kookie.block.utils.SkullType
 
 class Skull(identifier: ItemIdentifier, vanillaName: String = "Unknown", val skullType: SkullType) :
     Item(identifier, vanillaName) {

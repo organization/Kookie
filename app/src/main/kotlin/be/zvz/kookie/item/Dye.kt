@@ -17,6 +17,6 @@
  */
 package be.zvz.kookie.item
 
-import be.zvz.kookie.block.util.DyeColor
+import be.zvz.kookie.block.utils.DyeColor
 
 class Dye(identifier: ItemIdentifier, vanillaName: String = "Unknown", val color: DyeColor) : Item(identifier, vanillaName)

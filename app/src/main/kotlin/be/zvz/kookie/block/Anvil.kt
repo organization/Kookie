@@ -2,9 +2,9 @@ package be.zvz.kookie.block
 
 //import be.zvz.kookie.block.inventory.AnvilInventory
 //import be.zvz.kookie.block.util.BlockDataSerializer
-import be.zvz.kookie.block.util.Fallable
-import be.zvz.kookie.block.util.FallableHelper
-import be.zvz.kookie.block.util.HorizontalFacingHelper
+import be.zvz.kookie.block.utils.Fallable
+import be.zvz.kookie.block.utils.FallableHelper
+import be.zvz.kookie.block.utils.HorizontalFacing
 import be.zvz.kookie.math.Axis
 import be.zvz.kookie.math.AxisAlignedBB
 import be.zvz.kookie.math.Facing
@@ -13,9 +13,9 @@ class Anvil(
     idInfo: BlockIdentifier,
     name: String,
     breakInfo: BlockBreakInfo
-) : Transparent(idInfo, name, breakInfo), Fallable, FallableHelper, HorizontalFacingHelper {
+) : Transparent(idInfo, name, breakInfo), Fallable, FallableHelper, HorizontalFacing {
     private var damage: Int = 0
-    var facing: Facing = HorizontalFacingHelper.facing
+    var facing: Facing = HorizontalFacing.facing
 
     override fun writeStateToMeta(): Int {
         //TODO: not yet implemented
