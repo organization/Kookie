@@ -103,6 +103,7 @@ import be.zvz.kookie.network.mcpe.protocol.MultiplayerSettingsPacket
 import be.zvz.kookie.network.mcpe.protocol.NetworkChunkPublisherUpdatePacket
 import be.zvz.kookie.network.mcpe.protocol.NetworkSettingsPacket
 import be.zvz.kookie.network.mcpe.protocol.NetworkStackLatencyPacket
+import be.zvz.kookie.network.mcpe.protocol.NpcDialoguePacket
 import be.zvz.kookie.network.mcpe.protocol.NpcRequestPacket
 import be.zvz.kookie.network.mcpe.protocol.OnScreenTextureAnimationPacket
 import be.zvz.kookie.network.mcpe.protocol.PacketViolationWarningPacket
@@ -159,6 +160,7 @@ import be.zvz.kookie.network.mcpe.protocol.ShowCreditsPacket
 import be.zvz.kookie.network.mcpe.protocol.ShowProfilePacket
 import be.zvz.kookie.network.mcpe.protocol.ShowStoreOfferPacket
 import be.zvz.kookie.network.mcpe.protocol.SimpleEventPacket
+import be.zvz.kookie.network.mcpe.protocol.SimulationTypePacket
 import be.zvz.kookie.network.mcpe.protocol.SpawnExperienceOrbPacket
 import be.zvz.kookie.network.mcpe.protocol.SpawnParticleEffectPacket
 import be.zvz.kookie.network.mcpe.protocol.StartGamePacket
@@ -831,6 +833,14 @@ open class DefaultPacketHandler : PacketHandlerInterface {
     }
 
     override fun handleRemoveVolumeEntity(packet: RemoveVolumeEntityPacket): Boolean {
+        TODO("Not yet implemented")
+    }
+
+    override fun handleSimulationType(packet: SimulationTypePacket): Boolean {
+        TODO("Not yet implemented")
+    }
+
+    override fun handleNpcDialogue(packet: NpcDialoguePacket): Boolean {
         TODO("Not yet implemented")
     }
 }
