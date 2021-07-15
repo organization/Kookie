@@ -64,7 +64,7 @@ class SubChunk @JvmOverloads constructor(
             check = false
             // TODO: layer.collectGarbage()
 
-            layer.getPalette().forEach {
+            layer.palette.forEach {
                 if (it != emptyBlockId) {
                     check = true
                     return@forEach

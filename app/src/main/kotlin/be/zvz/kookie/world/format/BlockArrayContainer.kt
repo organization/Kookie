@@ -20,8 +20,8 @@ package be.zvz.kookie.world.format
 import be.zvz.kookie.world.format.internal.IPalettedBlockArray
 import be.zvz.kookie.world.format.internal.InternalPalettedBlockArray
 
-class BlockArrayContainer<Block> private constructor(var blockArray: IPalettedBlockArray<Block>) {
-
+class BlockArrayContainer<Block> private constructor(blockArray: IPalettedBlockArray<Block>) :
+    IPalettedBlockArray<Block> by blockArray {
     constructor(block: Block) : this(InternalPalettedBlockArray(1, block))
     constructor(capacity: Int) : this(blockArrayFromCapacity(capacity))
     constructor(
@@ -36,34 +36,7 @@ class BlockArrayContainer<Block> private constructor(var blockArray: IPalettedBl
         )
     )
 
-    constructor(other: BlockArrayContainer<Block>) : this(other.blockArray.clone() as IPalettedBlockArray<Block>)
-
-    fun getWordArray(): CharArray = blockArray.getWordArray()
-    fun getPalette(): List<Block> = blockArray.getPalette()
-    fun getMaxPaletteSize(): Int = blockArray.getMaxPaletteSize()
-    fun getBitsPerBlock(): Int = blockArray.getBitsPerBlock()
-    fun get(x: Int, y: Int, z: Int): Block = blockArray.get(x, y, z)
-    fun set(x: Int, y: Int, z: Int, v: Block) {
-        if (!blockArray.set(x, y, z, v)) {
-            val count = blockArray.getPaletteSize()
-            if (count < IPalettedBlockArray.ARRAY_CAPACITY) {
-                val newArray = blockArrayFromCapacity<Block>(count + 1)
-                newArray.fastUpsize(blockArray)
-                newArray.set(x, y, z, v)
-                blockArray = newArray
-            } else {
-                blockArray.replace(blockArray.getPaletteOffset(x, y, z), v)
-            }
-        }
-    }
-
-    fun replace(offset: Int, v: Block) {
-        blockArray.replace(offset, v)
-    }
-
-    fun replaceAll(oldVal: Block, newVal: Block) {
-        blockArray.replaceAll(oldVal, newVal)
-    }
+    constructor(other: BlockArrayContainer<Block>) : this(other.clone() as IPalettedBlockArray<Block>)
 
     companion object {
         private val cache1 = InternalPalettedBlockArray<Long>(1)

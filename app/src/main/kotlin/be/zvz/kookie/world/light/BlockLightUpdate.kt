@@ -51,7 +51,7 @@ class BlockLightUpdate(
         chunk.subChunks.forEachIndexed { subChunkY, subChunk ->
             subChunk.skyLight = LightArray.fill(0)
             subChunk.blockLayers.forEach lit@{ layer ->
-                layer.getPalette().forEach { state ->
+                layer.palette.forEach { state ->
                     val light = lightEmitters[state]
                         ?: throw CorruptedWorldException("SubChunk palette does not have a target light emitter")
                     if (light > 0) {

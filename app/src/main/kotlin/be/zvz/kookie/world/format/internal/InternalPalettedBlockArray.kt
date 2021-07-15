@@ -20,21 +20,28 @@ package be.zvz.kookie.world.format.internal
 import be.zvz.kookie.utils.inline.repeat3
 import com.koloboke.collect.set.hash.HashObjSets
 
-class InternalPalettedBlockArray<Block> internal constructor(private val bitsPerBlock: Int) :
-    IPalettedBlockArray<Block> {
+class InternalPalettedBlockArray<Block> internal constructor(override val bitsPerBlock: Int) : IPalettedBlockArray<Block> {
+    override val wordArray: CharArray
+        get() = CharArray(wordCount).apply {
+            words.forEachIndexed { index, value ->
+                this[index] = value.toChar()
+            }
+        }
+    override val maxPaletteSize = if (1 shl bitsPerBlock < IPalettedBlockArray.ARRAY_CAPACITY) {
+        1 shl bitsPerBlock
+    } else {
+        IPalettedBlockArray.ARRAY_CAPACITY
+    }
+    override val palette = ArrayList<Block>(maxPaletteSize)
+    override val paletteSize: Int get() = nextPaletteIndex
+
     internal val blocksPerWord = Int.SIZE_BITS / bitsPerBlock
     internal val blockMask = (1 shl bitsPerBlock) - 1
     internal val wordCount =
         IPalettedBlockArray.ARRAY_CAPACITY / blocksPerWord +
             if (IPalettedBlockArray.ARRAY_CAPACITY % blocksPerWord > 0) 1 else 0
     internal val payloadSize = wordCount * Int.SIZE_BYTES
-    internal val maxPaletteSize = if (1 shl bitsPerBlock < IPalettedBlockArray.ARRAY_CAPACITY) {
-        1 shl bitsPerBlock
-    } else {
-        IPalettedBlockArray.ARRAY_CAPACITY
-    }
     private val words = IntArray(wordCount)
-    private val palette = ArrayList<Block>(maxPaletteSize)
     private var nextPaletteIndex = 0
 
     internal constructor(bitsPerBlock: Int, block: Block) : this(bitsPerBlock) {
@@ -82,20 +89,6 @@ class InternalPalettedBlockArray<Block> internal constructor(private val bitsPer
         words[wordIdx] = words[wordIdx] and (blockMask shl shift).inv() or offset shl shift
     }
 
-    override fun getWordArray(): CharArray = CharArray(wordCount).apply {
-        words.forEachIndexed { index, value ->
-            this[index] = value.toChar()
-        }
-    }
-
-    override fun getPalette(): List<Block> = palette
-
-    override fun getPaletteSize(): Int = nextPaletteIndex
-
-    override fun getMaxPaletteSize(): Int = maxPaletteSize
-
-    override fun getBitsPerBlock(): Int = bitsPerBlock
-
     fun countUniqueBlocks(): Int {
         val hasFound: MutableSet<Block> = HashObjSets.newMutableSet()
         repeat3(
@@ -104,7 +97,7 @@ class InternalPalettedBlockArray<Block> internal constructor(private val bitsPer
             IPalettedBlockArray.ARRAY_DIM
         ) { x, y, z ->
             val inserted = hasFound.add(palette[internalGetPaletteOffset(x, y, z)])
-            if (inserted && hasFound.size == getPaletteSize()) {
+            if (inserted && hasFound.size == paletteSize) {
                 return hasFound.size
             }
         }
@@ -165,7 +158,7 @@ class InternalPalettedBlockArray<Block> internal constructor(private val bitsPer
     }
 
     override fun fastUpsize(otherArray: IPalettedBlockArray<Block>) {
-        val otherPalette = otherArray.getPalette()
+        val otherPalette = otherArray.palette
         nextPaletteIndex = otherPalette.size
         otherPalette.forEachIndexed(palette::set)
     }
