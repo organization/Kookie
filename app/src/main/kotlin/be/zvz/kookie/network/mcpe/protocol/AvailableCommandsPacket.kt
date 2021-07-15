@@ -184,7 +184,7 @@ open class AvailableCommandsPacket : DataPacket(), ClientboundPacket {
     ): CommandData {
         val name = input.getString()
         val description = input.getString()
-        val flags = input.getByte()
+        val flags = input.getLShort()
         val permission = input.getByte()
         val aliases = enums.getOrNull(input.getLInt())
         val overloads: MutableMap<Int, MutableMap<Int, CommandParameter>> = HashIntObjMaps.newMutableMap()
@@ -241,7 +241,7 @@ open class AvailableCommandsPacket : DataPacket(), ClientboundPacket {
     ) {
         output.putString(data.name)
         output.putString(data.description)
-        output.putByte(data.flags)
+        output.putLShort(data.flags)
         output.putByte(data.permission)
 
         data.aliases?.let {

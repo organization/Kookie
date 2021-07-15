@@ -125,7 +125,7 @@ open class Human(var skin: Skin, location: Location) : Living(location) {
 
         val syncHeldItem = {
             getViewers().forEach { (_, player) ->
-                // TODO: player.session.onMobMainHandItemChange(this)
+                // TODO: player.networkSession.onMobMainHandItemChange(this)
             }
         }
 
@@ -175,7 +175,7 @@ open class Human(var skin: Skin, location: Location) : Living(location) {
         offHandInventory.getListeners().add(
             CallbackInventoryListener.onAnyChange {
                 getViewers().forEach { (_, player) ->
-                    // TODO: player.session.onMobOffHandItemChange(this)
+                    // TODO: player.networkSession.onMobOffHandItemChange(this)
                 }
             }
         )
@@ -189,7 +189,7 @@ open class Human(var skin: Skin, location: Location) : Living(location) {
         inventory.setHeldItemIndex(nbt.getInt("SelectedInventorySlot", 0))
         inventory.heldItemIndexChangeListeners.add {
             getViewers().forEach { (_, player) ->
-                // TODO: player.session.onMobMainHandItemChange(this)
+                // TODO: player.networkSession.onMobMainHandItemChange(this)
             }
         }
         hungerManager.setFood(nbt.getInt("foodLevel", hungerManager.getFood().toInt()).toFloat())
@@ -307,7 +307,7 @@ open class Human(var skin: Skin, location: Location) : Living(location) {
 
     override fun sendSpawnPacket(player: Player) {
         if (this !is Player) {
-            player.session.sendDataPacket(
+            player.networkSession.sendDataPacket(
                 PlayerListPacket.add(
                     listOf(
                         PlayerListEntry.createAdditionEntry(
@@ -321,7 +321,7 @@ open class Human(var skin: Skin, location: Location) : Living(location) {
             )
         }
         if (this !is Player) {
-            player.session.sendDataPacket(
+            player.networkSession.sendDataPacket(
                 AddPlayerPacket().also {
                     it.uuid = uuid
                     it.username = nameTag
@@ -338,8 +338,8 @@ open class Human(var skin: Skin, location: Location) : Living(location) {
                         mutableMapOf(EntityMetadataProperties.NAMETAG to StringMetadataProperty(nameTag))
                     )
 
-                    // TODO: player.session.onMobArmorChange(this)
-                    // TODO: player.session.onMobOffHandItemChange(this)
+                    // TODO: player.networkSession.onMobArmorChange(this)
+                    // TODO: player.networkSession.onMobOffHandItemChange(this)
                 }
             )
         }

@@ -35,7 +35,7 @@ import be.zvz.kookie.plugin.Plugin
 
 class Player(
     override var server: Server,
-    val session: NetworkSession,
+    val networkSession: NetworkSession,
     val playerInfo: PlayerInfo,
     val authenticated: Boolean,
     val spawnLocation: Any, // TODO: Location,
@@ -57,11 +57,11 @@ class Player(
     }
 
     override fun sendMessage(message: String) {
-        session.sendDataPacket(TextPacket.raw(message))
+        networkSession.sendDataPacket(TextPacket.raw(message))
     }
 
     override fun sendMessage(message: TranslationContainer) {
-        session.sendDataPacket(TextPacket.translation(message.text, message.params.toMutableList()))
+        networkSession.sendDataPacket(TextPacket.translation(message.text, message.params.toMutableList()))
     }
 
     override fun getScreenLineHeight(): Int {
