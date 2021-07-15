@@ -23,6 +23,6 @@ package be.zvz.kookie.world
  * updates.
  */
 interface TickingChunkLoader : ChunkLoader {
-    fun getX(): Float
-    fun getZ(): Float
+    val x: Int
+    val z: Int
 }
