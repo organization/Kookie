@@ -47,6 +47,7 @@ import kotlin.io.path.createDirectories
 import kotlin.io.path.exists
 import kotlin.io.path.setPosixFilePermissions
 import kotlin.math.max
+import kotlin.math.min
 import ch.qos.logback.classic.Level as LoggerLevel
 
 class Server(dataPath: Path, pluginPath: Path) {
@@ -247,6 +248,11 @@ class Server(dataPath: Path, pluginPath: Path) {
     }
 
     fun getDataPath(): Path = CorePaths.PATH
+
+    fun getViewDistance(): Int = configGroup.getConfigLong("view-distance", 8).toInt()
+
+    /** Returns a view distance up to the currently-allowed limit. */
+    fun getAllowedViewDistance(distance: Int): Int = max(2, min(distance, memoryManager.getViewDistance(getViewDistance())))
 
     fun broadcastMessage(message: String): Int {
         TODO("Not yet implemented")
