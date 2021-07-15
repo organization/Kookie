@@ -40,7 +40,7 @@ open class Position @JvmOverloads constructor(
     fun asPosition(): Position = Position(x, y, z, world)
 
     fun isValid(): Boolean = world?.let {
-        if (it.closed) {
+        if (it.unloaded) {
             world = null
             false
         } else {

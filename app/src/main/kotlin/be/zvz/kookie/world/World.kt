@@ -143,7 +143,7 @@ class World(
 
     private val generator: KClass<out Generator> = GeneratorManager.getGenerator(provider.worldData.generatorName, true)
 
-    var closed: Boolean = false
+    var unloaded: Boolean = false
         private set
     val unloadCallbacks: MutableSet<() -> Unit> = HashObjSets.newMutableSet()
 
