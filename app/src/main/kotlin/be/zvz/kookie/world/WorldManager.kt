@@ -22,9 +22,16 @@ import be.zvz.kookie.world.format.io.WorldProviderManager
 import com.koloboke.collect.map.hash.HashIntObjMaps
 import java.nio.file.Path
 
-class WorldManager(private val server: Server, val dataPath: String, val providerManager: WorldProviderManager) {
+class WorldManager(
+    private val server: Server,
+    val dataPath: String,
+    val providerManager: WorldProviderManager
+) {
+    private val worldPath: Path get() = server.getDataPath().resolve("worlds")
+
     val worlds: MutableMap<Int, World> = HashIntObjMaps.newMutableMap()
     lateinit var defaultWorld: World
+
     var autoSave: Boolean = true
         set(value) {
             field = value
@@ -32,23 +39,21 @@ class WorldManager(private val server: Server, val dataPath: String, val provide
                 world.autoSave = true
             }
         }
+    var autoSaveTicks = 6000
+        set(value) {
+            if (value <= 0) {
+                throw IllegalArgumentException("Auto save ticks must be positive")
+            }
+            field = value
+        }
+
+    fun isWorldLoaded(name: String): Boolean = getWorldByName(name) is World
+    fun getWorldByName(name: String): World? = worlds.values.find { it.folderName == name }
+    fun getWorld(id: Int): World? = worlds[id]
 
     fun loadWorld(world: String) {
     }
 
     fun unloadWorld(world: String) {
     }
-
-    fun getWorld(id: Int): World? = worlds[id]
-
-    fun getWorldByName(name: String): World? {
-        worlds.values.forEach { world ->
-            if (world.folderName == name) {
-                return world
-            }
-        }
-        return null
-    }
-
-    private fun getWorldPath(): Path = server.getDataPath().resolve("worlds")
 }
