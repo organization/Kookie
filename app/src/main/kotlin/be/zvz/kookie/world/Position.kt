@@ -24,8 +24,20 @@ open class Position @JvmOverloads constructor(
     x: Double = 0.0,
     y: Double = 0.0,
     z: Double = 0.0,
-    var world: World? = null
+    world: World? = null
 ) : Vector3(x, y, z) {
+    var world: World? = null
+        set(value) {
+            if(value !== null && value.unloaded){
+                throw IllegalArgumentException("Position world is null or has been unloaded");
+            }
+            field = value
+        }
+
+    init {
+        this.world = world
+    }
+
     @JvmOverloads constructor(x: Int, y: Int = 0, z: Int = 0, world: World? = null) :
         this(x.toDouble(), y.toDouble(), z.toDouble(), world)
 
