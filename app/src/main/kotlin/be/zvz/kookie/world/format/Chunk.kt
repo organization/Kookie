@@ -32,7 +32,7 @@ class Chunk @JvmOverloads constructor(
     val NBTentities: MutableList<Entity> = mutableListOf(),
     val NBTtiles: MutableList<Tile> = mutableListOf(),
     val biomeIds: BiomeArray = BiomeArray.fill(BiomeIds.OCEAN.id),
-    val heightMap: HeightArray = HeightArray.fill(subChunks.size * 16)
+    var heightMap: HeightArray = HeightArray.fill(subChunks.size * 16)
 ) : Cloneable {
     var dirtyFlags: Int = 0
     val tiles = HashIntObjMaps.newMutableMap<Tile>()
@@ -46,6 +46,8 @@ class Chunk @JvmOverloads constructor(
     val savableEntities = entities.filter {
         TODO("Implements after implemented Entity::canSaveWithChunk()")
     }
+
+    val isDirty: Boolean get() = dirtyFlags != 0 || tiles.isNotEmpty() or savableEntities.isNotEmpty()
 
     fun getFullBlock(x: Int, y: Int, z: Int): Long {
         return getSubChunk(y shr 4).getFullBlock(x, y and 0xf, z)
