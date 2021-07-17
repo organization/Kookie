@@ -183,7 +183,7 @@ import be.zvz.kookie.network.mcpe.protocol.UpdatePlayerGameTypePacket
 import be.zvz.kookie.network.mcpe.protocol.UpdateSoftEnumPacket
 import be.zvz.kookie.network.mcpe.protocol.UpdateTradePacket
 
-open class DefaultPacketHandler : PacketHandlerInterface {
+open class PacketHandler : PacketHandlerInterface {
     override fun handleUnknown(packet: UnknownPacket): Boolean {
         return false
     }
