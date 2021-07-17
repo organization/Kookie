@@ -38,8 +38,8 @@ class Chunk @JvmOverloads constructor(
     val tiles = HashIntObjMaps.newMutableMap<Tile>()
     val entities = HashIntObjMaps.newMutableMap<Entity>()
 
-    var lightPopulated = false
-    var terrainPopulated = false
+    var lightPopulated: Boolean? = false
+    var terrainPopulated: Boolean = false
 
     val height: Int = subChunks.size
 
