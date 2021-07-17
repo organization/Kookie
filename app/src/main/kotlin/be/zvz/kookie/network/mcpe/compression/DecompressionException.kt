@@ -15,9 +15,6 @@
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  */
-package be.zvz.kookie.block.tile
+package be.zvz.kookie.network.mcpe.compression
 
-object TileFactory {
-    @JvmStatic
-    fun getSaveId(className: Class<out Tile>): String = TODO("getSaveId")
-}
+class DecompressionException(message: String, cause: Throwable) : RuntimeException(message, cause)
