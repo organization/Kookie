@@ -1,6 +1,5 @@
 /**
- *
- * _  __           _    _
+ *  _  __           _    _
  * | |/ /___   ___ | | _(_) ___
  * | ' // _ \ / _ \| |/ / |/ _ \
  * | . \ (_) | (_) |   <| |  __/
@@ -17,14 +16,53 @@
  */
 package be.zvz.kookie.scheduler
 
-import java.util.concurrent.FutureTask
+import java.util.concurrent.Callable
+import java.util.concurrent.ExecutionException
 
-class AsyncTask<T>(onRun: Runnable, internal val result: T?) : FutureTask<T>(onRun, result) {
-    private var submitted = false
+abstract class AsyncTask<T> @JvmOverloads constructor(
+    private val onRun: (() -> T)? = null,
+    private val onError: ((Exception) -> Unit)? = null
+) : Callable<T> {
+    private var submitted: Boolean = false
 
     fun setSubmitted() {
-        submitted = true
+        if (submitted) {
+            throw IllegalArgumentException("Cannot submit the same AsyncTask instance more than once")
+        } else {
+            this.submitted = true
+        }
     }
 
-    fun isSubmitted() = submitted
+    @Throws(ExecutionException::class)
+    override fun call(): T {
+        try {
+            val result = onRun()
+            this.onCompletion(result)
+            return result
+        } catch (e: Exception) {
+            onError(e)
+            throw ExecutionException(e)
+        }
+    }
+
+    @Throws(ExecutionException::class)
+    open fun onRun(): T {
+        if (onRun === null) {
+            throw ExecutionException(IllegalArgumentException("Must override this method or given constructor argument."))
+        } else {
+            return onRun()
+        }
+    }
+
+    open fun onError(e: Exception) {
+        if (onRun === null) {
+            e.printStackTrace()
+        } else {
+            return onError(e)
+        }
+    }
+
+    open fun onCompletion(result: T) {
+        // EMPTY BODY
+    }
 }
