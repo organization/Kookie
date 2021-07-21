@@ -92,7 +92,7 @@ dependencies {
     implementation(group = "org.fusesource.jansi", name = "jansi", version = "1.18")
 
     // netty
-    implementation(group = "io.netty", name = "netty-all", version = "4.1.65.Final")
+    implementation(group = "io.netty", name = "netty-all", version = "4.1.66.Final")
 
     // bedrock-network
     implementation(group = "org.powernukkit.bedrock.network", name = "raknet", version = "1.6.25-PN.2")
