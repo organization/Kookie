@@ -21,6 +21,7 @@ import be.zvz.kookie.block.BlockLegacyIds
 import be.zvz.kookie.block.tile.Tile
 import be.zvz.kookie.entity.Entity
 import be.zvz.kookie.math.Vector3
+import be.zvz.kookie.nbt.tag.CompoundTag
 import be.zvz.kookie.player.Player
 import be.zvz.kookie.world.biome.BiomeIds
 import com.koloboke.collect.map.hash.HashIntObjMaps
@@ -29,23 +30,30 @@ class Chunk @JvmOverloads constructor(
     val subChunks: MutableList<SubChunk> = MutableList(MAX_SUBCHUNKS) {
         SubChunk(BlockLegacyIds.AIR.id.toLong() shl 4, mutableListOf())
     },
-    val NBTentities: MutableList<Entity> = mutableListOf(),
-    val NBTtiles: MutableList<Tile> = mutableListOf(),
+    _NBTentities: List<CompoundTag>? = null,
+    _NBTtiles: List<CompoundTag>? = null,
     val biomeIds: BiomeArray = BiomeArray.fill(BiomeIds.OCEAN.id),
     var heightMap: HeightArray = HeightArray.fill(subChunks.size * 16)
 ) : Cloneable {
     var dirtyFlags: Int = 0
-    val tiles = HashIntObjMaps.newMutableMap<Tile>()
-    val entities = HashIntObjMaps.newMutableMap<Entity>()
+    val entities: MutableMap<Int, Entity> = HashIntObjMaps.newMutableMap()
+    val tiles: MutableMap<Int, Tile> = HashIntObjMaps.newMutableMap()
 
     var lightPopulated: Boolean? = false
     var terrainPopulated: Boolean = false
 
-    val height: Int = subChunks.size
+    val height: Int get() = subChunks.size
 
-    val savableEntities = entities.filter {
-        TODO("Implements after implemented Entity::canSaveWithChunk()")
-    }
+    private var _NBTentities: List<CompoundTag>? = _NBTentities
+    val NBTentities: List<CompoundTag> get() = _NBTentities ?: savableEntities.values.map { it.saveNBT() }
+
+    private var _NBTtiles: List<CompoundTag>? = _NBTtiles
+    val NBTtiles: List<CompoundTag> get() = _NBTtiles ?: tiles.values.map { it.saveNBT() }
+
+    val savableEntities
+        get() = entities.filter {
+            TODO("Implements after implemented Entity::canSaveWithChunk()")
+        }
 
     val isDirty: Boolean get() = dirtyFlags != 0 || tiles.isNotEmpty() or savableEntities.isNotEmpty()
 
@@ -144,6 +152,10 @@ class Chunk @JvmOverloads constructor(
             subChunks[y] = subChunk ?: SubChunk(BlockLegacyIds.AIR.id.toLong() shl 4, mutableListOf())
             setDirtyFlag(DIRTY_FLAG_TERRAIN, true)
         }
+    }
+
+    fun clearDirtyFlags() {
+        dirtyFlags = 0
     }
 
     public override fun clone() = Chunk(
