@@ -17,6 +17,8 @@
  */
 package be.zvz.kookie.world.format.io
 
+import be.zvz.kookie.world.format.Chunk
+
 interface WritableWorldProvider : WorldProvider {
-    fun saveChunk(chunkX: Int, chunkZ: Int)
+    fun saveChunk(chunkX: Int, chunkZ: Int, chunk: Chunk)
 }
