@@ -38,6 +38,7 @@ object Timings {
     var tickEntity = TimingsHandler(INCLUDED_BY_OTHER_TIMINGS_PREFIX + "tickEntity")
 
     val playerChunkSend = TimingsHandler("Player Send Chunks")
+    val playerChunkOrder = TimingsHandler("Player Order Chunks")
     val worldLoad = TimingsHandler("World Load")
     val worldSave = TimingsHandler("World Save")
 
