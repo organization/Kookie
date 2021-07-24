@@ -19,10 +19,16 @@ package be.zvz.kookie.world.format
 
 import be.zvz.kookie.block.BlockLegacyIds
 import be.zvz.kookie.block.tile.Tile
+import be.zvz.kookie.block.tile.TileFactory
 import be.zvz.kookie.entity.Entity
+import be.zvz.kookie.entity.EntityFactory
 import be.zvz.kookie.math.Vector3
+import be.zvz.kookie.nbt.NbtDataException
 import be.zvz.kookie.nbt.tag.CompoundTag
+import be.zvz.kookie.nbt.tag.IntTag
+import be.zvz.kookie.nbt.tag.StringTag
 import be.zvz.kookie.player.Player
+import be.zvz.kookie.world.World
 import be.zvz.kookie.world.biome.BiomeIds
 import com.koloboke.collect.map.hash.HashIntObjMaps
 
@@ -56,6 +62,61 @@ class Chunk @JvmOverloads constructor(
         }
 
     val isDirty: Boolean get() = dirtyFlags != 0 || tiles.isNotEmpty() or savableEntities.isNotEmpty()
+
+    internal fun initNbt(world: World, chunkX: Int, chunkZ: Int) {
+        _NBTentities?.let { tags ->
+            world.timings.syncChunkLoadEntities.startTiming()
+            tags.forEachIndexed { k, nbt ->
+                val entity = try {
+                    EntityFactory.createFromData(world, nbt)
+                } catch (e: NbtDataException) {
+                    world.logger.error("Chunk $chunkX $chunkZ: Bad entity data at list position $k: " + e.message)
+                    e.printStackTrace()
+
+                    return@forEachIndexed
+                }
+                if (entity === null) {
+                    val saveId = when (val saveIdTag = nbt.getTag("id") ?: nbt.getTag("identifier")) {
+                        is StringTag -> saveIdTag.value
+                        is IntTag -> "legacy(${saveIdTag.value})"
+                        else -> "<unknown>"
+                    }
+                    world.logger.warn("Chunk $chunkX $chunkZ: Deleted unknown entity type $saveId")
+                }
+                // TODO: we can't prevent entities getting added to unloaded chunks if they were saved in the wrong place
+                // here, because entities currently add themselves to the world
+            }
+
+            setDirtyFlag(DIRTY_FLAG_ENTITIES, true)
+            _NBTentities = null
+            world.timings.syncChunkLoadEntities.stopTiming()
+        }
+
+        _NBTtiles?.let { tags ->
+            world.timings.syncChunkLoadTileEntities.startTiming()
+            tags.forEachIndexed { k, nbt ->
+                val tile = try {
+                    TileFactory.createFromData(world, nbt)
+                } catch (e: NbtDataException) {
+                    world.logger.error("Chunk $chunkX $chunkZ: Bad tile entity data at list position $k: " + e.message)
+                    e.printStackTrace()
+
+                    return@forEachIndexed
+                }
+                if (tile === null) {
+                    val saveId = nbt.getString("id", "<unknown>")
+                    world.logger.warn("Chunk $chunkX $chunkZ: Deleted unknown tile entity type $saveId")
+                } else if (!world.isChunkLoaded(tile.pos.x.toInt() shr 4, tile.pos.z.toInt() shr 4)) {
+                    world.logger.error("Chunk $chunkX $chunkZ: Found tile saved on wrong chunk")
+                } else {
+                    world.addTile(tile)
+                }
+            }
+            setDirtyFlag(DIRTY_FLAG_TILES, true)
+            _NBTtiles = null
+            world.timings.syncChunkLoadTileEntities.stopTiming()
+        }
+    }
 
     fun getFullBlock(x: Int, y: Int, z: Int): Long {
         return getSubChunk(y shr 4).getFullBlock(x, y and 0xf, z)

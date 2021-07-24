@@ -1829,7 +1829,7 @@ class World(
 
         chunks[chunkHash] = chunk
         blockCache.remove(chunkHash)
-        // TODO: chunk.initNbt(this, chunkX, chunkZ)
+        chunk.initNbt(this, chunkX, chunkZ)
 
         ChunkLoadEvent(this, chunkX, chunkZ, chunk, false).call()
 
