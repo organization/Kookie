@@ -154,6 +154,10 @@ class Chunk @JvmOverloads constructor(
         }
     }
 
+    fun setDirty() {
+        dirtyFlags = 0.inv()
+    }
+
     fun clearDirtyFlags() {
         dirtyFlags = 0
     }
