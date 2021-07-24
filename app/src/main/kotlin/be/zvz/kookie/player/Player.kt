@@ -42,7 +42,7 @@ class Player(
     val namedTag: CompoundTag,
     skin: Skin,
     location: Location
-) : Human(skin, location), CommandSender {
+) : Human(skin, location), CommandSender, ChunkListener {
     override val language: Language get() = server.language
     val username = playerInfo.getUsername()
     var displayName = username
@@ -52,9 +52,6 @@ class Player(
     lateinit var craftingGrid: CraftingGrid
         private set
 
-    fun doChunkRequest() {
-        TODO("Not yet implemented")
-    }
 
     override fun sendMessage(message: String) {
         networkSession.sendDataPacket(TextPacket.raw(message))
@@ -117,6 +114,55 @@ class Player(
     }
 
     override fun getEffectivePermissions(): Map<String, PermissionAttachmentInfo> {
+        TODO("Not yet implemented")
+    }
+
+    fun doChunkRequest() {
+        TODO("Not yet implemented")
+    }
+
+    /** Requests chunks from the world to be sent, up to a set limit every tick. This operates on the results of the most recent chunk order. */
+    private fun requestChunks() {
+        TODO("Not yet implemented")
+    }
+
+    /**
+     * Calculates which new chunks this player needs to use, and which currently-used chunks it needs to stop using.
+     * This is based on factors including the player's current render radius and current position.
+     */
+    private fun orderChunks() {
+        TODO("Not yet implemented")
+    }
+
+    private fun unloadChunk(chunkX: Int, chunkZ: Int, world: World = this.world) {
+        TODO("Not yet implemented")
+    }
+
+    private fun spawnEntitiesOnAllChunks() {
+        TODO("Not yet implemented")
+    }
+
+    private fun spawnEntitiesOnChunk(chunkX: Int, chunkZ: Int) {
+        TODO("Not yet implemented")
+    }
+
+    /**
+     * Returns whether the player is using the chunk with the given coordinates,
+     * irrespective of whether the chunk has been sent yet.
+     */
+    fun isUsingChunk(chunkX: Int, chunkZ: Int): Boolean = TODO("Not yet implemented")
+
+    /** Returns a usage status of the given chunk, or null if the player is not using the given chunk.  */
+    fun getUsedChunkStatus(chunkX: Int, chunkZ: Int): UsedChunkStatus? = TODO("Not yet implemented")
+
+    /** Returns whether the target chunk has been sent to this player. */
+    fun hasReceivedChunk(chunkX: Int, chunkZ: Int): Boolean = TODO("Not yet implemented")
+
+    override fun onChunkChanged(chunkX: Int, chunkZ: Int, chunk: Chunk) {
+        TODO("Not yet implemented")
+    }
+
+    override fun onChunkUnloaded(chunkX: Int, chunkZ: Int, chunk: Chunk) {
         TODO("Not yet implemented")
     }
 }
