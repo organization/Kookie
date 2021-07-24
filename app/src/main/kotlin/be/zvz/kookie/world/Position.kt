@@ -28,8 +28,8 @@ open class Position @JvmOverloads constructor(
 ) : Vector3(x, y, z) {
     var world: World? = null
         set(value) {
-            if(value !== null && value.unloaded){
-                throw IllegalArgumentException("Position world is null or has been unloaded");
+            if (value !== null && value.unloaded) {
+                throw IllegalArgumentException("Position world is null or has been unloaded")
             }
             field = value
         }
