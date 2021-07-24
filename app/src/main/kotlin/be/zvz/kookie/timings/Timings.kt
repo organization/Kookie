@@ -41,6 +41,8 @@ object Timings {
     val playerChunkOrder = TimingsHandler("Player Order Chunks")
     val worldLoad = TimingsHandler("World Load")
     val worldSave = TimingsHandler("World Save")
+    val population = TimingsHandler("World Population")
+    val generation = TimingsHandler("World Generation")
 
     @JvmStatic
     fun getTileEntityTimings(tile: Tile): TimingsHandler {
