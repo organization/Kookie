@@ -32,6 +32,16 @@ import be.zvz.kookie.permission.Permission
 import be.zvz.kookie.permission.PermissionAttachment
 import be.zvz.kookie.permission.PermissionAttachmentInfo
 import be.zvz.kookie.plugin.Plugin
+import be.zvz.kookie.timings.Timings
+import be.zvz.kookie.world.ChunkHash
+import be.zvz.kookie.world.ChunkListener
+import be.zvz.kookie.world.World
+import be.zvz.kookie.world.format.Chunk
+import com.koloboke.collect.map.hash.HashLongObjMaps
+import com.koloboke.collect.set.hash.HashLongSets
+import org.slf4j.LoggerFactory
+import kotlin.math.min
+import kotlin.math.pow
 
 class Player(
     override var server: Server,
@@ -43,6 +53,8 @@ class Player(
     skin: Skin,
     location: Location
 ) : Human(skin, location), CommandSender, ChunkListener {
+    private val logger = LoggerFactory.getLogger(Player::class.java)
+
     override val language: Language get() = server.language
     val username = playerInfo.getUsername()
     var displayName = username
@@ -52,6 +64,27 @@ class Player(
     lateinit var craftingGrid: CraftingGrid
         private set
 
+    val usedChunks: MutableMap<ChunkHash, UsedChunkStatus> = HashLongObjMaps.newMutableMap()
+    private val loadQueue: MutableSet<ChunkHash> = HashLongSets.newMutableSet()
+    private var nextChunkOrderRun: Int = 5
+    private val chunkSelector = ChunkSelector()
+    private val chunkLoader = PlayerChunkLoader(spawnLocation)
+
+    private var chunksPerTick: Int = server.configGroup.getProperty("chunk-sending.per-tick").asLong(4).toInt()
+    private var spawnThreshold: Int =
+        (server.configGroup.getProperty("chunk-sending.spawn-radius").asLong(4).toDouble().pow(2) * Math.PI).toInt()
+    private var spawnChunkLoadCount: Int = 0
+    var viewDistance: Int = -1
+        set(value) {
+            field = server.getAllowedViewDistance(value)
+            spawnThreshold = min(
+                value,
+                (server.configGroup.getProperty("chunk-sending.spawn-radius").asLong(4).toDouble().pow(2) * Math.PI).toInt()
+            )
+            nextChunkOrderRun = 0
+            // TODO: networkSession.syncViewAreaRadius(viewDistance)
+            logger.debug("Setting view distance to $viewDistance (requested $value)")
+        }
 
     override fun sendMessage(message: String) {
         networkSession.sendDataPacket(TextPacket.raw(message))
@@ -118,12 +151,76 @@ class Player(
     }
 
     fun doChunkRequest() {
-        TODO("Not yet implemented")
+        if (nextChunkOrderRun != Int.MAX_VALUE && nextChunkOrderRun-- <= 0) {
+            nextChunkOrderRun = Int.MAX_VALUE
+            orderChunks()
+        }
+
+        if (loadQueue.isNotEmpty()) {
+            requestChunks()
+        }
     }
 
-    /** Requests chunks from the world to be sent, up to a set limit every tick. This operates on the results of the most recent chunk order. */
+    /**
+     * Requests chunks from the world to be sent, up to a set limit every tick.
+     * This operates on the results of the most recent chunk order.
+     */
     private fun requestChunks() {
-        TODO("Not yet implemented")
+        /** TODO: if(isConnected) return */
+
+        Timings.playerChunkSend.startTiming()
+
+        var count = 0
+
+        loadQueue.forEach { chunkHash ->
+            if (count >= chunksPerTick) {
+                return@forEach
+            }
+
+            val (X, Z) = World.parseChunkHash(chunkHash)
+            ++count
+
+            usedChunks[chunkHash] = UsedChunkStatus.NEEDED
+            world.registerChunkLoader(chunkLoader, X, Z, true)
+            world.registerChunkListener(this, X, Z)
+
+            val originWorld = world
+            world.requestChunkPopulation(X, Z, chunkLoader).onCompletion(
+                { chunk ->
+                    val usedChunk = usedChunks[chunkHash]
+                    if (/* TODO: !isConnected || */ usedChunk == null || world != originWorld) {
+                        return@onCompletion
+                    }
+                    if (usedChunk != UsedChunkStatus.NEEDED) {
+                        // TODO: make this an error
+                        // we may have added multiple completion handlers, since the Player keeps re-requesting chunks
+                        // it doesn't have yet (a relic from the old system, but also currently relied on for chunk resends).
+                        // in this event, make sure we don't try to send the chunk multiple times.
+                        return@onCompletion
+                    }
+                    loadQueue.remove(chunkHash)
+                    usedChunks[chunkHash] = UsedChunkStatus.REQUESTED
+
+                    /** TODO: Implements after implemented NetworkSession::startUsingChunk
+                     * networkSession.startUsingChunk(X, Z) {
+                     *     usedChunks[chunkHash] = UsedChunkStatus.SENT
+                     *     if (spawnChunkLoadCount == -1) {
+                     *         spawnEntitiesOnChunk(X, Z)
+                     *     } else if (spawnChunkLoadCount++ == spawnThreshold) {
+                     *         spawnChunkLoadCount = -1
+                     *
+                     *         spawnEntitiesOnAllChunks()
+                     *
+                     *         networkSession.notifyTerrainReady()
+                     *     }
+                     * }
+                     */
+                },
+                { }
+            )
+        }
+
+        Timings.playerChunkSend.stopTiming()
     }
 
     /**
@@ -131,38 +228,95 @@ class Player(
      * This is based on factors including the player's current render radius and current position.
      */
     private fun orderChunks() {
-        TODO("Not yet implemented")
+        if (/* TODO: !isConnected || */ viewDistance == -1) {
+            return
+        }
+
+        Timings.playerChunkOrder.startTiming()
+
+        loadQueue.clear()
+        val unloadChunks = HashLongObjMaps.newMutableMap(usedChunks)
+
+        chunkSelector.selectChunks(viewDistance, location.x.toInt() shr 4, location.z.toInt() shr 4).forEach { chunkHash ->
+            val status = usedChunks[chunkHash]?.equals(UsedChunkStatus.NEEDED)
+            if (status === null || status == true) {
+                loadQueue.add(chunkHash)
+            }
+            unloadChunks.remove(chunkHash)
+        }
+
+        unloadChunks.keys.forEach { chunkHash ->
+            val (chunkX, chunkZ) = World.parseChunkHash(chunkHash)
+            unloadChunk(chunkX, chunkZ)
+        }
+
+        if (loadQueue.isNotEmpty() || unloadChunks.isNotEmpty()) {
+            chunkLoader.currentLocation = location
+            // TODO: networkSession.syncViewAreaCenterPoint(location, viewDistance)
+        }
+
+        Timings.playerChunkOrder.stopTiming()
     }
 
     private fun unloadChunk(chunkX: Int, chunkZ: Int, world: World = this.world) {
-        TODO("Not yet implemented")
+        val chunkHash = World.chunkHash(chunkX, chunkZ)
+        if (usedChunks.containsKey(chunkHash)) {
+            world.getChunk(chunkX, chunkZ)?.entities?.values?.forEach {
+                if (it !== this) {
+                    it.despawnFrom(this)
+                }
+            }
+            // stopUsingChunk() always empty method...Why call it?
+            // TODO: networkSession.stopUsingChunk(chunkX, chunkZ)
+            usedChunks.remove(chunkHash)
+        }
+        world.unregisterChunkLoader(chunkLoader, chunkX, chunkZ)
+        world.unregisterChunkListener(this, chunkX, chunkZ)
+        loadQueue.remove(chunkHash)
     }
 
     private fun spawnEntitiesOnAllChunks() {
-        TODO("Not yet implemented")
+        usedChunks.forEach { (chunkHash, status) ->
+            if (status == UsedChunkStatus.SENT) {
+                val (chunkX, chunkZ) = World.parseChunkHash(chunkHash)
+                spawnEntitiesOnChunk(chunkX, chunkZ)
+            }
+        }
     }
 
     private fun spawnEntitiesOnChunk(chunkX: Int, chunkZ: Int) {
-        TODO("Not yet implemented")
+        world.getChunk(chunkX, chunkZ)?.let {
+            it.entities.values.forEach { entity ->
+                if (entity !== this && !entity.isFlaggedForDespawn()) {
+                    entity.spawnTo(this)
+                }
+            }
+        }
     }
 
     /**
      * Returns whether the player is using the chunk with the given coordinates,
-     * irrespective of whether the chunk has been sent yet.
+     *  irrespective of whether the chunk has been sent yet.
      */
-    fun isUsingChunk(chunkX: Int, chunkZ: Int): Boolean = TODO("Not yet implemented")
+    fun isUsingChunk(chunkX: Int, chunkZ: Int): Boolean = usedChunks.containsKey(World.chunkHash(chunkX, chunkZ))
 
     /** Returns a usage status of the given chunk, or null if the player is not using the given chunk.  */
-    fun getUsedChunkStatus(chunkX: Int, chunkZ: Int): UsedChunkStatus? = TODO("Not yet implemented")
+    fun getUsedChunkStatus(chunkX: Int, chunkZ: Int): UsedChunkStatus? = usedChunks[World.chunkHash(chunkX, chunkZ)]
 
     /** Returns whether the target chunk has been sent to this player. */
-    fun hasReceivedChunk(chunkX: Int, chunkZ: Int): Boolean = TODO("Not yet implemented")
+    fun hasReceivedChunk(chunkX: Int, chunkZ: Int): Boolean = getUsedChunkStatus(chunkX, chunkZ) == UsedChunkStatus.SENT
 
     override fun onChunkChanged(chunkX: Int, chunkZ: Int, chunk: Chunk) {
-        TODO("Not yet implemented")
+        if (hasReceivedChunk(chunkX, chunkZ)) {
+            usedChunks[World.chunkHash(chunkX, chunkZ)] = UsedChunkStatus.NEEDED
+            nextChunkOrderRun = 0
+        }
     }
 
     override fun onChunkUnloaded(chunkX: Int, chunkZ: Int, chunk: Chunk) {
-        TODO("Not yet implemented")
+        if (isUsingChunk(chunkX, chunkZ)) {
+            logger.debug("Detected forced unload of chunk $chunkX $chunkZ")
+            unloadChunk(chunkX, chunkZ)
+        }
     }
 }
