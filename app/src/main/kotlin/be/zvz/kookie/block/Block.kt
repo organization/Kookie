@@ -227,6 +227,10 @@ open class Block(val idInfo: BlockIdentifier, val name: String, val breakInfo: B
         pos = Position(x, y, z, world)
     }
 
+    fun position(world: World, vec: Vector3) {
+        pos = Position.fromObject(vec, world)
+    }
+
     open fun getDrops(item: Item): List<Item> =
         if (breakInfo.isToolCompatible(item)) {
             if (isAffectedBySilkTouch() && item.hasEnchantment(VanillaEnchantments.SILK_TOUCH.enchantment)) {

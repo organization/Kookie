@@ -294,6 +294,12 @@ class World(
         }
 
         fun getXZ(hash: Long): Pair<Int, Int> = Morton2D.decode(hash)
+    fun isInWorld(pos: Vector3): Boolean = isInWorld(pos.x.toInt(), pos.y.toInt(), pos.z.toInt())
+    override fun isInWorld(x: Int, y: Int, z: Int): Boolean =
+        x in Int.MIN_VALUE..Int.MAX_VALUE &&
+            y in Int.MIN_VALUE..Int.MAX_VALUE &&
+            z in Int.MIN_VALUE..Int.MAX_VALUE
+
 
         fun getDifficultyFromString(str: String): Int = when (str.trim().lowercase()) {
             "0", "peaceful", "p" -> DIFFICULTY_PEACEFUL
