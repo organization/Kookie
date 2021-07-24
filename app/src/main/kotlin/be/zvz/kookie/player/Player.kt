@@ -38,7 +38,7 @@ class Player(
     val networkSession: NetworkSession,
     val playerInfo: PlayerInfo,
     val authenticated: Boolean,
-    val spawnLocation: Any, // TODO: Location,
+    val spawnLocation: Location,
     val namedTag: CompoundTag,
     skin: Skin,
     location: Location
