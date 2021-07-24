@@ -18,12 +18,13 @@
 package be.zvz.kookie.world.particle
 
 import be.zvz.kookie.block.Block
+import be.zvz.kookie.math.Facing
 import be.zvz.kookie.network.mcpe.protocol.LevelEventPacket
 
-class BlockPunchParticle(val block: Block, val face: Int) : EventParticle(LevelEventPacket.EVENT_PARTICLE_PUNCH_BLOCK) {
+class BlockPunchParticle(val block: Block, val face: Facing) : EventParticle(LevelEventPacket.EVENT_PARTICLE_PUNCH_BLOCK) {
     override val data: Int
         get() {
             TODO("Implements after implemented RuntimeBlockMapping")
-            // RuntimeBlockMapping.totoRuntimeId(block.getFullId()) or (face shl 24)
+            // RuntimeBlockMapping.totoRuntimeId(block.getFullId()) or (face.value shl 24)
         }
 }

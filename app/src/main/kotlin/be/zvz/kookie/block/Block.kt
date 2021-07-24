@@ -135,7 +135,7 @@ open class Block(val idInfo: BlockIdentifier, val name: String, val breakInfo: B
     open fun canBePlacedAt(
         blockReplace: Block,
         clickVector: Vector3,
-        face: Int,
+        face: Facing,
         isClickedBlock: Boolean
     ): Boolean = blockReplace.canBeReplaced()
 
@@ -145,7 +145,7 @@ open class Block(val idInfo: BlockIdentifier, val name: String, val breakInfo: B
         item: Item,
         blockReplace: Block,
         blockClicked: Block,
-        face: Int,
+        face: Facing,
         clickVector: Vector3,
         player: Player? = null
     ): Boolean {
@@ -179,10 +179,10 @@ open class Block(val idInfo: BlockIdentifier, val name: String, val breakInfo: B
     }
 
     @JvmOverloads
-    open fun onInteract(item: Item, face: Int, clickVector: Vector3, player: Player? = null): Boolean = false
+    open fun onInteract(item: Item, face: Facing, clickVector: Vector3, player: Player? = null): Boolean = false
 
     @JvmOverloads
-    open fun onAttack(item: Item, face: Int, player: Player? = null): Boolean = false
+    open fun onAttack(item: Item, face: Facing, player: Player? = null): Boolean = false
 
     open fun getFrictionFactor(): Float = 0.6f
 
