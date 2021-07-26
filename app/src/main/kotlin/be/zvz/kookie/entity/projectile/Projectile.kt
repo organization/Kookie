@@ -1,3 +1,20 @@
+/**
+ *
+ * _  __           _    _
+ * | |/ /___   ___ | | _(_) ___
+ * | ' // _ \ / _ \| |/ / |/ _ \
+ * | . \ (_) | (_) |   <| |  __/
+ * |_|\_\___/ \___/|_|\_\_|\___|
+ *
+ * A server software for Minecraft: Bedrock Edition
+ *
+ * Copyright (C) 2021 organization Team
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ */
 package be.zvz.kookie.entity.projectile
 
 import be.zvz.kookie.block.Block
@@ -5,6 +22,12 @@ import be.zvz.kookie.block.BlockFactory
 import be.zvz.kookie.entity.Entity
 import be.zvz.kookie.entity.Living
 import be.zvz.kookie.entity.Location
+import be.zvz.kookie.event.entity.EntityCombustByEntityEvent
+import be.zvz.kookie.event.entity.EntityDamageByChildEntityEvent
+import be.zvz.kookie.event.entity.EntityDamageByEntityEvent
+import be.zvz.kookie.event.entity.EntityDamageEvent
+import be.zvz.kookie.event.entity.ProjectileHitEvent
+import be.zvz.kookie.math.RayTraceResult
 import be.zvz.kookie.math.Vector3
 import be.zvz.kookie.math.VoxelRayTrace
 import be.zvz.kookie.nbt.tag.ByteTag
@@ -152,37 +175,18 @@ abstract class Projectile(location: Location, val shootingEntity: Entity?, nbt: 
 
         var newDiff = end.subtract(start)
 
+        // TODO: do this when world get merged
         /*
-        world.getEntityCollidingEntities().forEach {
-
+        world.getEntityCollidingEntities(boundingBox.addCoord(newDiff.x, newDiff.y, newDiff.z).expand(1, 1, 1)).forEach {
+            owningEntity?.let { ownE ->
+                if (ownE.getId() == it.id && ticksLived < 5) {
+                    return@forEach
+                }
+            }
+            val entityBB = it.boundingBox.expandCopy(0.3, 0.3, 0.3)
         }
+         */
         /*
-        $this->blocksAround = null;
-
-		Timings::$entityMove->startTiming();
-
-		$start = $this->location->asVector3();
-		$end = $start->addVector($this->motion);
-
-		$blockHit = null;
-		$entityHit = null;
-		$hitResult = null;
-
-		foreach(VoxelRayTrace::betweenPoints($start, $end) as $vector3){
-			$block = $this->getWorld()->getBlockAt($vector3->x, $vector3->y, $vector3->z);
-
-			$blockHitResult = $this->calculateInterceptWithBlock($block, $start, $end);
-			if($blockHitResult !== null){
-				$end = $blockHitResult->hitVector;
-				$blockHit = $block;
-				$hitResult = $blockHitResult;
-				break;
-			}
-		}
-
-		$entityDistance = PHP_INT_MAX;
-
-		$newDiff = $end->subtractVector($start);
 		foreach($this->getWorld()->getCollidingEntities($this->boundingBox->addCoord($newDiff->x, $newDiff->y, $newDiff->z)->expand(1, 1, 1), $this) as $entity){
 			if($entity->getId() === $this->getOwningEntityId() and $this->ticksLived < 5){
 				continue;
@@ -252,6 +256,43 @@ abstract class Projectile(location: Location, val shootingEntity: Entity?, nbt: 
 
 		Timings::$entityMove->stopTiming();
          */
-         */
+    }
+
+    protected fun calculateInterceptWithBlock(block: Block, start: Vector3, end: Vector3): RayTraceResult? =
+        block.calculateIntercept(start, end)
+
+    protected fun onHit(event: ProjectileHitEvent) {
+    }
+
+    protected fun onHitEntity(entityHit: Entity, hitResult: RayTraceResult) {
+        val damage = getResultDamage()
+        if (damage >= 0) {
+
+            val ev = if (owningEntity != null) {
+                EntityDamageByEntityEvent(this, entityHit, EntityDamageEvent.Type.PROJECTILE, damage.toFloat())
+            } else {
+                EntityDamageByChildEntityEvent(
+                    owningEntity!!,
+                    entityHit,
+                    this,
+                    EntityDamageEvent.Type.PROJECTILE,
+                    damage.toFloat()
+                )
+            }
+            entityHit.attack(ev)
+
+            if (isOnFire()) {
+                val ev = EntityCombustByEntityEvent(this, entityHit, 5)
+                ev.call()
+                if (!ev.isCancelled) {
+                    entityHit.setOnFire(ev.duration.toLong())
+                }
+            }
+        }
+        flagForDespawn()
+    }
+
+    protected fun onHitBlock(blockHit: Block, hitResult: RayTraceResult) {
+        this.blockHit = blockHit.clone()
     }
 }

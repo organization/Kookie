@@ -17,22 +17,7 @@
  */
 package be.zvz.kookie.event.entity
 
-import be.zvz.kookie.entity.Entity
-import com.koloboke.collect.map.hash.HashObjObjMaps
+import be.zvz.kookie.entity.projectile.Projectile
+import be.zvz.kookie.math.RayTraceResult
 
-class EntityDamageByChildEntityEvent @JvmOverloads constructor(
-    damagerEntity: Entity,
-    val childEntity: Entity,
-    entity: Entity,
-    cause: Type,
-    damage: Float,
-    modifiers: MutableMap<ModifierType, Float> = HashObjObjMaps.newMutableMap(),
-    knockBack: Float = 0.4F
-) : EntityDamageByEntityEvent(
-    damagerEntity,
-    entity,
-    cause,
-    damage,
-    modifiers,
-    knockBack
-)
+abstract class ProjectileHitEvent(entity: Projectile, val rayTraceResult: RayTraceResult) : EntityEvent(entity)
