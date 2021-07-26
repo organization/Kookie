@@ -29,12 +29,12 @@ import kotlin.math.sqrt
 
 open class Vector3 @JvmOverloads constructor(var x: Double = 0.0, var y: Double = 0.0, var z: Double = 0.0) : Vector {
 
-    val floorX: Double = floor().x
-    val floorY: Double = floor().y
-    val floorZ: Double = floor().z
+    val floorX: Int = x.toInt()
+    val floorY: Int = y.toInt()
+    val floorZ: Int = z.toInt()
 
-    val chunkX: Int = floorX.toInt() shr 4
-    val chunkZ: Int = floorZ.toInt() shr 4
+    val chunkX: Int = floorX shr 4
+    val chunkZ: Int = floorZ shr 4
 
     @JvmOverloads
     constructor(x: Int, y: Int = 0, z: Int = 0) : this(x.toDouble(), y.toDouble(), z.toDouble())
