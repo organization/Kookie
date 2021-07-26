@@ -34,6 +34,7 @@ open class Vector3 @JvmOverloads constructor(var x: Double = 0.0, var y: Double 
     val floorZ: Int = z.toInt()
 
     val chunkX: Int = floorX shr 4
+    val chunkY: Int = floorY shr 4
     val chunkZ: Int = floorZ shr 4
 
     @JvmOverloads
