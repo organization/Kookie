@@ -297,7 +297,7 @@ class Server(dataPath: Path, pluginPath: Path) {
     }
 
     private fun tick() {
-        var tickTime: Long = System.currentTimeMillis()
+        val tickTime: Long = System.currentTimeMillis()
         if (tickTime - nextTick < -0.0025) {
             return
         }
