@@ -89,9 +89,9 @@ open class Explosion @JvmOverloads constructor(
                                 targetBlock.getAffectedBlocks().forEach { affectedBlock ->
                                     affectedBlocks[
                                         World.blockHash(
-                                            affectedBlock.pos.x.toInt(),
-                                            affectedBlock.pos.y.toInt(),
-                                            affectedBlock.pos.z.toInt()
+                                            affectedBlock.pos.floorX,
+                                            affectedBlock.pos.floorY,
+                                            affectedBlock.pos.floorZ
                                         )
                                     ] = affectedBlock
                                 }
@@ -187,7 +187,7 @@ open class Explosion @JvmOverloads constructor(
             val blockPos: Position = block.pos
             Facing.ALL.forEach { side ->
                 val sideBlock = blockPos.getSide(side)
-                val (sideX, sideY, sideZ) = listOf(sideBlock.x.toInt(), sideBlock.y.toInt(), sideBlock.z.toInt())
+                val (sideX, sideY, sideZ) = listOf(sideBlock.floorX, sideBlock.floorY, sideBlock.floorZ)
                 if (world.isInWorld(sideX, sideY, sideZ)) {
                     val index = World.blockHash(sideX, sideY, sideZ)
                     if (!affectedBlocks.containsKey(index) && !updateBlocks.containsKey(index)) {

@@ -30,7 +30,7 @@ class BlockTransaction(val world: ChunkManager) {
     }
 
     fun addBlock(pos: Vector3, state: Block): BlockTransaction =
-        addBlockAt(pos.x.toInt(), pos.y.toInt(), pos.z.toInt(), state)
+        addBlockAt(pos.floorX, pos.floorY, pos.floorZ, state)
 
     fun addBlockAt(x: Int, y: Int, z: Int, state: Block): BlockTransaction = this.apply {
         blocks
@@ -38,20 +38,20 @@ class BlockTransaction(val world: ChunkManager) {
             .getOrPut(y, HashIntObjMaps::newMutableMap)[z] = state
     }
 
-    fun fetchBlock(pos: Vector3): Block = fetchBlockAt(pos.x.toInt(), pos.y.toInt(), pos.z.toInt())
+    fun fetchBlock(pos: Vector3): Block = fetchBlockAt(pos.floorX, pos.floorY, pos.floorZ)
 
     fun fetchBlockAt(x: Int, y: Int, z: Int): Block = blocks[x]?.get(y)?.get(z) ?: world.getBlockAt(x, y, z)
 
     fun apply(): Boolean {
         getBlocks().forEach { data ->
             validators.forEach { callback ->
-                if (!callback.invoke(world, data.first.x.toInt(), data.first.y.toInt(), data.first.z.toInt())) {
+                if (!callback.invoke(world, data.first.floorX, data.first.floorY, data.first.floorZ)) {
                     return false
                 }
             }
         }
         getBlocks().forEach {
-            world.setBlockAt(it.first.x.toInt(), it.first.y.toInt(), it.first.z.toInt(), it.second)
+            world.setBlockAt(it.first.floorX, it.first.floorY, it.first.floorZ, it.second)
         }
         return true
     }

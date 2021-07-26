@@ -565,23 +565,23 @@ class World(
         val packets = mutableListOf<ClientboundPacket>()
 
         blocks.forEach { vec ->
-            val fullBlock = getBlockAt(vec.x.toInt(), vec.y.toInt(), vec.z.toInt())
+            val fullBlock = getBlockAt(vec.floorX, vec.floorY, vec.floorZ)
             packets.add(
                 UpdateBlockPacket().apply {
-                    pos.x = vec.x.toInt()
-                    pos.y = vec.y.toInt()
-                    pos.z = vec.z.toInt()
+                    pos.x = vec.floorX
+                    pos.y = vec.floorY
+                    pos.z = vec.floorZ
                     blockRuntimeId = 0 // TODO: RuntimeBlockMapping.getBlockRuntimeId(fullBlock.getFullId())
                 }
             )
 
-            val tile = getTileAt(vec.x.toInt(), vec.y.toInt(), vec.z.toInt())
+            val tile = getTileAt(vec.floorX, vec.floorY, vec.floorZ)
             if (tile is Spawnable) {
                 packets.add(
                     BlockActorDataPacket.create(
-                        vec.x.toInt(),
-                        vec.y.toInt(),
-                        vec.z.toInt(),
+                        vec.floorX,
+                        vec.floorY,
+                        vec.floorZ,
                         tile.serializedSpawnCompound
                     )
                 )
@@ -907,7 +907,7 @@ class World(
      * Returns the highest available level of any type of light at the given coordinates,
      * adjusted for the current weather and time of day.
      */
-    fun getFullLight(pos: Vector3): Int = getFullLight(pos.x.toInt(), pos.y.toInt(), pos.z.toInt())
+    fun getFullLight(pos: Vector3): Int = getFullLight(pos.floorX, pos.floorY, pos.floorZ)
     fun getFullLight(x: Int, y: Int, z: Int): Int {
         val skyLight = getRealBlockSkyLightAt(x, y, z)
         return if (skyLight < 15) {
@@ -1045,7 +1045,7 @@ class World(
         }
     }
 
-    fun isInWorld(pos: Vector3): Boolean = isInWorld(pos.x.toInt(), pos.y.toInt(), pos.z.toInt())
+    fun isInWorld(pos: Vector3): Boolean = isInWorld(pos.floorX, pos.floorY, pos.floorZ)
     override fun isInWorld(x: Int, y: Int, z: Int): Boolean =
         x in Int.MIN_VALUE..Int.MAX_VALUE &&
             y in Int.MIN_VALUE..Int.MAX_VALUE &&
@@ -1053,7 +1053,7 @@ class World(
 
     @JvmOverloads
     fun getBlock(pos: Vector3, cached: Boolean = true, addToCache: Boolean = true): Block =
-        getBlockAt(pos.x.toInt(), pos.y.toInt(), pos.z.toInt(), cached, addToCache)
+        getBlockAt(pos.floorX, pos.floorY, pos.floorZ, cached, addToCache)
 
     override fun getBlockAt(x: Int, y: Int, z: Int) = getBlockAt(x, y, z, true)
     fun getBlockAt(x: Int, y: Int, z: Int, cached: Boolean = true, addToCache: Boolean = true): Block {
@@ -1104,7 +1104,7 @@ class World(
     @JvmOverloads
     @Throws(IllegalArgumentException::class)
     fun setBlock(pos: Vector3, block: Block, update: Boolean = true) {
-        setBlockAt(pos.x.toInt(), pos.y.toInt(), pos.z.toInt(), block, update)
+        setBlockAt(pos.floorX, pos.floorY, pos.floorZ, block, update)
     }
 
     /**
@@ -1205,8 +1205,8 @@ class World(
     ): Boolean {
         val vector = pos.floor()
 
-        val chunkX = pos.x.toInt() shr 4
-        val chunkZ = pos.z.toInt() shr 4
+        val chunkX = pos.chunkX
+        val chunkZ = pos.chunkZ
         if (!isChunkLoaded(chunkX, chunkZ) || !isChunkGenerated(chunkX, chunkZ) || isChunkLocked(chunkX, chunkZ)) {
             return false
         }
@@ -1322,8 +1322,8 @@ class World(
             // TODO: build height limit messages for custom world heights and mcregion cap
             return false
         }
-        val chunkX = blockReplace.pos.x.toInt() shr 4
-        val chunkZ = blockReplace.pos.z.toInt() shr 4
+        val chunkX = blockReplace.pos.chunkX
+        val chunkZ = blockReplace.pos.chunkZ
         if (!isChunkLoaded(chunkX, chunkZ) || !isChunkGenerated(chunkX, chunkZ) || isChunkLocked(chunkX, chunkZ)) {
             return false
         }
@@ -1502,10 +1502,12 @@ class World(
     }
 
     /** Returns the Tile in a position, or null if not found. */
-    fun getTile(pos: Vector3): Tile? = getTileAt(pos.x.toInt(), pos.y.toInt(), pos.z.toInt())
+    fun getTile(pos: Vector3): Tile? =
+        loadChunk(pos.chunkX, pos.chunkZ)?.getTile(pos.x.toInt() and 0x0f, pos.y.toInt(), pos.z.toInt() and 0x0f)
 
     /** Returns the tile at the specified x,y,z coordinates, or null if it does not exist. */
-    fun getTileAt(x: Int, y: Int, z: Int): Tile? = this.loadChunk(x shr 4, z shr 4)?.getTile(x and 0x0f, y, y and 0x0f)
+    fun getTileAt(x: Int, y: Int, z: Int): Tile? =
+        loadChunk(x shr 4, z shr 4)?.getTile(x and 0x0f, y, z and 0x0f)
 
     fun getBiomeId(x: Int, z: Int): Int =
         loadChunk(x shr 4, z shr 4)?.getBiomeId(x and 0x0f, z and 0x0f) ?: BiomeIds.OCEAN.id
@@ -1531,7 +1533,7 @@ class World(
     override fun getChunk(chunkX: Int, chunkZ: Int): Chunk? = chunks[chunkHash(chunkX, chunkZ)]
 
     /** Returns the chunk containing the given Vector3 position. */
-    fun getOrLoadChunkAtPosition(pos: Vector3): Chunk? = loadChunk(pos.x.toInt() shr 4, pos.z.toInt() shr 4)
+    fun getOrLoadChunkAtPosition(pos: Vector3): Chunk? = loadChunk(pos.chunkX, pos.chunkZ)
 
     /** Returns the chunks adjacent to the specified chunk. */
     fun getAdjacentChunks(chunkX: Int, chunkZ: Int): MutableList<Chunk?> {
@@ -1648,7 +1650,7 @@ class World(
         throw WorldException("Cannot get highest block in an ungenerated chunk")
     }
 
-    fun isInLoadedTerrain(pos: Vector3): Boolean = isChunkLoaded(pos.x.toInt() shr 4, pos.z.toInt() shr 4)
+    fun isInLoadedTerrain(pos: Vector3): Boolean = isChunkLoaded(pos.chunkX, pos.chunkZ)
     fun isChunkLoaded(chunkX: Int, chunkZ: Int): Boolean = chunks[chunkHash(chunkX, chunkZ)] !== null
     fun isChunkGenerated(chunkX: Int, chunkZ: Int): Boolean = loadChunk(chunkX, chunkZ) !== null
     fun isChunkPopulated(chunkX: Int, chunkZ: Int): Boolean = loadChunk(chunkX, chunkZ)?.terrainPopulated == true
@@ -1698,7 +1700,7 @@ class World(
             throw IllegalArgumentException("Entity is not tracked by this world (possibly already removed?)")
         }
         val pos = this.entityLastKnownPositions[entityId] ?: entity.getPosition()
-        val chunk = getChunk(pos.x.toInt() shr 4, pos.x.toInt() shr 4)
+        val chunk = getChunk(pos.chunkX, pos.chunkX)
         if (chunk !== null) { // we don't care if the chunk already went out of scope
             chunk.removeEntity(entity)
         }
@@ -1717,10 +1719,10 @@ class World(
         val oldPosition = entityLastKnownPositions[entityId] ?: return
         val newPosition = entity.getPosition()
 
-        val oldChunkX = oldPosition.x.toInt() shr 4
-        val oldChunkZ = oldPosition.z.toInt() shr 4
-        val newChunkX = newPosition.x.toInt() shr 4
-        val newChunkZ = newPosition.z.toInt() shr 4
+        val oldChunkX = oldPosition.chunkX
+        val oldChunkZ = oldPosition.chunkZ
+        val newChunkX = newPosition.chunkX
+        val newChunkZ = newPosition.chunkZ
 
         if (oldChunkX != newChunkX || oldChunkZ != newChunkZ) {
             getChunk(oldChunkX, oldChunkZ)?.removeEntity(entity)
@@ -1761,8 +1763,8 @@ class World(
             throw IllegalArgumentException("Invalid Tile world")
         }
 
-        val chunkX = pos.x.toInt() shr 4
-        val chunkZ = pos.z.toInt() shr 4
+        val chunkX = pos.chunkX
+        val chunkZ = pos.chunkZ
         val chunkHash = chunkHash(chunkX, chunkZ)
 
         val chunk = chunks[chunkHash]
@@ -1782,8 +1784,8 @@ class World(
             throw IllegalArgumentException("Invalid Tile world")
         }
 
-        val chunkX = pos.x.toInt() shr 4
-        val chunkZ = pos.z.toInt() shr 4
+        val chunkX = pos.chunkX
+        val chunkZ = pos.chunkZ
         val chunkHash = chunkHash(chunkX, chunkZ)
         chunks[chunkHash]?.removeTile(tile)
         getChunkListeners(chunkX, chunkZ).forEach { listener ->
@@ -1918,7 +1920,7 @@ class World(
     /** Returns whether the chunk at the specified coordinates is a spawn chunk */
     fun isSpawnChunk(chunkX: Int, chunkZ: Int): Boolean {
         val spawn = spawnLocation
-        return abs(chunkX - spawn.x.toInt() shr 4) <= 1 && abs(chunkZ - spawn.z.toInt() shr 4) <= 1
+        return abs(chunkX - spawn.chunkX) <= 1 && abs(chunkZ - spawn.chunkZ) <= 1
     }
 
     @Throws(WorldException::class)
@@ -1930,9 +1932,9 @@ class World(
         val v = spawn.floor()
         val chunk = getOrLoadChunkAtPosition(v) ?: throw WorldException("Cannot find a safe spawn point in non-generated terrain")
 
-        val x = v.x.toInt()
-        val z = v.z.toInt()
-        var y = min(max - 2, v.y.toInt())
+        val x = v.floorX
+        val z = v.floorZ
+        var y = min(max - 2, v.floorY)
 
         var wasAir = getBlockAt(x, y - 1, z).getId() == BlockLegacyIds.AIR.id
         while (y > minY) {
@@ -1950,7 +1952,7 @@ class World(
         while (y in minY until max) {
             if (!getBlockAt(x, y + 1, z).isFullCube()) {
                 if (!getBlockAt(x, y, z).isFullCube()) {
-                    return Position(spawn.x.toInt(), if (y == spawn.y.toInt()) spawn.y.toInt() else y, spawn.z.toInt(), this)
+                    return Position(spawn.floorX, if (y == spawn.floorY) spawn.floorY else y, spawn.floorZ, this)
                 }
             } else {
                 ++y
@@ -2213,7 +2215,7 @@ class World(
 
         private const val DEFAULT_TICKED_BLOCKS_PER_SUBCHUNK_PER_TICK = 3
 
-        fun blockHash(pos: Vector3): BlockHash = blockHash(pos.x.toInt(), pos.y.toInt(), pos.z.toInt())
+        fun blockHash(pos: Vector3): BlockHash = blockHash(pos.floorX, pos.floorY, pos.floorZ)
         fun blockHash(x: Int, y: Int, z: Int): BlockHash {
             val shiftedY = y + BLOCKHASH_Y_OFFSET
             if (shiftedY and (0.inv() shl BLOCKHASH_Y_BITS) != 0) {
@@ -2233,12 +2235,12 @@ class World(
         }
 
         fun chunkHash(chunkX: Int, chunkZ: Int): ChunkHash = Morton2D.encode(chunkX, chunkZ)
-        fun chunkHash(pos: Vector3): ChunkHash = Morton2D.encode(pos.x.toInt() shr 4, pos.z.toInt() shr 4)
+        fun chunkHash(pos: Vector3): ChunkHash = Morton2D.encode(pos.chunkX, pos.chunkZ)
 
         /** Computes a small index relative to chunk base from the given coordinates. */
         fun chunkBlockHash(x: Int, y: Int, z: Int): ChunkBlockHash = Morton3D.encode(x, y, z)
         fun chunkBlockHash(pos: Vector3): ChunkBlockHash =
-            Morton3D.encode(pos.x.toInt() shr 4, pos.y.toInt() shr 4, pos.z.toInt() shr 4)
+            Morton3D.encode(pos.chunkX, pos.chunkY, pos.chunkZ)
 
         fun parseBlockHash(hash: BlockHash): Triple<Int, Int, Int> {
             val (baseX, baseY, baseZ) = Morton3D.decode(hash)

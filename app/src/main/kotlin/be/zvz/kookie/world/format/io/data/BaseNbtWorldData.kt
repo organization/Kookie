@@ -49,9 +49,9 @@ abstract class BaseNbtWorldData(protected val dataPath: Path) : WorldData {
             compoundTag.getInt("SpawnZ", 0)
         )
         set(value) {
-            compoundTag.setInt("SpawnX", value.x.toInt())
-            compoundTag.setInt("SpawnY", value.y.toInt())
-            compoundTag.setInt("SpawnZ", value.z.toInt())
+            compoundTag.setInt("SpawnX", value.floorX)
+            compoundTag.setInt("SpawnY", value.floorY)
+            compoundTag.setInt("SpawnZ", value.floorZ)
         }
 
     override var difficulty: Int

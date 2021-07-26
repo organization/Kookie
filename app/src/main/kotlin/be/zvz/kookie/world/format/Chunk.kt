@@ -114,7 +114,7 @@ class Chunk @JvmOverloads constructor(
                 if (tile === null) {
                     val saveId = nbt.getString("id", "<unknown>")
                     world.logger.warn("Chunk $chunkX $chunkZ: Deleted unknown tile entity type $saveId")
-                } else if (!world.isChunkLoaded(tile.pos.x.toInt() shr 4, tile.pos.z.toInt() shr 4)) {
+                } else if (!world.isChunkLoaded(tile.pos.chunkX, tile.pos.chunkZ)) {
                     world.logger.error("Chunk $chunkX $chunkZ: Found tile saved on wrong chunk")
                 } else {
                     world.addTile(tile)
@@ -193,7 +193,7 @@ class Chunk @JvmOverloads constructor(
         }
     }
 
-    fun getTile(pos: Vector3) = getTile(pos.x.toInt(), pos.y.toInt(), pos.z.toInt())
+    fun getTile(pos: Vector3) = getTile(pos.floorX, pos.floorY, pos.floorZ)
     fun getTile(x: Int, y: Int, z: Int) = tiles[blockHash(x, y, z)]
 
     fun onUnload() {
@@ -254,7 +254,7 @@ class Chunk @JvmOverloads constructor(
 
         const val MAX_SUBCHUNKS = 16
 
-        fun blockHash(pos: Vector3) = blockHash(pos.x.toInt(), pos.y.toInt(), pos.z.toInt())
+        fun blockHash(pos: Vector3) = blockHash(pos.floorX, pos.floorY, pos.floorZ)
         fun blockHash(x: Int, y: Int, z: Int) = y shl 8 or (z and 0x0f shl 4) or (x and 0x0f)
     }
 }
