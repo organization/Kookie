@@ -21,7 +21,9 @@ import be.zvz.kookie.world.ChunkManager
 import be.zvz.kookie.world.generator.objects.Ore
 import kotlin.random.Random
 
-class Ore(vararg val oreTypes: Ore.Type) : Populator {
+class Ore(vararg oreTypes: Ore.Type) : Populator {
+    var oreTypes: List<Ore.Type> = oreTypes.toList()
+
     override fun populate(world: ChunkManager, chunkX: Int, chunkZ: Int, random: Random) {
         oreTypes.forEach {
             val ore = Ore(random, it)
