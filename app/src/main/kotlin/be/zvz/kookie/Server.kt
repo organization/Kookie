@@ -22,6 +22,7 @@ import be.zvz.kookie.console.KookieConsole
 import be.zvz.kookie.console.brightCyan
 import be.zvz.kookie.constant.CorePaths
 import be.zvz.kookie.constant.FilePermission
+import be.zvz.kookie.event.server.QueryRegenerateEvent
 import be.zvz.kookie.lang.Language
 import be.zvz.kookie.lang.TranslationContainer
 import be.zvz.kookie.network.Network
@@ -31,6 +32,8 @@ import be.zvz.kookie.network.query.QueryInfo
 import be.zvz.kookie.player.Player
 import be.zvz.kookie.plugin.PluginManager
 import be.zvz.kookie.scheduler.AsyncPool
+import be.zvz.kookie.timings.Timings
+import be.zvz.kookie.timings.TimingsHandler
 import be.zvz.kookie.utils.Config
 import be.zvz.kookie.utils.OS
 import be.zvz.kookie.utils.config.PropertiesBrowser
@@ -47,6 +50,8 @@ import kotlin.io.path.createDirectories
 import kotlin.io.path.exists
 import kotlin.io.path.setPosixFilePermissions
 import kotlin.math.max
+import kotlin.math.min
+import kotlin.math.round
 import ch.qos.logback.classic.Level as LoggerLevel
 
 class Server(dataPath: Path, pluginPath: Path) {
@@ -55,8 +60,8 @@ class Server(dataPath: Path, pluginPath: Path) {
      * Counts the ticks since the server start
      *
      */
-    private var tickCounter: Int = 0
-    private var nextTick: Float = 0F
+    private var tickCounter: Long = 0
+    private var nextTick: Double = 0.0
     private val tickAverage: FloatArray = FloatArray(20) { 20F }
     private val useAverage: FloatArray = FloatArray(20) { 0F }
     private var currentTPS: Float = 20F
@@ -80,7 +85,16 @@ class Server(dataPath: Path, pluginPath: Path) {
     private var forceLanguage = false
     val configGroup: ServerConfigGroup
 
-    val queryInfo = QueryInfo()
+    var queryInfo: QueryInfo
+
+    var isCrashed: Boolean = false
+        private set
+    var isRunning: Boolean = false
+        private set
+
+    var sendUsageTicker: Int = 0
+
+    val profilingTickRate: Int = 20
 
     init {
         instance = this
@@ -229,6 +243,8 @@ class Server(dataPath: Path, pluginPath: Path) {
 
         pluginManager = PluginManager()
 
+        queryInfo = QueryInfo(this)
+
         asyncPool = AsyncPool(
             configGroup.getProperty("settings.async-workers").text().run {
                 var poolSize = 2
@@ -244,6 +260,8 @@ class Server(dataPath: Path, pluginPath: Path) {
                 poolSize
             }
         )
+
+        tickProcessor()
     }
 
     fun getDataPath(): Path = CorePaths.PATH
@@ -266,6 +284,100 @@ class Server(dataPath: Path, pluginPath: Path) {
 
     fun getPlayerByPrefix(prefix: String): Player? {
         TODO("Not yet implemented")
+    }
+
+    fun getTicksPerSecondAverage(): Float = round(tickAverage.sum() / tickAverage.size)
+
+    private fun tickProcessor() {
+        nextTick = System.currentTimeMillis().toDouble()
+
+        while (isRunning) {
+            tick()
+        }
+    }
+
+    private fun tick() {
+        var tickTime: Long = System.currentTimeMillis()
+        if (tickTime - nextTick < -0.0025) {
+            return
+        }
+
+        // TODO: Timings.serverTick.startTiming()
+
+        ++tickCounter
+
+        Timings.schedulerSync.startTiming()
+        // TODO: pluginManager.tickSchedulers()
+        Timings.schedulerSync.startTiming()
+
+        // TODO: Timings.schedulerAsync.startTiming()
+        // TODO: asyncPool.collectTasks()
+        // TODO: Timings.schedulerAsync.stopTiming()
+
+        // TODO: worldManager.tick(tickCounter)
+
+        // TODO: Timings.connection.startTiming()
+        // TODO: network.tick()
+        // TODO: Timings.connection.stopTiming()
+        if ((tickCounter % 20) == 0L) {
+            if (doTitleTick) {
+                titleTick()
+            }
+            currentTPS = 20F
+            currentUse = 0F
+
+            val queryRegenerateEvent = QueryRegenerateEvent(QueryInfo(this))
+            queryRegenerateEvent.call()
+            queryInfo = queryRegenerateEvent.queryInfo
+
+            // TODO: network.updateName()
+            // TODO: network.bandwidthTracker.rotateAverageHistory()
+        }
+
+        if (sendUsageTicker > 0 && --sendUsageTicker == 0) {
+            sendUsageTicker = 6000
+            // TODO: sendUsage(SendUsageTask.Type.STATUS)
+        }
+
+        if ((tickCounter % 100) == 0L) {
+            /*
+            TODO:
+            worldManager.worlds.forEach {
+                it.clearCache()
+            }
+
+             */
+
+            if (getTicksPerSecondAverage() < 12) {
+                logger.warn(language.translateString("pocketmine.server.tickOverload"))
+            }
+        }
+
+        memoryManager.check()
+
+        // TODO: Timings.serverTick.stopTiming()
+
+        val now = System.currentTimeMillis()
+
+        currentTPS = min(20F, 1 / max(0.001F, (now - tickTime).toFloat()))
+        currentUse = min(1F, (now - tickTime) / 0.05F)
+
+        TimingsHandler.tick(currentTPS <= profilingTickRate)
+
+        val idx = tickCounter % 20
+
+        tickAverage[idx.toInt()] = currentTPS
+        useAverage[idx.toInt()] = tickTime.toFloat()
+
+        if ((nextTick - tickTime) < -1) {
+            nextTick = tickTime.toDouble()
+        } else {
+            nextTick += 0.05
+        }
+    }
+
+    private fun titleTick() {
+        // TODO: title tick
     }
 
     companion object {
