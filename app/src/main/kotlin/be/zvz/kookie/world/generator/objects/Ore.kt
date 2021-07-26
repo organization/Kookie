@@ -20,10 +20,10 @@ package be.zvz.kookie.world.generator.objects
 import be.zvz.kookie.block.Block
 import be.zvz.kookie.math.Vector2
 import be.zvz.kookie.world.ChunkManager
-import java.util.Random
 import kotlin.math.cos
 import kotlin.math.pow
 import kotlin.math.sin
+import kotlin.random.Random
 
 class Ore(
     val random: Random,

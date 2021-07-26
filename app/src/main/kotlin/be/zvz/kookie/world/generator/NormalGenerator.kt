@@ -28,7 +28,7 @@ import be.zvz.kookie.world.generator.objects.Ore
 import be.zvz.kookie.world.generator.populator.GroundCover
 import be.zvz.kookie.world.generator.populator.Populator
 import com.koloboke.collect.map.hash.HashLongObjMaps
-import java.util.Random
+import kotlin.random.Random
 import be.zvz.kookie.world.generator.populator.Ore as OrePopulator
 
 class NormalGenerator(seed: Long, preset: String) : Generator(seed, preset) {
@@ -41,7 +41,7 @@ class NormalGenerator(seed: Long, preset: String) : Generator(seed, preset) {
     private val gaussian: Gaussian = Gaussian(2)
 
     init {
-        random.setSeed(seed)
+        random = Random(seed)
         selector.recalculate()
 
         val cover = GroundCover()
@@ -78,7 +78,7 @@ class NormalGenerator(seed: Long, preset: String) : Generator(seed, preset) {
     }
 
     override fun generateChunk(world: ChunkManager, chunkX: Int, chunkZ: Int) {
-        random.setSeed(0xdeadbeefL xor (chunkX.toLong() shl 8) xor chunkZ.toLong() xor seed)
+        random = Random(0xdeadbeefL xor (chunkX.toLong() shl 8) xor chunkZ.toLong() xor seed)
         val noise = noiseBase.getFastNoise3D(chunkX * 16, 0, chunkZ * 16)
         val chunk = world.getChunk(chunkX, chunkZ) ?: throw IllegalArgumentException("Chunk $chunkX $chunkZ does not exist")
         val biomeCache = HashLongObjMaps.newMutableMap<Biome>()

@@ -21,8 +21,8 @@ import be.zvz.kookie.block.BlockFactory
 import be.zvz.kookie.block.BlockLegacyIds
 import be.zvz.kookie.world.ChunkManager
 import be.zvz.kookie.world.biome.BiomeRegistry
-import java.util.Random
 import kotlin.math.min
+import kotlin.random.Random
 
 class GroundCover : Populator {
     override fun populate(world: ChunkManager, chunkX: Int, chunkZ: Int, random: Random) {

@@ -17,8 +17,8 @@
  */
 package be.zvz.kookie.world.generator.noise
 
-import java.util.Random
 import kotlin.math.sqrt
+import kotlin.random.Random
 
 class Simplex(
     random: Random,

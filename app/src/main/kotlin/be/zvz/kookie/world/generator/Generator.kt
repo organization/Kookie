@@ -18,13 +18,13 @@
 package be.zvz.kookie.world.generator
 
 import be.zvz.kookie.world.ChunkManager
-import java.util.Random
+import kotlin.random.Random
 
 abstract class Generator(
     protected val seed: Long,
     protected val preset: String
 ) {
-    protected val random = Random(seed)
+    protected var random = Random(seed)
 
     abstract fun generateChunk(world: ChunkManager, chunkX: Int, chunkZ: Int)
 

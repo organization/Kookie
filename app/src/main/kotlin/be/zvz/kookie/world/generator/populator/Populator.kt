@@ -18,7 +18,7 @@
 package be.zvz.kookie.world.generator.populator
 
 import be.zvz.kookie.world.ChunkManager
-import java.util.Random
+import kotlin.random.Random
 
 interface Populator {
     fun populate(world: ChunkManager, chunkX: Int, chunkZ: Int, random: Random)

@@ -19,16 +19,16 @@ package be.zvz.kookie.world.generator.populator
 
 import be.zvz.kookie.world.ChunkManager
 import be.zvz.kookie.world.generator.objects.Ore
-import java.util.Random
+import kotlin.random.Random
 
 class Ore(vararg val oreTypes: Ore.Type) : Populator {
     override fun populate(world: ChunkManager, chunkX: Int, chunkZ: Int, random: Random) {
         oreTypes.forEach {
             val ore = Ore(random, it)
             repeat(ore.type.clusterCount) {
-                val x = random.nextRange(chunkX shl 4, (chunkX shl 4) + 15)
-                val y = random.nextRange(ore.type.minHeight, ore.type.maxHeight)
-                val z = random.nextRange(chunkZ shl 4, (chunkZ shl 4) + 15)
+                val x = chunkX shl 4 + Random.nextInt(0, 15)
+                val y = random.nextInt(ore.type.minHeight, ore.type.maxHeight)
+                val z = chunkZ shl 4 + random.nextInt(0, 15)
                 if (ore.canPlaceObject(world, x, y, z)) {
                     ore.placeObject(world, x, y, z)
                 }
@@ -36,5 +36,3 @@ class Ore(vararg val oreTypes: Ore.Type) : Populator {
         }
     }
 }
-
-fun Random.nextRange(start: Int, end: Int) = start + nextInt() % (end + 1 - start)

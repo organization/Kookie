@@ -23,7 +23,7 @@ import be.zvz.kookie.world.biome.BiomeRegistry
 import be.zvz.kookie.world.biome.UnknownBiome
 import be.zvz.kookie.world.generator.noise.Simplex
 import com.koloboke.collect.map.hash.HashIntObjMaps
-import java.util.Random
+import kotlin.random.Random
 
 abstract class BiomeSelector(random: Random) {
     private val temperature: Simplex = Simplex(random, 2, 1F / 16, 1F / 512)

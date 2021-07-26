@@ -20,7 +20,7 @@ package be.zvz.kookie.world.biome
 import be.zvz.kookie.block.Block
 import be.zvz.kookie.world.ChunkManager
 import be.zvz.kookie.world.generator.populator.Populator
-import java.util.Random
+import kotlin.random.Random
 
 @BiomeIdentify(id = BiomeIds.UNKNOWN)
 abstract class Biome {
