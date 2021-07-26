@@ -2147,7 +2147,7 @@ class World(
                     unloadChunkRequest(chunkX, chunkZ, true)
                 }
             }
-            // TODO: chunk.collectGarbage()
+            chunk.collectGarbage()
         }
 
         provider.doGarbageCollection()

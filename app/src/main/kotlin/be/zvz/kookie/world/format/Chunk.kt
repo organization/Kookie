@@ -31,6 +31,7 @@ import be.zvz.kookie.player.Player
 import be.zvz.kookie.world.World
 import be.zvz.kookie.world.biome.BiomeIds
 import com.koloboke.collect.map.hash.HashIntObjMaps
+import com.koloboke.collect.map.hash.HashLongObjMaps
 
 class Chunk @JvmOverloads constructor(
     val subChunks: MutableList<SubChunk> = MutableList(MAX_SUBCHUNKS) {
@@ -42,7 +43,7 @@ class Chunk @JvmOverloads constructor(
     var heightMap: HeightArray = HeightArray.fill(subChunks.size * 16)
 ) : Cloneable {
     var dirtyFlags: Int = 0
-    val entities: MutableMap<Int, Entity> = HashIntObjMaps.newMutableMap()
+    val entities: MutableMap<Long, Entity> = HashLongObjMaps.newMutableMap()
     val tiles: MutableMap<Int, Tile> = HashIntObjMaps.newMutableMap()
 
     var lightPopulated: Boolean? = false
@@ -59,6 +60,13 @@ class Chunk @JvmOverloads constructor(
     val savableEntities
         get() = entities.filter {
             TODO("Implements after implemented Entity::canSaveWithChunk()")
+        }
+
+    val biomeIdArray = biomeIds.payload
+    var heightMapArray: MutableList<Int>
+        get() = heightMap.values
+        set(value) {
+            heightMap = HeightArray(value)
         }
 
     val isDirty: Boolean get() = dirtyFlags != 0 || tiles.isNotEmpty() or savableEntities.isNotEmpty()
@@ -118,13 +126,12 @@ class Chunk @JvmOverloads constructor(
         }
     }
 
-    fun getFullBlock(x: Int, y: Int, z: Int): Long {
-        return getSubChunk(y shr 4).getFullBlock(x, y and 0xf, z)
-    }
+    fun getFullBlock(x: Int, y: Int, z: Int): Long =
+        getSubChunk(y shr 4).getFullBlock(x, y and 0xf, z)
 
     fun setFullBlock(x: Int, y: Int, z: Int, block: Long) {
         getSubChunk(y shr 4).setFullBlock(x, y and 0xf, z, block)
-        dirtyFlags = dirtyFlags or DIRTY_FLAG_TERRAIN
+        setDirtyFlag(DIRTY_FLAG_TERRAIN, true)
     }
 
     fun getHighestBlockAt(x: Int, z: Int): Int? {
@@ -149,11 +156,19 @@ class Chunk @JvmOverloads constructor(
     }
 
     fun addEntity(entity: Entity) {
-        TODO("Implements after implemented Entity::isClosed()")
+        if (entity.isClosed()) {
+            throw IllegalArgumentException("Attempted to add a garbage closed Entity to a chunk")
+        }
+        entities[entity.getId()] = entity
+        if (!(entity is Player)) {
+            setDirtyFlag(DIRTY_FLAG_ENTITIES, true)
+        }
     }
 
     fun removeEntity(entity: Entity) {
-        TODO("Implements after implemented Entity::isClosed()")
+        if (entities.remove(entity.getId()) !is Player) {
+            setDirtyFlag(DIRTY_FLAG_ENTITIES, true)
+        }
     }
 
     fun addTile(tile: Tile) {
@@ -182,11 +197,7 @@ class Chunk @JvmOverloads constructor(
     fun getTile(x: Int, y: Int, z: Int) = tiles[blockHash(x, y, z)]
 
     fun onUnload() {
-        entities.values.forEach { entity ->
-            if (entity !is Player) {
-                TODO("Implements after implemented Entity::close()")
-            }
-        }
+        entities.values.filter { it !is Player }.forEach(Entity::close)
         tiles.values.forEach(Tile::close)
     }
 
@@ -197,6 +208,14 @@ class Chunk @JvmOverloads constructor(
         } else {
             dirtyFlags and flag.inv()
         }
+    }
+
+    fun setDirty() {
+        dirtyFlags = 0.inv()
+    }
+
+    fun clearDirtyFlags() {
+        dirtyFlags = 0
     }
 
     fun getSubChunk(y: Int) =
@@ -215,12 +234,9 @@ class Chunk @JvmOverloads constructor(
         }
     }
 
-    fun setDirty() {
-        dirtyFlags = 0.inv()
-    }
-
-    fun clearDirtyFlags() {
-        dirtyFlags = 0
+    /** Disposes of empty subchunks and frees data where possible */
+    fun collectGarbage() {
+        subChunks.forEach(SubChunk::collectGarbage)
     }
 
     public override fun clone() = Chunk(
