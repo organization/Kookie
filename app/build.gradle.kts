@@ -87,12 +87,12 @@ dependencies {
     implementation(group = "net.java.dev.jna", name = "jna", version = "5.8.0")
 
     // Logger
-    implementation(group = "org.slf4j", name = "slf4j-api", version = "1.7.31")
-    implementation(group = "ch.qos.logback", name = "logback-classic", version = "1.2.3")
+    implementation(group = "org.slf4j", name = "slf4j-api", version = "1.7.32")
+    implementation(group = "ch.qos.logback", name = "logback-classic", version = "1.2.4")
     implementation(group = "org.fusesource.jansi", name = "jansi", version = "1.18")
 
     // netty
-    implementation(group = "io.netty", name = "netty-all", version = "4.1.65.Final")
+    implementation(group = "io.netty", name = "netty-all", version = "4.1.66.Final")
 
     // bedrock-network
     implementation(group = "org.powernukkit.bedrock.network", name = "raknet", version = "1.6.25-PN.2")
