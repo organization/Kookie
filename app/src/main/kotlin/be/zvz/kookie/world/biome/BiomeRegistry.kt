@@ -17,6 +17,7 @@
  */
 package be.zvz.kookie.world.biome
 
+import be.zvz.kookie.block.util.TreeType
 import com.koloboke.collect.map.hash.HashIntObjMaps
 
 object BiomeRegistry {
@@ -34,14 +35,7 @@ object BiomeRegistry {
         register(HellBiome())
         register(IcePlainsBiome())
         register(SmallMountainsBiome())
-        /**
-         * TODO: Implements after implemented TreeType
-         * val birchForestIdentifier = BiomeIds.BIRCH_FOREST
-         * register(ForestBiome(TreeType::BIRCH()).apply{
-         *     id = birchForestIdentifier.id
-         *     name = birchForestIdentifier.biomeName
-         * });
-         */
+        register(ForestBiome(TreeType.BIRCH))
     }
 
     fun register(biome: Biome) = biomes.put(biome.id, biome)

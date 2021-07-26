@@ -17,9 +17,26 @@
  */
 package be.zvz.kookie.world.biome
 
+import be.zvz.kookie.block.util.TreeType
+import be.zvz.kookie.world.generator.populator.TallGrass
+import be.zvz.kookie.world.generator.populator.Tree
+
 @BiomeIdentify(id = BiomeIds.FOREST)
-open class ForestBiome : GrassyBiome() {
+open class ForestBiome(private val type: TreeType = TreeType.OAK) : GrassyBiome() {
     init {
-        // TODO: Implements after implemented TreeType
+        addPopulator(Tree(type, 5))
+        addPopulator(TallGrass(3))
+        setElevation(63, 81)
+
+        if (type == TreeType.BIRCH) {
+            temperature = 0.6F
+            rainfall = 0.5F
+        } else {
+            temperature = 0.7F
+            rainfall = 0.8F
+        }
+
+        id = BiomeIds.BIRCH_FOREST.id
+        name = BiomeIds.BIRCH_FOREST.biomeName
     }
 }

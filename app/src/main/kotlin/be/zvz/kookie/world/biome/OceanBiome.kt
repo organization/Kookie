@@ -17,23 +17,21 @@
  */
 package be.zvz.kookie.world.biome
 
+import be.zvz.kookie.block.VanillaBlocks
+import be.zvz.kookie.world.generator.populator.TallGrass
+
 @BiomeIdentify(id = BiomeIds.OCEAN)
 class OceanBiome : Biome() {
     init {
         groundCover.apply {
-            /**
-             * TODO: Implements after implemented VanillaBlocks
-             * add(VanillaBlocks.GRAVEL())
-             * add(VanillaBlocks.GRAVEL())
-             * add(VanillaBlocks.GRAVEL())
-             * add(VanillaBlocks.GRAVEL())
-             * add(VanillaBlocks.GRAVEL())
-             */
+            add(VanillaBlocks.GRAVEL.block)
+            add(VanillaBlocks.GRAVEL.block)
+            add(VanillaBlocks.GRAVEL.block)
+            add(VanillaBlocks.GRAVEL.block)
+            add(VanillaBlocks.GRAVEL.block)
         }
-        /**
-         * TODO: Implements after implemented populator/TallGrass
-         * addPopulator(TallGrass().apply{ baseAmount = 5 });
-         */
+
+        addPopulator(TallGrass(5))
 
         setElevation(46, 58)
         temperature = 0.5F

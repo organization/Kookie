@@ -17,21 +17,18 @@
  */
 package be.zvz.kookie.world.biome
 
+import be.zvz.kookie.block.VanillaBlocks
+import be.zvz.kookie.world.generator.populator.Ore
+import be.zvz.kookie.world.generator.populator.TallGrass
+import be.zvz.kookie.world.generator.populator.Tree
+import be.zvz.kookie.world.generator.objects.Ore.Type as OreType
+
 @BiomeIdentify(id = BiomeIds.MOUNTAINS)
 open class MountainsBiome : GrassyBiome() {
     init {
-        /**
-         * TODO: Implements after implemented populator/Tree
-         * addPopulator(Tree().apply{ baseAmount = 1 });
-         */
-        /**
-         * TODO: Implements after implemented populator/TallGrass
-         * addPopulator(TallGrass().apply{ baseAmount = 1 });
-         */
-        /**
-         * TODO: Implements after implemented populator/Ore
-         * addPopulator(Ore().apply{ oreTypes.push(new OreType(VanillaBlocks::EMERALD_ORE(), VanillaBlocks::STONE(), 11, 1, 0, 32)) });
-         */
+        addPopulator(Tree(baseAmount = 1))
+        addPopulator(TallGrass(1))
+        addPopulator(Ore(OreType(VanillaBlocks.EMERALD_ORE.block, VanillaBlocks.STONE.block, 11, 1, 0, 32)))
 
         setElevation(63, 127)
         temperature = 0.4F

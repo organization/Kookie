@@ -17,13 +17,12 @@
  */
 package be.zvz.kookie.world.biome
 
+import be.zvz.kookie.world.generator.populator.TallGrass
+
 @BiomeIdentify(id = BiomeIds.ICE_PLAINS)
 class IcePlainsBiome : SnowyBiome() {
     init {
-        /**
-         * TODO: Implements after implemented populator/TallGrass
-         * addPopulator(TallGrass().apply{ baseAmount = 5 });
-         */
+        addPopulator(TallGrass(5))
 
         setElevation(63, 74)
         temperature = 0.05F

@@ -17,17 +17,15 @@
  */
 package be.zvz.kookie.world.biome
 
+import be.zvz.kookie.block.util.TreeType
+import be.zvz.kookie.world.generator.populator.TallGrass
+import be.zvz.kookie.world.generator.populator.Tree
+
 @BiomeIdentify(id = BiomeIds.TAIGA)
 class TaigaBiome : SnowyBiome() {
     init {
-        /**
-         * TODO: Implements after implemented populator/Tree and TreeType
-         * addPopulator(Tree(TreeType::SPRUCE()).apply{ baseAmount = 10 });
-         */
-        /**
-         * TODO: Implements after implemented populator/TallGrass
-         * addPopulator(TallGrass().apply{ baseAmount = 1 });
-         */
+        addPopulator(Tree(TreeType.SPRUCE, 10))
+        addPopulator(TallGrass(1))
 
         setElevation(63, 81)
         temperature = 0.05F

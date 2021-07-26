@@ -17,13 +17,12 @@
  */
 package be.zvz.kookie.world.biome
 
+import be.zvz.kookie.world.generator.populator.TallGrass
+
 @BiomeIdentify(id = BiomeIds.PLAINS)
 class PlainsBiome : GrassyBiome() {
     init {
-        /**
-         * TODO: Implements after implemented populator/TallGrass
-         * addPopulator(TallGrass().apply{ baseAmount = 12 });
-         */
+        addPopulator(TallGrass(12))
 
         setElevation(63, 68)
         temperature = 0.48F

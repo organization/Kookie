@@ -17,18 +17,17 @@
  */
 package be.zvz.kookie.world.biome
 
+import be.zvz.kookie.block.VanillaBlocks
+
 @BiomeIdentify(id = BiomeIds.UNKNOWN)
 abstract class SnowyBiome : Biome() {
     init {
         groundCover.apply {
-            /**
-             * TODO: Implements after implemented VanillaBlocks
-             * add(VanillaBlocks.SNOW_LAYER())
-             * add(VanillaBlocks.GRASS())
-             * add(VanillaBlocks.DIRT())
-             * add(VanillaBlocks.DIRT())
-             * add(VanillaBlocks.DIRT())
-             */
+             add(VanillaBlocks.SNOW_LAYER.block)
+             add(VanillaBlocks.GRASS.block)
+             add(VanillaBlocks.DIRT.block)
+             add(VanillaBlocks.DIRT.block)
+             add(VanillaBlocks.DIRT.block)
         }
     }
 }

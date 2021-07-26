@@ -17,23 +17,21 @@
  */
 package be.zvz.kookie.world.biome
 
+import be.zvz.kookie.block.VanillaBlocks
+import be.zvz.kookie.world.generator.populator.TallGrass
+
 @BiomeIdentify(id = BiomeIds.RIVER)
 class RiverBiome : Biome() {
     init {
         groundCover.apply {
-            /**
-             * TODO: Implements after implemented VanillaBlocks
-             * add(VanillaBlocks.DIRT())
-             * add(VanillaBlocks.DIRT())
-             * add(VanillaBlocks.DIRT())
-             * add(VanillaBlocks.DIRT())
-             * add(VanillaBlocks.DIRT())
-             */
+            add(VanillaBlocks.DIRT.block)
+            add(VanillaBlocks.DIRT.block)
+            add(VanillaBlocks.DIRT.block)
+            add(VanillaBlocks.DIRT.block)
+            add(VanillaBlocks.DIRT.block)
         }
-        /**
-         * TODO: Implements after implemented populator/TallGrass
-         * addPopulator(TallGrass().apply{ baseAmount = 5 });
-         */
+
+        addPopulator(TallGrass(5))
 
         setElevation(58, 62)
         temperature = 0.5F

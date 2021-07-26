@@ -17,18 +17,17 @@
  */
 package be.zvz.kookie.world.biome
 
+import be.zvz.kookie.block.VanillaBlocks
+
 @BiomeIdentify(id = BiomeIds.UNKNOWN)
 abstract class SandyBiome : Biome() {
     init {
         groundCover.apply {
-            /**
-             * TODO: Implements after implemented VanillaBlocks
-             * add(VanillaBlocks.SAND())
-             * add(VanillaBlocks.SAND())
-             * add(VanillaBlocks.SANDSTONE())
-             * add(VanillaBlocks.SANDSTONE())
-             * add(VanillaBlocks.SANDSTONE())
-             */
+            add(VanillaBlocks.SAND.block)
+            add(VanillaBlocks.SAND.block)
+            add(VanillaBlocks.SANDSTONE.block)
+            add(VanillaBlocks.SANDSTONE.block)
+            add(VanillaBlocks.SANDSTONE.block)
         }
     }
 }
