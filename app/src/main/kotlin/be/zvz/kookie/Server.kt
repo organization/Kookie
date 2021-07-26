@@ -96,6 +96,8 @@ class Server(dataPath: Path, pluginPath: Path) {
 
     val profilingTickRate: Int = 20
 
+    val ticksPerSecondAverage: Float = round(tickAverage.sum() / tickAverage.size)
+
     init {
         instance = this
         startTime = Date()
@@ -286,8 +288,6 @@ class Server(dataPath: Path, pluginPath: Path) {
         TODO("Not yet implemented")
     }
 
-    fun getTicksPerSecondAverage(): Float = round(tickAverage.sum() / tickAverage.size)
-
     private fun tickProcessor() {
         nextTick = System.currentTimeMillis().toDouble()
 
@@ -348,7 +348,7 @@ class Server(dataPath: Path, pluginPath: Path) {
 
              */
 
-            if (getTicksPerSecondAverage() < 12) {
+            if (ticksPerSecondAverage < 12) {
                 logger.warn(language.translateString("pocketmine.server.tickOverload"))
             }
         }
