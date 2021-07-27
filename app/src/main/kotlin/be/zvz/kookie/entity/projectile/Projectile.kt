@@ -47,7 +47,7 @@ abstract class Projectile(location: Location, val shootingEntity: Entity?, nbt: 
         }
     }
 
-    override fun attack(source: Any) {
+    open override fun attack(source: Any) {
         /*
         TODO:
         if (source.cause == EntityDamageEvent.CAUSE_VOID) {
@@ -55,7 +55,7 @@ abstract class Projectile(location: Location, val shootingEntity: Entity?, nbt: 
          */
     }
 
-    override fun initEntity(nbt: CompoundTag) {
+    open override fun initEntity(nbt: CompoundTag) {
         super.initEntity(nbt)
 
         maxHealth = 1
@@ -91,11 +91,11 @@ abstract class Projectile(location: Location, val shootingEntity: Entity?, nbt: 
         } while (false)
     }
 
-    override fun canCollideWith(entity: Entity): Boolean {
+    open override fun canCollideWith(entity: Entity): Boolean {
         return entity is Living && !onGround
     }
 
-    override fun canBeCollidedWith(): Boolean {
+    open override fun canBeCollidedWith(): Boolean {
         return false
     }
 
@@ -109,7 +109,7 @@ abstract class Projectile(location: Location, val shootingEntity: Entity?, nbt: 
         return ceil(motion.length() * damage).toInt()
     }
 
-    override fun saveNBT(): CompoundTag {
+    open override fun saveNBT(): CompoundTag {
         return super.saveNBT().apply {
             setDouble("damage", damage.toDouble())
             blockHit?.let {
@@ -258,13 +258,13 @@ abstract class Projectile(location: Location, val shootingEntity: Entity?, nbt: 
          */
     }
 
-    protected fun calculateInterceptWithBlock(block: Block, start: Vector3, end: Vector3): RayTraceResult? =
+    protected open fun calculateInterceptWithBlock(block: Block, start: Vector3, end: Vector3): RayTraceResult? =
         block.calculateIntercept(start, end)
 
-    protected fun onHit(event: ProjectileHitEvent) {
+    protected open fun onHit(event: ProjectileHitEvent) {
     }
 
-    protected fun onHitEntity(entityHit: Entity, hitResult: RayTraceResult) {
+    protected open fun onHitEntity(entityHit: Entity, hitResult: RayTraceResult) {
         val damage = getResultDamage()
         if (damage >= 0) {
 
@@ -292,7 +292,7 @@ abstract class Projectile(location: Location, val shootingEntity: Entity?, nbt: 
         flagForDespawn()
     }
 
-    protected fun onHitBlock(blockHit: Block, hitResult: RayTraceResult) {
+    protected open fun onHitBlock(blockHit: Block, hitResult: RayTraceResult) {
         this.blockHit = blockHit.clone()
     }
 }
