@@ -52,6 +52,12 @@ class Language @JvmOverloads constructor(langStr: String, path: String = "locale
 
     @JvmOverloads
     fun translateString(
+        str: KnownTranslationKeys,
+        onlyPrefix: String? = null
+    ): String = translateString(str.key, onlyPrefix)
+
+    @JvmOverloads
+    fun translateString(
         str: String,
         params: List<String>,
         onlyPrefix: String? = null
@@ -78,6 +84,20 @@ class Language @JvmOverloads constructor(langStr: String, path: String = "locale
         return baseText
     }
 
+    @JvmOverloads
+    fun translateString(
+        str: KnownTranslationKeys,
+        params: Map<String, String>,
+        onlyPrefix: String? = null
+    ): String = translateString(str.key, params, onlyPrefix)
+
+    @JvmOverloads
+    fun translateString(
+        str: KnownTranslationKeys,
+        params: List<String>,
+        onlyPrefix: String? = null
+    ): String = translateString(str.key, params, onlyPrefix)
+
     fun translate(c: TranslationContainer): String = (internalGet(c.text) ?: parseTranslation(c.text)).let {
         var replacedStr = it
         c.params.forEachIndexed { index, p ->
@@ -88,6 +108,7 @@ class Language @JvmOverloads constructor(langStr: String, path: String = "locale
 
     private fun internalGet(id: String): String? = languagePrefs.getProperty(id, fallbackLang.getProperty(id))
     fun get(id: String): String = internalGet(id) ?: id
+    fun get(id: KnownTranslationKeys): String = get(id.key)
 
     @JvmOverloads
     fun parseTranslation(text: String, onlyPrefix: String? = null): String {
