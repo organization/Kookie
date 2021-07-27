@@ -37,9 +37,9 @@ import kotlin.math.ceil
 
 abstract class Projectile(location: Location, val shootingEntity: Entity?, nbt: CompoundTag?) : Entity(location, nbt) {
 
-    var damage: Float = 0F
+    open var damage: Float = 0F
 
-    var blockHit: Block? = null
+    open var blockHit: Block? = null
 
     init {
         shootingEntity?.let {
