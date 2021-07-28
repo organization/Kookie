@@ -21,7 +21,7 @@ import com.koloboke.collect.map.hash.HashIntFloatMaps
 import com.koloboke.collect.map.hash.HashIntIntMaps
 import com.koloboke.collect.map.hash.HashIntObjMaps
 import be.zvz.kookie.block.BlockIdentifier as BID
-import be.zvz.kookie.block.BlockLegacyIds as Ids
+import be.zvz.kookie.block.VanillaBlocks as Ids
 
 object BlockFactory {
     private val fullList: MutableMap<Int, Block> = HashIntObjMaps.newMutableMap()

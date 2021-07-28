@@ -17,7 +17,7 @@
  */
 package be.zvz.kookie.network.mcpe.convert
 
-import be.zvz.kookie.block.BlockLegacyIds
+import be.zvz.kookie.block.VanillaBlocks
 import be.zvz.kookie.item.Durable
 import be.zvz.kookie.item.Item
 import be.zvz.kookie.item.ItemFactory
@@ -102,7 +102,7 @@ object TypeConverter {
         var blockRuntimeId = 0
         if (isBlockItem) {
             val block = item.getBlock()
-            if (block.getId() != BlockLegacyIds.AIR.id) {
+            if (block.getId() != VanillaBlocks.AIR.id) {
                 // TODO: blockRuntimeId = RuntimeBlockMapping.toRuntimeId(block.getFullId())
             }
         }

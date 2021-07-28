@@ -17,14 +17,14 @@
  */
 package be.zvz.kookie.world.format
 
-import be.zvz.kookie.block.BlockLegacyIds
+import be.zvz.kookie.block.VanillaBlocks
 import be.zvz.kookie.block.tile.Tile
 import be.zvz.kookie.entity.Entity
 import be.zvz.kookie.world.biome.BiomeIds
 
 class Chunk @JvmOverloads constructor(
     val subChunks: MutableList<SubChunk> = MutableList(MAX_SUBCHUNKS) {
-        SubChunk(BlockLegacyIds.AIR.id.toLong() shl 4, mutableListOf())
+        SubChunk(VanillaBlocks.AIR.id.toLong() shl 4, mutableListOf())
     },
     val NBTentities: MutableList<Entity> = mutableListOf(),
     val NBTtiles: MutableList<Tile> = mutableListOf(),
