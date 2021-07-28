@@ -186,7 +186,10 @@ enum class VanillaBlocks(val id: Int, val meta: Int = 0) {
     FURNACE(61, 2),
     LIT_FURNACE(62, 2),
 
+    @Deprecated("Aliased", ReplaceWith("OAK_STANDING_SIGN"))
+    OAK_SIGN(63),
     OAK_STANDING_SIGN(63),
+
     OAK_DOOR(64),
     LADDER(65, 2),
     RAIL(66),
@@ -1117,6 +1120,8 @@ enum class VanillaBlocks(val id: Int, val meta: Int = 0) {
     MOSSY_COBBLESTONE_STAIRS(434),
     STONE_STAIRS(435),
 
+    @Deprecated("Aliased", ReplaceWith("SPRUCE_STANDING_SIGN"))
+    SPRUCE_SIGN(436),
     SPRUCE_STANDING_SIGN(436),
     SPRUCE_WALL_SIGN(437, 2),
 
@@ -1125,12 +1130,23 @@ enum class VanillaBlocks(val id: Int, val meta: Int = 0) {
     RED_NETHER_BRICK_STAIRS(439),
     SMOOTH_QUARTZ_STAIRS(440),
 
+    @Deprecated("Aliased", ReplaceWith("BIRCH_STANDING_SIGN"))
+    BIRCH_SIGN(441),
     BIRCH_STANDING_SIGN(441),
     BIRCH_WALL_SIGN(442, 2),
+
+    @Deprecated("Aliased", ReplaceWith("JUNGLE_STANDING_SIGN"))
+    JUNGLE_SIGN(443),
     JUNGLE_STANDING_SIGN(443),
     JUNGLE_WALL_SIGN(444, 2),
+
+    @Deprecated("Aliased", ReplaceWith("ACACIA_STANDING_SIGN"))
+    ACACIA_SIGN(445),
     ACACIA_STANDING_SIGN(445),
     ACACIA_WALL_SIGN(446, 2),
+
+    @Deprecated("Aliased", ReplaceWith("DARK_OAK_STANDING_SIGN"))
+    DARK_OAK_SIGN(447),
     DARK_OAK_STANDING_SIGN(447),
     DARK_OAK_WALL_SIGN(448, 2),
 
@@ -1210,8 +1226,15 @@ enum class VanillaBlocks(val id: Int, val meta: Int = 0) {
     WARPED_DOOR(500),
     CRIMSON_TRAPDOOR(501),
     WARPED_TRAPDOOR(502),
+
+    @Deprecated("Aliased", ReplaceWith("CRIMSON_STANDING_SIGN"))
+    CRIMSON_SIGN(505),
     CRIMSON_STANDING_SIGN(505),
+
+    @Deprecated("Aliased", ReplaceWith("WARPED_STANDING_SIGN"))
+    WARPED_SIGN(506),
     WARPED_STANDING_SIGN(506),
+
     CRIMSON_WALL_SIGN(507),
     WARPED_WALL_SIGN(508),
     CRIMSON_STAIRS(509),
