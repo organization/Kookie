@@ -119,12 +119,15 @@ enum class VanillaBlocks(val id: Int, val meta: Int = 0) {
     RED_WOOL(35, 14),
     BLACK_WOOL(35, 15),
 
+    @Deprecated("Aliased", ReplaceWith("UNKNOWN_ELEMENT"))
     ELEMENT_0(36),
     UNKNOWN_ELEMENT(36),
 
+    @Deprecated("Aliased", ReplaceWith("DANDELION"))
     YELLOW_FLOWER(37),
     DANDELION(37),
 
+    @Deprecated("Aliased", ReplaceWith("POPPY"))
     RED_FLOWER(38),
     POPPY(38, 0),
     BLUE_ORCHID(38, 1),
@@ -141,9 +144,11 @@ enum class VanillaBlocks(val id: Int, val meta: Int = 0) {
     BROWN_MUSHROOM(39),
     RED_MUSHROOM(40),
 
+    @Deprecated("Aliased", ReplaceWith("BLOCK_OF_GOLD"))
     GOLD_BLOCK(41),
     BLOCK_OF_GOLD(41),
 
+    @Deprecated("Aliased", ReplaceWith("BLOCK_OF_IRON"))
     IRON_BLOCK(42),
     BLOCK_OF_IRON(42),
 
@@ -170,6 +175,7 @@ enum class VanillaBlocks(val id: Int, val meta: Int = 0) {
     REDSTONE_WIRE(55),
     DIAMOND_ORE(56),
 
+    @Deprecated("Aliased", ReplaceWith("BLOCK_OF_DIAMOND"))
     DIAMOND_BLOCK(57),
     BLOCK_OF_DIAMOND(57),
 
@@ -192,6 +198,7 @@ enum class VanillaBlocks(val id: Int, val meta: Int = 0) {
     OAK_PRESSURE_PLATE(72),
     REDSTONE_ORE(73),
 
+    @Deprecated("Aliased", ReplaceWith("GLOWING_REDSTONE_ORE"))
     LIT_REDSTONE_ORE(74),
     GLOWING_REDSTONE_ORE(74),
 
@@ -222,10 +229,12 @@ enum class VanillaBlocks(val id: Int, val meta: Int = 0) {
     PORTAL(90),
     NETHER_PORTAL(90, 1),
 
+    @Deprecated("Aliased", ReplaceWith("LIT_PUMPKIN"))
     LIT_PUMPKIN(91),
     JACK_O_LANTERN(91),
     CAKE(92),
 
+    @Deprecated("Aliased", ReplaceWith("UNPOWERED_REPEATER"))
     REDSTONE_REPEATER(93),
     UNPOWERED_REPEATER(93),
     POWERED_REPEATER(94),
@@ -285,6 +294,7 @@ enum class VanillaBlocks(val id: Int, val meta: Int = 0) {
     TRIPWIRE_HOOK(131),
     TRIPWIRE(132),
 
+    @Deprecated("Aliased", ReplaceWith("BLOCK_OF_EMERALD"))
     EMERALD_BLOCK(133),
     BLOCK_OF_EMERALD(133),
 
@@ -314,6 +324,7 @@ enum class VanillaBlocks(val id: Int, val meta: Int = 0) {
     POTATOES(142),
     OAK_BUTTON(143),
 
+    @Deprecated("Aliased", ReplaceWith("HEAD"))
     SKULL(144, 2),
     HEAD(144, 2),
 
@@ -328,12 +339,14 @@ enum class VanillaBlocks(val id: Int, val meta: Int = 0) {
 
     DAYLIGHT_DETECTOR(151),
 
+    @Deprecated("Aliased", ReplaceWith("BLOCK_OF_REDSTONE"))
     REDSTONE_BLOCK(152),
     BLOCK_OF_REDSTONE(152),
 
     NETHER_QUARTZ_ORE(153),
     HOPPER(154),
 
+    @Deprecated("Aliased", ReplaceWith("BLOCK_OF_QUARTZ"))
     QUARTZ_BLOCK(155),
     BLOCK_OF_QUARTZ(155, 0),
 
@@ -351,6 +364,7 @@ enum class VanillaBlocks(val id: Int, val meta: Int = 0) {
     ACACIA_SLAB(158, 4),
     DARK_OAK_SLAB(158, 5),
 
+    @Deprecated("Aliased", ReplaceWith("COLORED_TERRACOTTA"))
     STAINED_HARDENED_CLAY(159),
     COLORED_TERRACOTTA(159),
 
@@ -409,6 +423,7 @@ enum class VanillaBlocks(val id: Int, val meta: Int = 0) {
 
     SEA_LANTERN(169),
 
+    @Deprecated("Aliased", ReplaceWith("HAY_BALE"))
     HAY_BLOCK(170),
     HAY_BALE(170),
 
@@ -432,6 +447,7 @@ enum class VanillaBlocks(val id: Int, val meta: Int = 0) {
 
     HARDENED_CLAY(172),
 
+    @Deprecated("Aliased", ReplaceWith("BLOCK_OF_COAL"))
     COAL_BLOCK(173),
     BLOCK_OF_COAL(173),
 
@@ -676,6 +692,7 @@ enum class VanillaBlocks(val id: Int, val meta: Int = 0) {
     INFO_UPDATE(248),
     INFO_UPDATE2(249),
 
+    @Deprecated("Aliased", ReplaceWith("MOVING_PISTON"))
     MOVING_BLOCK(250),
     MOVING_PISTON(250),
 
