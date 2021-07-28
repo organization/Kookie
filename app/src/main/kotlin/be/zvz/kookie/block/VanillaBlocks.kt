@@ -229,7 +229,7 @@ enum class VanillaBlocks(val id: Int, val meta: Int = 0) {
     PORTAL(90),
     NETHER_PORTAL(90, 1),
 
-    @Deprecated("Aliased", ReplaceWith("LIT_PUMPKIN"))
+    @Deprecated("Aliased", ReplaceWith("JACK_O_LANTERN"))
     LIT_PUMPKIN(91),
     JACK_O_LANTERN(91),
     CAKE(92),
@@ -528,7 +528,7 @@ enum class VanillaBlocks(val id: Int, val meta: Int = 0) {
     RED_HARDENED_STAINED_GLASS_PANE(191, 14),
     BLACK_HARDENED_STAINED_GLASS_PANE(191, 15),
 
-    HEAD_BLOCK(192),
+    HEAT_BLOCK(192),
 
     SPRUCE_DOOR(193),
     BIRCH_DOOR(194),
@@ -1020,11 +1020,11 @@ enum class VanillaBlocks(val id: Int, val meta: Int = 0) {
     DEAD_HORN_CORAL_BLOCK(387, 12),
 
     CORAL_FAN(388),
-    TUBE_CORAL_FAN(387, 0),
-    BRAIN_CORAL_FAN(387, 1),
-    BUBBLE_CORAL_FAN(387, 2),
-    FIRE_CORAL_FAN(387, 3),
-    HORN_CORAL_FAN(387, 4),
+    TUBE_CORAL_FAN(388, 0),
+    BRAIN_CORAL_FAN(388, 1),
+    BUBBLE_CORAL_FAN(388, 2),
+    FIRE_CORAL_FAN(388, 3),
+    HORN_CORAL_FAN(388, 4),
 
     DEAD_CORAL_FAN(389),
     DEAD_TUBE_CORAL_FAN(389, 0),
