@@ -1438,6 +1438,7 @@ enum class VanillaBlocks(val id: Int, val meta: Int = 0) {
 
     val fullId: Int = (id shr 4) or meta
     val block: Block get() = BlockFactory.get(id, meta)
+    // TODO: Add val runtimeId, after implementing RuntimeBlockMapping
 
     companion object {
         const val ANVIL_NORMAL = 0
