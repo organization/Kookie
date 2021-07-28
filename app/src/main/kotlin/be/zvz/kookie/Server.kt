@@ -22,6 +22,7 @@ import be.zvz.kookie.console.KookieConsole
 import be.zvz.kookie.console.brightCyan
 import be.zvz.kookie.constant.CorePaths
 import be.zvz.kookie.constant.FilePermission
+import be.zvz.kookie.lang.KnownTranslationKeys
 import be.zvz.kookie.lang.Language
 import be.zvz.kookie.lang.TranslationContainer
 import be.zvz.kookie.network.Network
@@ -170,7 +171,7 @@ class Server(dataPath: Path, pluginPath: Path) {
 
         logger.info(
             language.translateString(
-                "language.selected",
+                KnownTranslationKeys.LANGUAGE_SELECTED,
                 listOf(
                     language.name,
                     language.lang
@@ -182,17 +183,17 @@ class Server(dataPath: Path, pluginPath: Path) {
             if (configGroup.getProperty("settings.enable-dev-builds").asBoolean(false)) {
                 logger.error(
                     language.translateString(
-                        "pocketmine.server.devBuild.error1",
+                        KnownTranslationKeys.POCKETMINE_SERVER_DEVBUILD_ERROR1,
                         listOf(
                             VersionInfo.NAME
                         )
                     )
                 )
-                logger.error(language.translateString("pocketmine.server.devBuild.error2"))
-                logger.error(language.translateString("pocketmine.server.devBuild.error3"))
+                logger.error(language.translateString(KnownTranslationKeys.POCKETMINE_SERVER_DEVBUILD_ERROR2))
+                logger.error(language.translateString(KnownTranslationKeys.POCKETMINE_SERVER_DEVBUILD_ERROR3))
                 logger.error(
                     language.translateString(
-                        "pocketmine.server.devBuild.error4",
+                        KnownTranslationKeys.POCKETMINE_SERVER_DEVBUILD_ERROR4,
                         listOf(
                             "settings.enable-dev-builds"
                         )
@@ -200,7 +201,7 @@ class Server(dataPath: Path, pluginPath: Path) {
                 )
                 logger.error(
                     language.translateString(
-                        "pocketmine.server.devBuild.error5",
+                        KnownTranslationKeys.POCKETMINE_SERVER_DEVBUILD_ERROR5,
                         listOf(
                             "https://github.com/organization/Kookie/releases"
                         )
@@ -222,7 +223,10 @@ class Server(dataPath: Path, pluginPath: Path) {
             )
         )
 
-        language.translateString("pocketmine.server.start", listOf(ProtocolInfo.MINECRAFT_VERSION_NETWORK.brightCyan()))
+        language.translateString(
+            KnownTranslationKeys.POCKETMINE_SERVER_START,
+            listOf(ProtocolInfo.MINECRAFT_VERSION_NETWORK.brightCyan())
+        )
 
         thread(isDaemon = true, name = "${VersionInfo.NAME}-console") {
             console.start()
