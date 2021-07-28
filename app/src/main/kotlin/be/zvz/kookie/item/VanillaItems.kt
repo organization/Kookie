@@ -356,4 +356,10 @@ enum class VanillaItems(val id: Int, val meta: Int = 0) {
     ZOMBIE_SPAWN_EGG(383, 32);
 
     val item: Item get() = ItemFactory.get(id, meta)
+
+    companion object {
+        @JvmStatic
+        @JvmOverloads
+        fun fromId(id: Int, meta: Int? = null) = values().firstOrNull { it.id == id && (meta == null || it.meta == meta) }
+    }
 }
