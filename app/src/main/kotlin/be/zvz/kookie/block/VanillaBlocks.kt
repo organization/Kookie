@@ -1459,6 +1459,7 @@ enum class VanillaBlocks(val id: Int, val meta: Int = 0) {
     BLOCK_OF_RAW_COPPER(707),
     BLOCK_OF_RAW_GOLD(708);
 
+    val identifier: BlockIdentifier = BlockIdentifier(this.id, this.meta)
     val fullId: Int = (id shr 4) or meta
     val block: Block get() = BlockFactory.get(id, meta)
     // TODO: Add val runtimeId, after implementing RuntimeBlockMapping

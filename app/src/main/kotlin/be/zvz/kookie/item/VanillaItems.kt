@@ -1910,6 +1910,7 @@ enum class VanillaItems(val id: Int, val meta: Int = 0) {
     NETHERITE_BOOTS(751),
     NETHERITE_SCARP(752);
 
+    val identifier: ItemIdentifier = ItemIdentifier(this.id, this.meta)
     val item: Item get() = ItemFactory.get(id, meta)
 
     companion object {

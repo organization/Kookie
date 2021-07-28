@@ -32,8 +32,8 @@ object BlockFactory {
 
     init {
         /*val railBreakInfo = BlockBreakInfo(0.7f)
-        register(ActivatorRail(BID(Ids.ACTIVATOR_RAIL.id, 0), "Activator Rail", railBreakInfo))*/
-        register(Air(BID(Ids.AIR.id, 0), "Air", BlockBreakInfo.indestructible(-1f)))
+        register(ActivatorRail(Ids.ACTIVATOR_RAIL.identifier, "Activator Rail", railBreakInfo))*/
+        register(Air(Ids.AIR.identifier, "Air", BlockBreakInfo.indestructible(-1f)))
         TODO("Add Blocks")
     }
 
