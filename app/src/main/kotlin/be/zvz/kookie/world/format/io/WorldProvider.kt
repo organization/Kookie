@@ -46,7 +46,7 @@ interface WorldProvider {
      * @throws CorruptedChunkException
      */
     @Throws(CorruptedChunkException::class)
-    fun getAllChunks(skipCorrupted: Boolean = false, logger: Logger? = null): Sequence<Chunk>
+    fun getAllChunks(skipCorrupted: Boolean = false, logger: Logger? = null): Sequence<Triple<Int, Int, Chunk>>
 
     /** Returns the number of chunks in the provider. Used for world conversion time estimations */
     fun calculateChunkCount(): Int

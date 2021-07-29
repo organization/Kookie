@@ -1,9 +1,30 @@
+/**
+ *
+ * _  __           _    _
+ * | |/ /___   ___ | | _(_) ___
+ * | ' // _ \ / _ \| |/ / |/ _ \
+ * | . \ (_) | (_) |   <| |  __/
+ * |_|\_\___/ \___/|_|\_\_|\___|
+ *
+ * A server software for Minecraft: Bedrock Edition
+ *
+ * Copyright (C) 2021 organization Team
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ */
 package be.zvz.kookie.world.format.io.leveldb
 
 import be.zvz.kookie.block.BlockLegacyIds
 import be.zvz.kookie.data.bedrock.LegacyIdToStringIdMap
 import be.zvz.kookie.nbt.LittleEndianNbtSerializer
+import be.zvz.kookie.nbt.NbtDataException
+import be.zvz.kookie.nbt.TreeRoot
+import be.zvz.kookie.nbt.tag.CompoundTag
 import be.zvz.kookie.utils.Binary
+import be.zvz.kookie.utils.BinaryDataException
 import be.zvz.kookie.utils.BinaryStream
 import be.zvz.kookie.world.WorldCreationOptions
 import be.zvz.kookie.world.format.BiomeArray
@@ -11,20 +32,28 @@ import be.zvz.kookie.world.format.Chunk
 import be.zvz.kookie.world.format.PalettedBlockArray
 import be.zvz.kookie.world.format.SubChunk
 import be.zvz.kookie.world.format.io.BaseWorldProvider
+import be.zvz.kookie.world.format.io.SubChunkConverter
 import be.zvz.kookie.world.format.io.WorldData
 import be.zvz.kookie.world.format.io.data.BedrockWorldData
 import be.zvz.kookie.world.format.io.exception.CorruptedChunkException
-import com.koloboke.collect.map.hash.HashIntObjMaps
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.yield
 import org.iq80.leveldb.DB
 import org.iq80.leveldb.DBException
 import org.iq80.leveldb.Options
 import org.iq80.leveldb.impl.Iq80DBFactory
+import org.iq80.leveldb.impl.WriteBatchImpl
 import org.slf4j.Logger
+import java.nio.ByteBuffer
+import java.nio.ByteOrder
+import java.nio.IntBuffer
 import java.nio.charset.StandardCharsets
 import java.nio.file.Path
 import java.util.concurrent.atomic.AtomicInteger
 import kotlin.io.path.createDirectory
 import kotlin.io.path.isDirectory
+
 
 class LevelDB(path: Path) : BaseWorldProvider(path) {
 
@@ -117,201 +146,229 @@ class LevelDB(path: Path) : BaseWorldProvider(path) {
 
             val chunkVersionRaw = db.get((index + TAG_VERSION).toByteArray()) ?: return null
 
-            val subChunks: MutableMap<Int, SubChunk> = HashIntObjMaps.newMutableMap()
+            val subChunks: MutableList<SubChunk> = mutableListOf()
 
-            val biomeArray: BiomeArray? = null
+            var biomeArray: BiomeArray? = null
 
-            val chunkVersion =
+            val chunkVersion = ord(chunkVersionRaw.toString())
+            var hasBeenUpgraded = chunkVersion < CURRENT_LEVEL_CHUNK_VERSION
 
-            /*
-            $index = LevelDB::chunkIndex($chunkX, $chunkZ);
+            when (chunkVersion) {
+                15, 14, 13, 12, 11, 10, 9, 7, 6, 4 -> {
+                    val convertedLegacyExtraData = deserializeLegacyExtraData(index, chunkVersion)
+                    for (y in 0 until Chunk.MAX_SUBCHUNKS) {
+                        val data = db.get((index + TAG_SUBCHUNK_PREFIX).toByteArray()) ?: continue
 
-            $chunkVersionRaw = $this->db->get($index . self::TAG_VERSION);
-            if($chunkVersionRaw === false){
-                return null;
-            }
-
-            /** @var SubChunk[] $subChunks */
-            $subChunks = [];
-
-            /** @var BiomeArray|null $biomeArray */
-            $biomeArray = null;
-
-            $chunkVersion = ord($chunkVersionRaw);
-            $hasBeenUpgraded = $chunkVersion < self::CURRENT_LEVEL_CHUNK_VERSION;
-
-            switch($chunkVersion){
-                case 15: //MCPE 1.12.0.4 beta (???)
-                case 14: //MCPE 1.11.1.2 (???)
-                case 13: //MCPE 1.11.0.4 beta (???)
-                case 12: //MCPE 1.11.0.3 beta (???)
-                case 11: //MCPE 1.11.0.1 beta (???)
-                case 10: //MCPE 1.9 (???)
-                case 9: //MCPE 1.8 (???)
-                case 7: //MCPE 1.2 (???)
-                case 6: //MCPE 1.2.0.2 beta (???)
-                case 4: //MCPE 1.1
-                    //TODO: check beds
-                case 3: //MCPE 1.0
-                    $convertedLegacyExtraData = $this->deserializeLegacyExtraData($index, $chunkVersion);
-
-                    for($y = 0; $y < Chunk::MAX_SUBCHUNKS; ++$y){
-                        if(($data = $this->db->get($index . self::TAG_SUBCHUNK_PREFIX . chr($y))) === false){
-                            continue;
+                        val binaryStream = BinaryStream(data.toString())
+                        if (binaryStream.feof()) {
+                            throw CorruptedChunkException("Unexpected empty data for subchunk $y")
                         }
-
-                        $binaryStream = new BinaryStream($data);
-                        if($binaryStream->feof()){
-                            throw new CorruptedChunkException("Unexpected empty data for subchunk $y");
+                        val subChunkVersion = binaryStream.getByte()
+                        if (subChunkVersion < CURRENT_LEVEL_SUBCHUNK_VERSION) {
+                            hasBeenUpgraded = true
                         }
-                        $subChunkVersion = $binaryStream->getByte();
-                        if($subChunkVersion < self::CURRENT_LEVEL_SUBCHUNK_VERSION){
-                            $hasBeenUpgraded = true;
-                        }
-
-                        switch($subChunkVersion){
-                            case 0:
-                            case 2: //these are all identical to version 0, but vanilla respects these so we should also
-                            case 3:
-                            case 4:
-                            case 5:
-                            case 6:
-                            case 7:
-                                try{
-                                    $blocks = $binaryStream->get(4096);
-                                    $blockData = $binaryStream->get(2048);
-
-                                    if($chunkVersion < 4){
-                                        $binaryStream->get(4096); //legacy light info, discard it
-                                        $hasBeenUpgraded = true;
+                        when (subChunkVersion) {
+                            1 -> { // paletted v1, has a single blockstorage
+                                try {
+                                    val blocks = binaryStream.get(4096)
+                                    val blockData = binaryStream.get(2048)
+                                    if (chunkVersion < 4) {
+                                        binaryStream.get(4096) // legacy light info, discard it
                                     }
-                                }catch(BinaryDataException $e){
-                                    throw new CorruptedChunkException($e->getMessage(), 0, $e);
-                                }
-
-                                $storages = [SubChunkConverter::convertSubChunkXZY($blocks, $blockData)];
-                                if(isset($convertedLegacyExtraData[$y])){
-                                    $storages[] = $convertedLegacyExtraData[$y];
-                                }
-
-                                $subChunks[$y] = new SubChunk(BlockLegacyIds::AIR << Block::INTERNAL_METADATA_BITS, $storages);
-                                break;
-                            case 1: //paletted v1, has a single blockstorage
-                                $storages = [$this->deserializePaletted($binaryStream)];
-                                if(isset($convertedLegacyExtraData[$y])){
-                                    $storages[] = $convertedLegacyExtraData[$y];
-                                }
-                                $subChunks[$y] = new SubChunk(BlockLegacyIds::AIR << Block::INTERNAL_METADATA_BITS, $storages);
-                                break;
-                            case 8:
-                                //legacy extradata layers intentionally ignored because they aren't supposed to exist in v8
-                                $storageCount = $binaryStream->getByte();
-                                if($storageCount > 0){
-                                    $storages = [];
-
-                                    for($k = 0; $k < $storageCount; ++$k){
-                                        $storages[] = $this->deserializePaletted($binaryStream);
+                                    hasBeenUpgraded = true
+                                    val storages =
+                                        mutableListOf(SubChunkConverter.convertSubChunkXZY(blocks, blockData))
+                                    if (convertedLegacyExtraData.getOrNull(y) != null) {
+                                        storages.add(convertedLegacyExtraData[y])
                                     }
-                                    $subChunks[$y] = new SubChunk(BlockLegacyIds::AIR << Block::INTERNAL_METADATA_BITS, $storages);
+                                    subChunks[y] =
+                                        SubChunk((BlockLegacyIds.AIR.id shl INTERNAL_METADATA_BITS).toLong(), storages)
+                                } catch (e: BinaryDataException) {
+                                    throw CorruptedChunkException(e.message ?: "No error was provided", e)
                                 }
-                                break;
-                            default:
-                                //TODO: set chunks read-only so the version on disk doesn't get overwritten
-                                throw new CorruptedChunkException("don't know how to decode LevelDB subchunk format version $subChunkVersion");
+                            }
+                            8 -> {
+                                // legacy extradata layers intentionally ignored because they aren't supposed to exist in v8
+
+                                val storageCount = binaryStream.getByte()
+                                if (storageCount > 0) {
+                                    val storages = mutableListOf<PalettedBlockArray>()
+                                    for (i in 0 until storageCount) {
+                                        storages.add(deserializePaletted(binaryStream))
+                                    }
+                                    subChunks[y] =
+                                        SubChunk((BlockLegacyIds.AIR.id shl INTERNAL_METADATA_BITS).toLong(), storages)
+                                }
+                            }
+                            else -> throw CorruptedChunkException("don't know how to decode LevelDB subchunk format version $subChunkVersion")
                         }
                     }
-
-                    if(($maps2d = $this->db->get($index . self::TAG_DATA_2D)) !== false){
-                        $binaryStream = new BinaryStream($maps2d);
-
-                        try{
-                            $binaryStream->get(512); //heightmap, discard it
-                            $biomeArray = new BiomeArray($binaryStream->get(256)); //never throws
-                        }catch(BinaryDataException $e){
-                            throw new CorruptedChunkException($e->getMessage(), 0, $e);
+                    val maps2d = db.get((index + TAG_DATA_2D).toByteArray())
+                    if (maps2d != null) {
+                        val binaryStream = BinaryStream(maps2d.toString())
+                        try {
+                            binaryStream.get(512) // heightmap, discard it
+                            biomeArray = BiomeArray(binaryStream.get(256))
+                        } catch (e: BinaryDataException) {
+                            throw CorruptedChunkException(e.message ?: "No error was provided", e)
                         }
                     }
-                    break;
-                case 2: // < MCPE 1.0
-                case 1:
-                case 0: //MCPE 0.9.0.1 beta (first version)
-                    $convertedLegacyExtraData = $this->deserializeLegacyExtraData($index, $chunkVersion);
+                }
+                2, 1, 0 -> { // MCPE 1.0, 0.9.1 beta (first version)
+                    val convertedLegacyExtraData = deserializeLegacyExtraData(index, chunkVersion)
 
-                    $legacyTerrain = $this->db->get($index . self::TAG_LEGACY_TERRAIN);
-                    if($legacyTerrain === false){
-                        throw new CorruptedChunkException("Missing expected LEGACY_TERRAIN tag for format version $chunkVersion");
-                    }
-                    $binaryStream = new BinaryStream($legacyTerrain);
-                    try{
-                        $fullIds = $binaryStream->get(32768);
-                        $fullData = $binaryStream->get(16384);
-                        $binaryStream->get(32768); //legacy light info, discard it
-                    }catch(BinaryDataException $e){
-                        throw new CorruptedChunkException($e->getMessage(), 0, $e);
-                    }
+                    val legacyTerrain = db.get((index + TAG_LEGACY_TERRAIN).toByteArray())
+                        ?: throw CorruptedChunkException("Missing expected LEGACY_TERRAIN tag for format version $chunkVersion")
 
-                    for($yy = 0; $yy < 8; ++$yy){
-                        $storages = [SubChunkConverter::convertSubChunkFromLegacyColumn($fullIds, $fullData, $yy)];
-                        if(isset($convertedLegacyExtraData[$yy])){
-                            $storages[] = $convertedLegacyExtraData[$yy];
+                    val binaryStream = BinaryStream(legacyTerrain.toString())
+                    try {
+                        val fullIds = binaryStream.get(32768)
+                        val fullData = binaryStream.get(16384)
+
+                        for (yy in 0 until 8) {
+                            val storages =
+                                mutableListOf(SubChunkConverter.convertSubChunkFromLegacyColumn(fullIds, fullData, yy))
+                            if (convertedLegacyExtraData.getOrNull(yy) != null) {
+                                storages.add(convertedLegacyExtraData[yy])
+                            }
+                            subChunks[yy] =
+                                SubChunk((BlockLegacyIds.AIR.id shl INTERNAL_METADATA_BITS).toLong(), storages)
                         }
-                        $subChunks[$yy] = new SubChunk(BlockLegacyIds::AIR << Block::INTERNAL_METADATA_BITS, $storages);
+                    } catch (e: BinaryDataException) {
+                        throw CorruptedChunkException(e.message ?: "No error was provided", e)
                     }
-
-                    try{
-                        $binaryStream->get(256); //heightmap, discard it
-                        /** @var int[] $unpackedBiomeArray */
-                        $unpackedBiomeArray = unpack("N*", $binaryStream->get(1024)); //unpack() will never fail here
-                        $biomeArray = new BiomeArray(ChunkUtils::convertBiomeColors(array_values($unpackedBiomeArray))); //never throws
-                    }catch(BinaryDataException $e){
-                        throw new CorruptedChunkException($e->getMessage(), 0, $e);
+                    try {
+                        binaryStream.get(256) // heightmap, discard it
+                        val unpackedBiomeArray = unpackNStar(binaryStream.get(1024).toByteArray())
+                    } catch (e: BinaryDataException) {
+                        throw CorruptedChunkException(e.message ?: "No error was provided", e)
                     }
-                    break;
-                default:
-                    //TODO: set chunks read-only so the version on disk doesn't get overwritten
-                    throw new CorruptedChunkException("don't know how to decode chunk format version $chunkVersion");
+                }
+                else -> throw CorruptedChunkException("don't know how to decode chunk format version $chunkVersion")
             }
+            val nbt = LittleEndianNbtSerializer()
 
-            $nbt = new LittleEndianNbtSerializer();
+            var entities: List<CompoundTag> = mutableListOf()
+            val entityData = db.get((index + TAG_ENTITY).toByteArray())
 
-            /** @var CompoundTag[] $entities */
-            $entities = [];
-            if(($entityData = $this->db->get($index . self::TAG_ENTITY)) !== false and $entityData !== ""){
-                try{
-                    $entities = array_map(function(TreeRoot $root) : CompoundTag{ return $root->mustGetCompoundTag(); }, $nbt->readMultiple($entityData));
-                }catch(NbtDataException $e){
-                    throw new CorruptedChunkException($e->getMessage(), 0, $e);
+            if (entityData != null && entityData.toString() != "") {
+                try {
+                    entities = mutableListOf<CompoundTag>().apply {
+                        nbt.readMultiple(entityData.toString()).forEach {
+                            add(it.mustGetCompoundTag())
+                        }
+                    }
+                } catch (e: NbtDataException) {
+                    throw CorruptedChunkException(e.message ?: "No error was provided", e)
                 }
             }
-
-            /** @var CompoundTag[] $tiles */
-            $tiles = [];
-            if(($tileData = $this->db->get($index . self::TAG_BLOCK_ENTITY)) !== false and $tileData !== ""){
-                try{
-                    $tiles = array_map(function(TreeRoot $root) : CompoundTag{ return $root->mustGetCompoundTag(); }, $nbt->readMultiple($tileData));
-                }catch(NbtDataException $e){
-                    throw new CorruptedChunkException($e->getMessage(), 0, $e);
+            var tiles: MutableList<CompoundTag> = mutableListOf()
+            val tileData = db.get((index + TAG_BLOCK_ENTITY).toByteArray())
+            if (tileData != null && tileData.toString() != "") {
+                try {
+                    tiles = mutableListOf<CompoundTag>().apply {
+                        nbt.readMultiple(tileData.toString()).forEach {
+                            add(it.mustGetCompoundTag())
+                        }
+                    }
+                } catch (e: NbtDataException) {
+                    throw CorruptedChunkException(e.message ?: "No error was provided", e)
                 }
             }
-
-            $chunk = new Chunk(
-                $subChunks,
-                $entities,
-                $tiles,
-                $biomeArray
-            );
-
-            //TODO: tile ticks, biome states (?)
-
-            $chunk->setPopulated();
-            if($hasBeenUpgraded){
-                $chunk->setDirty(); //trigger rewriting chunk to disk if it was converted from an older format
+            val chunk = Chunk(
+                subChunks,
+                entities,
+                tiles,
+                biomeArray!!
+            )
+            chunk.terrainPopulated = true
+            chunk.dirtyFlags = chunk.dirtyFlags or Chunk.DIRTY_FLAG_TERRAIN
+            if (hasBeenUpgraded) {
+                chunk.setDirty()
             }
-
-            return $chunk;
-             */
+            return chunk
         } catch (e: DBException) {
             return null
+        }
+    }
+
+    fun saveChunk(chunkX: Int, chunkZ: Int, chunk: Chunk) {
+        val idMap = LegacyIdToStringIdMap.BLOCK
+        val index = chunkIndex(chunkX, chunkZ)
+
+        val write = WriteBatchImpl()
+        // FIXME: PHP sucks, I don't know how to encode Int to char, but when I know it another problem have appeared to me
+        // This is hacky method and I don't know if it is correct
+        write.put(
+            (index + TAG_VERSION).toByteArray(),
+            CURRENT_LEVEL_CHUNK_VERSION.toChar().code.toString().toByteArray()
+        )
+        if (chunk.getDirtyFlag(Chunk.DIRTY_FLAG_TERRAIN)) {
+            val subChunks = chunk.subChunks
+            subChunks.forEachIndexed { y, subChunk ->
+                val key = index + TAG_SUBCHUNK_PREFIX + y.toChar().code.toString().toByteArray()
+                if (subChunk.isEmptyAuthoritative()) {
+                    write.delete(key.toByteArray())
+                } else {
+                    val subStream = BinaryStream()
+                    subStream.putByte(CURRENT_LEVEL_SUBCHUNK_VERSION)
+
+                    val layers = subChunk.blockLayers
+                    subStream.putByte(layers.size)
+                    layers.forEach {
+                        subStream.putByte(it.bitsPerBlock shl 1)
+                        subStream.put(it.wordArray.toString())
+
+                        val palette = it.palette
+                        subStream.putLInt(palette.size)
+                        val tags = mutableListOf<TreeRoot>()
+                        palette.forEach { p ->
+                            tags.add(TreeRoot(CompoundTag.create().apply {
+                                setString(
+                                    "name",
+                                    idMap.legacyToString[p.toInt() shr INTERNAL_METADATA_BITS]
+                                        ?: "minecraft:info_update"
+                                )
+                                setInt("oldid", p.toInt() shr INTERNAL_METADATA_BITS)
+                                setShort("val", p.toInt() and INTERNAL_METADATA_MASK)
+                            }))
+
+                            subStream.put(LittleEndianNbtSerializer().writeMultiple(tags))
+                        }
+                        write.put(key.toByteArray(), subStream.buffer.toString().toByteArray())
+                    }
+                }
+            }
+        }
+        if (chunk.getDirtyFlag(Chunk.DIRTY_FLAG_BIOMES)) {
+            write.put(
+                (index + TAG_DATA_2D).toByteArray(),
+                (0x00.toString().repeat(512) + chunk.biomeIdArray).toByteArray()
+            )
+        }
+
+        write.put(
+            (index + TAG_STATE_FINALISATION).toByteArray(),
+            FINALISATION_DONE.toChar().code.toString().toByteArray()
+        )
+
+        writeTags(chunk.NBTtiles, index + TAG_BLOCK_ENTITY, write)
+        writeTags(chunk.NBTentities, index + TAG_ENTITY, write)
+
+        write.delete((index + TAG_DATA_2D_LEGACY).toByteArray())
+        write.delete((index + TAG_LEGACY_TERRAIN).toByteArray())
+        db.write(write)
+    }
+
+    private fun writeTags(targets: List<CompoundTag>, index: String, write: WriteBatchImpl) {
+        if (targets.isNotEmpty()) {
+            val nbt = LittleEndianNbtSerializer()
+            val list = mutableListOf<TreeRoot>().apply {
+                targets.forEach { add(TreeRoot(it)) }
+            }
+            write.put(index.toByteArray(), nbt.writeMultiple(list).toByteArray())
+        } else {
+            write.delete(index.toByteArray())
         }
     }
 
@@ -320,15 +377,39 @@ class LevelDB(path: Path) : BaseWorldProvider(path) {
     }
 
     override fun close() {
-        TODO("Not yet implemented")
+        db.close()
     }
 
-    override fun getAllChunks(skipCorrupted: Boolean, logger: Logger?): Sequence<Chunk> {
-        TODO("Not yet implemented")
+    override fun getAllChunks(skipCorrupted: Boolean, logger: Logger?): Sequence<Triple<Int, Int, Chunk>> {
+        /*
+        db.forEach { (key, _)->
+            val chunkX = Binary.readLInt(key.toString().substring(0 until 4))
+            val chunkZ = Binary.readLInt(key.toString().substring(4))
+
+            try {
+                loadChunk(chunkX, chunkZ)?.let{
+                    yield(Triple(chunkX, chunkZ, it))
+                }
+            } catch (e: CorruptedChunkException) {
+                if (!skipCorrupted) {
+                    throw e
+                }
+                logger?.error("Skipped corrupted chunk $chunkX $chunkZ (${e.message})")
+            }
+        }
+
+         */
+        TODO("HELP ME!!!!!!!!!!!!!!!!!!!!!!!")
     }
 
     override fun calculateChunkCount(): Int {
-        TODO("Not yet implemented")
+        var count = 0
+        db.forEach { (key, _)->
+            if (key.toString().length == 9 && key.toString().substring(-1) == TAG_VERSION) {
+                count++
+            }
+        }
+        return count
     }
 
     companion object {
@@ -403,11 +484,22 @@ class LevelDB(path: Path) : BaseWorldProvider(path) {
         }
 
         fun ord(c: Char): Int {
-            return if (c < 0x80) {
+            return if (c.code < 0x80) {
                 c.code
             } else {
-                ord(Character.toString(c))
+                ord(c.toString())
             }
+        }
+
+        private fun unpackNStar(bytes: ByteArray): String {
+            val byteBuf: ByteBuffer = ByteBuffer.wrap(bytes)
+
+            byteBuf.order(ByteOrder.BIG_ENDIAN)
+            val intBuf: IntBuffer = byteBuf.asIntBuffer()
+
+            val integers = IntArray(intBuf.remaining())
+            intBuf[integers].get()
+            return integers.toString()
         }
     }
 }
