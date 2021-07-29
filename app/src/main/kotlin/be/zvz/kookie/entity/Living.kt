@@ -265,11 +265,11 @@ abstract class Living(location: Location) : Entity(location) {
             /** TODO: Implements after implemented World methods
              * var fallBlockPos = location.floor()
              * var fallBlock = world.getBlockAt(fallBlockPos)
-             * if (fallBlock.getId() == BlockLegacyIds.AIR.id) {
+             * if (fallBlock.getId() == VanillaBlocks.AIR.id) {
              *     fallBlockPos = fallBlockPos.subtract(0, 1, 0)
              *     fallBlock = world.getBlock(fallBlockPos)
              * }
-             * if (fallBlock.getId() != BlockLegacyIds.AIR.id) {
+             * if (fallBlock.getId() != VanillaBlocks.AIR.id) {
              *     broadcastSound(EntityLandSound(this, fallBlock))
              * }
              */
