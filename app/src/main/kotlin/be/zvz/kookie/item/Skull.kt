@@ -23,5 +23,5 @@ import be.zvz.kookie.block.util.SkullType
 
 class Skull(identifier: ItemIdentifier, vanillaName: String = "Unknown", val skullType: SkullType) :
     Item(identifier, vanillaName) {
-    override fun getBlock(clickedFace: Int?): Block = VanillaBlocks.MOB_HEAD.block // TODO: setSkullType
+    override fun getBlock(clickedFace: Int?): Block = VanillaBlocks.HEAD.block // TODO: setSkullType
 }
