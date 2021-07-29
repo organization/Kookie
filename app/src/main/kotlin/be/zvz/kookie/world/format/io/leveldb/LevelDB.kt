@@ -36,9 +36,6 @@ import be.zvz.kookie.world.format.io.SubChunkConverter
 import be.zvz.kookie.world.format.io.WorldData
 import be.zvz.kookie.world.format.io.data.BedrockWorldData
 import be.zvz.kookie.world.format.io.exception.CorruptedChunkException
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.yield
 import org.iq80.leveldb.DB
 import org.iq80.leveldb.DBException
 import org.iq80.leveldb.Options
@@ -53,7 +50,6 @@ import java.nio.file.Path
 import java.util.concurrent.atomic.AtomicInteger
 import kotlin.io.path.createDirectory
 import kotlin.io.path.isDirectory
-
 
 class LevelDB(path: Path) : BaseWorldProvider(path) {
 
@@ -404,7 +400,7 @@ class LevelDB(path: Path) : BaseWorldProvider(path) {
 
     override fun calculateChunkCount(): Int {
         var count = 0
-        db.forEach { (key, _)->
+        db.forEach { (key, _) ->
             if (key.toString().length == 9 && key.toString().substring(-1) == TAG_VERSION) {
                 count++
             }
@@ -413,7 +409,7 @@ class LevelDB(path: Path) : BaseWorldProvider(path) {
     }
 
     companion object {
-        //According to Tomasso, these aren't supposed to be readable anymore. Thankfully he didn't change the readable ones...
+        // According to Tomasso, these aren't supposed to be readable anymore. Thankfully he didn't change the readable ones...
         private const val TAG_DATA_2D = 0x2d.toChar().toString()
         private const val TAG_DATA_2D_LEGACY = 0x2e.toChar().toString()
         private const val TAG_SUBCHUNK_PREFIX = 0x2f.toChar().toString()
