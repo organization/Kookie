@@ -17,4 +17,52 @@
  */
 package be.zvz.kookie.world.format.io
 
-class WorldProviderManager
+import be.zvz.kookie.world.format.io.leveldb.LevelDB
+import com.koloboke.collect.map.hash.HashObjObjMaps
+import java.nio.file.Path
+import kotlin.io.path.isDirectory
+
+class WorldProviderManager {
+
+    private val providers: MutableMap<String, WorldProviderManagerEntry> = HashObjObjMaps.newMutableMap()
+
+    val default: WriteableWorldProviderManagerEntry = WriteableWorldProviderManagerEntry(
+        { pathString ->
+            val path = Path.of(pathString)
+            return@WriteableWorldProviderManagerEntry path.resolve("level.dat").toFile().isFile && path.resolve("db")
+                .isDirectory()
+        },
+        { pathString -> return@WriteableWorldProviderManagerEntry LevelDB(Path.of(pathString)) },
+        { pathString, name, options ->
+            return@WriteableWorldProviderManagerEntry LevelDB.generate(Path.of(pathString), name, options)
+        }
+    )
+
+    @JvmOverloads
+    fun addProvider(providerEntry: WorldProviderManagerEntry, providerName: String, overwrite: Boolean = false) {
+        val name = providerName.lowercase()
+        if (providers.containsKey(name) && !overwrite) {
+            throw IllegalArgumentException("Alias \"$name\" is already registered")
+        }
+        providers[name] = providerEntry
+    }
+
+    fun getMatchingProviders(path: Path): Map<String, WorldProviderManagerEntry> {
+        val result: MutableMap<String, WorldProviderManagerEntry> = HashObjObjMaps.newMutableMap()
+
+        providers.forEach { (providerName, provider) ->
+            if (provider.isValid(path)) {
+                result[providerName] = provider
+            }
+        }
+        return result
+    }
+
+    fun getAvailableProviders(): MutableMap<String, WorldProviderManagerEntry> {
+        return providers
+    }
+
+    fun getProviderByName(providerName: String): WorldProviderManagerEntry? {
+        return providers[providerName]
+    }
+}

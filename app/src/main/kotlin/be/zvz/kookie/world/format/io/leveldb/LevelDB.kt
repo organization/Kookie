@@ -34,6 +34,7 @@ import be.zvz.kookie.world.format.SubChunk
 import be.zvz.kookie.world.format.io.BaseWorldProvider
 import be.zvz.kookie.world.format.io.SubChunkConverter
 import be.zvz.kookie.world.format.io.WorldData
+import be.zvz.kookie.world.format.io.WritableWorldProvider
 import be.zvz.kookie.world.format.io.data.BedrockWorldData
 import be.zvz.kookie.world.format.io.exception.CorruptedChunkException
 import org.iq80.leveldb.DB
@@ -51,7 +52,7 @@ import java.util.concurrent.atomic.AtomicInteger
 import kotlin.io.path.createDirectory
 import kotlin.io.path.isDirectory
 
-class LevelDB(path: Path) : BaseWorldProvider(path) {
+class LevelDB(path: Path) : BaseWorldProvider(path), WritableWorldProvider {
 
     private val db: DB = createDB(path)
 
@@ -290,7 +291,7 @@ class LevelDB(path: Path) : BaseWorldProvider(path) {
         }
     }
 
-    fun saveChunk(chunkX: Int, chunkZ: Int, chunk: Chunk) {
+    override fun saveChunk(chunkX: Int, chunkZ: Int, chunk: Chunk) {
         val idMap = LegacyIdToStringIdMap.BLOCK
         val index = chunkIndex(chunkX, chunkZ)
 
