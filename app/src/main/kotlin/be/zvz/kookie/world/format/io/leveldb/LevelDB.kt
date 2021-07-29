@@ -27,6 +27,7 @@ import be.zvz.kookie.utils.Binary
 import be.zvz.kookie.utils.BinaryDataException
 import be.zvz.kookie.utils.BinaryStream
 import be.zvz.kookie.world.WorldCreationOptions
+import be.zvz.kookie.world.biome.BiomeIds
 import be.zvz.kookie.world.format.BiomeArray
 import be.zvz.kookie.world.format.Chunk
 import be.zvz.kookie.world.format.PalettedBlockArray
@@ -278,7 +279,7 @@ class LevelDB(path: Path) : BaseWorldProvider(path), WritableWorldProvider {
                 subChunks,
                 entities,
                 tiles,
-                biomeArray!!
+                biomeArray ?: BiomeArray.fill(BiomeIds.PLAINS.id)
             )
             chunk.terrainPopulated = true
             chunk.dirtyFlags = chunk.dirtyFlags or Chunk.DIRTY_FLAG_TERRAIN
