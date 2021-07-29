@@ -46,9 +46,9 @@ import kotlin.math.pow
 class Player(
     override var server: Server,
     val networkSession: NetworkSession,
-    val playerInfo: PlayerInfo,
+    playerInfo: PlayerInfo,
     val authenticated: Boolean,
-    val spawnLocation: Location,
+    spawnLocation: Location,
     val namedTag: CompoundTag,
     skin: Skin,
     location: Location
