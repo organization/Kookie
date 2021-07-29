@@ -18,7 +18,7 @@
 package be.zvz.kookie.world.generator.populator
 
 import be.zvz.kookie.block.BlockFactory
-import be.zvz.kookie.block.BlockLegacyIds
+import be.zvz.kookie.block.VanillaBlocks
 import be.zvz.kookie.world.ChunkManager
 import be.zvz.kookie.world.biome.BiomeRegistry
 import kotlin.math.min
@@ -49,7 +49,7 @@ class GroundCover : Populator {
                         --y
                         val coverBlock = biome.groundCover[startY - y]
                         val beforeBlock = BlockFactory.fromFullBlock(chunk.getFullBlock(x, y, z))
-                        if (beforeBlock.getId() == BlockLegacyIds.AIR.id && coverBlock.isSolid()) {
+                        if (beforeBlock.getId() == VanillaBlocks.AIR.id && coverBlock.isSolid()) {
                             break
                         }
                         if (coverBlock.canBeFlowedInto()) {

@@ -17,7 +17,7 @@
  */
 package be.zvz.kookie.world.generator.populator
 
-import be.zvz.kookie.block.BlockLegacyIds
+import be.zvz.kookie.block.VanillaBlocks
 import be.zvz.kookie.block.util.TreeType
 import be.zvz.kookie.world.ChunkManager
 import kotlin.random.Random
@@ -46,10 +46,10 @@ class Tree @JvmOverloads constructor(
         for (y in 127 downTo 0) {
             val id = world.getBlockAt(x, y, z).getId()
             when {
-                id != BlockLegacyIds.AIR.id &&
-                    id != BlockLegacyIds.LEAVES.id &&
-                    id != BlockLegacyIds.LEAVES2.id &&
-                    id != BlockLegacyIds.SNOW_LAYER.id -> {
+                id != VanillaBlocks.AIR.id &&
+                    id != VanillaBlocks.LEAVES.id &&
+                    id != VanillaBlocks.LEAVES2.id &&
+                    id != VanillaBlocks.SNOW_LAYER.id -> {
                     return y + 1
                 }
             }

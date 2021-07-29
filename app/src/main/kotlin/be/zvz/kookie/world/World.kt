@@ -21,7 +21,6 @@ import be.zvz.kookie.Server
 import be.zvz.kookie.block.Air
 import be.zvz.kookie.block.Block
 import be.zvz.kookie.block.BlockFactory
-import be.zvz.kookie.block.BlockLegacyIds
 import be.zvz.kookie.block.UnknownBlock
 import be.zvz.kookie.block.VanillaBlocks
 import be.zvz.kookie.block.tile.Spawnable
@@ -1328,7 +1327,7 @@ class World(
             return false
         }
 
-        if (blockClicked.getId() == BlockLegacyIds.AIR.id) {
+        if (blockClicked.getId() == VanillaBlocks.AIR.id) {
             return false
         }
 
@@ -1936,7 +1935,7 @@ class World(
         val z = v.floorZ
         var y = min(max - 2, v.floorY)
 
-        var wasAir = getBlockAt(x, y - 1, z).getId() == BlockLegacyIds.AIR.id
+        var wasAir = getBlockAt(x, y - 1, z).getId() == VanillaBlocks.AIR.id
         while (y > minY) {
             if (getBlockAt(x, y, z).isFullCube()) {
                 if (wasAir) {

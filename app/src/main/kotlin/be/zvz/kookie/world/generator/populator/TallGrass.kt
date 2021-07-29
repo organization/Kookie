@@ -17,7 +17,6 @@
  */
 package be.zvz.kookie.world.generator.populator
 
-import be.zvz.kookie.block.BlockLegacyIds
 import be.zvz.kookie.block.VanillaBlocks
 import be.zvz.kookie.world.ChunkManager
 import kotlin.random.Random
@@ -43,18 +42,18 @@ class TallGrass @JvmOverloads constructor(
 
     private fun canTallGrassStay(world: ChunkManager, x: Int, y: Int, z: Int): Boolean {
         val id = world.getBlockAt(x, y, z).getId()
-        return (id == BlockLegacyIds.AIR.id || id == BlockLegacyIds.SNOW_LAYER.id) &&
-            world.getBlockAt(x, y - 1, z).getId() == BlockLegacyIds.GRASS.id
+        return (id == VanillaBlocks.AIR.id || id == VanillaBlocks.SNOW_LAYER.id) &&
+            world.getBlockAt(x, y - 1, z).getId() == VanillaBlocks.GRASS.id
     }
 
     private fun getHighestWorkableBlock(world: ChunkManager, x: Int, z: Int): Int {
         for (y in 127 downTo 0) {
             val id = world.getBlockAt(x, y, z).getId()
             when {
-                id != BlockLegacyIds.AIR.id &&
-                    id != BlockLegacyIds.LEAVES.id &&
-                    id != BlockLegacyIds.LEAVES2.id &&
-                    id != BlockLegacyIds.SNOW_LAYER.id -> {
+                id != VanillaBlocks.AIR.id &&
+                    id != VanillaBlocks.LEAVES.id &&
+                    id != VanillaBlocks.LEAVES2.id &&
+                    id != VanillaBlocks.SNOW_LAYER.id -> {
                     return y + 1
                 }
             }

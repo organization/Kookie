@@ -229,7 +229,7 @@ class Chunk @JvmOverloads constructor(
         if (y !in 0 until subChunks.size) {
             throw IllegalArgumentException("Invalid subchunk Y coordinate $y")
         } else {
-            subChunks[y] = subChunk ?: SubChunk(BlockLegacyIds.AIR.id.toLong() shl 4, mutableListOf())
+            subChunks[y] = subChunk ?: SubChunk(VanillaBlocks.AIR.id.toLong() shl 4, mutableListOf())
             setDirtyFlag(DIRTY_FLAG_TERRAIN, true)
         }
     }
