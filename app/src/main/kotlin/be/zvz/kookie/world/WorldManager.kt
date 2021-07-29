@@ -34,6 +34,7 @@ import com.koloboke.collect.map.hash.HashIntObjMaps
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.nio.file.Path
+import java.nio.file.Paths
 
 class WorldManager(
     private val server: Server,
@@ -264,14 +265,14 @@ class WorldManager(
     }
 
     fun getWorldPath(name: String): Path {
-        return Path.of(dataPath, name)
+        return Paths.get(dataPath, name)
     }
 
     fun isWorldGenerated(name: String): Boolean =
         if (name.trim() == "") {
             false
         } else if ((getWorldByName(name)) !is World) {
-            providerManager.getMatchingProviders(Path.of(dataPath, name)).isNotEmpty()
+            providerManager.getMatchingProviders(Paths.get(dataPath, name)).isNotEmpty()
         } else {
             true
         }

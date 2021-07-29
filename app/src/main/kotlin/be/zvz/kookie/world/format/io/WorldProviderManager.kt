@@ -20,6 +20,7 @@ package be.zvz.kookie.world.format.io
 import be.zvz.kookie.world.format.io.leveldb.LevelDB
 import com.koloboke.collect.map.hash.HashObjObjMaps
 import java.nio.file.Path
+import java.nio.file.Paths
 import kotlin.io.path.isDirectory
 
 class WorldProviderManager {
@@ -28,13 +29,13 @@ class WorldProviderManager {
 
     val default: WriteableWorldProviderManagerEntry = WriteableWorldProviderManagerEntry(
         { pathString ->
-            val path = Path.of(pathString)
+            val path = Paths.get(pathString)
             return@WriteableWorldProviderManagerEntry path.resolve("level.dat").toFile().isFile && path.resolve("db")
                 .isDirectory()
         },
-        { pathString -> return@WriteableWorldProviderManagerEntry LevelDB(Path.of(pathString)) },
+        { pathString -> return@WriteableWorldProviderManagerEntry LevelDB(Paths.get(pathString)) },
         { pathString, name, options ->
-            return@WriteableWorldProviderManagerEntry LevelDB.generate(Path.of(pathString), name, options)
+            return@WriteableWorldProviderManagerEntry LevelDB.generate(Paths.get(pathString), name, options)
         }
     )
 
