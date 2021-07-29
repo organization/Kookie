@@ -23,11 +23,11 @@ import be.zvz.kookie.block.VanillaBlocks
 abstract class SnowyBiome : Biome() {
     init {
         groundCover.apply {
-             add(VanillaBlocks.SNOW_LAYER.block)
-             add(VanillaBlocks.GRASS.block)
-             add(VanillaBlocks.DIRT.block)
-             add(VanillaBlocks.DIRT.block)
-             add(VanillaBlocks.DIRT.block)
+            add(VanillaBlocks.SNOW_LAYER.block)
+            add(VanillaBlocks.GRASS.block)
+            add(VanillaBlocks.DIRT.block)
+            add(VanillaBlocks.DIRT.block)
+            add(VanillaBlocks.DIRT.block)
         }
     }
 }

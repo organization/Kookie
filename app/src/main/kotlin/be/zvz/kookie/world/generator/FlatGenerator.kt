@@ -25,6 +25,7 @@ import be.zvz.kookie.world.format.Chunk
 import be.zvz.kookie.world.generator.objects.Ore
 import be.zvz.kookie.world.generator.populator.Populator
 import com.koloboke.collect.map.hash.HashObjObjMaps
+import kotlin.random.Random
 import be.zvz.kookie.world.generator.populator.Ore as OrePopulator
 
 open class FlatGenerator(seed: Long, preset: String) :
@@ -93,7 +94,7 @@ open class FlatGenerator(seed: Long, preset: String) :
     }
 
     override fun populateChunk(world: ChunkManager, chunkX: Int, chunkZ: Int) {
-        random.setSeed(0xdeadbeef xor (chunkX.toLong() shl 8) xor chunkZ.toLong() xor seed)
+        random = Random(0xdeadbeef xor (chunkX.toLong() shl 8) xor chunkZ.toLong() xor seed)
         populators.forEach { populator ->
             populator.populate(world, chunkX, chunkZ, random)
         }

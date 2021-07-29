@@ -196,7 +196,9 @@ class LevelDB(path: Path) : BaseWorldProvider(path) {
                                         SubChunk((BlockLegacyIds.AIR.id shl INTERNAL_METADATA_BITS).toLong(), storages)
                                 }
                             }
-                            else -> throw CorruptedChunkException("don't know how to decode LevelDB subchunk format version $subChunkVersion")
+                            else -> throw CorruptedChunkException(
+                                "don't know how to decode LevelDB subchunk format version $subChunkVersion"
+                            )
                         }
                     }
                     val maps2d = db.get((index + TAG_DATA_2D).toByteArray())
@@ -319,15 +321,19 @@ class LevelDB(path: Path) : BaseWorldProvider(path) {
                         subStream.putLInt(palette.size)
                         val tags = mutableListOf<TreeRoot>()
                         palette.forEach { p ->
-                            tags.add(TreeRoot(CompoundTag.create().apply {
-                                setString(
-                                    "name",
-                                    idMap.legacyToString[p.toInt() shr INTERNAL_METADATA_BITS]
-                                        ?: "minecraft:info_update"
+                            tags.add(
+                                TreeRoot(
+                                    CompoundTag.create().apply {
+                                        setString(
+                                            "name",
+                                            idMap.legacyToString[p.toInt() shr INTERNAL_METADATA_BITS]
+                                                ?: "minecraft:info_update"
+                                        )
+                                        setInt("oldid", p.toInt() shr INTERNAL_METADATA_BITS)
+                                        setShort("val", p.toInt() and INTERNAL_METADATA_MASK)
+                                    }
                                 )
-                                setInt("oldid", p.toInt() shr INTERNAL_METADATA_BITS)
-                                setShort("val", p.toInt() and INTERNAL_METADATA_MASK)
-                            }))
+                            )
 
                             subStream.put(LittleEndianNbtSerializer().writeMultiple(tags))
                         }
