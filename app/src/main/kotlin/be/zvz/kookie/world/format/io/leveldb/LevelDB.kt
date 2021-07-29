@@ -376,7 +376,7 @@ class LevelDB(path: Path) : BaseWorldProvider(path), WritableWorldProvider {
     }
 
     override fun doGarbageCollection() {
-        TODO("Not yet implemented")
+        // NOOP
     }
 
     override fun close() {
