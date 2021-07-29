@@ -376,14 +376,13 @@ class LevelDB(path: Path) : BaseWorldProvider(path) {
         db.close()
     }
 
-    override fun getAllChunks(skipCorrupted: Boolean, logger: Logger?): Sequence<Triple<Int, Int, Chunk>> {
-        /*
-        db.forEach { (key, _)->
+    override fun getAllChunks(skipCorrupted: Boolean, logger: Logger?) = sequence {
+        db.forEach { (key, _) ->
             val chunkX = Binary.readLInt(key.toString().substring(0 until 4))
             val chunkZ = Binary.readLInt(key.toString().substring(4))
 
             try {
-                loadChunk(chunkX, chunkZ)?.let{
+                loadChunk(chunkX, chunkZ)?.let {
                     yield(Triple(chunkX, chunkZ, it))
                 }
             } catch (e: CorruptedChunkException) {
@@ -393,9 +392,6 @@ class LevelDB(path: Path) : BaseWorldProvider(path) {
                 logger?.error("Skipped corrupted chunk $chunkX $chunkZ (${e.message})")
             }
         }
-
-         */
-        TODO("HELP ME!!!!!!!!!!!!!!!!!!!!!!!")
     }
 
     override fun calculateChunkCount(): Int {
