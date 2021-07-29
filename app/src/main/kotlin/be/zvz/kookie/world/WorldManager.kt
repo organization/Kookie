@@ -264,15 +264,14 @@ class WorldManager(
         }
     }
 
-    fun getWorldPath(name: String): Path {
-        return Paths.get(dataPath, name)
-    }
+    fun getWorldPath(name: String): Path = Paths.get(worldPath.toString(), name)
+
 
     fun isWorldGenerated(name: String): Boolean =
         if (name.trim() == "") {
             false
         } else if ((getWorldByName(name)) !is World) {
-            providerManager.getMatchingProviders(Paths.get(dataPath, name)).isNotEmpty()
+            providerManager.getMatchingProviders(Paths.get(worldPath.toString(), name)).isNotEmpty()
         } else {
             true
         }
