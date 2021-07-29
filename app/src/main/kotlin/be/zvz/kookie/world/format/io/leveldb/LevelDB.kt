@@ -17,7 +17,7 @@
  */
 package be.zvz.kookie.world.format.io.leveldb
 
-import be.zvz.kookie.block.BlockLegacyIds
+import be.zvz.kookie.block.VanillaBlocks
 import be.zvz.kookie.data.bedrock.LegacyIdToStringIdMap
 import be.zvz.kookie.nbt.LittleEndianNbtSerializer
 import be.zvz.kookie.nbt.NbtDataException
@@ -81,9 +81,9 @@ class LevelDB(path: Path) : BaseWorldProvider(path), WritableWorldProvider {
                 val tag = nbt.read(stream.buffer.toString(), offset).mustGetCompoundTag()
                 stream.offset.set(offset.get())
 
-                val id = idMap.stringToLegacy[tag.getString("name")] ?: BlockLegacyIds.INFO_UPDATE.id
+                val id = idMap.stringToLegacy[tag.getString("name")] ?: VanillaBlocks.INFO_UPDATE.id
                 var data = tag.getShort("val")
-                if (id == BlockLegacyIds.AIR.id) {
+                if (id == VanillaBlocks.AIR.id) {
                     // TODO: quick and dirty hack for artifacts left behind by broken world editors
                     // we really need a proper state fixer, but this is a pressing issue.
                     data = 0
@@ -122,7 +122,7 @@ class LevelDB(path: Path) : BaseWorldProvider(path), WritableWorldProvider {
                 if (extraDataLayers.getOrNull(ySub) == null) {
                     extraDataLayers.add(
                         ySub,
-                        PalettedBlockArray((BlockLegacyIds.AIR.id shl INTERNAL_METADATA_BITS).toLong())
+                        PalettedBlockArray((VanillaBlocks.AIR.id shl INTERNAL_METADATA_BITS).toLong())
                     )
                 }
                 extraDataLayers[ySub].set(
@@ -180,7 +180,7 @@ class LevelDB(path: Path) : BaseWorldProvider(path), WritableWorldProvider {
                                         storages.add(convertedLegacyExtraData[y])
                                     }
                                     subChunks[y] =
-                                        SubChunk((BlockLegacyIds.AIR.id shl INTERNAL_METADATA_BITS).toLong(), storages)
+                                        SubChunk((VanillaBlocks.AIR.id shl INTERNAL_METADATA_BITS).toLong(), storages)
                                 } catch (e: BinaryDataException) {
                                     throw CorruptedChunkException(e.message ?: "No error was provided", e)
                                 }
@@ -195,7 +195,7 @@ class LevelDB(path: Path) : BaseWorldProvider(path), WritableWorldProvider {
                                         storages.add(deserializePaletted(binaryStream))
                                     }
                                     subChunks[y] =
-                                        SubChunk((BlockLegacyIds.AIR.id shl INTERNAL_METADATA_BITS).toLong(), storages)
+                                        SubChunk((VanillaBlocks.AIR.id shl INTERNAL_METADATA_BITS).toLong(), storages)
                                 }
                             }
                             else -> throw CorruptedChunkException(
@@ -232,7 +232,7 @@ class LevelDB(path: Path) : BaseWorldProvider(path), WritableWorldProvider {
                                 storages.add(convertedLegacyExtraData[yy])
                             }
                             subChunks[yy] =
-                                SubChunk((BlockLegacyIds.AIR.id shl INTERNAL_METADATA_BITS).toLong(), storages)
+                                SubChunk((VanillaBlocks.AIR.id shl INTERNAL_METADATA_BITS).toLong(), storages)
                         }
                     } catch (e: BinaryDataException) {
                         throw CorruptedChunkException(e.message ?: "No error was provided", e)
