@@ -266,7 +266,6 @@ class WorldManager(
 
     fun getWorldPath(name: String): Path = Paths.get(worldPath.toString(), name)
 
-
     fun isWorldGenerated(name: String): Boolean =
         if (name.trim() == "") {
             false
