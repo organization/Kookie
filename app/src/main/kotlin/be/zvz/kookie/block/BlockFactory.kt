@@ -21,7 +21,7 @@ import com.koloboke.collect.map.hash.HashLongFloatMaps
 import com.koloboke.collect.map.hash.HashLongIntMaps
 import com.koloboke.collect.map.hash.HashLongObjMaps
 import be.zvz.kookie.block.BlockIdentifier as BID
-import be.zvz.kookie.block.BlockLegacyIds as Ids
+import be.zvz.kookie.block.VanillaBlocks as Ids
 
 object BlockFactory {
     private val fullList: MutableMap<Long, Block> = HashLongObjMaps.newMutableMap()
@@ -32,8 +32,8 @@ object BlockFactory {
 
     init {
         /*val railBreakInfo = BlockBreakInfo(0.7f)
-        register(ActivatorRail(BID(Ids.ACTIVATOR_RAIL.id, 0), "Activator Rail", railBreakInfo))*/
-        register(Air(BID(Ids.AIR.id, 0), "Air", BlockBreakInfo.indestructible(-1f)))
+        register(ActivatorRail(Ids.ACTIVATOR_RAIL.identifier, "Activator Rail", railBreakInfo))*/
+        register(Air(Ids.AIR.identifier, "Air", BlockBreakInfo.indestructible(-1f)))
         TODO("Add Blocks")
     }
 

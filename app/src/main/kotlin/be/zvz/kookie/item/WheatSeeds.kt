@@ -22,5 +22,5 @@ import be.zvz.kookie.block.VanillaBlocks
 import be.zvz.kookie.math.Facing
 
 class WheatSeeds(identifier: ItemIdentifier, name: String) : Item(identifier, name) {
-    override fun getBlock(clickedFace: Facing?): Block = VanillaBlocks.WHEAT.block
+    override fun getBlock(clickedFace: Facing?): Block = VanillaBlocks.WHEAT_CROPS.block
 }

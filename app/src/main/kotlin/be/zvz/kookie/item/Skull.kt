@@ -24,5 +24,5 @@ import be.zvz.kookie.math.Facing
 
 class Skull(identifier: ItemIdentifier, vanillaName: String = "Unknown", val skullType: SkullType) :
     Item(identifier, vanillaName) {
-    override fun getBlock(clickedFace: Facing?): Block = VanillaBlocks.MOB_HEAD.block // TODO: setSkullType
+    override fun getBlock(clickedFace: Facing?): Block = VanillaBlocks.HEAD.block // TODO: setSkullType
 }

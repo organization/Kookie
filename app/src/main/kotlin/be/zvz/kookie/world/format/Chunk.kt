@@ -17,7 +17,7 @@
  */
 package be.zvz.kookie.world.format
 
-import be.zvz.kookie.block.BlockLegacyIds
+import be.zvz.kookie.block.VanillaBlocks
 import be.zvz.kookie.block.tile.Tile
 import be.zvz.kookie.block.tile.TileFactory
 import be.zvz.kookie.entity.Entity
@@ -35,7 +35,7 @@ import com.koloboke.collect.map.hash.HashLongObjMaps
 
 class Chunk @JvmOverloads constructor(
     val subChunks: MutableList<SubChunk> = MutableList(MAX_SUBCHUNKS) {
-        SubChunk(BlockLegacyIds.AIR.id.toLong() shl 4, mutableListOf())
+        SubChunk(VanillaBlocks.AIR.id.toLong() shl 4, mutableListOf())
     },
     _NBTentities: List<CompoundTag>? = null,
     _NBTtiles: List<CompoundTag>? = null,
