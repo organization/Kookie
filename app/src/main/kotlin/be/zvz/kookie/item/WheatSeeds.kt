@@ -21,5 +21,5 @@ import be.zvz.kookie.block.Block
 import be.zvz.kookie.block.VanillaBlocks
 
 class WheatSeeds(identifier: ItemIdentifier, name: String) : Item(identifier, name) {
-    override fun getBlock(clickedFace: Int?): Block = VanillaBlocks.WHEAT.block
+    override fun getBlock(clickedFace: Int?): Block = VanillaBlocks.WHEAT_CROPS.block
 }
