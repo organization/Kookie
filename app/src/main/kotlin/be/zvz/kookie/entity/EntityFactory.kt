@@ -20,6 +20,7 @@ package be.zvz.kookie.entity
 import be.zvz.kookie.data.bedrock.PotionTypeIdMap
 import be.zvz.kookie.data.bedrock.PotionTypeIds
 import be.zvz.kookie.entity.`object`.ExperienceOrb
+import be.zvz.kookie.entity.`object`.FallingBlock
 import be.zvz.kookie.entity.projectile.*
 import be.zvz.kookie.nbt.tag.CompoundTag
 import be.zvz.kookie.nbt.tag.StringTag
@@ -49,7 +50,9 @@ object EntityFactory {
         register(ExperienceOrb::class.java, { world, nbt ->
             ExperienceBottle(EntityDataHelper.parseLocation(nbt, world), null, nbt)
         }, listOf("XPOrb", "minecraft:xp_orb"))
-        // TODO: FallingBlock
+        register(FallingBlock::class.java, { world, nbt ->
+            FallingBlock(EntityDataHelper.parseLocation(nbt, world), FallingBlock.parseBlockNBT(nbt), nbt)
+        }, listOf("FallingBlock", "minecraft:falling_block"))
         // TODO: ItemEntity
         // TODO: Painting
         // TODO: PrimedTNT
