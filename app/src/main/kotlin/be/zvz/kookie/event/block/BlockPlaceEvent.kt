@@ -18,6 +18,7 @@
 package be.zvz.kookie.event.block
 
 import be.zvz.kookie.block.Block
+import be.zvz.kookie.event.Cancellable
 import be.zvz.kookie.item.Item
 import be.zvz.kookie.player.Player
 
@@ -27,4 +28,6 @@ class BlockPlaceEvent(
     val blockReplace: Block,
     val blockAgainst: Block,
     val item: Item
-) : BlockEvent(blockPlace)
+) : BlockEvent(blockPlace), Cancellable {
+    override var isCancelled: Boolean = false
+}

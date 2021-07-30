@@ -19,7 +19,8 @@ package be.zvz.kookie.item
 
 import be.zvz.kookie.block.Block
 import be.zvz.kookie.block.VanillaBlocks
+import be.zvz.kookie.math.Facing
 
 class StringItem(identifier: ItemIdentifier, name: String) : Item(identifier, name) {
-    override fun getBlock(clickedFace: Int?): Block = VanillaBlocks.TRIPWIRE.block
+    override fun getBlock(clickedFace: Facing?): Block = VanillaBlocks.TRIPWIRE.block
 }

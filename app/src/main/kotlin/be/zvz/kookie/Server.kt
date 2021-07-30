@@ -272,6 +272,11 @@ class Server(dataPath: Path, pluginPath: Path) {
 
     fun getDataPath(): Path = CorePaths.PATH
 
+    fun getViewDistance(): Int = configGroup.getConfigLong("view-distance", 8).toInt()
+
+    /** Returns a view distance up to the currently-allowed limit. */
+    fun getAllowedViewDistance(distance: Int): Int = max(2, min(distance, memoryManager.getViewDistance(getViewDistance())))
+
     fun broadcastMessage(message: String): Int {
         TODO("Not yet implemented")
     }
