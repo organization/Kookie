@@ -37,7 +37,7 @@ open class Arrow(
     location: Location,
     shootingEntity: Entity?,
     isCritical: Boolean,
-    nbt: CompoundTag?,
+    nbt: CompoundTag? = null,
 ) : Projectile(location, shootingEntity, nbt) {
     override val gravity: Float = 0.05F
     override val drag: Float = 0.0F

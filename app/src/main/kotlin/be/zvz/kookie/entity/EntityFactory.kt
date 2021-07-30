@@ -17,6 +17,10 @@
  */
 package be.zvz.kookie.entity
 
+import be.zvz.kookie.data.bedrock.PotionTypeIdMap
+import be.zvz.kookie.data.bedrock.PotionTypeIds
+import be.zvz.kookie.entity.`object`.ExperienceOrb
+import be.zvz.kookie.entity.projectile.*
 import be.zvz.kookie.nbt.tag.CompoundTag
 import be.zvz.kookie.nbt.tag.StringTag
 import be.zvz.kookie.world.World
@@ -29,6 +33,37 @@ object EntityFactory {
 
     init {
         // TODO: register default entities on here
+        register(Arrow::class.java, { world, nbt ->
+            Arrow(EntityDataHelper.parseLocation(nbt, world), null, nbt.getByte(Arrow.TAG_CRITICAL, 0) == 1, nbt)
+        }, listOf("Arrow", "minecraft:arrow"))
+        register(Egg::class.java, { world, nbt ->
+            Egg(EntityDataHelper.parseLocation(nbt, world), null, nbt)
+        }, listOf("Egg", "miecraft:egg"))
+        register(EnderPearl::class.java, { world, nbt ->
+            EnderPearl(EntityDataHelper.parseLocation(nbt, world), null, nbt)
+        }, listOf("ThrownEnderpearl", "minecraft:ender_pearl"))
+        register(ExperienceBottle::class.java, {world, nbt ->
+            ExperienceBottle(EntityDataHelper.parseLocation(nbt, world), null, nbt)
+        }, listOf("ThrownXpBottle", "minecraft:xp_bottle"))
+        register(ExperienceOrb::class.java, {world, nbt ->
+            ExperienceBottle(EntityDataHelper.parseLocation(nbt, world), null, nbt)
+        }, listOf("XPOrb", "minecraft:xp_orb"))
+        // TODO: FallingBlock
+        // TODO: ItemEntity
+        // TODO: Painting
+        // TODO: PrimedTNT
+        register(Snowball::class.java, {world, nbt ->
+            Snowball(EntityDataHelper.parseLocation(nbt, world), null, nbt)
+        }, listOf("Snowball", "minecraft:snowball"))
+        register(SplashPotion::class.java, {world, nbt ->
+            SplashPotion(EntityDataHelper.parseLocation(nbt, world), null, PotionTypeIdMap.fromId(nbt.getShort("PotionId", PotionTypeIds.WATER.id))!!)
+        }, listOf("ThrownPotion", "minecraft:splash_potion"))
+        // TODO: Squid
+        // TODO: Villager
+        // TODO: Zombie
+        register(Human::class.java, {world, nbt ->
+            Human(Human.parseSkinNBT(nbt), EntityDataHelper.parseLocation(nbt, world), nbt)
+        }, listOf("Human"))
     }
 
     @JvmStatic

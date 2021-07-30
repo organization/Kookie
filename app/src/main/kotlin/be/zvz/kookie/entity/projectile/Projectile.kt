@@ -35,7 +35,7 @@ import be.zvz.kookie.nbt.tag.CompoundTag
 import be.zvz.kookie.nbt.tag.IntTag
 import kotlin.math.ceil
 
-abstract class Projectile(location: Location, val shootingEntity: Entity?, nbt: CompoundTag?) : Entity(location, nbt) {
+abstract class Projectile(location: Location, shootingEntity: Entity?, nbt: CompoundTag? = null) : Entity(location, nbt) {
 
     open var damage: Float = 0F
 
