@@ -37,6 +37,13 @@ object Timings {
     var schedulerSync = TimingsHandler(INCLUDED_BY_OTHER_TIMINGS_PREFIX + "Scheduler - Sync Tasks")
     var tickEntity = TimingsHandler(INCLUDED_BY_OTHER_TIMINGS_PREFIX + "tickEntity")
 
+    val playerChunkSend = TimingsHandler("Player Send Chunks")
+    val playerChunkOrder = TimingsHandler("Player Order Chunks")
+    val worldLoad = TimingsHandler("World Load")
+    val worldSave = TimingsHandler("World Save")
+    val population = TimingsHandler("World Population")
+    val generation = TimingsHandler("World Generation")
+
     @JvmStatic
     fun getTileEntityTimings(tile: Tile): TimingsHandler {
         var exist = timings[tile::class.java.simpleName]

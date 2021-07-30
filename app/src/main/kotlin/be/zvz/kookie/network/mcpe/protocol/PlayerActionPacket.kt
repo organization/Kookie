@@ -17,6 +17,7 @@
  */
 package be.zvz.kookie.network.mcpe.protocol
 
+import be.zvz.kookie.math.Facing
 import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
 import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 
@@ -25,20 +26,20 @@ class PlayerActionPacket : DataPacket(), ServerboundPacket {
     var entityRuntimeId: Long = 0
     var action: Int = 0
     val pos = PacketSerializer.BlockPosition()
-    var face: Int = 0
+    var face: Facing = Facing.UP
 
     override fun decodePayload(input: PacketSerializer) {
         this.entityRuntimeId = input.getEntityRuntimeId()
         this.action = input.getVarInt()
         input.getBlockPosition(pos)
-        this.face = input.getVarInt()
+        this.face = Facing.fromInt(input.getVarInt())
     }
 
     override fun encodePayload(output: PacketSerializer) {
         output.putEntityRuntimeId(entityRuntimeId)
         output.putVarInt(action)
         output.putBlockPosition(pos)
-        output.putVarInt(face)
+        output.putVarInt(face.value)
     }
 
     override fun handle(handler: PacketHandlerInterface): Boolean = handler.handlePlayerAction(this)

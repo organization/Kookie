@@ -19,6 +19,7 @@ package be.zvz.kookie.item
 
 import be.zvz.kookie.block.Block
 import be.zvz.kookie.entity.Entity
+import be.zvz.kookie.math.Facing
 import be.zvz.kookie.math.Vector3
 import be.zvz.kookie.player.Player
 import be.zvz.kookie.world.World
@@ -31,7 +32,7 @@ abstract class SpawnEgg(identifier: ItemIdentifier, vanillaName: String = "Unkno
         player: Player,
         blockReplace: Block,
         blockClicked: Block,
-        face: Int,
+        face: Facing,
         clickVector: Vector3
     ): ItemUseResult {
         val entity = createEntity(player.world, blockClicked.pos.add(0.5, 0.0, 0.5), Random.nextFloat() * 360, 0F)

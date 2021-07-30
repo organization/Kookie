@@ -19,7 +19,8 @@ package be.zvz.kookie.item
 
 import be.zvz.kookie.block.Block
 import be.zvz.kookie.block.VanillaBlocks
+import be.zvz.kookie.math.Facing
 
 class BeetrootSeeds(identifier: ItemIdentifier, vanillaName: String = "Unknown") : Item(identifier, vanillaName) {
-    override fun getBlock(clickedFace: Int?): Block = VanillaBlocks.BEETROOTS.block
+    override fun getBlock(clickedFace: Facing?): Block = VanillaBlocks.BEETROOTS.block
 }

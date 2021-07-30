@@ -17,6 +17,7 @@
  */
 package be.zvz.kookie.network.mcpe.protocol.types.inventory
 
+import be.zvz.kookie.math.Facing
 import be.zvz.kookie.math.Vector3
 import be.zvz.kookie.network.mcpe.protocol.InventoryTransactionPacket
 import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
@@ -28,7 +29,7 @@ class UseItemTransactionData : TransactionData() {
 
     private lateinit var blockPos: PacketSerializer.BlockPosition
 
-    private var face: Int = -1
+    private var face: Facing = Facing.UP
 
     private var hotbarSlot: Int = -1
 
@@ -44,7 +45,7 @@ class UseItemTransactionData : TransactionData() {
 
     fun getBlockPos(): PacketSerializer.BlockPosition = blockPos
 
-    fun getFace(): Int = face
+    fun getFace(): Facing = face
 
     fun getHotbarSlot(): Int = hotbarSlot
 
@@ -59,7 +60,7 @@ class UseItemTransactionData : TransactionData() {
     override fun decodeData(input: PacketSerializer) {
         actionType = input.getUnsignedVarInt()
         blockPos = input.getBlockPosition()
-        face = input.getVarInt()
+        face = Facing.fromInt(input.getVarInt())
         itemInHand = ItemStackWrapper.read(input)
         playerPos = input.getVector3()
         clickPos = input.getVector3()
@@ -69,7 +70,7 @@ class UseItemTransactionData : TransactionData() {
     override fun encodeData(output: PacketSerializer) {
         output.putUnsignedVarInt(actionType)
         output.putBlockPosition(blockPos)
-        output.putVarInt(face)
+        output.putVarInt(face.value)
         output.putVarInt(hotbarSlot)
         itemInHand.write(output)
         output.putVector3(playerPos)
@@ -87,7 +88,7 @@ class UseItemTransactionData : TransactionData() {
             actions: MutableList<NetworkInventoryAction>,
             actionType: Int,
             blockPos: PacketSerializer.BlockPosition,
-            face: Int,
+            face: Facing,
             hotbarSlot: Int,
             itemInHand: ItemStackWrapper,
             playerPos: Vector3,

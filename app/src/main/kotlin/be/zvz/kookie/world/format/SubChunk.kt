@@ -22,7 +22,7 @@ class SubChunk @JvmOverloads constructor(
     var blockLayers: MutableList<PalettedBlockArray>,
     var skyLight: LightArray = LightArray.fill(0),
     var blockLight: LightArray = LightArray.fill(0),
-) {
+) : Cloneable {
 
     fun isEmptyAuthoritative(): Boolean {
         collectGarbage()
@@ -64,7 +64,7 @@ class SubChunk @JvmOverloads constructor(
             check = false
             // TODO: layer.collectGarbage()
 
-            layer.getPalette().forEach {
+            layer.palette.forEach {
                 if (it != emptyBlockId) {
                     check = true
                     return@forEach
@@ -80,7 +80,7 @@ class SubChunk @JvmOverloads constructor(
         // TODO: blockLight.collectGarbage()
     }
 
-    fun clone(): SubChunk {
+    public override fun clone(): SubChunk {
         return SubChunk(
             emptyBlockId,
             blockLayers,
