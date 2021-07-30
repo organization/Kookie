@@ -23,10 +23,10 @@ import be.zvz.kookie.event.entity.ProjectileHitEvent
 import be.zvz.kookie.nbt.tag.CompoundTag
 import be.zvz.kookie.network.mcpe.protocol.types.entity.EntityIds
 
-class ExperienceBottle(
+open class ExperienceBottle @JvmOverloads constructor(
     location: Location,
     shootingEntity: Entity?,
-    nbt: CompoundTag?,
+    nbt: CompoundTag? = null,
 ) : Throwable(
     location, shootingEntity,
     nbt

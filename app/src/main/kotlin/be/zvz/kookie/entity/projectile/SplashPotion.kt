@@ -38,11 +38,11 @@ import be.zvz.kookie.world.particle.PotionSplashParticle
 import be.zvz.kookie.world.sound.PotionSplashSound
 import kotlin.math.sqrt
 
-class SplashPotion(
+open class SplashPotion @JvmOverloads constructor(
     location: Location,
     shootingEntity: Entity?,
     val type: PotionType,
-    nbt: CompoundTag?
+    nbt: CompoundTag? = null
 ) : Throwable(
     location,
     shootingEntity,

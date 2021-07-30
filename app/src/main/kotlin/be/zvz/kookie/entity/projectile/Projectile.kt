@@ -22,11 +22,7 @@ import be.zvz.kookie.block.BlockFactory
 import be.zvz.kookie.entity.Entity
 import be.zvz.kookie.entity.Living
 import be.zvz.kookie.entity.Location
-import be.zvz.kookie.event.entity.EntityCombustByEntityEvent
-import be.zvz.kookie.event.entity.EntityDamageByChildEntityEvent
-import be.zvz.kookie.event.entity.EntityDamageByEntityEvent
-import be.zvz.kookie.event.entity.EntityDamageEvent
-import be.zvz.kookie.event.entity.ProjectileHitEvent
+import be.zvz.kookie.event.entity.*
 import be.zvz.kookie.math.RayTraceResult
 import be.zvz.kookie.math.Vector3
 import be.zvz.kookie.math.VoxelRayTrace
@@ -35,7 +31,11 @@ import be.zvz.kookie.nbt.tag.CompoundTag
 import be.zvz.kookie.nbt.tag.IntTag
 import kotlin.math.ceil
 
-abstract class Projectile(location: Location, shootingEntity: Entity?, nbt: CompoundTag? = null) : Entity(location, nbt) {
+abstract class Projectile @JvmOverloads constructor(
+    location: Location,
+    shootingEntity: Entity?,
+    nbt: CompoundTag? = null
+) : Entity(location, nbt) {
 
     open var damage: Float = 0F
 

@@ -26,11 +26,7 @@ import be.zvz.kookie.item.enchantment.VanillaEnchantments
 import be.zvz.kookie.math.Math
 import be.zvz.kookie.math.Vector3
 import be.zvz.kookie.nbt.NBT
-import be.zvz.kookie.nbt.tag.ByteArrayTag
-import be.zvz.kookie.nbt.tag.CompoundTag
-import be.zvz.kookie.nbt.tag.IntTag
-import be.zvz.kookie.nbt.tag.ListTag
-import be.zvz.kookie.nbt.tag.StringTag
+import be.zvz.kookie.nbt.tag.*
 import be.zvz.kookie.network.mcpe.convert.SkinAdapterSingleton
 import be.zvz.kookie.network.mcpe.convert.TypeConverter
 import be.zvz.kookie.network.mcpe.protocol.AddPlayerPacket
@@ -42,10 +38,14 @@ import be.zvz.kookie.network.mcpe.protocol.types.entity.StringMetadataProperty
 import be.zvz.kookie.network.mcpe.protocol.types.inventory.ItemStackWrapper
 import be.zvz.kookie.player.Player
 import java.nio.charset.StandardCharsets
-import java.util.UUID
+import java.util.*
 import kotlin.math.min
 
-open class Human(var skin: Skin, location: Location, nbt: CompoundTag? = null) : Living(location, nbt) {
+open class Human @JvmOverloads constructor(
+    var skin: Skin,
+    location: Location,
+    nbt: CompoundTag? = null
+) : Living(location, nbt) {
 
     override val entityNetworkIdentifier = EntityIds.PLAYER
 

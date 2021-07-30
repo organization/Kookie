@@ -24,10 +24,10 @@ import be.zvz.kookie.entity.Location
 import be.zvz.kookie.math.RayTraceResult
 import be.zvz.kookie.nbt.tag.CompoundTag
 
-abstract class Throwable(
+abstract class Throwable @JvmOverloads constructor(
     location: Location,
     shootingEntity: Entity?,
-    nbt: CompoundTag?,
+    nbt: CompoundTag? = null,
 ) : Projectile(location, shootingEntity, nbt) {
 
     override val gravity: Float = 0.03F

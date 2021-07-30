@@ -33,7 +33,7 @@ import be.zvz.kookie.player.Player
 import kotlin.math.pow
 import kotlin.math.sqrt
 
-open class Arrow(
+open class Arrow @JvmOverloads constructor(
     location: Location,
     shootingEntity: Entity?,
     isCritical: Boolean,

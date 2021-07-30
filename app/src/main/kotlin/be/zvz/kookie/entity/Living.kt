@@ -45,7 +45,7 @@ import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.sqrt
 
-abstract class Living(location: Location, nbt: CompoundTag? = null) : Entity(location, nbt) {
+abstract class Living @JvmOverloads constructor(location: Location, nbt: CompoundTag? = null) : Entity(location, nbt) {
     override val gravity: Float = 0.08F
     override val drag: Float = 0.02F
 

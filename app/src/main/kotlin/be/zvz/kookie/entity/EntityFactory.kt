@@ -27,7 +27,8 @@ import be.zvz.kookie.world.World
 import com.koloboke.collect.map.hash.HashObjObjMaps
 
 object EntityFactory {
-    private val creationFuncs: MutableMap<String, (world: World, nbt: CompoundTag) -> Entity> = HashObjObjMaps.newMutableMap()
+    private val creationFuncs: MutableMap<String, (world: World, nbt: CompoundTag) -> Entity> =
+        HashObjObjMaps.newMutableMap()
 
     private val saveNames: MutableMap<Class<out Entity>, String> = HashObjObjMaps.newMutableMap()
 
@@ -42,26 +43,31 @@ object EntityFactory {
         register(EnderPearl::class.java, { world, nbt ->
             EnderPearl(EntityDataHelper.parseLocation(nbt, world), null, nbt)
         }, listOf("ThrownEnderpearl", "minecraft:ender_pearl"))
-        register(ExperienceBottle::class.java, {world, nbt ->
+        register(ExperienceBottle::class.java, { world, nbt ->
             ExperienceBottle(EntityDataHelper.parseLocation(nbt, world), null, nbt)
         }, listOf("ThrownXpBottle", "minecraft:xp_bottle"))
-        register(ExperienceOrb::class.java, {world, nbt ->
+        register(ExperienceOrb::class.java, { world, nbt ->
             ExperienceBottle(EntityDataHelper.parseLocation(nbt, world), null, nbt)
         }, listOf("XPOrb", "minecraft:xp_orb"))
         // TODO: FallingBlock
         // TODO: ItemEntity
         // TODO: Painting
         // TODO: PrimedTNT
-        register(Snowball::class.java, {world, nbt ->
+        register(Snowball::class.java, { world, nbt ->
             Snowball(EntityDataHelper.parseLocation(nbt, world), null, nbt)
         }, listOf("Snowball", "minecraft:snowball"))
-        register(SplashPotion::class.java, {world, nbt ->
-            SplashPotion(EntityDataHelper.parseLocation(nbt, world), null, PotionTypeIdMap.fromId(nbt.getShort("PotionId", PotionTypeIds.WATER.id))!!)
+        register(SplashPotion::class.java, { world, nbt ->
+            SplashPotion(
+                EntityDataHelper.parseLocation(nbt, world),
+                null,
+                PotionTypeIdMap.fromId(nbt.getShort("PotionId", PotionTypeIds.WATER.id))!!,
+                nbt
+            )
         }, listOf("ThrownPotion", "minecraft:splash_potion"))
         // TODO: Squid
         // TODO: Villager
         // TODO: Zombie
-        register(Human::class.java, {world, nbt ->
+        register(Human::class.java, { world, nbt ->
             Human(Human.parseSkinNBT(nbt), EntityDataHelper.parseLocation(nbt, world), nbt)
         }, listOf("Human"))
     }
