@@ -446,6 +446,7 @@ class LevelDB(path: Path) : BaseWorldProvider(path), WritableWorldProvider {
             return Iq80DBFactory().open(path.toFile(), Options())
         }
 
+        @JvmStatic
         fun generate(path: Path, name: String, options: WorldCreationOptions) {
             if (!path.isDirectory()) {
                 path.createDirectory()
@@ -471,6 +472,7 @@ class LevelDB(path: Path) : BaseWorldProvider(path), WritableWorldProvider {
             }
         }
 
+        @JvmStatic
         fun chunkIndex(chunkX: Int, chunkZ: Int): String {
             return Binary.writeLInt(chunkX) + Binary.writeLInt(chunkZ)
         }
