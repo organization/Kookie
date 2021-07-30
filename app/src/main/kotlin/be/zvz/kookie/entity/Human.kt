@@ -38,7 +38,7 @@ import be.zvz.kookie.network.mcpe.protocol.types.entity.StringMetadataProperty
 import be.zvz.kookie.network.mcpe.protocol.types.inventory.ItemStackWrapper
 import be.zvz.kookie.player.Player
 import java.nio.charset.StandardCharsets
-import java.util.*
+import java.util.Random
 import kotlin.math.min
 
 open class Human @JvmOverloads constructor(
