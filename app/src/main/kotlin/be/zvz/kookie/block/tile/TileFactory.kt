@@ -17,7 +17,41 @@
  */
 package be.zvz.kookie.block.tile
 
+import be.zvz.kookie.math.Vector3
+import be.zvz.kookie.nbt.tag.CompoundTag
+import be.zvz.kookie.world.World
+import com.koloboke.collect.map.hash.HashObjObjMaps
+import com.koloboke.collect.set.hash.HashObjSets
+
+typealias TileClass = Class<out Tile>
+
 object TileFactory {
+    private val knownTiles: MutableMap<String, TileClass> = HashObjObjMaps.newMutableMap()
+    private val saveNames: MutableMap<TileClass, String> = HashObjObjMaps.newMutableMap()
+
     @JvmStatic
-    fun getSaveId(className: String): String = TODO("getSaveId")
+    @JvmOverloads
+    fun register(tileClass: TileClass, saveNames: List<String> = listOf()) {
+        val names = HashObjSets.newMutableSet(saveNames).apply { add(tileClass.simpleName) }
+        names.forEach { knownTiles[it] = tileClass }
+        this.saveNames[tileClass] = saveNames.first()
+    }
+
+    @JvmStatic
+    internal fun createFromData(world: World, nbt: CompoundTag): Tile? {
+        val tileClass = knownTiles[nbt.getString(Tile.TAG_ID, "")] ?: return null
+        val vec = Vector3(
+            nbt.getInt(Tile.TAG_X),
+            nbt.getInt(Tile.TAG_Y),
+            nbt.getInt(Tile.TAG_Z)
+        )
+
+        return tileClass.getConstructor(World::class.java, Vector3::class.java)
+            .newInstance(world, vec)
+            .apply { readSaveData(nbt) } as Tile
+    }
+
+    @JvmStatic
+    fun getSaveId(tileClass: TileClass): String =
+        saveNames[tileClass] ?: throw IllegalArgumentException("Tile $tileClass is not registered")
 }

@@ -19,10 +19,11 @@ package be.zvz.kookie.item
 
 import be.zvz.kookie.block.Block
 import be.zvz.kookie.block.VanillaBlocks
+import be.zvz.kookie.math.Facing
 
 class Carrot(identifier: ItemIdentifier, name: String) : Food(identifier, name) {
     override val foodRestore: Int = 3
     override val saturationRestore: Float = 4.8F
 
-    override fun getBlock(clickedFace: Int?): Block = VanillaBlocks.CARROTS.block
+    override fun getBlock(clickedFace: Facing?): Block = VanillaBlocks.CARROTS.block
 }

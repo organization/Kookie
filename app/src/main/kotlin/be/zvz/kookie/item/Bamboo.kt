@@ -19,8 +19,9 @@ package be.zvz.kookie.item
 
 import be.zvz.kookie.block.Block
 import be.zvz.kookie.block.VanillaBlocks
+import be.zvz.kookie.math.Facing
 
 class Bamboo(identifier: ItemIdentifier, vanillaName: String = "Unknown") : Item(identifier, vanillaName) {
     override val fuelTime: Int = 50
-    override fun getBlock(clickedFace: Int?): Block = VanillaBlocks.BAMBOO_SAPLING.block
+    override fun getBlock(clickedFace: Facing?): Block = VanillaBlocks.BAMBOO_SAPLING.block
 }

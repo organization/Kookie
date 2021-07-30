@@ -97,6 +97,9 @@ dependencies {
     // bedrock-network
     implementation(group = "org.powernukkit.bedrock.network", name = "raknet", version = "1.6.25-PN.2")
 
+    // bedrock-leveldb
+    implementation(group = "org.powernukkit.bedrock.leveldb", name = "bedrock-leveldb", version = "0.11.0-PN")
+
     // guava
     implementation(group = "com.google.guava", name = "guava", version = "30.1.1-jre")
 

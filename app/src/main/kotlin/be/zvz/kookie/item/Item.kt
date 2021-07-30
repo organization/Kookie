@@ -23,6 +23,7 @@ import be.zvz.kookie.block.VanillaBlocks
 import be.zvz.kookie.entity.Entity
 import be.zvz.kookie.item.enchantment.EnchantmentIdMap
 import be.zvz.kookie.item.enchantment.EnchantmentInstance
+import be.zvz.kookie.math.Facing
 import be.zvz.kookie.math.Vector3
 import be.zvz.kookie.nbt.LittleEndianNbtSerializer
 import be.zvz.kookie.nbt.NBT
@@ -205,7 +206,7 @@ open class Item @JvmOverloads constructor(
     fun canBePlaced(): Boolean = getBlock().canBePlaced()
 
     @JvmOverloads
-    open fun getBlock(clickedFace: Int? = null): Block = VanillaBlocks.AIR.block
+    open fun getBlock(clickedFace: Facing? = null): Block = VanillaBlocks.AIR.block
 
     fun getId(): Int = identifier.id
 
@@ -221,7 +222,7 @@ open class Item @JvmOverloads constructor(
         player: Player,
         blockReplace: Block,
         blockClicked: Block,
-        face: Int,
+        face: Facing,
         clickVector: Vector3
     ): ItemUseResult = ItemUseResult.NONE
 

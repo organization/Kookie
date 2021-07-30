@@ -66,14 +66,14 @@ enum class Facing(val value: Int) {
             )
         )
 
-        @JvmStatic
-        fun axis(direction: Int): Int = direction shr 1
+        @JvmStatic fun axis(direction: Facing): Int = axis(direction.value)
+        @JvmStatic fun axis(direction: Int): Int = direction shr 1
 
-        @JvmStatic
-        fun isPositive(direction: Int): Boolean = (direction and FLAG_AXIS_POSITIVE) == FLAG_AXIS_POSITIVE
+        @JvmStatic fun isPositive(direction: Facing): Boolean = isPositive(direction.value)
+        @JvmStatic fun isPositive(direction: Int): Boolean = (direction and FLAG_AXIS_POSITIVE) == FLAG_AXIS_POSITIVE
 
-        @JvmStatic
-        fun opposite(direction: Int): Int = direction xor FLAG_AXIS_POSITIVE
+        @JvmStatic fun opposite(direction: Facing): Int = opposite(direction.value)
+        @JvmStatic fun opposite(direction: Int): Int = direction xor FLAG_AXIS_POSITIVE
 
         @JvmStatic
         fun rotate(direction: Facing, axis: Axis, clockWise: Boolean): Int =
@@ -86,5 +86,8 @@ enum class Facing(val value: Int) {
                     }
                 } ?: throw IllegalArgumentException("Cannot rotate direction ${direction.value} around axis ${axis.value}")
             } ?: throw IllegalArgumentException("Invalid axis ${direction.value}")
+
+        @JvmStatic
+        fun fromInt(value: Int) = values().firstOrNull { it.value == value } ?: UP
     }
 }

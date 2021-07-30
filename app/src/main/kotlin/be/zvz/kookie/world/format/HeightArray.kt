@@ -17,20 +17,25 @@
  */
 package be.zvz.kookie.world.format
 
-class HeightArray @JvmOverloads constructor(val values: MutableList<Int> = mutableListOf()) {
+class HeightArray @JvmOverloads constructor(val values: MutableList<Int> = mutableListOf()) : Cloneable {
     init {
         if (values.size != 256) {
             throw IllegalArgumentException("Expected exactly 256 values")
         }
     }
 
-    fun get(x: Int, z: Int): Int = values[idx(x, z)]
+    operator fun get(index: Int): Int = values[index]
+    operator fun get(x: Int, z: Int): Int = values[idx(x, z)]
 
-    fun set(x: Int, z: Int, height: Int) {
+    operator fun set(index: Int, height: Int) {
+        values[index] = height
+    }
+
+    operator fun set(x: Int, z: Int, height: Int) {
         values[idx(x, z)] = height
     }
 
-    fun clone(): HeightArray = HeightArray(values)
+    public override fun clone() = HeightArray(values)
 
     companion object {
         @JvmStatic
