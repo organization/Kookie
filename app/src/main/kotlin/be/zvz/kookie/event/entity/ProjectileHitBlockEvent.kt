@@ -28,5 +28,4 @@ class ProjectileHitBlockEvent(
 ) : ProjectileHitEvent(
     entity,
     rayTraceResult
-) {
-}
+)

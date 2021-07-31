@@ -50,7 +50,6 @@ class ExperienceOrb(location: Location, nbt: CompoundTag? = null) : Entity(locat
             return null
         }
 
-
     var xpValue = 0
         set(value) {
             if (value < 0) {
@@ -137,8 +136,8 @@ class ExperienceOrb(location: Location, nbt: CompoundTag? = null) : Entity(locat
     }
 
     companion object {
-        const val TAG_VALUE_PC = "Value"; //short
-        const val TAG_VALUE_PE = "experience value"; //int (WTF?)
+        const val TAG_VALUE_PC = "Value"; // short
+        const val TAG_VALUE_PE = "experience value"; // int (WTF?)
 
         /** Max distance an orb will follow a player across. */
         const val MAX_TARGET_DISTANCE = 8.0
@@ -156,7 +155,7 @@ class ExperienceOrb(location: Location, nbt: CompoundTag? = null) : Entity(locat
             7,
             3,
             1
-        ) //This is indexed biggest to smallest so that we can return as soon as we found the biggest value.
+        ) // This is indexed biggest to smallest so that we can return as soon as we found the biggest value.
 
         /**
          * Returns the largest size of normal XP orb that will be spawned for the specified amount of XP. Used to split XP

@@ -80,9 +80,11 @@ open class FallingBlock @JvmOverloads constructor(
                 flagForDespawn()
 
                 val block = world.getBlock(pos)
-                if (!block.canBePlaced() || !world.isInWorld(pos.floorX, pos.floorY, pos.floorZ) || (onGround && abs(
-                        location.y - location.floorY
-                    ) > 0.001)
+                if (!block.canBePlaced() || !world.isInWorld(pos.floorX, pos.floorY, pos.floorZ) || (
+                    onGround && abs(
+                            location.y - location.floorY
+                        ) > 0.001
+                    )
                 ) {
                     // FIXME: anvils are supposed to destroy torches
                     world.dropItem(location, this.block.asItem())

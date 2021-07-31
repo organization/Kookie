@@ -20,6 +20,9 @@ package be.zvz.kookie.entity
 import be.zvz.kookie.Server
 import be.zvz.kookie.block.Block
 import be.zvz.kookie.entity.animation.Animation
+import be.zvz.kookie.event.entity.EntityDespawnEvent
+import be.zvz.kookie.event.entity.EntityMotionEvent
+import be.zvz.kookie.event.entity.EntityTeleportEvent
 import be.zvz.kookie.math.AxisAlignedBB
 import be.zvz.kookie.math.Facing
 import be.zvz.kookie.math.Vector2
@@ -39,6 +42,7 @@ import be.zvz.kookie.timings.Timings
 import be.zvz.kookie.timings.TimingsHandler
 import be.zvz.kookie.world.Position
 import be.zvz.kookie.world.World
+import be.zvz.kookie.world.sound.Sound
 import com.koloboke.collect.map.hash.HashLongObjMaps
 import org.slf4j.LoggerFactory
 import kotlin.math.PI
@@ -516,89 +520,87 @@ abstract class Entity @JvmOverloads constructor(var location: Location, nbt: Com
     }
 
     open fun checkObstruction(x: Float, y: Float, z: Float): Boolean {
-        /** TODO: Implements after implemented World::getCollisionBoxes()
-         * val worldT = world
-         * if (world.getCollisionBoxes(this, getBoundingBox(), false).size == 0) {
-         *     return false
-         * }
-         * val floorX = floor(x).toInt()
-         * val floorY = floor(y).toInt()
-         * val floorZ = floor(z).toInt()
-         * val diffX = x - floorX
-         * val diffY = y - floorY
-         * val diffZ = z - floorZ
-         *
-         * if (world.getBlockAt(floorX, floorY, floorZ).isSolid()) {
-         *     val westNonSolid = !world.getBlockAt(floorX - 1, floorY, floorZ).isSolid()
-         *     val eastNonSolid = !world.getBlockAt(floorX + 1, floorY, floorZ).isSolid()
-         *     val downNonSolid = !world.getBlockAt(floorX, floorY - 1, floorZ).isSolid()
-         *     val upNonSolid    = !world.getBlockAt(floorX, floorY + 1, floorZ).isSolid()
-         *     val northNonSolid = !world.getBlockAt(floorX, floorY, floorZ - 1).isSolid()
-         *     val southNonSolid = !world.getBlockAt(floorX, floorY, floorZ + 1).isSolid()
-         *
-         *     var direction = -1
-         *     var limit = 9999F
-         *
-         *     if (westNonSolid) {
-         *         limit = diffX
-         *         direction = Facing.WEST.value
-         *     }
-         *
-         *     if (eastNonSolid && 1 - diffX < limit) {
-         *         limit = 1 - diffX
-         *         direction = Facing.EAST.value
-         *     }
-         *
-         *     if (northNonSolid && diffY < limit) {
-         *         limit = diffY
-         *         direction = Facing.DOWN.value
-         *     }
-         *
-         *     if (upNonSolid && 1 - diffY < limit) {
-         *         limit = diffY
-         *         direction = Facing.DOWN.value
-         *     }
-         *
-         *     if (northNonSolid && diffZ < limit) {
-         *         limit = diffZ
-         *         direction = Facing.NORTH.value
-         *     }
-         *
-         *     if (southNonSolid && 1 - diffZ < limit) {
-         *         direction = Facing.SOUTH
-         *     }
-         *
-         *     val force = Math.random() * 0.2 + 0.1
-         *
-         *     if (direction == Facing.WEST.value) {
-         *         motion = motion.withComponents(-force, null, null)
-         *         return true
-         *     }
-         *
-         *     if (direction == Facing.EAST.value) {
-         *         motion = motion.withComponents(force, null, null)
-         *         return true
-         *     }
-         *
-         *     if (direction == Facing.DOWN.value) {
-         *         motion = motion.withComponents(null, -force, null)
-         *         return true
-         *     }
-         *     if (direction == Facing.UP.value) {
-         *         motion = motion.withComponents(null, force, null)
-         *         return true
-         *     }
-         *
-         *     if (direction == Facing.NORTH.value) {
-         *         motion = motion.withComponents(null, null, -force)
-         *         return true
-         *     }
-         *     if (direction == Facing.SOUTH.value) {
-         *         motion = motion.withComponents(null, null, force)
-         *         return true
-         *     }
-         * }
-         */
+        val worldT = world
+        if (world.getCollisionBoxes(this, boundingBox, false).size == 0) {
+            return false
+        }
+        val floorX = floor(x).toInt()
+        val floorY = floor(y).toInt()
+        val floorZ = floor(z).toInt()
+        val diffX = x - floorX
+        val diffY = y - floorY
+        val diffZ = z - floorZ
+
+        if (world.getBlockAt(floorX, floorY, floorZ).isSolid()) {
+            val westNonSolid = !world.getBlockAt(floorX - 1, floorY, floorZ).isSolid()
+            val eastNonSolid = !world.getBlockAt(floorX + 1, floorY, floorZ).isSolid()
+            val downNonSolid = !world.getBlockAt(floorX, floorY - 1, floorZ).isSolid()
+            val upNonSolid = !world.getBlockAt(floorX, floorY + 1, floorZ).isSolid()
+            val northNonSolid = !world.getBlockAt(floorX, floorY, floorZ - 1).isSolid()
+            val southNonSolid = !world.getBlockAt(floorX, floorY, floorZ + 1).isSolid()
+
+            var direction = -1
+            var limit = 9999F
+
+            if (westNonSolid) {
+                limit = diffX
+                direction = Facing.WEST.value
+            }
+
+            if (eastNonSolid && 1 - diffX < limit) {
+                limit = 1 - diffX
+                direction = Facing.EAST.value
+            }
+
+            if (northNonSolid && diffY < limit) {
+                limit = diffY
+                direction = Facing.DOWN.value
+            }
+
+            if (upNonSolid && 1 - diffY < limit) {
+                limit = diffY
+                direction = Facing.DOWN.value
+            }
+
+            if (northNonSolid && diffZ < limit) {
+                limit = diffZ
+                direction = Facing.NORTH.value
+            }
+
+            if (southNonSolid && 1 - diffZ < limit) {
+                direction = Facing.SOUTH.value
+            }
+
+            val force = Math.random() * 0.2 + 0.1
+
+            if (direction == Facing.WEST.value) {
+                motion = motion.withComponents(-force, null, null)
+                return true
+            }
+
+            if (direction == Facing.EAST.value) {
+                motion = motion.withComponents(force, null, null)
+                return true
+            }
+
+            if (direction == Facing.DOWN.value) {
+                motion = motion.withComponents(null, -force, null)
+                return true
+            }
+            if (direction == Facing.UP.value) {
+                motion = motion.withComponents(null, force, null)
+                return true
+            }
+
+            if (direction == Facing.NORTH.value) {
+                motion = motion.withComponents(null, null, -force)
+                return true
+            }
+            if (direction == Facing.SOUTH.value) {
+                motion = motion.withComponents(null, null, force)
+                return true
+            }
+        }
         return false
     }
 
@@ -758,30 +760,27 @@ abstract class Entity @JvmOverloads constructor(var location: Location, nbt: Com
         } else {
             ySize *= STEP_CLIP_MULTIPLIER
 
-            val moveBB = boundingBox.clone()
+            var moveBB = boundingBox.clone()
 
             assert(abs(dx) <= 20 && abs(dy) <= 20 && abs(dz) <= 20)
 
-            /** TODO: Implements after implemented World::getCollisionBoxes()
-             * val list = world.getCollisionBoxes(this, moveBB.addCoord(dx, dy, dz), false)
-             * list.forEach {
-             *     dy = it.calculateYOffset(moveBB, dy)
-             * }
-             */
+            val list = world.getCollisionBoxes(this, moveBB.addCoord(dx, dy, dz), false)
+            list.forEach {
+                dy = it.calculateYOffset(moveBB, dy)
+            }
+
             moveBB.offset(0.0, dy, 0.0)
 
             val fallingFlag = onGround || (dy != movY && movY < 0)
-            /** TODO: Implements after implemented World::getCollisionBoxes()
-             * list.forEach {
-             *     dx = it.calculateXOffset(moveBB, dx)
-             * }
-             */
+            list.forEach {
+                dx = it.calculateXOffset(moveBB, dx)
+            }
+
             moveBB.offset(dx, 0.0, 0.0)
-            /** TODO: Implements after implemented World::getCollisionBoxes()
-             * list.forEach {
-             *     dz = it.calculateZOffset(moveBB, dz)
-             * }
-             */
+
+            list.forEach {
+                dz = it.calculateZOffset(moveBB, dz)
+            }
 
             moveBB.offset(0.0, 0.0, dz)
 
@@ -793,47 +792,44 @@ abstract class Entity @JvmOverloads constructor(var location: Location, nbt: Com
                 dy = stepHeight.toDouble()
                 dz = movZ
 
-                /** TODO: Implements after implemented and World::getCollisionBoxes()
-                 * val stepBB = boundingBox.clone()
-                 *
-                 * val list = world.getCollisionBoxes(this, stepBB.addCoord(dx, dy, dz), false)
-                 *
-                 * list.forEach {
-                 *     dy = it.calculateYOffset(stepBB, dy)
-                 * }
-                 *
-                 * stepBB.offset(0.0, dy, 0.0)
-                 *
-                 * list.forEach {
-                 *     dx = it.calculateXOffset(stepBB, dx)
-                 * }
-                 *
-                 * stepBB.offset(dx, 0.0, 0.0)
-                 *
-                 * list.forEach {
-                 *     dz = it.calculateZOffset(stepBB, dz)
-                 * }
-                 *
-                 * stepBB.offset(0.0, 0.0, dz)
-                 *
-                 * var reverseDY = -dy
-                 *
-                 * list.forEach {
-                 *     reverseDY = it.calculateYOffset(stepBB, reverseDY)
-                 * }
-                 * dy += reverseDY
-                 * stepBB.offset(0.0, reverseDY, 0.0)
-                 *
-                 * if ((cx.pow(2) + cz.pow(2)) >= (dx.pow(2) + dz.pow(2))) {
-                 *     dx = cx
-                 *     dy = cy
-                 *     dz = cz
-                 * } else {
-                 *     moveBB = stepBB
-                 *     ySize += dy.toFloat()
-                 * }
-                 *
-                 */
+                val stepBB = boundingBox.clone()
+
+                val list = world.getCollisionBoxes(this, stepBB.addCoord(dx, dy, dz), false)
+
+                list.forEach {
+                    dy = it.calculateYOffset(stepBB, dy)
+                }
+
+                stepBB.offset(0.0, dy, 0.0)
+
+                list.forEach {
+                    dx = it.calculateXOffset(stepBB, dx)
+                }
+
+                stepBB.offset(dx, 0.0, 0.0)
+
+                list.forEach {
+                    dz = it.calculateZOffset(stepBB, dz)
+                }
+
+                stepBB.offset(0.0, 0.0, dz)
+
+                var reverseDY = -dy
+
+                list.forEach {
+                    reverseDY = it.calculateYOffset(stepBB, reverseDY)
+                }
+                dy += reverseDY
+                stepBB.offset(0.0, reverseDY, 0.0)
+
+                if ((cx.pow(2) + cz.pow(2)) >= (dx.pow(2) + dz.pow(2))) {
+                    dx = cx
+                    dy = cy
+                    dz = cz
+                } else {
+                    moveBB = stepBB
+                    ySize += dy.toFloat()
+                }
             }
             boundingBox = moveBB
         }
@@ -847,7 +843,7 @@ abstract class Entity @JvmOverloads constructor(var location: Location, nbt: Com
             location.world
         )
 
-        // TODO: world.onEntityMoved(this)
+        world.onEntityMoved(this)
         checkBlockCollision()
         checkGroundState(movX, movY, movZ, dx, dy, dz)
         updateFallState(dy.toLong(), onGround)
@@ -884,12 +880,10 @@ abstract class Entity @JvmOverloads constructor(var location: Location, nbt: Com
                 for (z in minZ until maxZ) {
                     for (x in minX until maxX) {
                         for (y in minY until maxY) {
-                            /** TODO: Implements after implemented World::getBlockAt()
-                             * val block = world.getBlockAt(x, y, z)
-                             * if (block.hasEntityCollision()) {
-                             *     blocksAround?.add(block)
-                             * }
-                             */
+                            val block = world.getBlockAt(x, y, z)
+                            if (block.hasEntityCollision()) {
+                                blocksAround?.add(block)
+                            }
                         }
                     }
                 }
@@ -932,11 +926,11 @@ abstract class Entity @JvmOverloads constructor(var location: Location, nbt: Com
 
         val oldWorld = world
 
-        val newWorld = if (pos is Position) pos.world else oldWorld
+        val newWorld = (if (pos is Position) pos.world else oldWorld) as World
 
         if (oldWorld != newWorld) {
             despawnFromAll()
-            // TODO: oldWorld.removeEntity(this)
+            oldWorld.removeEntity(this)
         }
 
         location = Location.fromObject(pos, newWorld, location.yaw, location.pitch)
@@ -945,9 +939,9 @@ abstract class Entity @JvmOverloads constructor(var location: Location, nbt: Com
         blocksAround = null
 
         if (oldWorld != newWorld) {
-            // TODO: newWorld.addEntity(this)
+            newWorld.addEntity(this)
         } else {
-            // TODO: newWorld.onEntityMoved(this)
+            newWorld.onEntityMoved(this)
         }
         return true
     }
@@ -968,13 +962,11 @@ abstract class Entity @JvmOverloads constructor(var location: Location, nbt: Com
 
     fun setMotion(motion: Vector3): Boolean {
         if (!justCreated) {
-            /** TODO: Implements after implemented EntityMotionEvent
-             * ev = EntityMotionEvent(this, motion)
-             * ev.call()
-             * if (ev.isCancelled()) {
-             *     return false
-             * }
-             */
+            val ev = EntityMotionEvent(this, motion)
+            ev.call()
+            if (ev.isCancelled) {
+                return false
+            }
         }
         this.motion = motion.clone()
 
@@ -1005,15 +997,13 @@ abstract class Entity @JvmOverloads constructor(var location: Location, nbt: Com
             location.pitch
         }
 
-        /** TODO: Implements after implemented EntityTeleportEvent
-         * val from = location.asPosition()
-         * val to = Position.fromObject(pos, if (pos is Position) pos.world else world)
-         * ev = EntityTeleportEvent(this, from, to)
-         * ev.call()
-         * if (ev.isCancelled()) {
-         *     return false
-         * }
-         */
+        val from = location.asPosition()
+        val to = Position.fromObject(pos, if (pos is Position) pos.world else world)
+        val ev = EntityTeleportEvent(this, from, to)
+        ev.call()
+        if (ev.isCancelled) {
+            return false
+        }
         setMotion(Vector3(0, 0, 0))
         if (setPositionAndRotation(pos, yaw, pitch)) {
             resetFallDistance()
@@ -1038,7 +1028,15 @@ abstract class Entity @JvmOverloads constructor(var location: Location, nbt: Com
         pk.headYaw = location.yaw.toFloat()
         pk.pitch = location.pitch.toFloat()
         attributeMap.getAll().forEach { (_, attr) ->
-            pk.attributes.add(NetworkAttribute(attr.id, attr.minValue, attr.maxValue, attr.currentValue, attr.defaultValue))
+            pk.attributes.add(
+                NetworkAttribute(
+                    attr.id,
+                    attr.minValue,
+                    attr.maxValue,
+                    attr.currentValue,
+                    attr.defaultValue
+                )
+            )
         }
         pk.metadata = getAllNetworkData()
 
@@ -1050,8 +1048,8 @@ abstract class Entity @JvmOverloads constructor(var location: Location, nbt: Com
             throw AssertionError("Entity must be initialized before calling spawnTo()")
         }
         if (
-            !hasSpawned.containsKey(player.getId())
-            /* TODO: && player.hasReceivedChunk(floor(location.x).toInt() shr 4, floor(location.z).toInt() shr 4)*/
+            !hasSpawned.containsKey(player.getId()) &&
+            player.hasReceivedChunk(floor(location.x).toInt() shr 4, floor(location.z).toInt() shr 4)
         ) {
             hasSpawned[player.getId()] = player
             sendSpawnPacket(player)
@@ -1062,11 +1060,9 @@ abstract class Entity @JvmOverloads constructor(var location: Location, nbt: Com
         if (closed) {
             return
         }
-        /** TODO: Implements after implemented World::getViewersForPosition()
-         * world.getViewersForPosition(location).forEach {
-         *     spawnTo(it)
-         * }
-         */
+        world.getViewersForPosition(location).forEach {
+            spawnTo(it)
+        }
     }
 
     open fun respawnToAll() {
@@ -1112,7 +1108,7 @@ abstract class Entity @JvmOverloads constructor(var location: Location, nbt: Com
         }
         if (!closed) {
             closeInFlight = true
-            // TODO: EntityDespawnEvent(this).call()
+            EntityDespawnEvent(this).call()
 
             onDispose()
             closed = true
@@ -1124,7 +1120,7 @@ abstract class Entity @JvmOverloads constructor(var location: Location, nbt: Com
     open fun onDispose() {
         despawnFromAll()
         if (location.isValid()) {
-            // TODO: world.removeEntity(this)
+            world.removeEntity(this)
         }
     }
 
@@ -1140,7 +1136,7 @@ abstract class Entity @JvmOverloads constructor(var location: Location, nbt: Com
 
     // TODO: Sound
     @JvmOverloads
-    fun broadcastSound(sound: Any, targets: List<Player>? = null) {
+    fun broadcastSound(sound: Sound, targets: List<Player>? = null) {
         if (!silent) {
             // TODO: server.broadcastPackets(if (targets == null) getViewers() else targets, sound.encode(location))
         }
