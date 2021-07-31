@@ -136,8 +136,8 @@ class ExperienceOrb(location: Location, nbt: CompoundTag? = null) : Entity(locat
     }
 
     companion object {
-        const val TAG_VALUE_PC = "Value"; // short
-        const val TAG_VALUE_PE = "experience value"; // int (WTF?)
+        const val TAG_VALUE_PC = "Value" // short
+        const val TAG_VALUE_PE = "experience value" // int (WTF?)
 
         /** Max distance an orb will follow a player across. */
         const val MAX_TARGET_DISTANCE = 8.0
