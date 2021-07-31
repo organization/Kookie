@@ -635,7 +635,7 @@ abstract class Entity @JvmOverloads constructor(var location: Location, nbt: Com
         return Vector2(-cos(Math.toRadians(location.yaw) - PI), -sin(Math.toRadians(location.yaw) - PI)).normalize()
     }
 
-    open suspend fun onUpdate(currentTick: Long): Boolean {
+    open fun onUpdate(currentTick: Long): Boolean {
         return if (closed) {
             false
         } else {
@@ -742,7 +742,7 @@ abstract class Entity @JvmOverloads constructor(var location: Location, nbt: Com
         return false
     }
 
-    open suspend fun move(dx: Double, dy: Double, dz: Double) {
+    open fun move(dx: Double, dy: Double, dz: Double) {
         var dx = dx
         var dy = dy
         var dz = dz

@@ -147,7 +147,7 @@ abstract class Projectile @JvmOverloads constructor(
         return blockHit != null && super.hasMovementUpdate()
     }
 
-    override suspend fun move(dx: Double, dy: Double, dz: Double) {
+    override fun move(dx: Double, dy: Double, dz: Double) {
         blocksAround = null
 
         // TODO: Timings.entityMove.startTiming()
