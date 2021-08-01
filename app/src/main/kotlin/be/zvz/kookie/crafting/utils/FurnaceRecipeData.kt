@@ -17,8 +17,15 @@
  */
 package be.zvz.kookie.crafting.utils
 
+import be.zvz.kookie.crafting.FurnaceRecipe
+
 data class FurnaceRecipeData(
     val block: String,
     val input: ItemData,
     val output: ItemData
-)
+) {
+    fun toRecipe() = FurnaceRecipe(
+        input = input.toItem(),
+        result = output.toItem()
+    )
+}

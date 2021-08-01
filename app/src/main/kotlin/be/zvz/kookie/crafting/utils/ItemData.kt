@@ -17,7 +17,12 @@
  */
 package be.zvz.kookie.crafting.utils
 
+import be.zvz.kookie.item.Item
+import be.zvz.kookie.item.ItemFactory
+
 data class ItemData(
     val id: Int,
-    val damage: Int
-)
+    val meta: Int
+) {
+    fun toItem(): Item = ItemFactory.get(id, meta)
+}

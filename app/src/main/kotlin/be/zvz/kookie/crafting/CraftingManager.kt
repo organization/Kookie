@@ -17,11 +17,18 @@
  */
 package be.zvz.kookie.crafting
 
+import be.zvz.kookie.crafting.utils.FurnaceRecipeData
+import be.zvz.kookie.crafting.utils.ShapedRecipeData
+import be.zvz.kookie.crafting.utils.ShapelessRecipeData
 import be.zvz.kookie.item.Item
+import be.zvz.kookie.utils.Json
 import com.fasterxml.jackson.core.JsonFactory
 import com.fasterxml.jackson.core.JsonParser
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.module.kotlin.convertValue
 import com.koloboke.collect.map.hash.HashObjObjMaps
+import java.io.BufferedInputStream
+import java.io.InputStream
 
 class CraftingManager {
     val shapedRecipes: MutableMap<String, MutableList<ShapedRecipe>> = HashObjObjMaps.newMutableMap()
@@ -113,5 +120,27 @@ class CraftingManager {
                     forEach { it.count = 1 }
                 }
             )
+
+        @JvmStatic
+        fun fromDataHelper(stream: InputStream) = CraftingManager().apply {
+            val recipes = stream.use {
+                BufferedInputStream(it).use(Json.jsonMapper::readTree)
+            }
+            Json.jsonMapper.convertValue<List<ShapelessRecipeData>>(recipes["shapeless"]).forEach {
+                if (it.block == "crafting_table") {
+                    registerShapelessRecipe(it.toRecipe())
+                }
+            }
+            Json.jsonMapper.convertValue<List<ShapedRecipeData>>(recipes["shaped"]).forEach {
+                if (it.block == "crafting_table") {
+                    registerShapedRecipe(it.toRecipe())
+                }
+            }
+            Json.jsonMapper.convertValue<List<FurnaceRecipeData>>(recipes["smelting"]).forEach {
+                if (it.block == "furnace") {
+                    furnaceRecipeManager.register(it.toRecipe())
+                }
+            }
+        }
     }
 }

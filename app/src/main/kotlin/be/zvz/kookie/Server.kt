@@ -22,6 +22,7 @@ import be.zvz.kookie.console.KookieConsole
 import be.zvz.kookie.console.brightCyan
 import be.zvz.kookie.constant.CorePaths
 import be.zvz.kookie.constant.FilePermission
+import be.zvz.kookie.crafting.CraftingManager
 import be.zvz.kookie.lang.KnownTranslationKeys
 import be.zvz.kookie.lang.Language
 import be.zvz.kookie.lang.TranslationContainer
@@ -68,6 +69,8 @@ class Server(dataPath: Path, pluginPath: Path) {
     private var doTitleTick = true
     private val logger = LoggerFactory.getLogger(Server::class.java)
     private val console = KookieConsole(this)
+    val craftingManager: CraftingManager =
+        CraftingManager.fromDataHelper(this::class.java.getResourceAsStream("/vanilla/recipes.json")!!)
     private var maxPlayers: Int = 20
     private var onlineMode = true
     private var networkCompressionAsync = true
