@@ -24,67 +24,50 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.koloboke.collect.map.hash.HashObjObjMaps
 
 class CraftingManager {
-
     val shapedRecipes: MutableMap<String, MutableList<ShapedRecipe>> = HashObjObjMaps.newMutableMap()
-
     val shapelessRecipes: MutableMap<String, MutableList<ShapelessRecipe>> = HashObjObjMaps.newMutableMap()
 
     val furnaceRecipeManager: FurnaceRecipeManager = FurnaceRecipeManager()
 
+    val destructorCallbacks: MutableList<() -> Unit> = mutableListOf()
     val recipeRegisteredCallback: MutableList<() -> Unit> = mutableListOf()
 
     init {
         furnaceRecipeManager.recipeRegisteredCallbacks.add {
-            recipeRegisteredCallback.forEach {
-                it()
-            }
+            recipeRegisteredCallback.forEach { it() }
         }
     }
 
     fun registerShapedRecipe(recipe: ShapedRecipe) {
-        shapedRecipes.getOrPut(hashOutputs(recipe.results)) {
-            mutableListOf()
-        }.add(recipe)
+        shapedRecipes
+            .getOrPut(hashOutputs(recipe.results), ::mutableListOf)
+            .add(recipe)
+
+        recipeRegisteredCallback.forEach { it() }
     }
 
     fun registerShapelessRecipe(recipe: ShapelessRecipe) {
-        shapelessRecipes.getOrPut(hashOutputs(recipe.results)) {
-            mutableListOf()
-        }.add(recipe)
+        shapelessRecipes
+            .getOrPut(hashOutputs(recipe.results), ::mutableListOf)
+            .add(recipe)
+
+        recipeRegisteredCallback.forEach { it() }
     }
 
     fun matchRecipe(grid: CraftingGrid, outputs: List<Item>): CraftingRecipe? {
         val outputHash = hashOutputs(outputs)
-
-        if (shapedRecipes.containsKey(outputHash)) {
-            shapelessRecipes.getValue(outputHash).forEach {
-                if (it.matchesCraftingGrid(grid)) {
-                    return it
-                }
-            }
-        }
-        if (shapelessRecipes.containsKey(outputHash)) {
-            shapelessRecipes.getValue(outputHash).forEach {
-                if (it.matchesCraftingGrid(grid)) {
-                    return it
-                }
-            }
-        }
-        return null
+        return shapedRecipes[outputHash]?.find { it.matchesCraftingGrid(grid) }
+            ?: shapelessRecipes[outputHash]?.find { it.matchesCraftingGrid(grid) }
     }
 
-    suspend fun matchRecipeByOutputs(outputs: List<Item>) = sequence<CraftingRecipe> {
+    suspend fun matchRecipeByOutputs(outputs: List<Item>) = sequence {
         val outputHash = hashOutputs(outputs)
-        if (shapedRecipes.containsKey(outputHash)) {
-            shapelessRecipes.getValue(outputHash).forEach {
-                yield(it)
-            }
-        }
-        if (shapelessRecipes.containsKey(outputHash)) {
-            shapelessRecipes.getValue(outputHash).forEach {
-                yield(it)
-            }
-        }
+        shapedRecipes[outputHash]?.forEach { yield(it) }
+        shapelessRecipes[outputHash]?.forEach { yield(it) }
+    }
+
+    fun finalize() {
+        destructorCallbacks.forEach { it() }
     }
 
     companion object {
@@ -110,11 +93,11 @@ class CraftingManager {
         @JvmStatic
         private fun pack(items: List<Item>): MutableList<Item> {
             val result = mutableListOf<Item>()
-            items.forEachIndexed index@{ index, item ->
+            items.forEach items@{ item ->
                 result.forEach {
                     if (item.equals(it)) {
                         it.count = it.count + item.count
-                        return@index
+                        return@items
                     }
                 }
                 result.add(item.clone())
@@ -123,17 +106,12 @@ class CraftingManager {
         }
 
         @JvmStatic
-        private fun hashOutputs(outputs: List<Item>): String {
-            val outputs = pack(outputs)
-            outputs.sortWith(
-                Comparator { item, item2 ->
-                    sort(item, item2)
+        private fun hashOutputs(outputs: List<Item>): String =
+            mapper.writeValueAsString(
+                pack(outputs).apply {
+                    sortWith(::sort)
+                    forEach { it.count = 1 }
                 }
             )
-            outputs.forEach { o ->
-                o.count = 1
-            }
-            return mapper.writeValueAsString(outputs)
-        }
     }
 }

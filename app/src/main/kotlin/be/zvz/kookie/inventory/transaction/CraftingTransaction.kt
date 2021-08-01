@@ -118,7 +118,7 @@ class CraftingTransaction(
         craftingManager.matchRecipeByOutputs(outputs).forEach {
             try {
                 repetitions = matchRecipeItems(outputs, it.getResultFor(source.craftingGrid).toMutableList(), false)
-                matchRecipeItems(inputs, it.getIngredientList().toMutableList(), true, repetitions)
+                matchRecipeItems(inputs, it.ingredients.toMutableList(), true, repetitions)
             } catch (_: TransactionValidationException) {
                 ++failed
             }
