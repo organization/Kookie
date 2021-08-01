@@ -17,74 +17,64 @@
  */
 package be.zvz.kookie.crafting
 
+import be.zvz.kookie.crafting.utils.FurnaceRecipeData
+import be.zvz.kookie.crafting.utils.ShapedRecipeData
+import be.zvz.kookie.crafting.utils.ShapelessRecipeData
 import be.zvz.kookie.item.Item
+import be.zvz.kookie.utils.Json
 import com.fasterxml.jackson.core.JsonFactory
 import com.fasterxml.jackson.core.JsonParser
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.module.kotlin.convertValue
 import com.koloboke.collect.map.hash.HashObjObjMaps
+import java.io.BufferedInputStream
+import java.io.InputStream
 
 class CraftingManager {
-
     val shapedRecipes: MutableMap<String, MutableList<ShapedRecipe>> = HashObjObjMaps.newMutableMap()
-
     val shapelessRecipes: MutableMap<String, MutableList<ShapelessRecipe>> = HashObjObjMaps.newMutableMap()
 
     val furnaceRecipeManager: FurnaceRecipeManager = FurnaceRecipeManager()
 
+    val destructorCallbacks: MutableList<() -> Unit> = mutableListOf()
     val recipeRegisteredCallback: MutableList<() -> Unit> = mutableListOf()
 
     init {
         furnaceRecipeManager.recipeRegisteredCallbacks.add {
-            recipeRegisteredCallback.forEach {
-                it()
-            }
+            recipeRegisteredCallback.forEach { it() }
         }
     }
 
     fun registerShapedRecipe(recipe: ShapedRecipe) {
-        shapedRecipes.getOrPut(hashOutputs(recipe.results)) {
-            mutableListOf()
-        }.add(recipe)
+        shapedRecipes
+            .getOrPut(hashOutputs(recipe.results), ::mutableListOf)
+            .add(recipe)
+
+        recipeRegisteredCallback.forEach { it() }
     }
 
     fun registerShapelessRecipe(recipe: ShapelessRecipe) {
-        shapelessRecipes.getOrPut(hashOutputs(recipe.results)) {
-            mutableListOf()
-        }.add(recipe)
+        shapelessRecipes
+            .getOrPut(hashOutputs(recipe.results), ::mutableListOf)
+            .add(recipe)
+
+        recipeRegisteredCallback.forEach { it() }
     }
 
     fun matchRecipe(grid: CraftingGrid, outputs: List<Item>): CraftingRecipe? {
         val outputHash = hashOutputs(outputs)
-
-        if (shapedRecipes.containsKey(outputHash)) {
-            shapelessRecipes.getValue(outputHash).forEach {
-                if (it.matchesCraftingGrid(grid)) {
-                    return it
-                }
-            }
-        }
-        if (shapelessRecipes.containsKey(outputHash)) {
-            shapelessRecipes.getValue(outputHash).forEach {
-                if (it.matchesCraftingGrid(grid)) {
-                    return it
-                }
-            }
-        }
-        return null
+        return shapedRecipes[outputHash]?.find { it.matchesCraftingGrid(grid) }
+            ?: shapelessRecipes[outputHash]?.find { it.matchesCraftingGrid(grid) }
     }
 
-    suspend fun matchRecipeByOutputs(outputs: List<Item>) = sequence<CraftingRecipe> {
+    suspend fun matchRecipeByOutputs(outputs: List<Item>) = sequence {
         val outputHash = hashOutputs(outputs)
-        if (shapedRecipes.containsKey(outputHash)) {
-            shapelessRecipes.getValue(outputHash).forEach {
-                yield(it)
-            }
-        }
-        if (shapelessRecipes.containsKey(outputHash)) {
-            shapelessRecipes.getValue(outputHash).forEach {
-                yield(it)
-            }
-        }
+        shapedRecipes[outputHash]?.forEach { yield(it) }
+        shapelessRecipes[outputHash]?.forEach { yield(it) }
+    }
+
+    fun finalize() {
+        destructorCallbacks.forEach { it() }
     }
 
     companion object {
@@ -110,11 +100,11 @@ class CraftingManager {
         @JvmStatic
         private fun pack(items: List<Item>): MutableList<Item> {
             val result = mutableListOf<Item>()
-            items.forEachIndexed index@{ index, item ->
+            items.forEach items@{ item ->
                 result.forEach {
                     if (item.equals(it)) {
                         it.count = it.count + item.count
-                        return@index
+                        return@items
                     }
                 }
                 result.add(item.clone())
@@ -123,17 +113,34 @@ class CraftingManager {
         }
 
         @JvmStatic
-        private fun hashOutputs(outputs: List<Item>): String {
-            val outputs = pack(outputs)
-            outputs.sortWith(
-                Comparator { item, item2 ->
-                    sort(item, item2)
+        private fun hashOutputs(outputs: List<Item>): String =
+            mapper.writeValueAsString(
+                pack(outputs).apply {
+                    sortWith(::sort)
+                    forEach { it.count = 1 }
                 }
             )
-            outputs.forEach { o ->
-                o.count = 1
+
+        @JvmStatic
+        fun fromDataHelper(stream: InputStream) = CraftingManager().apply {
+            val recipes = stream.use {
+                BufferedInputStream(it).use(Json.jsonMapper::readTree)
             }
-            return mapper.writeValueAsString(outputs)
+            Json.jsonMapper.convertValue<List<ShapelessRecipeData>>(recipes["shapeless"]).forEach {
+                if (it.block == "crafting_table") {
+                    registerShapelessRecipe(it.toRecipe())
+                }
+            }
+            Json.jsonMapper.convertValue<List<ShapedRecipeData>>(recipes["shaped"]).forEach {
+                if (it.block == "crafting_table") {
+                    registerShapedRecipe(it.toRecipe())
+                }
+            }
+            Json.jsonMapper.convertValue<List<FurnaceRecipeData>>(recipes["smelting"]).forEach {
+                if (it.block == "furnace") {
+                    furnaceRecipeManager.register(it.toRecipe())
+                }
+            }
         }
     }
 }

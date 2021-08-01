@@ -20,10 +20,10 @@ package be.zvz.kookie.crafting
 import be.zvz.kookie.item.Item
 
 interface CraftingRecipe {
+    val ingredients: List<Item>
+    val results: List<Item>
 
-    fun getIngredientList(): List<Item>
-
-    fun getResultFor(grid: CraftingGrid): List<Item>
+    fun getResultFor(grid: CraftingGrid): List<Item> = results
 
     fun matchesCraftingGrid(grid: CraftingGrid): Boolean
 }

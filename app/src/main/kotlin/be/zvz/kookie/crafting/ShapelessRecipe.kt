@@ -20,58 +20,39 @@ package be.zvz.kookie.crafting
 import be.zvz.kookie.item.Item
 
 class ShapelessRecipe(ingredients: List<Item>, results: List<Item>) : CraftingRecipe {
+    private val _ingredients: List<Item> = ingredients
+    override val ingredients: List<Item> get() = _ingredients.map(Item::clone)
+    val ingredientCount: Int get() = ingredients.sumOf(Item::count)
 
-    var ingredients: MutableList<Item> = mutableListOf()
-
-    var results: List<Item> = results.toList()
+    private val _results: List<Item> = results
+    override val results: List<Item> get() = _results.map(Item::clone)
 
     init {
-        ingredients.forEach {
-            if (this.ingredients.size + it.count > 9) {
-                throw IllegalArgumentException("Shapeless recipes cannot have more than 9 ingredients")
-            }
-            while (it.count > 0) {
-                this.ingredients.add(it.pop())
-            }
+        if (ingredients.size > 9) {
+            throw IllegalArgumentException("Shapeless recipes cannot have more than 9 ingredients")
         }
     }
 
-    override fun getIngredientList(): List<Item> {
-        return ingredients.toList()
-    }
-
-    override fun getResultFor(grid: CraftingGrid): List<Item> {
-        return results.toMutableList()
-    }
-
     override fun matchesCraftingGrid(grid: CraftingGrid): Boolean {
-        val input = grid.getContents().toMutableMap()
+        val input = grid.getContents().values.toMutableList()
 
         ingredients.forEach loop@{ needItem ->
-            input.apply {
-                val iterator = iterator()
-                while (iterator.hasNext()) {
-                    val (j, haveItem) = iterator.next()
-                    if (
-                        haveItem.equals(
-                            needItem,
-                            !needItem.hasAnyDamageValue(),
-                            needItem.hasNamedTag()
-                        ) && haveItem.count >= needItem.count
-                    ) {
-                        iterator.remove()
-                        return@loop
-                    }
+            val iterator = input.iterator()
+            while (iterator.hasNext()) {
+                val haveItem = iterator.next()
+                if (
+                    haveItem.equals(
+                        needItem,
+                        !needItem.hasAnyDamageValue(),
+                        needItem.hasNamedTag()
+                    ) && haveItem.count >= needItem.count
+                ) {
+                    iterator.remove()
+                    return@loop
                 }
             }
             return false
         }
         return input.isEmpty()
-    }
-
-    fun getIngredientCount(): Int {
-        var count = 0
-        ingredients.forEach { count += it.count }
-        return count
     }
 }

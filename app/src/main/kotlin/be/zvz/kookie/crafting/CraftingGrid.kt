@@ -20,19 +20,24 @@ package be.zvz.kookie.crafting
 import be.zvz.kookie.inventory.SimpleInventory
 import be.zvz.kookie.item.Item
 import be.zvz.kookie.player.Player
+import be.zvz.kookie.utils.inline.repeat2
 import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.pow
 
 class CraftingGrid(val holder: Player, val gridWidth: Int) : SimpleInventory(gridWidth.toDouble().pow(2).toInt()) {
-
     private var startX: Int? = null
-    private var xLen: Int? = null
-
     private var startY: Int? = null
+
+    private var xLen: Int? = null
     private var yLen: Int? = null
+
+    val recipeWidth: Int get() = xLen ?: 0
+    val recipeHeight: Int get() = yLen ?: 0
+
     override fun setItem(index: Int, item: Item) {
         super.setItem(index, item)
+        seekRecipeBounds()
     }
 
     private fun seekRecipeBounds() {
@@ -43,17 +48,15 @@ class CraftingGrid(val holder: Player, val gridWidth: Int) : SimpleInventory(gri
 
         var empty = true
 
-        repeat(gridWidth) { x ->
-            repeat(gridWidth) { y ->
-                if (!isSlotEmpty(y * gridWidth + x)) {
-                    minX = min(minX, x)
-                    maxX = max(maxX, x)
+        repeat2(gridWidth, gridWidth) { x, y ->
+            if (!isSlotEmpty(y * gridWidth + x)) {
+                minX = min(minX, x)
+                maxX = max(maxX, x)
 
-                    minY = min(minY, y)
-                    maxY = max(maxY, y)
+                minY = min(minY, y)
+                maxY = max(maxY, y)
 
-                    empty = false
-                }
+                empty = false
             }
         }
         if (!empty) {
@@ -70,15 +73,13 @@ class CraftingGrid(val holder: Player, val gridWidth: Int) : SimpleInventory(gri
     }
 
     fun getIngredient(x: Int, y: Int): Item {
-        if (startX != null && startY != null) {
-            return getItem((y + startY!!) * gridWidth + (x + startX!!))
+        startX?.let { startX ->
+            startY?.let { startY ->
+                return getItem((y + startY) * gridWidth + (x + startX))
+            }
         }
         throw IllegalStateException("No ingredients found in grid")
     }
-
-    fun getRecipeWidth(): Int = xLen ?: 0
-
-    fun getRecipeHeight(): Int = yLen ?: 0
 
     companion object {
         const val SIZE_SMALL = 2
