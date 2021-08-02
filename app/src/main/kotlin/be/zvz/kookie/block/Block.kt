@@ -36,14 +36,14 @@ import be.zvz.kookie.world.World
 open class Block(val idInfo: BlockIdentifier, val name: String, val breakInfo: BlockBreakInfo) {
     var pos: Position
 
-    protected var collisionBoxes: List<AxisAlignedBB>? = null
-        get() = field ?: run {
+    protected var _collisionBoxes: List<AxisAlignedBB>? = null
+    val collisionBoxes: List<AxisAlignedBB>
+        get() = _collisionBoxes ?: run {
             val offset = getPosOffset()?.let(pos::add) ?: pos
-            recalculateCollisionBoxes().let { boxes ->
-                boxes.forEach { it.offset(offset.x, offset.y, offset.z) }
-                field = boxes
-            }
-            field
+            val boxes = recalculateCollisionBoxes()
+            boxes.forEach { it.offset(offset.x, offset.y, offset.z) }
+            _collisionBoxes = boxes
+            boxes
         }
 
     init {
@@ -63,7 +63,7 @@ open class Block(val idInfo: BlockIdentifier, val name: String, val breakInfo: B
 
     fun getId(): Int = idInfo.blockId
 
-    fun getFullId(): Int = (getId() shl 4) or getMeta()
+    fun getFullId(): Long = fullId(getId(), getMeta())
 
     fun asItem(): Item = ItemFactory.get(
         idInfo.itemId,
@@ -87,7 +87,7 @@ open class Block(val idInfo: BlockIdentifier, val name: String, val breakInfo: B
     }
 
     open fun readStateFromWorld() {
-        collisionBoxes = null
+        _collisionBoxes = null
     }
 
     open fun writeStateToWorld() {
@@ -135,7 +135,7 @@ open class Block(val idInfo: BlockIdentifier, val name: String, val breakInfo: B
     open fun canBePlacedAt(
         blockReplace: Block,
         clickVector: Vector3,
-        face: Int,
+        face: Facing,
         isClickedBlock: Boolean
     ): Boolean = blockReplace.canBeReplaced()
 
@@ -145,7 +145,7 @@ open class Block(val idInfo: BlockIdentifier, val name: String, val breakInfo: B
         item: Item,
         blockReplace: Block,
         blockClicked: Block,
-        face: Int,
+        face: Facing,
         clickVector: Vector3,
         player: Player? = null
     ): Boolean {
@@ -179,10 +179,10 @@ open class Block(val idInfo: BlockIdentifier, val name: String, val breakInfo: B
     }
 
     @JvmOverloads
-    open fun onInteract(item: Item, face: Int, clickVector: Vector3, player: Player? = null): Boolean = false
+    open fun onInteract(item: Item, face: Facing, clickVector: Vector3, player: Player? = null): Boolean = false
 
     @JvmOverloads
-    open fun onAttack(item: Item, face: Int, player: Player? = null): Boolean = false
+    open fun onAttack(item: Item, face: Facing, player: Player? = null): Boolean = false
 
     open fun getFrictionFactor(): Float = 0.6f
 
@@ -225,6 +225,10 @@ open class Block(val idInfo: BlockIdentifier, val name: String, val breakInfo: B
 
     fun position(world: World, x: Int, y: Int, z: Int) {
         pos = Position(x, y, z, world)
+    }
+
+    fun position(world: World, vec: Vector3) {
+        pos = Position.fromObject(vec, world)
     }
 
     open fun getDrops(item: Item): List<Item> =
@@ -315,7 +319,7 @@ open class Block(val idInfo: BlockIdentifier, val name: String, val breakInfo: B
     override fun toString(): String = "Block[$name] (${getId()}:${getMeta()})"
 
     /** Checks for collision against an AxisAlignedBB */
-    fun collidesWithBB(bb: AxisAlignedBB): Boolean = collisionBoxes?.find(bb::intersectsWith) !== null
+    fun collidesWithBB(bb: AxisAlignedBB): Boolean = _collisionBoxes?.find(bb::intersectsWith) !== null
 
     /**
      * Called when an entity's bounding box clips inside this block's cell. Note that the entity may not be intersecting
@@ -338,13 +342,13 @@ open class Block(val idInfo: BlockIdentifier, val name: String, val breakInfo: B
     protected open fun recalculateCollisionBoxes(): List<AxisAlignedBB> = listOf(AxisAlignedBB.one())
 
     fun isFullCube(): Boolean =
-        collisionBoxes?.takeIf { it.size == 1 && it[0].getAverageEdgeLength() >= 1 && it[0].isCube() } !== null
+        _collisionBoxes?.takeIf { it.size == 1 && it[0].getAverageEdgeLength() >= 1 && it[0].isCube() } !== null
 
     fun calculateIntercept(pos1: Vector3, pos2: Vector3): RayTraceResult? {
         var currentHit: RayTraceResult? = null
         var currentDistance = Double.MAX_VALUE
 
-        collisionBoxes
+        _collisionBoxes
             ?.takeIf { it.isNotEmpty() }
             ?.forEach {
                 val nextHit = it.calculateIntercept(pos1, pos2) ?: return@forEach
@@ -355,5 +359,19 @@ open class Block(val idInfo: BlockIdentifier, val name: String, val breakInfo: B
                 }
             }
         return currentHit
+    }
+
+    companion object {
+        @JvmStatic
+        fun fullId(id: Long, variant: Int) = id shl 4 or variant.toLong()
+
+        @JvmStatic
+        fun fullId(id: Long, variant: Short) = id shl 4 or variant.toLong()
+
+        @JvmStatic
+        fun fullId(id: Int, variant: Int) = id.toLong() shl 4 or variant.toLong()
+
+        @JvmStatic
+        fun fullId(id: Int, variant: Short) = id.toLong() shl 4 or variant.toLong()
     }
 }

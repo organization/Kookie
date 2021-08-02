@@ -19,9 +19,10 @@ package be.zvz.kookie.item
 
 import be.zvz.kookie.block.Block
 import be.zvz.kookie.block.VanillaBlocks
-import be.zvz.kookie.block.utils.DyeColor
+import be.zvz.kookie.block.util.DyeColor
+import be.zvz.kookie.math.Facing
 
 class Bed(identifier: ItemIdentifier, vanillaName: String = "Unknown", val color: DyeColor) : Item(identifier, vanillaName) {
     override val maxStackSize: Int = 1
-    override fun getBlock(clickedFace: Int?): Block = VanillaBlocks.BED.block
+    override fun getBlock(clickedFace: Facing?): Block = VanillaBlocks.BED.block
 }

@@ -18,11 +18,12 @@
 package be.zvz.kookie.world.format.internal
 
 interface IPalettedBlockArray<Block> : Cloneable {
-    fun getWordArray(): CharArray
-    fun getPalette(): List<Block>
-    fun getPaletteSize(): Int
-    fun getMaxPaletteSize(): Int
-    fun getBitsPerBlock(): Int
+    val wordArray: CharArray
+    val palette: List<Block>
+    val paletteSize: Int
+    val maxPaletteSize: Int
+    val bitsPerBlock: Int
+
     fun get(x: Int, y: Int, z: Int): Block
     fun set(x: Int, y: Int, z: Int, v: Block): Boolean
     fun getPaletteOffset(x: Int, y: Int, z: Int): Int

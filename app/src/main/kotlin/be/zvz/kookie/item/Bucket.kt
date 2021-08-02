@@ -18,6 +18,7 @@
 package be.zvz.kookie.item
 
 import be.zvz.kookie.block.Block
+import be.zvz.kookie.math.Facing
 import be.zvz.kookie.math.Vector3
 import be.zvz.kookie.player.Player
 
@@ -28,7 +29,7 @@ class Bucket(identifier: ItemIdentifier, vanillaName: String = "Unknown") : Item
         player: Player,
         blockReplace: Block,
         blockClicked: Block,
-        face: Int,
+        face: Facing,
         clickVector: Vector3
     ): ItemUseResult {
         TODO("Bucket Not yet implemented")

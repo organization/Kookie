@@ -17,23 +17,23 @@
  */
 package be.zvz.kookie.block
 
-import com.koloboke.collect.map.hash.HashIntFloatMaps
-import com.koloboke.collect.map.hash.HashIntIntMaps
-import com.koloboke.collect.map.hash.HashIntObjMaps
+import com.koloboke.collect.map.hash.HashLongFloatMaps
+import com.koloboke.collect.map.hash.HashLongIntMaps
+import com.koloboke.collect.map.hash.HashLongObjMaps
 import be.zvz.kookie.block.BlockIdentifier as BID
-import be.zvz.kookie.block.BlockLegacyIds as Ids
+import be.zvz.kookie.block.VanillaBlocks as Ids
 
 object BlockFactory {
-    private val fullList: MutableMap<Int, Block> = HashIntObjMaps.newMutableMap()
-    var light: MutableMap<Int, Int> = HashIntIntMaps.newMutableMap()
-    var lightFilter: MutableMap<Int, Int> = HashIntIntMaps.newMutableMap()
-    var blocksDirectSkyLight: MutableMap<Int, Boolean> = HashIntObjMaps.newMutableMap()
-    var blastResistance: MutableMap<Int, Float> = HashIntFloatMaps.newMutableMap()
+    private val fullList: MutableMap<Long, Block> = HashLongObjMaps.newMutableMap()
+    var light: MutableMap<Long, Int> = HashLongIntMaps.newMutableMap()
+    var lightFilter: MutableMap<Long, Int> = HashLongIntMaps.newMutableMap()
+    var blocksDirectSkyLight: MutableMap<Long, Boolean> = HashLongObjMaps.newMutableMap()
+    var blastResistance: MutableMap<Long, Float> = HashLongFloatMaps.newMutableMap()
 
     init {
         /*val railBreakInfo = BlockBreakInfo(0.7f)
-        register(ActivatorRail(BID(Ids.ACTIVATOR_RAIL.id, 0), "Activator Rail", railBreakInfo))*/
-        register(Air(BID(Ids.AIR.id, 0), "Air", BlockBreakInfo.indestructible(-1f)))
+        register(ActivatorRail(Ids.ACTIVATOR_RAIL.identifier, "Activator Rail", railBreakInfo))*/
+        register(Air(Ids.AIR.identifier, "Air", BlockBreakInfo.indestructible(-1f)))
         TODO("Add Blocks")
     }
 
@@ -48,20 +48,29 @@ object BlockFactory {
         }
 
         block.idInfo.getAllBlockIds().forEach { id ->
-            if (!override) assertRegisterValid(block, id, variant)
+            if (!override && isRegistered(id, variant)) {
+                throw IllegalArgumentException("Block registration $id:$variant conflicts with an existing block")
+            }
+
             for (meta in variant until (variant or stateMask)) {
                 if (meta and stateMask.inv() != variant) {
                     continue
                 }
                 if (!override) assertRegisterValid(block, id, meta)
 
-                val index = id shl 4 or meta
+                if (!override && isRegistered(id, meta)) {
+                    throw IllegalArgumentException(
+                        "Block registration ${block::class} has states which conflict with other blocks"
+                    )
+                }
+
+                val fullId = Block.fullId(id, meta)
                 val v = block.clone().apply { readStateFromData(id, meta) }
-                if (v.getFullId() != index) {
+                if (v.getFullId() != fullId) {
                     // if the fullID comes back different, this is a broken state that we can't rely on; map it to default
-                    fillStaticArrays(index, block)
+                    fillStaticArrays(fullId, block)
                 } else {
-                    fillStaticArrays(index, v)
+                    fillStaticArrays(fullId, v)
                 }
             }
         }
@@ -78,23 +87,23 @@ object BlockFactory {
     @JvmStatic
     fun remap(id: Int, meta: Int, block: Block) {
         if (isRegistered(id, meta)) {
-            val index = id shl 4 or meta
-            val existing = fullList[index]
-            if (existing !== null && existing.getFullId() == index) {
+            val fullId = Block.fullId(id, meta)
+            val existing = fullList[fullId]
+            if (existing !== null && existing.getFullId() == fullId) {
                 throw IllegalArgumentException("$id:$meta is already mapped")
             } else {
                 // if it's not a match, this was already remapped for some reason remapping overwrites are OK
             }
         }
-        fillStaticArrays((id shl 4) or meta, block)
+        fillStaticArrays(Block.fullId(id, meta), block)
     }
 
-    private fun fillStaticArrays(index: Int, block: Block) {
-        fullList[index] = block
-        light[index] = block.getLightLevel()
-        lightFilter[index] = 15.coerceAtMost(block.getLightFilter() + 1) // opacity plus 1 standard light filter
-        blocksDirectSkyLight[index] = block.blocksDirectSkyLight()
-        blastResistance[index] = block.breakInfo.blastResistance
+    private fun fillStaticArrays(fullId: Long, block: Block) {
+        fullList[fullId] = block
+        light[fullId] = block.getLightLevel()
+        lightFilter[fullId] = 15.coerceAtMost(block.getLightFilter() + 1) // opacity plus 1 standard light filter
+        blocksDirectSkyLight[fullId] = block.blocksDirectSkyLight()
+        blastResistance[fullId] = block.breakInfo.blastResistance
     }
 
     /**
@@ -112,18 +121,18 @@ object BlockFactory {
         }
 
         var block: Block? = null
-        val index = (id shl 4) or meta
-        fullList[index]?.let {
+        val fullId = Block.fullId(id, meta)
+        fullList[fullId]?.let {
             block = it.clone()
         }
         return block ?: UnknownBlock(BID(id, meta), BlockBreakInfo.instant())
     }
 
-    fun fromFullBlock(fullState: Int): Block = get(fullState shr 4, fullState and 0xf)
+    fun fromFullBlock(fullState: Long): Block = get((fullState shr 4).toInt(), (fullState and 0xf).toInt())
 
     @JvmStatic
     @JvmOverloads
-    fun isRegistered(id: Int, meta: Int = 0): Boolean = fullList[id shl 4 or meta]?.takeIf { it !is UnknownBlock } !== null
+    fun isRegistered(id: Int, meta: Int = 0): Boolean = fullList[Block.fullId(id, meta)]?.takeIf { it !is UnknownBlock } !== null
 
     @Deprecated("In PMMP, it is used to fetch only blocks without null ")
     fun getAllKnownStates() = fullList.toList()

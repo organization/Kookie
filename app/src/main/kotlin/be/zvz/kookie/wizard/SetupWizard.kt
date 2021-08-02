@@ -19,6 +19,7 @@ package be.zvz.kookie.wizard
 
 import be.zvz.kookie.App
 import be.zvz.kookie.VersionInfo
+import be.zvz.kookie.lang.KnownTranslationKeys
 import be.zvz.kookie.lang.Language
 import be.zvz.kookie.utils.Config
 import be.zvz.kookie.utils.Internet
@@ -57,7 +58,7 @@ class SetupWizard(private val dataPath: Path) {
 
         lang = Language(langStr)
 
-        logger.info(lang.get("language_has_been_selected"))
+        logger.info(lang.get(KnownTranslationKeys.LANGUAGE_HAS_BEEN_SELECTED))
 
         if (!showLicense()) {
             return false
@@ -70,7 +71,7 @@ class SetupWizard(private val dataPath: Path) {
         config.set("language", langStr)
         config.save()
 
-        if (getInput(lang.get("skip_installer"), "n", "y/N") == "y") {
+        if (getInput(lang.get(KnownTranslationKeys.SKIP_INSTALLER), "n", "y/N") == "y") {
             printIpDetails()
             return true
         }
@@ -89,9 +90,9 @@ class SetupWizard(private val dataPath: Path) {
     }
 
     private fun endWizard() {
-        logger.info(lang.get("you_have_finished"))
-        logger.info(lang.get("pocketmine_plugins"))
-        logger.info(lang.translateString("pocketmine_will_start", listOf(VersionInfo.NAME)))
+        logger.info(lang.get(KnownTranslationKeys.YOU_HAVE_FINISHED))
+        logger.info(lang.get(KnownTranslationKeys.POCKETMINE_PLUGINS))
+        logger.info(lang.translateString(KnownTranslationKeys.POCKETMINE_WILL_START, listOf(VersionInfo.NAME)))
 
         println()
         println()
@@ -104,9 +105,9 @@ class SetupWizard(private val dataPath: Path) {
             dataPath.resolve(App.SERVER_PROPERTIES_NAME),
             Config.Type.PROPERTIES
         )
-        logger.warn(lang.get("query_warning1"))
-        logger.warn(lang.get("query_warning2"))
-        if (getInput(lang.get("query_disable"), "n", "y/N").equals("y", true)) {
+        logger.warn(lang.get(KnownTranslationKeys.QUERY_WARNING1))
+        logger.warn(lang.get(KnownTranslationKeys.QUERY_WARNING2))
+        if (getInput(lang.get(KnownTranslationKeys.QUERY_DISABLE), "n", "y/N").equals("y", true)) {
             config.set("enable-query", false)
         } else {
             config.set("enable-query", true)
@@ -115,23 +116,23 @@ class SetupWizard(private val dataPath: Path) {
     }
 
     private fun generateUserFiles() {
-        logger.info(lang.get("op_info"))
-        val op = getInput(lang.get("op_who"), "").lowercase()
+        logger.info(lang.get(KnownTranslationKeys.OP_INFO))
+        val op = getInput(lang.get(KnownTranslationKeys.OP_WHO), "").lowercase()
         if (op.isEmpty()) {
-            logger.warn(lang.get("op_warning"))
+            logger.warn(lang.get(KnownTranslationKeys.OP_WARNING))
         } else {
             val ops = Config(dataPath.resolve("ops.txt"), Config.Type.ENUM)
             ops.set(op, true)
             ops.save()
         }
-        logger.info(lang.get("whitelist_info"))
+        logger.info(lang.get(KnownTranslationKeys.WHITELIST_INFO))
 
         val config = Config(
             dataPath.resolve(App.SERVER_PROPERTIES_NAME),
             Config.Type.PROPERTIES
         )
-        if (getInput(lang.get("whitelist_enable"), "n", "y/N").equals("y", true)) {
-            logger.error(lang.get("whitelist_warning"))
+        if (getInput(lang.get(KnownTranslationKeys.WHITELIST_ENABLE), "n", "y/N").equals("y", true)) {
+            logger.error(lang.get(KnownTranslationKeys.WHITELIST_WARNING))
             config.set("white-list", true)
         } else {
             config.set("white-list", false)
@@ -144,34 +145,34 @@ class SetupWizard(private val dataPath: Path) {
             dataPath.resolve(App.SERVER_PROPERTIES_NAME),
             Config.Type.PROPERTIES
         )
-        val serverName = getInput(lang.get("name_your_server"), DEFAULT_NAME)
+        val serverName = getInput(lang.get(KnownTranslationKeys.NAME_YOUR_SERVER), DEFAULT_NAME)
         config.set("motd", serverName)
         config.set("server-name", serverName)
 
-        logger.warn(lang.get("port_warning"))
+        logger.warn(lang.get(KnownTranslationKeys.PORT_WARNING))
 
         var port: Int
         do {
             try {
-                port = getInput(lang.get("server_port"), DEFAULT_PORT.toString()).toInt()
+                port = getInput(lang.get(KnownTranslationKeys.SERVER_PORT), DEFAULT_PORT.toString()).toInt()
                 if (port !in 0..65535) {
-                    logger.error(lang.get("invalid_port"))
+                    logger.error(lang.get(KnownTranslationKeys.INVALID_PORT))
                     continue
                 }
             } catch (e: NumberFormatException) {
-                logger.error(lang.get("invalid_port"))
+                logger.error(lang.get(KnownTranslationKeys.INVALID_PORT))
                 continue
             }
 
             break
         } while (true)
         config.set("server-port", port)
-        logger.info(lang.get("gamemode_info"))
+        logger.info(lang.get(KnownTranslationKeys.GAMEMODE_INFO))
 
         var gamemode: Int
         do {
             try {
-                gamemode = getInput(lang.get("default_gamemode"), "0" /* TODO: GameMode Class */).toInt()
+                gamemode = getInput(lang.get(KnownTranslationKeys.DEFAULT_GAMEMODE), "0" /* TODO: GameMode Class */).toInt()
             } catch (e: NumberFormatException) {
                 gamemode = -1
                 continue
@@ -183,13 +184,13 @@ class SetupWizard(private val dataPath: Path) {
     }
 
     private fun welcome() {
-        logger.info(lang.get("setting_up_server_now"))
-        logger.info(lang.get("default_values_info"))
-        logger.info(lang.get("server_properties"))
+        logger.info(lang.get(KnownTranslationKeys.SETTING_UP_SERVER_NOW))
+        logger.info(lang.get(KnownTranslationKeys.DEFAULT_VALUES_INFO))
+        logger.info(lang.get(KnownTranslationKeys.SERVER_PROPERTIES))
     }
 
     private fun printIpDetails() {
-        logger.info(lang.get("ip_get"))
+        logger.info(lang.get(KnownTranslationKeys.IP_GET))
 
         var externalIp = Internet.getIP()
         if (externalIp.isEmpty()) {
@@ -203,7 +204,7 @@ class SetupWizard(private val dataPath: Path) {
 
         logger.error(
             lang.translateString(
-                "ip_warning",
+                KnownTranslationKeys.IP_WARNING,
                 mapOf(
                     "EXTERNAL_IP" to externalIp,
                     "INTERNAL_IP" to internalIp
@@ -213,7 +214,7 @@ class SetupWizard(private val dataPath: Path) {
     }
 
     private fun showLicense(): Boolean {
-        logger.info(lang.translateString("welcome_to_pocketmine", listOf(VersionInfo.NAME)))
+        logger.info(lang.translateString(KnownTranslationKeys.WELCOME_TO_POCKETMINE, listOf(VersionInfo.NAME)))
         println(
             """
             LICENSE
@@ -223,8 +224,8 @@ class SetupWizard(private val dataPath: Path) {
   (at your option) any later version.
             """.trimIndent()
         )
-        return if (getInput("accept_license", "n", "y/N") != "y") {
-            logger.error(lang.translateString("you_have_to_accept_the_license", listOf(VersionInfo.NAME)))
+        return if (getInput(lang.translateString(KnownTranslationKeys.ACCEPT_LICENSE), "n", "y/N") != "y") {
+            logger.error(lang.translateString(KnownTranslationKeys.YOU_HAVE_TO_ACCEPT_THE_LICENSE, listOf(VersionInfo.NAME)))
             Thread.sleep(5000)
 
             false

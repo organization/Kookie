@@ -17,22 +17,29 @@
  */
 package be.zvz.kookie.world.format
 
-class BiomeArray(var payload: String) {
+class BiomeArray(var payload: String) : Cloneable {
     init {
         if (payload.length != 256) {
             throw IllegalArgumentException("Biome array is expected to be exactly 256 bytes")
         }
     }
 
-    fun get(x: Int, z: Int): Int = payload[idx(x, z)].code
+    operator fun get(index: Int): Int = payload[index].code
+    operator fun get(x: Int, z: Int): Int = payload[idx(x, z)].code
 
-    fun set(x: Int, z: Int, biomeId: Int) {
+    operator fun set(index: Int, biomeId: Int) {
         if (biomeId !in 0 until 256) {
             throw IllegalArgumentException("Biome ID must be in the range 0-255")
         }
 
-        payload = payload.replaceRange(idx(x, z)..idx(x, z), biomeId.toString())
+        payload = payload.replaceRange(index..index, biomeId.toString())
     }
+
+    operator fun set(x: Int, z: Int, biomeId: Int) {
+        this[idx(x, z)] = biomeId
+    }
+
+    public override fun clone() = BiomeArray(payload)
 
     companion object {
         @JvmStatic

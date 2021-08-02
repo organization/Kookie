@@ -17,21 +17,22 @@
  */
 package be.zvz.kookie.world.biome
 
-enum class BiomeIds(val id: Int) {
-    OCEAN(0),
-    PLAINS(1),
-    DESERT(2),
-    MOUNTAINS(3),
-    FOREST(4),
-    TAIGA(5),
-    SWAMP(6),
-    RIVER(7),
+enum class BiomeIds(val id: Int, val biomeName: String) {
+    UNKNOWN(-1, "Unknown"),
+    OCEAN(0, "Ocean"),
+    PLAINS(1, "Plains"),
+    DESERT(2, "Desert"),
+    MOUNTAINS(3, "Mountains"),
+    FOREST(4, "Forest"),
+    TAIGA(5, "Taiga"),
+    SWAMP(6, "Swamp"),
+    RIVER(7, "River"),
 
-    HELL(8),
+    HELL(8, "Hell"),
 
-    ICE_PLAINS(12),
+    ICE_PLAINS(12, "Ice Plains"),
 
-    SMALL_MOUNTAINS(20),
+    SMALL_MOUNTAINS(20, "Small Mountains"),
 
-    BIRCH_FOREST(27),
+    BIRCH_FOREST(27, "Bitch Forest"),
 }

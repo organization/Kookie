@@ -17,9 +17,17 @@
  */
 package be.zvz.kookie.crafting.utils
 
+import be.zvz.kookie.crafting.ShapelessRecipe
+
 data class ShapelessRecipeData(
     val block: String,
     val input: List<ItemData>,
     val output: List<ItemData>,
     val priority: Int
-)
+) {
+    fun toRecipe() =
+        ShapelessRecipe(
+            ingredients = input.map(ItemData::toItem),
+            results = output.map(ItemData::toItem)
+        )
+}

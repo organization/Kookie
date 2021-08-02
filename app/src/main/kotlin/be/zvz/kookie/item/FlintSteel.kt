@@ -18,8 +18,8 @@
 package be.zvz.kookie.item
 
 import be.zvz.kookie.block.Block
-import be.zvz.kookie.block.BlockLegacyIds
 import be.zvz.kookie.block.VanillaBlocks
+import be.zvz.kookie.math.Facing
 import be.zvz.kookie.math.Vector3
 import be.zvz.kookie.player.Player
 
@@ -30,10 +30,10 @@ class FlintSteel(identifier: ItemIdentifier, name: String) : Tool(identifier, na
         player: Player,
         blockReplace: Block,
         blockClicked: Block,
-        face: Int,
+        face: Facing,
         clickVector: Vector3
     ): ItemUseResult {
-        if (blockReplace.idInfo.blockId == BlockLegacyIds.AIR.id) {
+        if (blockReplace.idInfo.blockId == VanillaBlocks.AIR.id) {
             val world = player.world
             world.setBlock(blockReplace.pos, VanillaBlocks.AIR.block)
             // TODO: addSound

@@ -28,7 +28,7 @@ class PaintingItem(identifier: ItemIdentifier, vanillaName: String = "Unknown") 
         player: Player,
         blockReplace: Block,
         blockClicked: Block,
-        face: Int,
+        face: Facing,
         clickVector: Vector3
     ): ItemUseResult {
         if (Facing.axis(face) == Axis.Y.value) return ItemUseResult.NONE

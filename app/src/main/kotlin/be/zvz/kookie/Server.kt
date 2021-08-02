@@ -22,6 +22,8 @@ import be.zvz.kookie.console.KookieConsole
 import be.zvz.kookie.console.brightCyan
 import be.zvz.kookie.constant.CorePaths
 import be.zvz.kookie.constant.FilePermission
+import be.zvz.kookie.crafting.CraftingManager
+import be.zvz.kookie.lang.KnownTranslationKeys
 import be.zvz.kookie.lang.Language
 import be.zvz.kookie.lang.TranslationContainer
 import be.zvz.kookie.network.Network
@@ -47,6 +49,7 @@ import kotlin.io.path.createDirectories
 import kotlin.io.path.exists
 import kotlin.io.path.setPosixFilePermissions
 import kotlin.math.max
+import kotlin.math.min
 import ch.qos.logback.classic.Level as LoggerLevel
 
 class Server(dataPath: Path, pluginPath: Path) {
@@ -66,6 +69,8 @@ class Server(dataPath: Path, pluginPath: Path) {
     private var doTitleTick = true
     private val logger = LoggerFactory.getLogger(Server::class.java)
     private val console = KookieConsole(this)
+    val craftingManager: CraftingManager =
+        CraftingManager.fromDataHelper(this::class.java.getResourceAsStream("/vanilla/recipes.json")!!)
     private var maxPlayers: Int = 20
     private var onlineMode = true
     private var networkCompressionAsync = true
@@ -169,7 +174,7 @@ class Server(dataPath: Path, pluginPath: Path) {
 
         logger.info(
             language.translateString(
-                "language.selected",
+                KnownTranslationKeys.LANGUAGE_SELECTED,
                 listOf(
                     language.name,
                     language.lang
@@ -181,17 +186,17 @@ class Server(dataPath: Path, pluginPath: Path) {
             if (configGroup.getProperty("settings.enable-dev-builds").asBoolean(false)) {
                 logger.error(
                     language.translateString(
-                        "pocketmine.server.devBuild.error1",
+                        KnownTranslationKeys.POCKETMINE_SERVER_DEVBUILD_ERROR1,
                         listOf(
                             VersionInfo.NAME
                         )
                     )
                 )
-                logger.error(language.translateString("pocketmine.server.devBuild.error2"))
-                logger.error(language.translateString("pocketmine.server.devBuild.error3"))
+                logger.error(language.translateString(KnownTranslationKeys.POCKETMINE_SERVER_DEVBUILD_ERROR2))
+                logger.error(language.translateString(KnownTranslationKeys.POCKETMINE_SERVER_DEVBUILD_ERROR3))
                 logger.error(
                     language.translateString(
-                        "pocketmine.server.devBuild.error4",
+                        KnownTranslationKeys.POCKETMINE_SERVER_DEVBUILD_ERROR4,
                         listOf(
                             "settings.enable-dev-builds"
                         )
@@ -199,7 +204,7 @@ class Server(dataPath: Path, pluginPath: Path) {
                 )
                 logger.error(
                     language.translateString(
-                        "pocketmine.server.devBuild.error5",
+                        KnownTranslationKeys.POCKETMINE_SERVER_DEVBUILD_ERROR5,
                         listOf(
                             "https://github.com/organization/Kookie/releases"
                         )
@@ -221,7 +226,10 @@ class Server(dataPath: Path, pluginPath: Path) {
             )
         )
 
-        language.translateString("pocketmine.server.start", listOf(ProtocolInfo.MINECRAFT_VERSION_NETWORK.brightCyan()))
+        language.translateString(
+            KnownTranslationKeys.POCKETMINE_SERVER_START,
+            listOf(ProtocolInfo.MINECRAFT_VERSION_NETWORK.brightCyan())
+        )
 
         thread(isDaemon = true, name = "${VersionInfo.NAME}-console") {
             console.start()
@@ -247,6 +255,11 @@ class Server(dataPath: Path, pluginPath: Path) {
     }
 
     fun getDataPath(): Path = CorePaths.PATH
+
+    fun getViewDistance(): Int = configGroup.getConfigLong("view-distance", 8).toInt()
+
+    /** Returns a view distance up to the currently-allowed limit. */
+    fun getAllowedViewDistance(distance: Int): Int = max(2, min(distance, memoryManager.getViewDistance(getViewDistance())))
 
     fun broadcastMessage(message: String): Int {
         TODO("Not yet implemented")

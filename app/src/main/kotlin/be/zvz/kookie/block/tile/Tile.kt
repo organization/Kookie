@@ -36,16 +36,15 @@ abstract class Tile(world: World, pos: Vector3) {
     protected abstract fun writeSaveData(nbt: CompoundTag)
 
     fun saveNBT(): CompoundTag {
-        val nbt = CompoundTag.create()
-        nbt.apply {
-            setString(TAG_ID, TileFactory.getSaveId(this.javaClass.name))
+        val saveId = TileFactory.getSaveId(this.javaClass)
+        return CompoundTag.create().apply {
+            setString(TAG_ID, saveId)
             setInt(TAG_X, pos.floor().x.toInt())
             setInt(TAG_Y, pos.floor().y.toInt())
             setInt(TAG_Z, pos.floor().z.toInt())
-        }
-        writeSaveData(nbt)
 
-        return nbt
+            writeSaveData(this)
+        }
     }
 
     fun getCleanedNBT(): CompoundTag? = CompoundTag().apply(this::writeSaveData).takeIf { it.count() > 0 }

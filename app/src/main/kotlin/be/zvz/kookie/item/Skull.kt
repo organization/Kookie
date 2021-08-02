@@ -19,9 +19,10 @@ package be.zvz.kookie.item
 
 import be.zvz.kookie.block.Block
 import be.zvz.kookie.block.VanillaBlocks
-import be.zvz.kookie.block.utils.SkullType
+import be.zvz.kookie.block.util.SkullType
+import be.zvz.kookie.math.Facing
 
 class Skull(identifier: ItemIdentifier, vanillaName: String = "Unknown", val skullType: SkullType) :
     Item(identifier, vanillaName) {
-    override fun getBlock(clickedFace: Int?): Block = VanillaBlocks.MOB_HEAD.block // TODO: setSkullType
+    override fun getBlock(clickedFace: Facing?): Block = VanillaBlocks.HEAD.block // TODO: setSkullType
 }
