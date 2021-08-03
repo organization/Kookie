@@ -13,7 +13,7 @@ class Anvil(
     breakInfo: BlockBreakInfo
 ) : Transparent(idInfo, name, breakInfo), Fallable, FallableHelper, HorizontalFacing {
     private var damage: Int = 0
-    var facing: Facing = HorizontalFacing.facing
+    override var facing: Facing by HorizontalFacing.observer()
 
     override fun writeStateToMeta(): Int {
         TODO("Not yet implemented")
