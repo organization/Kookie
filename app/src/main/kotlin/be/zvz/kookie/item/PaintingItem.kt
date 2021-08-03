@@ -31,7 +31,7 @@ class PaintingItem(identifier: ItemIdentifier, vanillaName: String = "Unknown") 
         face: Facing,
         clickVector: Vector3
     ): ItemUseResult {
-        if (Facing.axis(face) == Axis.Y.value) return ItemUseResult.NONE
+        if (face.axis == Axis.Y) return ItemUseResult.NONE
 
         TODO("Not yet implemented")
     }

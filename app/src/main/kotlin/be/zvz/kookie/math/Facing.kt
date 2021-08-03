@@ -18,7 +18,6 @@
 package be.zvz.kookie.math
 
 enum class Facing(val value: Int) {
-
     DOWN(Axis.Y.value shl 1),
     UP(Axis.Y.value shl 1 or Facing.FLAG_AXIS_POSITIVE),
     NORTH(Axis.Z.value shl 1),
@@ -27,8 +26,25 @@ enum class Facing(val value: Int) {
     EAST(Axis.X.value shl 1 or Facing.FLAG_AXIS_POSITIVE),
     CENTER(-1);
 
+    val axis: Axis = Axis.fromInt(value shr 1)
+    val opposite: Facing by lazy { fromInt(value xor FLAG_AXIS_POSITIVE) }
+    val isPositive: Boolean by lazy { value and FLAG_AXIS_POSITIVE == FLAG_AXIS_POSITIVE }
+
+    fun rotate(axis: Axis, clockWise: Boolean): Facing =
+        CLOCKWISE[axis]?.let { map ->
+            map[this]?.let { rotated ->
+                return if (clockWise) {
+                    rotated
+                } else {
+                    rotated.opposite
+                }
+            } ?: throw IllegalArgumentException("Cannot rotate direction $value around axis ${axis.value}")
+        } ?: throw IllegalArgumentException("Invalid axis $value")
+
     companion object {
         private const val FLAG_AXIS_POSITIVE = 1
+        private val VALUES = values()
+
         val ALL = arrayOf(
             DOWN,
             UP,
@@ -66,28 +82,23 @@ enum class Facing(val value: Int) {
             )
         )
 
-        @JvmStatic fun axis(direction: Facing): Int = axis(direction.value)
-        @JvmStatic fun axis(direction: Int): Int = direction shr 1
+        @Deprecated("Incorrect usage", ReplaceWith("direction.axis"))
+        @JvmStatic fun axis(direction: Facing): Axis = direction.axis
+        @JvmStatic fun axis(direction: Int): Axis = fromInt(direction).axis
 
-        @JvmStatic fun isPositive(direction: Facing): Boolean = isPositive(direction.value)
-        @JvmStatic fun isPositive(direction: Int): Boolean = (direction and FLAG_AXIS_POSITIVE) == FLAG_AXIS_POSITIVE
+        @Deprecated("Incorrect usage", ReplaceWith("direction.opposite"))
+        @JvmStatic fun opposite(direction: Facing): Facing = direction.opposite
+        @JvmStatic fun opposite(direction: Int): Facing = fromInt(direction).opposite
 
-        @JvmStatic fun opposite(direction: Facing): Int = opposite(direction.value)
-        @JvmStatic fun opposite(direction: Int): Int = direction xor FLAG_AXIS_POSITIVE
+        @Deprecated("Incorrect usage", ReplaceWith("direction.isPositive"))
+        @JvmStatic fun isPositive(direction: Facing): Boolean = direction.isPositive
+        @JvmStatic fun isPositive(direction: Int): Boolean = fromInt(direction).isPositive
 
-        @JvmStatic
-        fun rotate(direction: Facing, axis: Axis, clockWise: Boolean): Int =
-            CLOCKWISE[axis]?.let { map ->
-                map[direction]?.let { rotated ->
-                    return if (clockWise) {
-                        rotated.value
-                    } else {
-                        opposite(rotated.value)
-                    }
-                } ?: throw IllegalArgumentException("Cannot rotate direction ${direction.value} around axis ${axis.value}")
-            } ?: throw IllegalArgumentException("Invalid axis ${direction.value}")
+        @Deprecated("Incorrect usage", ReplaceWith("direction.rotate(axis, clockWise)"))
+        @JvmStatic fun rotate(direction: Facing, axis: Axis, clockWise: Boolean): Facing = direction.rotate(axis, clockWise)
+        @JvmStatic fun rotate(direction: Int, axis: Axis, clockWise: Boolean): Facing = fromInt(direction).rotate(axis, clockWise)
 
         @JvmStatic
-        fun fromInt(value: Int) = values().firstOrNull { it.value == value } ?: UP
+        fun fromInt(value: Int) = VALUES.find { it.value == value } ?: UP
     }
 }
