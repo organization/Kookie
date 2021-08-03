@@ -17,7 +17,7 @@
  */
 package be.zvz.kookie.world.biome
 
-import be.zvz.kookie.block.util.TreeType
+import be.zvz.kookie.block.utils.TreeType
 import be.zvz.kookie.world.generator.populator.TallGrass
 import be.zvz.kookie.world.generator.populator.Tree
 

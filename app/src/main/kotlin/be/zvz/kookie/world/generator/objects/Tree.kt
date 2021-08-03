@@ -19,7 +19,7 @@ package be.zvz.kookie.world.generator.objects
 
 import be.zvz.kookie.block.Block
 import be.zvz.kookie.block.VanillaBlocks
-import be.zvz.kookie.block.util.TreeType
+import be.zvz.kookie.block.utils.TreeType
 import be.zvz.kookie.world.BlockTransaction
 import be.zvz.kookie.world.ChunkManager
 import kotlin.math.abs

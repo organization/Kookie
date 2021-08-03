@@ -18,7 +18,7 @@
 package be.zvz.kookie.world.generator.populator
 
 import be.zvz.kookie.block.VanillaBlocks
-import be.zvz.kookie.block.util.TreeType
+import be.zvz.kookie.block.utils.TreeType
 import be.zvz.kookie.world.ChunkManager
 import kotlin.random.Random
 import be.zvz.kookie.world.generator.objects.Tree as ObjectTree
