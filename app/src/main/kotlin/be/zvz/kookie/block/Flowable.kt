@@ -26,6 +26,7 @@ open class Flowable(
 ) : Transparent(idInfo, name, breakInfo) {
     override fun canBeFlowedInto(): Boolean = true
     override fun isSolid(): Boolean = false
-    //TODO: need check
+
+    // TODO: need check
     override fun recalculateCollisionBoxes(): List<AxisAlignedBB> = emptyList()
 }
