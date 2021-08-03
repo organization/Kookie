@@ -13,8 +13,7 @@ interface HorizontalFacing {
         internal inline fun observer(): ReadWriteProperty<Any?, Facing> =
             object : ObservableProperty<Facing>(Facing.NORTH) {
                 override fun afterChange(property: KProperty<*>, oldValue: Facing, newValue: Facing) {
-                    val axis = Facing.axis(newValue)
-                    if (axis != Axis.X.value && axis != Axis.Z.value) {
+                    if (newValue.axis == Axis.Y) {
                         throw IllegalArgumentException("Facing must be horizontal")
                     }
                 }

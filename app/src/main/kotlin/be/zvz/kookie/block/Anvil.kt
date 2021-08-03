@@ -42,19 +42,13 @@ class Anvil(
         this.damage = damage
     }
 
-    override fun recalculateCollisionBoxes(): List<AxisAlignedBB> {
-        val axis = Facing.axis(
-            Facing.rotate(
-                facing, Axis.Y, false
-            )
-        )
-        return listOf(
-            AxisAlignedBB.one().squash( // TODO: Conflict between squash and Facing.axis
-                Axis.values().first { it.value == axis },
+    override fun recalculateCollisionBoxes(): List<AxisAlignedBB> =
+        listOf(
+            AxisAlignedBB.one().squash(
+                facing.rotate(Axis.Y, false).axis,
                 1.0 / 8.0
             )
         )
-    }
 
     override fun tickFalling(): Block? = null
 }
