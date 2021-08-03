@@ -20,5 +20,15 @@ package be.zvz.kookie.math
 enum class Axis(val value: Int) {
     X(0),
     Y(1),
-    Z(2)
+    Z(2);
+
+    companion object {
+        @JvmStatic
+        fun fromInt(value: Int): Axis = when (value) {
+            0 -> X
+            1 -> Y
+            2 -> Z
+            else -> throw IllegalArgumentException("$value is invalid axis value")
+        }
+    }
 }
