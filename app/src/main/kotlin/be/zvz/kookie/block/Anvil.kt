@@ -1,7 +1,5 @@
 package be.zvz.kookie.block
 
-//import be.zvz.kookie.block.inventory.AnvilInventory
-//import be.zvz.kookie.block.util.BlockDataSerializer
 import be.zvz.kookie.block.utils.Fallable
 import be.zvz.kookie.block.utils.FallableHelper
 import be.zvz.kookie.block.utils.HorizontalFacing
@@ -18,13 +16,17 @@ class Anvil(
     var facing: Facing = HorizontalFacing.facing
 
     override fun writeStateToMeta(): Int {
-        //TODO: not yet implemented
+        TODO("Not yet implemented")
     }
 
     override fun readStateFromData(id: Int, stateMeta: Int) {
-        //TODO: remove comment after implementing functions
-        //facing = BlockDataSerializer.readLegacyHorizontalFacing(stateMeta and 0x3)
-        //damage = BlockDataSerializer.readBoundedInt("damage", stateMeta shr 2, 0, 2)
+        // TODO: remove comment after implementing functions
+        // facing = BlockDataSerializer.readLegacyHorizontalFacing(stateMeta and 0x3)
+        // damage = BlockDataSerializer.readBoundedInt("damage", stateMeta shr 2, 0, 2)
+    }
+
+    override fun onNearbyBlockChange() {
+        TODO("Not yet implemented")
     }
 
     override fun getStateBitmask(): Int = 0b1111
@@ -34,7 +36,7 @@ class Anvil(
     fun getDamage(): Int = damage
 
     fun setDamage(damage: Int): Anvil = apply {
-        if(damage < 0 || damage > 2) {
+        if (damage < 0 || damage > 2) {
             throw IllegalArgumentException("Damage must be in range 0-2")
         }
         this.damage = damage
