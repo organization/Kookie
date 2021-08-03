@@ -61,7 +61,7 @@ open class Location @JvmOverloads constructor(
 
         @JvmStatic
         @JvmOverloads
-        fun fromObject(pos: Vector3, world: World?, yaw: Double, pitch: Double = 0.0): Location =
+        fun fromObject(pos: Vector3, world: World? = null, yaw: Double = 0.0, pitch: Double = 0.0): Location =
             Location(pos.x, pos.y, pos.z, yaw, pitch, world ?: if (pos is Position) pos.world else null)
     }
 }
