@@ -17,12 +17,16 @@
  */
 package be.zvz.kookie
 
+import be.zvz.kookie.command.CommandMap
 import be.zvz.kookie.command.CommandSender
+import be.zvz.kookie.command.ConsoleCommandSender
+import be.zvz.kookie.command.SimpleCommandMap
 import be.zvz.kookie.console.KookieConsole
 import be.zvz.kookie.console.brightCyan
 import be.zvz.kookie.constant.CorePaths
 import be.zvz.kookie.constant.FilePermission
 import be.zvz.kookie.crafting.CraftingManager
+import be.zvz.kookie.event.server.CommandEvent
 import be.zvz.kookie.event.server.QueryRegenerateEvent
 import be.zvz.kookie.lang.KnownTranslationKeys
 import be.zvz.kookie.lang.Language
@@ -38,6 +42,7 @@ import be.zvz.kookie.timings.Timings
 import be.zvz.kookie.timings.TimingsHandler
 import be.zvz.kookie.utils.Config
 import be.zvz.kookie.utils.OS
+import be.zvz.kookie.utils.TextFormat
 import be.zvz.kookie.utils.config.PropertiesBrowser
 import be.zvz.kookie.world.World
 import ch.qos.logback.classic.Logger
@@ -71,15 +76,17 @@ class Server(dataPath: Path, pluginPath: Path) {
 
     private var doTitleTick = true
     private val logger = LoggerFactory.getLogger(Server::class.java)
-    private val console = KookieConsole(this)
     val craftingManager: CraftingManager =
         CraftingManager.fromDataHelper(this::class.java.getResourceAsStream("/vanilla/recipes.json")!!)
+    val consoleSender: ConsoleCommandSender
+    private val console: KookieConsole
     private var maxPlayers: Int = 20
     private var onlineMode = true
     private var networkCompressionAsync = true
     val memoryManager: MemoryManager
     val pluginManager: PluginManager
     val asyncPool: AsyncPool
+    val commandMap: CommandMap = SimpleCommandMap()
 
     private val network: Network
 
@@ -245,6 +252,9 @@ class Server(dataPath: Path, pluginPath: Path) {
             listOf(ProtocolInfo.MINECRAFT_VERSION_NETWORK.brightCyan())
         )
 
+        consoleSender = ConsoleCommandSender(this, language)
+        console = KookieConsole(this, consoleSender)
+
         thread(isDaemon = true, name = "${VersionInfo.NAME}-console") {
             console.start()
         }
@@ -389,6 +399,23 @@ class Server(dataPath: Path, pluginPath: Path) {
 
     private fun titleTick() {
         // TODO: title tick
+    }
+
+    @JvmOverloads
+    fun dispatchCommand(sender: CommandSender, commandLine: String, internal: Boolean = false): Boolean {
+        if (!internal) {
+            val ev = CommandEvent(sender, commandLine)
+            ev.call()
+            if (ev.isCancelled) {
+                return false
+            }
+            val commandLine = ev.command
+        }
+        if (commandMap.dispatch(sender, commandLine)) {
+            return true
+        }
+        sender.sendMessage(sender.language.translateString(TextFormat.RED + "%commands.generic.notFound"))
+        return false
     }
 
     companion object {
