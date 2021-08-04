@@ -17,16 +17,18 @@
  */
 package be.zvz.kookie.player
 
+import be.zvz.kookie.lang.KnownTranslationKeys
+
 enum class GameMode(
     protected val magicNumber: Int,
     val modeName: String,
-    val translationKey: String,
+    val translationKey: KnownTranslationKeys,
     val aliases: Array<String>
 ) : IGameMode {
-    SURVIVAL(0, "Survival", "gameMode.survival", arrayOf("s", "0")),
-    CREATIVE(1, "Creative", "gameMode.creative", arrayOf("c", "1")),
-    ADVENTURE(2, "Adventure", "%gameMode.adventure", arrayOf("a", "2")),
-    SPECTATOR(3, "Spectator", "%gameMode.spectator", arrayOf("v", "view", "3"));
+    SURVIVAL(0, "Survival", KnownTranslationKeys.GAMEMODE_SURVIVAL, arrayOf("s", "0")),
+    CREATIVE(1, "Creative", KnownTranslationKeys.GAMEMODE_CREATIVE, arrayOf("c", "1")),
+    ADVENTURE(2, "Adventure", KnownTranslationKeys.GAMEMODE_ADVENTURE, arrayOf("a", "2")),
+    SPECTATOR(3, "Spectator", KnownTranslationKeys.GAMEMODE_SPECTATOR, arrayOf("v", "view", "3"));
 
     override fun id(): Int = this.magicNumber
 

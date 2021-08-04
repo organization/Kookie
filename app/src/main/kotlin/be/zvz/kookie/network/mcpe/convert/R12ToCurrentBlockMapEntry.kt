@@ -15,20 +15,12 @@
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  */
-package be.zvz.kookie.math
+package be.zvz.kookie.network.mcpe.convert
 
-enum class Axis(val value: Int) {
-    X(0),
-    Y(1),
-    Z(2);
+import be.zvz.kookie.nbt.tag.CompoundTag
 
-    companion object {
-        @JvmStatic
-        fun fromInt(value: Int): Axis = when (value) {
-            0 -> X
-            1 -> Y
-            2 -> Z
-            else -> throw IllegalArgumentException("$value is invalid axis value")
-        }
-    }
-}
+data class R12ToCurrentBlockMapEntry(
+    val id: String,
+    val meta: Int,
+    val blockState: CompoundTag
+)

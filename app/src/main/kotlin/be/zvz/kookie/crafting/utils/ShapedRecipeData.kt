@@ -17,10 +17,24 @@
  */
 package be.zvz.kookie.crafting.utils
 
+import be.zvz.kookie.crafting.ShapedRecipe
+import be.zvz.kookie.item.Item
+import com.koloboke.collect.map.hash.HashCharObjMaps
+
 data class ShapedRecipeData(
     val block: String,
     val input: Map<String, ItemData>,
     val output: List<ItemData>,
     val priority: Int,
     val shape: List<String>
-)
+) {
+    fun toRecipe() = ShapedRecipe(
+        shape = shape,
+        ingredientMap = HashCharObjMaps.newMutableMap<Item>().apply {
+            input.forEach { (symbol, itemData) ->
+                put(symbol[0], itemData.toItem())
+            }
+        },
+        results = output.map(ItemData::toItem)
+    )
+}

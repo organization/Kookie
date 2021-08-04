@@ -19,8 +19,10 @@ package be.zvz.kookie.crafting
 
 import be.zvz.kookie.item.Item
 
-class FurnaceRecipe(result: Item, ingredient: Item) {
+class FurnaceRecipe(input: Item, result: Item) {
+    private val _input: Item = input
+    val input: Item get() = _input.clone()
 
-    val item: Item = result.clone()
-    val ingredient: Item = ingredient.clone()
+    private val _result: Item = result
+    val result: Item get() = _result.clone()
 }
