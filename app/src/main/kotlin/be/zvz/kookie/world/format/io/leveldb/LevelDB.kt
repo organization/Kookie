@@ -17,6 +17,7 @@
  */
 package be.zvz.kookie.world.format.io.leveldb
 
+import be.zvz.kookie.block.Block
 import be.zvz.kookie.block.VanillaBlocks
 import be.zvz.kookie.data.bedrock.LegacyIdToStringIdMap
 import be.zvz.kookie.nbt.LittleEndianNbtSerializer
@@ -88,8 +89,7 @@ class LevelDB(path: Path) : BaseWorldProvider(path), WritableWorldProvider {
                     // we really need a proper state fixer, but this is a pressing issue.
                     data = 0
                 }
-                // FIXME: Block doesn't have INTERNAL_METADATA_BITS, have to add
-                palette.add(((id shl INTERNAL_METADATA_BITS) or data).toLong())
+                palette.add(((id shl Block.INTERNAL_METADATA_BITS) or data).toLong())
             }
 
             return PalettedBlockArray(PalettedBlockArray.fromData(bitsPerBlock, words, palette))
@@ -122,14 +122,14 @@ class LevelDB(path: Path) : BaseWorldProvider(path), WritableWorldProvider {
                 if (extraDataLayers.getOrNull(ySub) == null) {
                     extraDataLayers.add(
                         ySub,
-                        PalettedBlockArray((VanillaBlocks.AIR.id shl INTERNAL_METADATA_BITS).toLong())
+                        PalettedBlockArray((VanillaBlocks.AIR.id shl Block.INTERNAL_METADATA_BITS).toLong())
                     )
                 }
                 extraDataLayers[ySub].set(
                     x.get(),
                     y,
                     z.get(),
-                    ((blockId shl INTERNAL_METADATA_BITS) or blockData).toLong()
+                    ((blockId shl Block.INTERNAL_METADATA_BITS) or blockData).toLong()
                 )
             }
             return extraDataLayers
@@ -180,7 +180,7 @@ class LevelDB(path: Path) : BaseWorldProvider(path), WritableWorldProvider {
                                         storages.add(convertedLegacyExtraData[y])
                                     }
                                     subChunks[y] =
-                                        SubChunk((VanillaBlocks.AIR.id shl INTERNAL_METADATA_BITS).toLong(), storages)
+                                        SubChunk((VanillaBlocks.AIR.id shl Block.INTERNAL_METADATA_BITS).toLong(), storages)
                                 } catch (e: BinaryDataException) {
                                     throw CorruptedChunkException(e.message ?: "No error was provided", e)
                                 }
@@ -195,7 +195,7 @@ class LevelDB(path: Path) : BaseWorldProvider(path), WritableWorldProvider {
                                         storages.add(deserializePaletted(binaryStream))
                                     }
                                     subChunks[y] =
-                                        SubChunk((VanillaBlocks.AIR.id shl INTERNAL_METADATA_BITS).toLong(), storages)
+                                        SubChunk((VanillaBlocks.AIR.id shl Block.INTERNAL_METADATA_BITS).toLong(), storages)
                                 }
                             }
                             else -> throw CorruptedChunkException(
@@ -232,7 +232,7 @@ class LevelDB(path: Path) : BaseWorldProvider(path), WritableWorldProvider {
                                 storages.add(convertedLegacyExtraData[yy])
                             }
                             subChunks[yy] =
-                                SubChunk((VanillaBlocks.AIR.id shl INTERNAL_METADATA_BITS).toLong(), storages)
+                                SubChunk((VanillaBlocks.AIR.id shl Block.INTERNAL_METADATA_BITS).toLong(), storages)
                         }
                     } catch (e: BinaryDataException) {
                         throw CorruptedChunkException(e.message ?: "No error was provided", e)
@@ -333,11 +333,11 @@ class LevelDB(path: Path) : BaseWorldProvider(path), WritableWorldProvider {
                                     CompoundTag.create().apply {
                                         setString(
                                             "name",
-                                            idMap.legacyToString[p.toInt() shr INTERNAL_METADATA_BITS]
+                                            idMap.legacyToString[p.toInt() shr Block.INTERNAL_METADATA_BITS]
                                                 ?: "minecraft:info_update"
                                         )
-                                        setInt("oldid", p.toInt() shr INTERNAL_METADATA_BITS)
-                                        setShort("val", p.toInt() and INTERNAL_METADATA_MASK)
+                                        setInt("oldid", p.toInt() shr Block.INTERNAL_METADATA_BITS)
+                                        setShort("val", p.toInt() and Block.INTERNAL_METADATA_MASK)
                                     }
                                 )
                             )
@@ -447,9 +447,6 @@ class LevelDB(path: Path) : BaseWorldProvider(path), WritableWorldProvider {
 
         private const val CURRENT_LEVEL_CHUNK_VERSION = 7
         private const val CURRENT_LEVEL_SUBCHUNK_VERSION = 8
-
-        const val INTERNAL_METADATA_BITS = 4
-        const val INTERNAL_METADATA_MASK = (0.inv() shl INTERNAL_METADATA_BITS).inv()
 
         private fun createDB(path: Path): DB {
             return Iq80DBFactory().open(path.toFile(), Options())

@@ -283,8 +283,9 @@ open class Block(val idInfo: BlockIdentifier, val name: String, val breakInfo: B
     }
 
     @JvmOverloads
-    fun getSide(side: Facing, step: Int = 1): Block = pos.takeIf { it.isValid() }?.world?.getBlock(pos.getSide(side, step))
-        ?: throw IllegalStateException("Block does not have a valid world")
+    fun getSide(side: Facing, step: Int = 1): Block =
+        pos.takeIf { it.isValid() }?.world?.getBlock(pos.getSide(side, step))
+            ?: throw IllegalStateException("Block does not have a valid world")
 
     fun getHorizontalSides() = sequence {
         pos.sidesAroundAxis(Axis.Y).forEach {
@@ -362,6 +363,9 @@ open class Block(val idInfo: BlockIdentifier, val name: String, val breakInfo: B
     }
 
     companion object {
+        const val INTERNAL_METADATA_BITS = 4
+        const val INTERNAL_METADATA_MASK = (0.inv() shl INTERNAL_METADATA_BITS).inv()
+
         @JvmStatic
         fun fullId(id: Long, variant: Int) = id shl 4 or variant.toLong()
 
