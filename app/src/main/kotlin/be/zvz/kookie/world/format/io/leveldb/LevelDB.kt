@@ -281,8 +281,13 @@ class LevelDB(path: Path) : BaseWorldProvider(path), WritableWorldProvider {
                 tiles,
                 biomeArray ?: BiomeArray.fill(BiomeIds.PLAINS.id)
             )
-            chunk.terrainPopulated = true
-            chunk.dirtyFlags = chunk.dirtyFlags or Chunk.DIRTY_FLAG_TERRAIN
+            val finalisationChr = db.get((index + TAG_STATE_FINALISATION).toByteArray())
+            if (finalisationChr != null) {
+                val finalisation = ord(finalisationChr.toString())
+                chunk.terrainPopulated = finalisation == FINALISATION_DONE
+            } else { // older versions didn't have this tag
+                chunk.terrainPopulated = true
+            }
             if (hasBeenUpgraded) {
                 chunk.setDirty()
             }
@@ -353,7 +358,11 @@ class LevelDB(path: Path) : BaseWorldProvider(path), WritableWorldProvider {
 
         write.put(
             (index + TAG_STATE_FINALISATION).toByteArray(),
-            FINALISATION_DONE.toChar().code.toString().toByteArray()
+            if (chunk.terrainPopulated) {
+                FINALISATION_DONE.toChar().code.toString().toByteArray()
+            } else {
+                FINALISATION_NEEDS_POPULATION.toChar().code.toString().toByteArray()
+            }
         )
 
         writeTags(chunk.NBTtiles, index + TAG_BLOCK_ENTITY, write)
