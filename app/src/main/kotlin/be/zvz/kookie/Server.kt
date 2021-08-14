@@ -17,7 +17,6 @@
  */
 package be.zvz.kookie
 
-import be.zvz.kookie.command.CommandMap
 import be.zvz.kookie.command.CommandSender
 import be.zvz.kookie.command.ConsoleCommandSender
 import be.zvz.kookie.command.SimpleCommandMap
@@ -35,6 +34,7 @@ import be.zvz.kookie.network.Network
 import be.zvz.kookie.network.mcpe.protocol.ProtocolInfo
 import be.zvz.kookie.network.mcpe.raklib.RakLibInterface
 import be.zvz.kookie.network.query.QueryInfo
+import be.zvz.kookie.permission.BanList
 import be.zvz.kookie.player.Player
 import be.zvz.kookie.plugin.PluginManager
 import be.zvz.kookie.scheduler.AsyncPool
@@ -45,91 +45,132 @@ import be.zvz.kookie.utils.OS
 import be.zvz.kookie.utils.TextFormat
 import be.zvz.kookie.utils.config.PropertiesBrowser
 import be.zvz.kookie.world.World
+import be.zvz.kookie.world.WorldManager
 import ch.qos.logback.classic.Logger
+import com.koloboke.collect.map.hash.HashObjObjMaps
 import org.apache.commons.io.IOUtils
 import org.slf4j.LoggerFactory
 import java.io.BufferedOutputStream
 import java.net.InetSocketAddress
 import java.nio.file.Path
 import java.util.Date
+import java.util.UUID
 import kotlin.concurrent.thread
 import kotlin.io.path.createDirectories
 import kotlin.io.path.exists
 import kotlin.io.path.setPosixFilePermissions
 import kotlin.math.max
 import kotlin.math.min
-import kotlin.math.round
 import ch.qos.logback.classic.Level as LoggerLevel
 
 class Server(dataPath: Path, pluginPath: Path) {
-    /**
-     * Counts the ticks since the server start
-     *
-     */
-    private var tickCounter: Long = 0
+    val name: String get() = VersionInfo.NAME
+    val kookieVersion: String = TODO()
+    val apiVersion: String get() = VersionInfo.BASE_VERSION
+    val version: String get() = ProtocolInfo.MINECRAFT_VERSION_NETWORK
+
+    val ip: String get() = configGroup.getConfigString("server-ip", "0.0.0.0").takeIf { it.isNotBlank() } ?: "0.0.0.0"
+    val port: Int get() = configGroup.getConfigLong("server-port", 19132).toInt()
+
+    val viewDistance: Int get() = configGroup.getConfigLong("view-distance", 8).toInt()
+
+    val banByName: BanList = TODO()
+    val banById: BanList = TODO()
+
+    val operators: Config = TODO()
+    val whitelist: Config = TODO()
+
+    var isRunning: Boolean = false
+        private set
+    private var hasStopped: Boolean = false
+
+    val pluginManager: PluginManager = PluginManager()
+
+    val profilingTickRate: Int = 20
+    // TODO: val updater: AutoUpdater
+
+    val asyncPool: AsyncPool
+
+    /** Counts the ticks since the server start */
+    var tickCounter: Long = 0
+        private set
     private var nextTick: Double = 0.0
     private val tickAverage: FloatArray = FloatArray(20) { 20F }
     private val useAverage: FloatArray = FloatArray(20) { 0F }
     private var currentTPS: Float = 20F
     private var currentUse: Float = 0F
-    private val startTime: Date
+
+    @Deprecated("Unnecessary rounded", ReplaceWith("currentTPS"))
+    val ticksPerSecond: Float
+        get() = currentTPS
+    val ticksPerSecondAverage: Float get() = tickAverage.average().toFloat()
+    val tickUsage: Float get() = currentUse * 100
+    val tickUsageAverage: Float get() = (useAverage.average() * 100).toFloat()
+
+    var startTime: Date = Date()
+        private set
 
     private var doTitleTick = true
-    private val logger = LoggerFactory.getLogger(Server::class.java)
+    private var sendUsageTicker: Int = 0
+
+    val logger = LoggerFactory.getLogger(Server::class.java)
+    val memoryManager: MemoryManager = MemoryManager(this)
+
+    private val console: KookieConsole = KookieConsole(this, consoleSender)
+
+    val commandMap = SimpleCommandMap()
+
     val craftingManager: CraftingManager =
         CraftingManager.fromDataHelper(this::class.java.getResourceAsStream("/vanilla/recipes.json")!!)
-    val consoleSender: ConsoleCommandSender
-    private val console: KookieConsole
-    private var maxPlayers: Int = 20
-    private var onlineMode = true
-    private var networkCompressionAsync = true
-    val memoryManager: MemoryManager
-    val pluginManager: PluginManager
-    val asyncPool: AsyncPool
-    val commandMap: CommandMap = SimpleCommandMap()
 
-    private val network: Network
+    val consoleSender: ConsoleCommandSender = ConsoleCommandSender(this, language)
+
+    // TODO: val resourceManager: ResourcePackManager
+
+    val worldManager: WorldManager
+
+    var maxPlayers: Int = 20
+        private set
+    var onlineMode = true
+        private set
+
+    val network: Network = Network(this, logger)
+    private var networkCompressionAsync = true
 
     var language: Language
         private set
-    private var forceLanguage = false
+    var forceLanguage = false
+        private set
+
+    val serverId: UUID
+
+    val dataPath: Path get() = CorePaths.PATH
+    val pluginPath: String
+
+    private val uniquePlayers: Set<UUID>
+
+    var queryInfo: QueryInfo = QueryInfo(this)
+
     val configGroup: ServerConfigGroup
 
-    var queryInfo: QueryInfo
+    private val playerList: MutableMap<UUID, Player> = HashObjObjMaps.newMutableMap()
 
-    var isCrashed: Boolean = false
-        private set
-    var isRunning: Boolean = false
-        private set
-
-    var sendUsageTicker: Int = 0
-
-    val profilingTickRate: Int = 20
-
-    val ticksPerSecondAverage: Float = round(tickAverage.sum() / tickAverage.size)
+    private val broadcastSubscribers: MutableMap<String, MutableSet<CommandSender>> = HashObjObjMaps.newMutableMap()
 
     init {
         instance = this
-        startTime = Date()
 
-        val worldsPath = dataPath.resolve("worlds")
-        if (!worldsPath.exists()) {
-            worldsPath.createDirectories()
-            if (OS.isPosixCompliant) {
-                worldsPath.setPosixFilePermissions(FilePermission.perm777)
-            }
-        }
-        val playersPath = dataPath.resolve("players")
-        if (!playersPath.exists()) {
-            playersPath.createDirectories()
-            if (OS.isPosixCompliant) {
-                playersPath.setPosixFilePermissions(FilePermission.perm777)
-            }
-        }
-        if (!pluginPath.exists()) {
-            pluginPath.createDirectories()
-            if (OS.isPosixCompliant) {
-                pluginPath.setPosixFilePermissions(FilePermission.perm777)
+        arrayOf(
+            dataPath,
+            pluginPath,
+            dataPath.resolve("worlds"),
+            dataPath.resolve("players")
+        ).forEach { path ->
+            if (!path.exists()) {
+                path.createDirectories()
+                if (OS.isPosixCompliant) {
+                    path.setPosixFilePermissions(FilePermission.perm777)
+                }
             }
         }
 
@@ -235,10 +276,6 @@ class Server(dataPath: Path, pluginPath: Path) {
             }
         }
 
-        memoryManager = MemoryManager(this)
-
-        network = Network(this, logger)
-
         network.addInterface(
             RakLibInterface(
                 this,
@@ -252,16 +289,9 @@ class Server(dataPath: Path, pluginPath: Path) {
             listOf(ProtocolInfo.MINECRAFT_VERSION_NETWORK.brightCyan())
         )
 
-        consoleSender = ConsoleCommandSender(this, language)
-        console = KookieConsole(this, consoleSender)
-
         thread(isDaemon = true, name = "${VersionInfo.NAME}-console") {
             console.start()
         }
-
-        pluginManager = PluginManager()
-
-        queryInfo = QueryInfo(this)
 
         asyncPool = AsyncPool(
             configGroup.getProperty("settings.async-workers").text().run {
@@ -282,12 +312,8 @@ class Server(dataPath: Path, pluginPath: Path) {
         tickProcessor()
     }
 
-    fun getDataPath(): Path = CorePaths.PATH
-
-    fun getViewDistance(): Int = configGroup.getConfigLong("view-distance", 8).toInt()
-
     /** Returns a view distance up to the currently-allowed limit. */
-    fun getAllowedViewDistance(distance: Int): Int = max(2, min(distance, memoryManager.getViewDistance(getViewDistance())))
+    fun getAllowedViewDistance(distance: Int): Int = max(2, min(distance, memoryManager.getViewDistance(viewDistance)))
 
     fun broadcastMessage(message: String): Int {
         TODO("Not yet implemented")
