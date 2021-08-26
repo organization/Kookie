@@ -20,8 +20,10 @@ package be.zvz.kookie.entity
 import be.zvz.kookie.Server
 import be.zvz.kookie.block.Block
 import be.zvz.kookie.entity.animation.Animation
+import be.zvz.kookie.event.entity.EntityDamageEvent
 import be.zvz.kookie.event.entity.EntityDespawnEvent
 import be.zvz.kookie.event.entity.EntityMotionEvent
+import be.zvz.kookie.event.entity.EntityRegainHealthEvent
 import be.zvz.kookie.event.entity.EntityTeleportEvent
 import be.zvz.kookie.math.AxisAlignedBB
 import be.zvz.kookie.math.Facing
@@ -64,7 +66,7 @@ abstract class Entity @JvmOverloads constructor(var location: Location, nbt: Com
     val networkProperties = EntityMetadataCollection()
 
     // TODO: fill this when event system is implemented
-    var lastDamageCause: Any? = null
+    var lastDamageCause: EntityDamageEvent? = null
 
     protected var blocksAround: MutableList<Block>? = mutableListOf()
 
@@ -249,12 +251,21 @@ abstract class Entity @JvmOverloads constructor(var location: Location, nbt: Com
         compoundTag.setByte("OnGround", if (onGround) 1 else 0)
     }
 
-    open fun attack(source: Any) {
-        TODO("Requires event implementation")
+    open fun attack(source: EntityDamageEvent) {
+        source.call()
+        if (source.isCancelled) {
+            return
+        }
+        lastDamageCause = source
+        setHealth(getHealth() - source.getFinalDamage())
     }
 
-    open fun heal(source: Any) {
-        TODO("Requires event implementation")
+    open fun heal(source: EntityRegainHealthEvent) {
+        source.call()
+        if (source.isCancelled) {
+            return
+        }
+        setHealth(getHealth() + source.amount)
     }
 
     open fun kill() {
@@ -311,7 +322,11 @@ abstract class Entity @JvmOverloads constructor(var location: Location, nbt: Com
         checkBlockCollision()
 
         if (location.y <= -16 && isAlive()) {
-            // TODO: attack(EntityDamageEvent)
+            attack(
+                EntityDamageEvent(
+                    this, EntityDamageEvent.Type.VOID, 10
+                )
+            )
             hasUpdate = true
         }
         if (isOnFire() && doOnFireTick(tickDiff)) {
@@ -370,7 +385,7 @@ abstract class Entity @JvmOverloads constructor(var location: Location, nbt: Com
     }
 
     fun scheduleUpdate() {
-        // TODO: world.updateEntities[id] = this
+        world.updateEntities[entityId] = this
     }
 
     fun isAlive(): Boolean {
@@ -425,7 +440,7 @@ abstract class Entity @JvmOverloads constructor(var location: Location, nbt: Com
     }
 
     protected open fun dealFireDamage() {
-        // TODO: attack(EntityDamageEvent) here
+        attack(EntityDamageEvent(this, EntityDamageEvent.Type.FIRE_TICK, 1))
     }
 
     open fun canCollideWith(entity: Entity): Boolean = !justCreated && entity != this
@@ -447,12 +462,12 @@ abstract class Entity @JvmOverloads constructor(var location: Location, nbt: Com
 
         if (teleport || diffPosition > 0.0001 || diffRotation > 1.0 || (!wasStill && still)) {
             lastLocation = location.asLocation()
-            // TODO: broadcastMovement(teleport)
+            broadcastMovement(teleport)
         }
 
         if (diffMotion > 0.0025 || wasStill != still) {
             lastMotion = motion.clone()
-            // TODO: broadcastMotion()
+            broadcastMotion()
         }
     }
 
