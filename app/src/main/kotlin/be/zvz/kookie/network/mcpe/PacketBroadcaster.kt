@@ -15,11 +15,10 @@
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  */
-package be.zvz.kookie.event.server
+package be.zvz.kookie.network.mcpe
 
-import be.zvz.kookie.command.CommandSender
-import be.zvz.kookie.event.Cancellable
+import be.zvz.kookie.network.mcpe.protocol.ClientboundPacket
 
-class CommandEvent(val sender: CommandSender, var command: String) : ServerEvent(), Cancellable {
-    override var isCancelled: Boolean = false
+interface PacketBroadcaster {
+    fun broadcastPackets(recipients: List<NetworkSession>, packets: List<ClientboundPacket>)
 }

@@ -17,7 +17,9 @@
  */
 package be.zvz.kookie.network.query
 
-class QueryInfo {
+import be.zvz.kookie.Server
+
+class QueryInfo(private val server: Server) {
 
     private var maxPlayers: Int = 0
     private var players = mapOf<Any, Any>()

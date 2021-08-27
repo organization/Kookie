@@ -41,7 +41,7 @@ class WorldManager(
     val dataPath: String,
     val providerManager: WorldProviderManager
 ) {
-    private val worldPath: Path get() = server.getDataPath().resolve("worlds")
+    private val worldPath: Path get() = server.dataPath.resolve("worlds")
 
     val logger: Logger = LoggerFactory.getLogger(this::class.java)
 

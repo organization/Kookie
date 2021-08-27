@@ -18,14 +18,22 @@
 package be.zvz.kookie.console
 
 import be.zvz.kookie.Server
+import be.zvz.kookie.command.ConsoleCommandSender
 import net.minecrell.terminalconsole.SimpleTerminalConsole
 import org.jline.reader.LineReader
 import org.jline.reader.LineReaderBuilder
 
-class KookieConsole(private val server: Server) : SimpleTerminalConsole() {
+class KookieConsole(
+    private val server: Server,
+    private val sender: ConsoleCommandSender
+) : SimpleTerminalConsole() {
+
     override fun isRunning(): Boolean = true
 
     override fun runCommand(command: String?) {
+        command?.let {
+            server.dispatchCommand(sender, it)
+        }
     }
 
     override fun shutdown() {
