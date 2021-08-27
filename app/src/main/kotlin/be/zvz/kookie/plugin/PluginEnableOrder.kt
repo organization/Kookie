@@ -15,11 +15,15 @@
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  */
-package be.zvz.kookie.event.server
+package be.zvz.kookie.plugin
 
-import be.zvz.kookie.command.CommandSender
-import be.zvz.kookie.event.Cancellable
+enum class PluginEnableOrder {
+    POSTWORLD, STARTUP;
 
-class CommandEvent(val sender: CommandSender, var command: String) : ServerEvent(), Cancellable {
-    override var isCancelled: Boolean = false
+    companion object {
+        private val VALUES = values()
+
+        @JvmStatic
+        fun fromString(name: String) = VALUES.first { name.lowercase() == it.name.lowercase() }
+    }
 }

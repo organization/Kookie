@@ -115,28 +115,26 @@ class Language @JvmOverloads constructor(langStr: String, path: String = "locale
         val newStringBuilder = StringBuilder()
         val replaceString = StringBuilder()
         text.forEach {
-            if (replaceString.isNotEmpty()) {
-                val ord = it.code
-                if (
-                    ord in 0x30..0x39 || // 0-9
-                    ord in 0x41..0x5a || // A-Z
-                    ord in 0x61..0x7a || // a-z
-                    it in arrayOf('.', '-')
-                ) {
-                    replaceString.append(it)
-                } else {
-                    val t = internalGet(replaceString.substring(1))
-                    if (t !== null && onlyPrefix !== null || replaceString.indexOf(onlyPrefix) == 1) {
-                        newStringBuilder.append(t)
-                    } else {
-                        newStringBuilder.append(replaceString)
+            when {
+                replaceString.isNotEmpty() -> {
+                    when (it) {
+                        in '0'..'9',
+                        in 'A'..'Z',
+                        in 'a'..'z',
+                        '.', '-' -> replaceString.append(it)
+                        else -> {
+                            val t = internalGet(replaceString.substring(1))
+                            if (t !== null && (onlyPrefix === null || replaceString.indexOf(onlyPrefix) == 1)) {
+                                newStringBuilder.append(t)
+                            } else {
+                                newStringBuilder.append(replaceString)
+                            }
+                            replaceString.clear()
+                        }
                     }
-                    replaceString.clear()
                 }
-            } else if (it == '%') {
-                replaceString.append(it)
-            } else {
-                newStringBuilder.append(it)
+                it == '%' -> replaceString.append(it)
+                else -> newStringBuilder.append(it)
             }
         }
 

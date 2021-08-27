@@ -44,6 +44,14 @@ object Timings {
     val population = TimingsHandler("World Population")
     val generation = TimingsHandler("World Generation")
 
+    val playerNetworkSend = TimingsHandler("Player Network Send")
+    val playerNetworkSendCompress =
+        TimingsHandler(INCLUDED_BY_OTHER_TIMINGS_PREFIX + "Player Network Send - Compression", playerNetworkSend)
+    val playerNetworkSendEncrypt =
+        TimingsHandler(INCLUDED_BY_OTHER_TIMINGS_PREFIX + "Player Network Send - Encryption", playerNetworkSend)
+
+    val broadcastPackets = TimingsHandler(INCLUDED_BY_OTHER_TIMINGS_PREFIX + "Broadcast Packets", playerNetworkSend)
+
     @JvmStatic
     fun getTileEntityTimings(tile: Tile): TimingsHandler {
         var exist = timings[tile::class.java.simpleName]

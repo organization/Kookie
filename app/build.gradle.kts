@@ -22,14 +22,14 @@ import org.jmailen.gradle.kotlinter.tasks.LintTask
 
 plugins {
     // Apply the org.jetbrains.kotlin.jvm Plugin to add support for Kotlin.
-    kotlin("jvm") version "1.5.21"
+    kotlin("jvm") version "1.5.30"
 
     // Apply the application plugin to add support for building a CLI application in Java.
     application
 
     id("com.gorylenko.gradle-git-properties") version "2.3.1"
 
-    id("org.jmailen.kotlinter") version "3.4.5"
+    id("org.jmailen.kotlinter") version "3.5.1"
     id("com.github.johnrengelman.shadow") version "7.0.0"
 }
 
@@ -84,7 +84,7 @@ dependencies {
     implementation(group = "commons-io", name = "commons-io", version = "2.11.0")
 
     // jna
-    implementation(group = "net.java.dev.jna", name = "jna", version = "5.8.0")
+    implementation(group = "net.java.dev.jna", name = "jna", version = "5.9.0")
 
     // Logger
     implementation(group = "org.slf4j", name = "slf4j-api", version = "1.7.32")
@@ -92,7 +92,7 @@ dependencies {
     implementation(group = "org.fusesource.jansi", name = "jansi", version = "1.18")
 
     // netty
-    implementation(group = "io.netty", name = "netty-all", version = "4.1.66.Final")
+    implementation(group = "io.netty", name = "netty-all", version = "4.1.67.Final")
 
     // bedrock-network
     implementation(group = "org.powernukkit.bedrock.network", name = "raknet", version = "1.6.25-PN.2")

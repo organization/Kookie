@@ -60,7 +60,7 @@ class TimingsHandler @JvmOverloads constructor(
         parent?.internalStopTiming(now)
     }
 
-    fun time(callback: () -> Any): Any {
+    inline fun <T> time(callback: () -> T): T {
         startTiming()
         try {
             return callback()
