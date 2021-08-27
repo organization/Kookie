@@ -72,7 +72,7 @@ dependencies {
 
     // jline (console)
     implementation(group = "org.jline", name = "jline", version = "3.20.0")
-    implementation(group = "net.minecrell", name = "terminalconsoleappender", version = "1.2.0")
+    implementation(group = "net.minecrell", name = "terminalconsoleappender", version = "1.3.0")
 
     // Jackson
     implementation(group = "com.fasterxml.jackson.module", name = "jackson-module-kotlin", version = "2.12.4")
