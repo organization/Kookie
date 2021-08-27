@@ -289,17 +289,17 @@ class Server(dataPath: Path, pluginPath: Path) {
             if (configGroup.getProperty("settings.enable-dev-builds").asBoolean(false)) {
                 logger.error(
                     language.translateString(
-                        KnownTranslationKeys.POCKETMINE_SERVER_DEVBUILD_ERROR1,
+                        KnownTranslationKeys.KOOKIE_SERVER_DEVBUILD_ERROR1,
                         listOf(
                             VersionInfo.NAME
                         )
                     )
                 )
-                logger.error(language.translateString(KnownTranslationKeys.POCKETMINE_SERVER_DEVBUILD_ERROR2))
-                logger.error(language.translateString(KnownTranslationKeys.POCKETMINE_SERVER_DEVBUILD_ERROR3))
+                logger.error(language.translateString(KnownTranslationKeys.KOOKIE_SERVER_DEVBUILD_ERROR2))
+                logger.error(language.translateString(KnownTranslationKeys.KOOKIE_SERVER_DEVBUILD_ERROR3))
                 logger.error(
                     language.translateString(
-                        KnownTranslationKeys.POCKETMINE_SERVER_DEVBUILD_ERROR4,
+                        KnownTranslationKeys.KOOKIE_SERVER_DEVBUILD_ERROR4,
                         listOf(
                             "settings.enable-dev-builds"
                         )
@@ -307,7 +307,7 @@ class Server(dataPath: Path, pluginPath: Path) {
                 )
                 logger.error(
                     language.translateString(
-                        KnownTranslationKeys.POCKETMINE_SERVER_DEVBUILD_ERROR5,
+                        KnownTranslationKeys.KOOKIE_SERVER_DEVBUILD_ERROR5,
                         listOf(
                             "https://github.com/organization/Kookie/releases"
                         )
@@ -326,7 +326,7 @@ class Server(dataPath: Path, pluginPath: Path) {
         )
 
         language.translateString(
-            KnownTranslationKeys.POCKETMINE_SERVER_START,
+            KnownTranslationKeys.KOOKIE_SERVER_START,
             listOf(ProtocolInfo.MINECRAFT_VERSION_NETWORK.brightCyan())
         )
 
@@ -337,7 +337,7 @@ class Server(dataPath: Path, pluginPath: Path) {
         asyncPool = AsyncPool(
             configGroup.getProperty("settings.async-workers").text().run {
                 var poolSize = 2
-                if (this ?: "auto" == "auto") {
+                if ((this ?: "auto") == "auto") {
                     val processors = Runtime.getRuntime().availableProcessors() - 2
 
                     if (processors > 0) {

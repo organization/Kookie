@@ -91,8 +91,8 @@ class SetupWizard(private val dataPath: Path) {
 
     private fun endWizard() {
         logger.info(lang.get(KnownTranslationKeys.YOU_HAVE_FINISHED))
-        logger.info(lang.get(KnownTranslationKeys.POCKETMINE_PLUGINS))
-        logger.info(lang.translateString(KnownTranslationKeys.POCKETMINE_WILL_START, listOf(VersionInfo.NAME)))
+        logger.info(lang.get(KnownTranslationKeys.KOOKIE_PLUGINS))
+        logger.info(lang.translateString(KnownTranslationKeys.KOOKIE_WILL_START, listOf(VersionInfo.NAME)))
 
         println()
         println()

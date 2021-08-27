@@ -86,16 +86,16 @@ class WorldManager(
         if (providers.size != 1) {
             logger.error(
                 server.language.translateString(
-                    KnownTranslationKeys.POCKETMINE_LEVEL_LOADERROR,
+                    KnownTranslationKeys.KOOKIE_LEVEL_LOADERROR,
                     listOf(
                         name,
                         if (providers.isEmpty()) {
                             server.language.translateString(
-                                KnownTranslationKeys.POCKETMINE_LEVEL_UNKNOWNFORMAT
+                                KnownTranslationKeys.KOOKIE_LEVEL_UNKNOWNFORMAT
                             )
                         } else {
                             server.language.translateString(
-                                KnownTranslationKeys.POCKETMINE_LEVEL_AMBIGUOUSFORMAT,
+                                KnownTranslationKeys.KOOKIE_LEVEL_AMBIGUOUSFORMAT,
                                 providers.keys.joinToString(", ")
                             )
                         }
@@ -108,7 +108,7 @@ class WorldManager(
         if (providerClass == null) {
             logger.error(
                 server.language.translateString(
-                    KnownTranslationKeys.POCKETMINE_LEVEL_UNKNOWNFORMAT
+                    KnownTranslationKeys.KOOKIE_LEVEL_UNKNOWNFORMAT
                 )
             )
             return false
@@ -120,7 +120,7 @@ class WorldManager(
             } catch (e: IllegalArgumentException) {
                 logger.error(
                     server.language.translateString(
-                        KnownTranslationKeys.POCKETMINE_LEVEL_LOADERROR,
+                        KnownTranslationKeys.KOOKIE_LEVEL_LOADERROR,
                         listOf(
                             name,
                             "Unknown generator \"${provider.worldData.generatorName}\""
@@ -144,7 +144,7 @@ class WorldManager(
         } catch (e: CorruptedWorldException) {
             logger.error(
                 server.language.translateString(
-                    KnownTranslationKeys.POCKETMINE_LEVEL_LOADERROR,
+                    KnownTranslationKeys.KOOKIE_LEVEL_LOADERROR,
                     listOf(
                         name,
                         "Corrupted data detected: ${e.message}"
@@ -155,7 +155,7 @@ class WorldManager(
         } catch (e: UnsupportedWorldFormatException) {
             logger.error(
                 server.language.translateString(
-                    KnownTranslationKeys.POCKETMINE_LEVEL_LOADERROR,
+                    KnownTranslationKeys.KOOKIE_LEVEL_LOADERROR,
                     listOf(
                         name,
                         "Unsupported format: ${e.message}"
@@ -187,7 +187,7 @@ class WorldManager(
         if (backgroundCreation) {
             logger.info(
                 server.language.translateString(
-                    KnownTranslationKeys.POCKETMINE_LEVEL_BACKGROUNDGENERATION,
+                    KnownTranslationKeys.KOOKIE_LEVEL_BACKGROUNDGENERATION,
                     listOf(name)
                 )
             )
@@ -237,7 +237,7 @@ class WorldManager(
         }
         logger.info(
             server.language.translateString(
-                KnownTranslationKeys.POCKETMINE_LEVEL_UNLOADING,
+                KnownTranslationKeys.KOOKIE_LEVEL_UNLOADING,
                 listOf(world.displayName)
             )
         )
