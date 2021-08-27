@@ -185,7 +185,7 @@ class World(
 
     val chunkTickRadius: Int =
         min(
-            max(2, server.getViewDistance()),
+            max(2, server.viewDistance),
             max(1, server.configGroup.getProperty("chunk-ticking.tick-radius").asLong(4).toInt())
         )
     val chunksPerTick: Int = server.configGroup.getProperty("chunk-ticking.per-tick").asLong(40).toInt()

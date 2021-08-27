@@ -15,11 +15,11 @@
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  */
-package be.zvz.kookie.event.server
+package be.zvz.kookie.plugin
 
-import be.zvz.kookie.command.CommandSender
-import be.zvz.kookie.event.Cancellable
-
-class CommandEvent(val sender: CommandSender, var command: String) : ServerEvent(), Cancellable {
-    override var isCancelled: Boolean = false
+/**
+ * This interface may be implemented by objects which are owned by plugins, to allow them to be identified as such.
+ */
+interface PluginOwned {
+    val owningPlugin: Plugin
 }

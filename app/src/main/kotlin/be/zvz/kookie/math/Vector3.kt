@@ -142,7 +142,7 @@ open class Vector3 @JvmOverloads constructor(var x: Double = 0.0, var y: Double 
     @JvmOverloads
     fun sidesAroundAxis(axis: Axis, step: Int = 1) = sequence {
         Facing.ALL.forEach {
-            if (Facing.axis(it.value) != axis.value) {
+            if (it.axis != axis) {
                 yield(Pair(it, getSide(it, step)))
             }
         }
