@@ -35,6 +35,8 @@ plugins {
 
 val tag = System.getenv("VERSION_TAG") ?: "SNAPSHOT"
 
+val protocolVer = "v448"
+
 group = "be.zvz"
 version = "0.0.1-$tag"
 java.sourceCompatibility = JavaVersion.VERSION_1_8
@@ -113,6 +115,9 @@ dependencies {
     runtimeOnly(group = "io.jsonwebtoken", name = "jjwt-impl", version = "0.11.2")
     runtimeOnly(group = "io.jsonwebtoken", name = "jjwt-jackson", version = "0.11.2")
     implementation(group = "org.whispersystems", name = "curve25519-java", version = "0.5.0")
+
+    // Bedrock Protocol
+    implementation(group = "org.powernukkit.bedrock.protocol", name = "bedrock-$protocolVer", version = "2.8.1-PN-SNAPSHOT")
 
     // Use the Kotlin test library.
     testImplementation(group = "org.jetbrains.kotlin", name = "kotlin-test")
