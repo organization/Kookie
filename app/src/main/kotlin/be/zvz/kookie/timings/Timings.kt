@@ -25,7 +25,6 @@ import be.zvz.kookie.network.mcpe.protocol.ProtocolInfo
 import be.zvz.kookie.player.Player
 import be.zvz.kookie.scheduler.TaskHandler
 import com.koloboke.collect.map.hash.HashObjObjMaps
-import com.nukkitx.protocol.bedrock.BedrockPacket
 
 object Timings {
     const val INCLUDED_BY_OTHER_TIMINGS_PREFIX = "** "
@@ -64,8 +63,13 @@ object Timings {
     }
 
     @JvmStatic
-    fun getPacketDecodeTimings(packet: BedrockPacket): TimingsHandler {
-        val networkId = packet.packetId
+    fun getPacketDecodeTimings(packet: DataPacket): TimingsHandler {
+        val protocolIdentify = this::class.java.getAnnotation(ProtocolIdentify::class.java)!!
+        val networkId = if (protocolIdentify.networkId == ProtocolInfo.IDS.UNKNOWN && protocolIdentify.customId != -1) {
+            protocolIdentify.customId
+        } else {
+            protocolIdentify.networkId.id
+        }
         val key = "PacketDecode: $networkId"
         var exist = timings[key]
         if (exist === null) {
@@ -76,8 +80,13 @@ object Timings {
     }
 
     @JvmStatic
-    fun getPacketSendTimings(packet: BedrockPacket): TimingsHandler {
-        val networkId = packet.packetId
+    fun getPacketSendTimings(packet: DataPacket): TimingsHandler {
+        val protocolIdentify = this::class.java.getAnnotation(ProtocolIdentify::class.java)!!
+        val networkId = if (protocolIdentify.networkId == ProtocolInfo.IDS.UNKNOWN && protocolIdentify.customId != -1) {
+            protocolIdentify.customId
+        } else {
+            protocolIdentify.networkId.id
+        }
         val key = "PacketSend: $networkId"
         var exist = timings[key]
         if (exist === null) {

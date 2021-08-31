@@ -35,6 +35,12 @@ import be.zvz.kookie.nbt.tag.CompoundTag
 import be.zvz.kookie.network.Network
 import be.zvz.kookie.network.mcpe.NetworkSession
 import be.zvz.kookie.network.mcpe.PacketBroadcaster
+import be.zvz.kookie.network.mcpe.compression.CompressBatchPromise
+import be.zvz.kookie.network.mcpe.compression.Compressor
+import be.zvz.kookie.network.mcpe.protocol.ClientboundPacket
+import be.zvz.kookie.network.mcpe.protocol.ProtocolInfo
+import be.zvz.kookie.network.mcpe.protocol.serializer.PacketBatch
+import be.zvz.kookie.network.mcpe.raklib.RakLibInterface
 import be.zvz.kookie.network.query.QueryInfo
 import be.zvz.kookie.permission.BanList
 import be.zvz.kookie.permission.DefaultPermissions
@@ -45,6 +51,7 @@ import be.zvz.kookie.plugin.PluginEnableOrder
 import be.zvz.kookie.plugin.PluginManager
 import be.zvz.kookie.plugin.PluginOwned
 import be.zvz.kookie.scheduler.AsyncPool
+import be.zvz.kookie.scheduler.AsyncTask
 import be.zvz.kookie.timings.Timings
 import be.zvz.kookie.timings.TimingsHandler
 import be.zvz.kookie.utils.Config
@@ -58,9 +65,6 @@ import be.zvz.kookie.world.WorldManager
 import ch.qos.logback.classic.Logger
 import com.koloboke.collect.map.hash.HashObjObjMaps
 import com.koloboke.collect.set.hash.HashObjSets
-import com.nukkitx.protocol.bedrock.BedrockPacket
-import com.nukkitx.protocol.bedrock.BedrockServer
-import com.nukkitx.protocol.bedrock.v448.Bedrock_v448
 import org.apache.commons.io.IOUtils
 import org.slf4j.LoggerFactory
 import java.io.BufferedOutputStream
@@ -80,7 +84,7 @@ class Server(dataPath: Path, pluginPath: Path) {
     val name: String get() = VersionInfo.NAME
     val kookieVersion: String = TODO()
     val apiVersion: String get() = VersionInfo.BASE_VERSION
-    val version: String get() = currentVersion.minecraftVersion
+    val version: String get() = ProtocolInfo.MINECRAFT_VERSION_NETWORK
 
     val ip: String get() = configGroup.getConfigString("server-ip", "0.0.0.0").takeIf { it.isNotBlank() } ?: "0.0.0.0"
     val port: Int get() = configGroup.getConfigLong("server-port", 19132).toInt()
@@ -193,8 +197,6 @@ class Server(dataPath: Path, pluginPath: Path) {
     private val playerList: MutableMap<UUID, Player> = HashObjObjMaps.newMutableMap()
 
     private val broadcastSubscribers: MutableMap<String, MutableSet<CommandSender>> = HashObjObjMaps.newMutableMap()
-
-    val bedrockServer: BedrockServer
 
     init {
         instance = this
@@ -315,13 +317,17 @@ class Server(dataPath: Path, pluginPath: Path) {
             }
         }
 
-        bedrockServer = BedrockServer(InetSocketAddress("0.0.0.0", port))
-
-        bedrockServer.bind()
+        network.addInterface(
+            RakLibInterface(
+                this,
+                network.getSessionManager(),
+                InetSocketAddress("0.0.0.0", configGroup.getConfigLong("server-port").toInt())
+            )
+        )
 
         language.translateString(
             KnownTranslationKeys.POCKETMINE_SERVER_START,
-            listOf(currentVersion.minecraftVersion.brightCyan())
+            listOf(ProtocolInfo.MINECRAFT_VERSION_NETWORK.brightCyan())
         )
 
         thread(isDaemon = true, name = "${VersionInfo.NAME}-console") {
@@ -331,7 +337,7 @@ class Server(dataPath: Path, pluginPath: Path) {
         asyncPool = AsyncPool(
             configGroup.getProperty("settings.async-workers").text().run {
                 var poolSize = 2
-                if ((this ?: "auto") == "auto") {
+                if (this ?: "auto" == "auto") {
                     val processors = Runtime.getRuntime().availableProcessors() - 2
 
                     if (processors > 0) {
@@ -444,8 +450,7 @@ class Server(dataPath: Path, pluginPath: Path) {
         }
     }
 
-    fun isWhitelisted(username: String): Boolean =
-        !hasWhiteList || isOp(username) || whitelist.exists(username.lowercase())
+    fun isWhitelisted(username: String): Boolean = !hasWhiteList || isOp(username) || whitelist.exists(username.lowercase())
 
     /**
      * Subscribes to a particular message broadcast channel.
@@ -526,7 +531,7 @@ class Server(dataPath: Path, pluginPath: Path) {
         return recipients.size
     }
 
-    fun broadcastPackets(players: List<Player>, packets: List<BedrockPacket>): Boolean {
+    fun broadcastPackets(players: List<Player>, packets: List<ClientboundPacket>): Boolean {
         if (players.isEmpty() || packets.isEmpty()) return true
 
         Timings.broadcastPackets.time {
@@ -536,8 +541,7 @@ class Server(dataPath: Path, pluginPath: Path) {
                 return false
             }
 
-            val broadcasterTargets: MutableMap<PacketBroadcaster, MutableList<NetworkSession>> =
-                HashObjObjMaps.newMutableMap()
+            val broadcasterTargets: MutableMap<PacketBroadcaster, MutableList<NetworkSession>> = HashObjObjMaps.newMutableMap()
             ev.targets.forEach { recipient ->
                 /** TODO: Implements after implementing NetworkSession::getBroadcaster()
                  * val broadcaster = recipient.getBroadcaster()
@@ -553,7 +557,6 @@ class Server(dataPath: Path, pluginPath: Path) {
     }
 
     /** Broadcasts a list of packets in a batch to a list of players */
-    /*
     fun prepareBatch(stream: PacketBatch, compressor: Compressor, sync: Boolean? = null): CompressBatchPromise {
         try {
             Timings.playerNetworkSendCompress.startTiming()
@@ -578,7 +581,6 @@ class Server(dataPath: Path, pluginPath: Path) {
             Timings.playerNetworkSendCompress.stopTiming()
         }
     }
-     */
 
     fun enablePlugins(type: PluginEnableOrder) {
         /** TODO: Implements after implementing PluginManager::getPlugins()
@@ -746,8 +748,5 @@ class Server(dataPath: Path, pluginPath: Path) {
 
         @JvmStatic
         lateinit var instance: Server
-
-        @JvmStatic
-        val currentVersion = Bedrock_v448.V448_CODEC
     }
 }
