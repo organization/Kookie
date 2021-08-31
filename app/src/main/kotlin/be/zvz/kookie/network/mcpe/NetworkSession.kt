@@ -21,19 +21,14 @@ import be.zvz.kookie.Server
 import be.zvz.kookie.entity.Attribute
 import be.zvz.kookie.entity.Living
 import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
-import be.zvz.kookie.network.mcpe.protocol.ClientboundPacket
-import be.zvz.kookie.network.mcpe.protocol.DataPacket
-import be.zvz.kookie.network.mcpe.protocol.Packet
-import be.zvz.kookie.network.mcpe.protocol.UpdateAttributesPacket
-import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
-import be.zvz.kookie.network.mcpe.protocol.types.entity.NetworkAttribute
 import be.zvz.kookie.player.Player
 import be.zvz.kookie.player.PlayerInfo
 import be.zvz.kookie.timings.Timings
-import com.nukkitx.network.raknet.RakNetSession
-import com.nukkitx.network.util.DisconnectReason
+import com.nukkitx.protocol.bedrock.BedrockPacket
+import com.nukkitx.protocol.bedrock.BedrockSession
+import com.nukkitx.protocol.bedrock.data.AttributeData
+import com.nukkitx.protocol.bedrock.packet.UpdateAttributesPacket
 import io.netty.buffer.ByteBuf
-import io.netty.buffer.Unpooled
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.util.Date
@@ -41,7 +36,7 @@ import java.util.Date
 class NetworkSession(
     private val server: Server,
     private val sessionManager: NetworkSessionManager,
-    private val session: RakNetSession,
+    private val session: BedrockSession,
 ) {
 
     val logger: Logger = LoggerFactory.getLogger(NetworkSession::class.java)
@@ -50,7 +45,7 @@ class NetworkSession(
     private var info: PlayerInfo? = null
     private var connected = false
     private var connectedTime = Date()
-    private val sendBuffer = mutableListOf<Packet>()
+    private val sendBuffer = mutableListOf<BedrockPacket>()
 
     private var handler: PacketHandlerInterface? = null
 
@@ -80,46 +75,21 @@ class NetworkSession(
                 attribute.markSynchronized()
             }
         }
-
-        flushSendBuffer()
         return true
     }
 
     @JvmOverloads
-    fun sendDataPacket(packet: DataPacket, immediate: Boolean = false) {
+    fun sendDataPacket(packet: BedrockPacket, immediate: Boolean = false) {
         // TODO: call DataPacketSendEvent on here
         val timings = Timings.getPacketSendTimings(packet)
         timings.startTiming()
         try {
-            if (packet !is ClientboundPacket) {
-                throw InvalidPacketException("Cannot send non-clientbound packet to ${getDisplayName()}")
-            }
-            if (info == null && !packet.canBeSentBeforeLogin()) {
-                throw InvalidPacketException("Cannot send ${packet.getName()} to ${getDisplayName()} before login")
+            if (info == null /*&& !packet.canBeSentBeforeLogin()*/) {
+                throw InvalidPacketException("Cannot send ${packet::class.java.simpleName} to ${getDisplayName()} before login")
             }
 
             sendBuffer.add(packet)
             sessionManager.scheduleUpdate(this)
-        } finally {
-            timings.stopTiming()
-        }
-    }
-
-    fun handleDataPacket(packet: DataPacket, buffer: ByteBuf) {
-        val timings = Timings.getPacketDecodeTimings(packet)
-        timings.startTiming()
-        try {
-            val serializer = PacketSerializer(buffer.toString())
-            packet.decode(serializer)
-            if (!serializer.feof()) {
-                val remains = serializer.buffer.substring(serializer.offset.get())
-                logger.debug("Still ${remains.length} bytes unread in ${packet.getName()}")
-            }
-            handler?.let {
-                if (!packet.handle(it)) {
-                    logger.debug("Unhandled ${packet.getName()}")
-                }
-            }
         } finally {
             timings.stopTiming()
         }
@@ -130,11 +100,11 @@ class NetworkSession(
 
     fun syncAttributes(entity: Living, attributes: Map<Attribute.Identifier, Attribute>) {
         if (attributes.isNotEmpty()) {
-            val networkAttributes: MutableList<NetworkAttribute> = mutableListOf()
+            val networkAttributes: MutableList<AttributeData> = mutableListOf()
             attributes.forEach { (id, attribute) ->
                 networkAttributes.add(
-                    NetworkAttribute(
-                        id,
+                    AttributeData(
+                        id.name,
                         attribute.minValue,
                         attribute.maxValue,
                         attribute.currentValue,
@@ -143,35 +113,15 @@ class NetworkSession(
                 )
             }
             val pk = UpdateAttributesPacket()
-            pk.entityRuntimeId = 0L // TODO: Entity runtime id
-            pk.entries = networkAttributes
+            pk.runtimeEntityId = 0L // TODO: Entity runtime id
+            pk.attributes = networkAttributes
             sendDataPacket(pk)
-        }
-    }
-
-    private fun flushSendBuffer(immediate: Boolean = false) {
-        try {
-            if (sendBuffer.size > 0) {
-                if (immediate) {
-                    sendBuffer.forEach {
-                        val serializer = PacketSerializer()
-                        it.encode(serializer)
-                        // TODO: packet encryption here
-                        session.send(Unpooled.copiedBuffer(serializer.buffer.toString().toByteArray()))
-                    }
-                    return
-                } else {
-                    TODO("non-immediate buffer, should compressed with zlib")
-                }
-            }
-        } finally {
-            sendBuffer.clear()
         }
     }
 
     @JvmOverloads
     fun disconnect(reason: String, notify: Boolean = true) {
-        session.disconnect(DisconnectReason.DISCONNECTED)
+        session.disconnect()
     }
 
     fun getDisplayName(): String {

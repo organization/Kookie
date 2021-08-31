@@ -27,7 +27,6 @@ import be.zvz.kookie.lang.Language
 import be.zvz.kookie.lang.TranslationContainer
 import be.zvz.kookie.nbt.tag.CompoundTag
 import be.zvz.kookie.network.mcpe.NetworkSession
-import be.zvz.kookie.network.mcpe.protocol.TextPacket
 import be.zvz.kookie.permission.Permission
 import be.zvz.kookie.permission.PermissionAttachment
 import be.zvz.kookie.permission.PermissionAttachmentInfo
@@ -39,6 +38,7 @@ import be.zvz.kookie.world.World
 import be.zvz.kookie.world.format.Chunk
 import com.koloboke.collect.map.hash.HashLongObjMaps
 import com.koloboke.collect.set.hash.HashLongSets
+import com.nukkitx.protocol.bedrock.packet.TextPacket
 import org.slf4j.LoggerFactory
 import kotlin.math.min
 import kotlin.math.pow
@@ -87,11 +87,20 @@ class Player(
         }
 
     override fun sendMessage(message: String) {
-        networkSession.sendDataPacket(TextPacket.raw(message))
+        networkSession.sendDataPacket(TextPacket().apply {
+            this.type = TextPacket.Type.CHAT
+            this.message = message
+            this.isNeedsTranslation = true
+        })
     }
 
     override fun sendMessage(message: TranslationContainer) {
-        networkSession.sendDataPacket(TextPacket.translation(message.text, message.params.toMutableList()))
+        networkSession.sendDataPacket(TextPacket().apply {
+            this.type = TextPacket.Type.TRANSLATION
+            this.message = message.text
+            this.parameters = message.params
+            this.isNeedsTranslation = true
+        })
     }
 
     override fun getScreenLineHeight(): Int {
