@@ -53,6 +53,14 @@ repositories {
         url = uri("https://oss.sonatype.org/content/repositories/snapshots")
     }
     maven {
+        name = "nukkitx-repo-release"
+        url = uri("https://repo.nukkitx.com/maven-releases/")
+    }
+    maven {
+        name = "nukkitx-repo-snapshots"
+        url = uri("https://repo.nukkitx.com/maven-snapshots/")
+    }
+    maven {
         name = "jitpack"
         url = uri("https://jitpack.io")
     }
