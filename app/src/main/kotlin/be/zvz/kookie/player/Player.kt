@@ -43,7 +43,7 @@ import org.slf4j.LoggerFactory
 import kotlin.math.min
 import kotlin.math.pow
 
-class Player(
+open class Player(
     override var server: Server,
     val networkSession: NetworkSession,
     playerInfo: PlayerInfo,
@@ -150,7 +150,7 @@ class Player(
         TODO("Not yet implemented")
     }
 
-    fun doChunkRequest() {
+    open fun doChunkRequest() {
         if (nextChunkOrderRun != Int.MAX_VALUE && nextChunkOrderRun-- <= 0) {
             nextChunkOrderRun = Int.MAX_VALUE
             orderChunks()
@@ -298,13 +298,13 @@ class Player(
      * Returns whether the player is using the chunk with the given coordinates,
      *  irrespective of whether the chunk has been sent yet.
      */
-    fun isUsingChunk(chunkX: Int, chunkZ: Int): Boolean = usedChunks.containsKey(World.chunkHash(chunkX, chunkZ))
+    open fun isUsingChunk(chunkX: Int, chunkZ: Int): Boolean = usedChunks.containsKey(World.chunkHash(chunkX, chunkZ))
 
     /** Returns a usage status of the given chunk, or null if the player is not using the given chunk.  */
-    fun getUsedChunkStatus(chunkX: Int, chunkZ: Int): UsedChunkStatus? = usedChunks[World.chunkHash(chunkX, chunkZ)]
+    open fun getUsedChunkStatus(chunkX: Int, chunkZ: Int): UsedChunkStatus? = usedChunks[World.chunkHash(chunkX, chunkZ)]
 
     /** Returns whether the target chunk has been sent to this player. */
-    fun hasReceivedChunk(chunkX: Int, chunkZ: Int): Boolean = getUsedChunkStatus(chunkX, chunkZ) == UsedChunkStatus.SENT
+    open fun hasReceivedChunk(chunkX: Int, chunkZ: Int): Boolean = getUsedChunkStatus(chunkX, chunkZ) == UsedChunkStatus.SENT
 
     override fun onChunkChanged(chunkX: Int, chunkZ: Int, chunk: Chunk) {
         if (hasReceivedChunk(chunkX, chunkZ)) {
