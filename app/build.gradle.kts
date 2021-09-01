@@ -82,13 +82,13 @@ dependencies {
 
     // jline (console)
     implementation(group = "org.jline", name = "jline", version = "3.20.0")
-    implementation(group = "net.minecrell", name = "terminalconsoleappender", version = "1.2.0")
+    implementation(group = "net.minecrell", name = "terminalconsoleappender", version = "1.3.0")
 
     // Jackson
-    implementation(group = "com.fasterxml.jackson.module", name = "jackson-module-kotlin", version = "2.12.4")
-    implementation(group = "com.fasterxml.jackson.module", name = "jackson-module-afterburner", version = "2.12.4")
-    implementation(group = "com.fasterxml.jackson.dataformat", name = "jackson-dataformat-yaml", version = "2.12.4")
-    implementation(group = "com.fasterxml.jackson.dataformat", name = "jackson-dataformat-properties", version = "2.12.4")
+    implementation(group = "com.fasterxml.jackson.module", name = "jackson-module-kotlin", version = "2.12.5")
+    implementation(group = "com.fasterxml.jackson.module", name = "jackson-module-afterburner", version = "2.12.5")
+    implementation(group = "com.fasterxml.jackson.dataformat", name = "jackson-dataformat-yaml", version = "2.12.5")
+    implementation(group = "com.fasterxml.jackson.dataformat", name = "jackson-dataformat-properties", version = "2.12.5")
 
     // Apache commons IO
     implementation(group = "commons-io", name = "commons-io", version = "2.11.0")
