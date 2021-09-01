@@ -30,8 +30,8 @@ import be.zvz.kookie.network.mcpe.protocol.types.entity.NetworkAttribute
 import be.zvz.kookie.player.Player
 import be.zvz.kookie.player.PlayerInfo
 import be.zvz.kookie.timings.Timings
-import com.nukkitx.network.raknet.RakNetSession
 import com.nukkitx.network.util.DisconnectReason
+import com.nukkitx.protocol.bedrock.BedrockServerSession
 import io.netty.buffer.ByteBuf
 import io.netty.buffer.Unpooled
 import org.slf4j.Logger
@@ -41,7 +41,7 @@ import java.util.Date
 class NetworkSession(
     private val server: Server,
     private val sessionManager: NetworkSessionManager,
-    private val session: RakNetSession,
+    private val session: BedrockServerSession,
 ) {
 
     val logger: Logger = LoggerFactory.getLogger(NetworkSession::class.java)
@@ -171,7 +171,7 @@ class NetworkSession(
 
     @JvmOverloads
     fun disconnect(reason: String, notify: Boolean = true) {
-        session.disconnect(DisconnectReason.DISCONNECTED)
+        session.disconnect(reason)
     }
 
     fun getDisplayName(): String {
