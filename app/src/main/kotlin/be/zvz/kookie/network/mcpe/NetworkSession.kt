@@ -118,6 +118,4 @@ class NetworkSession(
     fun getDisplayName(): String {
         return info?.getUsername() ?: session.address.toString()
     }
-
-    class InvalidPacketException(message: String) : RuntimeException(message)
 }
