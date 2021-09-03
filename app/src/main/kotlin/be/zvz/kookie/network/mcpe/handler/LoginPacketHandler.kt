@@ -12,7 +12,7 @@ import net.minidev.json.parser.JSONParser
 class LoginPacketHandler(
     val networkSession: NetworkSession,
     val playerInfoConsumer: (PlayerInfo) -> Unit,
-    val authenticatedConsumer: ()
+    val authenticatedConsumer: () -> Unit
 ) : BedrockPacketHandler {
 
     override fun handle(packet: LoginPacket): Boolean {

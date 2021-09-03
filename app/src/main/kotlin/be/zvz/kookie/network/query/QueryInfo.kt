@@ -21,11 +21,8 @@ import be.zvz.kookie.Server
 
 class QueryInfo(private val server: Server) {
 
-    private var maxPlayers: Int = 0
-    private var players = mapOf<Any, Any>()
-    private var plugins = mapOf<Any, Any>()
+    var maxPlayers: Int = 0
+    var players: List<String> = mutableListOf()
+    var motd: String = server.motd
 
-    fun getPlayerCount(): Int = players.size
-
-    fun getMaxPlayerCount(): Int = maxPlayers
 }

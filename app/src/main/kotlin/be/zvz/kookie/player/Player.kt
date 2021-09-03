@@ -27,7 +27,6 @@ import be.zvz.kookie.lang.Language
 import be.zvz.kookie.lang.TranslationContainer
 import be.zvz.kookie.nbt.tag.CompoundTag
 import be.zvz.kookie.network.mcpe.NetworkSession
-import be.zvz.kookie.network.mcpe.protocol.TextPacket
 import be.zvz.kookie.permission.Permission
 import be.zvz.kookie.permission.PermissionAttachment
 import be.zvz.kookie.permission.PermissionAttachmentInfo
@@ -39,6 +38,7 @@ import be.zvz.kookie.world.World
 import be.zvz.kookie.world.format.Chunk
 import com.koloboke.collect.map.hash.HashLongObjMaps
 import com.koloboke.collect.set.hash.HashLongSets
+import com.nukkitx.protocol.bedrock.packet.TextPacket
 import org.slf4j.LoggerFactory
 import kotlin.math.min
 import kotlin.math.pow
@@ -79,7 +79,10 @@ open class Player(
             field = server.getAllowedViewDistance(value)
             spawnThreshold = min(
                 value,
-                (server.configGroup.getProperty("chunk-sending.spawn-radius").asLong(4).toDouble().pow(2) * Math.PI).toInt()
+                (
+                    server.configGroup.getProperty("chunk-sending.spawn-radius").asLong(4).toDouble()
+                        .pow(2) * Math.PI
+                    ).toInt()
             )
             nextChunkOrderRun = 0
             // TODO: networkSession.syncViewAreaRadius(viewDistance)
@@ -87,11 +90,22 @@ open class Player(
         }
 
     override fun sendMessage(message: String) {
-        networkSession.sendDataPacket(TextPacket.raw(message))
+        networkSession.sendDataPacket(
+            TextPacket().apply {
+                type = TextPacket.Type.RAW
+                this.message = message
+            }
+        )
     }
 
     override fun sendMessage(message: TranslationContainer) {
-        networkSession.sendDataPacket(TextPacket.translation(message.text, message.params.toMutableList()))
+        networkSession.sendDataPacket(
+            TextPacket().apply {
+                type = TextPacket.Type.TRANSLATION
+                this.message = message.text
+                parameters = message.params
+            }
+        )
     }
 
     override fun getScreenLineHeight(): Int {
@@ -237,13 +251,14 @@ open class Player(
         loadQueue.clear()
         val unloadChunks = HashLongObjMaps.newMutableMap(usedChunks)
 
-        chunkSelector.selectChunks(viewDistance, location.x.toInt() shr 4, location.z.toInt() shr 4).forEach { chunkHash ->
-            val status = usedChunks[chunkHash]?.equals(UsedChunkStatus.NEEDED)
-            if (status === null || status == true) {
-                loadQueue.add(chunkHash)
+        chunkSelector.selectChunks(viewDistance, location.x.toInt() shr 4, location.z.toInt() shr 4)
+            .forEach { chunkHash ->
+                val status = usedChunks[chunkHash]?.equals(UsedChunkStatus.NEEDED)
+                if (status === null || status == true) {
+                    loadQueue.add(chunkHash)
+                }
+                unloadChunks.remove(chunkHash)
             }
-            unloadChunks.remove(chunkHash)
-        }
 
         unloadChunks.keys.forEach { chunkHash ->
             val (chunkX, chunkZ) = World.parseChunkHash(chunkHash)
@@ -301,10 +316,12 @@ open class Player(
     open fun isUsingChunk(chunkX: Int, chunkZ: Int): Boolean = usedChunks.containsKey(World.chunkHash(chunkX, chunkZ))
 
     /** Returns a usage status of the given chunk, or null if the player is not using the given chunk.  */
-    open fun getUsedChunkStatus(chunkX: Int, chunkZ: Int): UsedChunkStatus? = usedChunks[World.chunkHash(chunkX, chunkZ)]
+    open fun getUsedChunkStatus(chunkX: Int, chunkZ: Int): UsedChunkStatus? =
+        usedChunks[World.chunkHash(chunkX, chunkZ)]
 
     /** Returns whether the target chunk has been sent to this player. */
-    open fun hasReceivedChunk(chunkX: Int, chunkZ: Int): Boolean = getUsedChunkStatus(chunkX, chunkZ) == UsedChunkStatus.SENT
+    open fun hasReceivedChunk(chunkX: Int, chunkZ: Int): Boolean =
+        getUsedChunkStatus(chunkX, chunkZ) == UsedChunkStatus.SENT
 
     override fun onChunkChanged(chunkX: Int, chunkZ: Int, chunk: Chunk) {
         if (hasReceivedChunk(chunkX, chunkZ)) {
