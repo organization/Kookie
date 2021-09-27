@@ -101,7 +101,7 @@ dependencies {
     implementation(group = "org.powernukkit.bedrock.leveldb", name = "bedrock-leveldb", version = "0.11.0-PN")
 
     // guava
-    implementation(group = "com.google.guava", name = "guava", version = "30.1.1-jre")
+    implementation(group = "com.google.guava", name = "guava", version = "31.0.1-jre")
 
     // koloboke
     implementation(group = "com.koloboke", name = "koloboke-impl-common-jdk8", version = "1.0.0")
