@@ -30,7 +30,7 @@ plugins {
     id("com.gorylenko.gradle-git-properties") version "2.3.1"
 
     id("org.jmailen.kotlinter") version "3.6.0"
-    id("com.github.johnrengelman.shadow") version "7.0.0"
+    id("com.github.johnrengelman.shadow") version "7.1.0"
 }
 
 val tag = System.getenv("VERSION_TAG") ?: "SNAPSHOT"
