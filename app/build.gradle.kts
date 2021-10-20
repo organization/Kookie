@@ -71,7 +71,7 @@ dependencies {
     implementation(group = "io.reactivex.rxjava3", name = "rxkotlin", version = "3.0.1")
 
     // jline (console)
-    implementation(group = "org.jline", name = "jline", version = "3.20.0")
+    implementation(group = "org.jline", name = "jline", version = "3.21.0")
     implementation(group = "net.minecrell", name = "terminalconsoleappender", version = "1.3.0")
 
     // Jackson
