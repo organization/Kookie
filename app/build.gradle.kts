@@ -65,7 +65,7 @@ dependencies {
 
     // Kotlin coroutines
     implementation(group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version = "1.5.2")
-    implementation(group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-jdk8", version = "1.5.2")
+    implementation(group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-jdk8", version = "1.6.0")
 
     // RxKotlin
     implementation(group = "io.reactivex.rxjava3", name = "rxkotlin", version = "3.0.1")
