@@ -82,7 +82,6 @@ import ch.qos.logback.classic.Level as LoggerLevel
 
 class Server(dataPath: Path, pluginPath: Path) {
     val name: String get() = VersionInfo.NAME
-    val kookieVersion: String = TODO()
     val apiVersion: String get() = VersionInfo.BASE_VERSION
     val version: String get() = ProtocolInfo.MINECRAFT_VERSION_NETWORK
 
@@ -92,8 +91,8 @@ class Server(dataPath: Path, pluginPath: Path) {
 
     val viewDistance: Int get() = configGroup.getConfigLong("view-distance", 8).toInt()
 
-    val banByName: BanList = TODO()
-    val banById: BanList = TODO()
+    val banByName: BanList get() = BanList(dataPath.resolve("banned-players.txt"))
+    val banByIP: BanList get() = BanList(dataPath.resolve("banned-ips.txt"))
 
     val operators: Config = TODO()
     val whitelist: Config = TODO()
