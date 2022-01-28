@@ -35,7 +35,7 @@ plugins {
 
 val tag = System.getenv("VERSION_TAG") ?: "SNAPSHOT"
 
-val protocolVer = "v475"
+val protocolVer = 475 // 1.18
 
 group = "be.zvz"
 version = "0.0.1-$tag"
@@ -125,7 +125,7 @@ dependencies {
     implementation(group = "org.whispersystems", name = "curve25519-java", version = "0.5.0")
 
     // Bedrock Protocol
-    implementation(group = "org.powernukkit.bedrock.protocol", name = "bedrock-$protocolVer", version = "2.8.1-PN-SNAPSHOT")
+    implementation(group = "org.powernukkit.bedrock.protocol", name = "bedrock-v$protocolVer", version = "2.9.4-PN-SNAPSHOT")
 
     // Use the Kotlin test library.
     testImplementation(group = "org.jetbrains.kotlin", name = "kotlin-test")
