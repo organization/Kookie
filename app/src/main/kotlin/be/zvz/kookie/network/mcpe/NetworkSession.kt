@@ -87,7 +87,8 @@ class NetworkSession(
             LoginPacketHandler(this, { info ->
                 // TODO
                 logger.info("Player: ${TextFormat.AQUA}${info.getUsername()}${TextFormat.RESET}")
-            }, {
+            }, { authenticated, authRequired, error, clientPubKey ->
+
                 // TODO
             })
         )
