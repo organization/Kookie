@@ -35,7 +35,7 @@ plugins {
 
 val tag = System.getenv("VERSION_TAG") ?: "SNAPSHOT"
 
-val protocolVer = "v448"
+val protocolVer = "v475"
 
 group = "be.zvz"
 version = "0.0.1-$tag"
