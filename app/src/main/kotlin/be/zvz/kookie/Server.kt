@@ -70,7 +70,7 @@ import com.nukkitx.protocol.bedrock.BedrockPong
 import com.nukkitx.protocol.bedrock.BedrockServer
 import com.nukkitx.protocol.bedrock.BedrockServerEventHandler
 import com.nukkitx.protocol.bedrock.BedrockServerSession
-import com.nukkitx.protocol.bedrock.v448.Bedrock_v448
+import com.nukkitx.protocol.bedrock.v475.Bedrock_v475
 import org.apache.commons.io.IOUtils
 import org.slf4j.LoggerFactory
 import java.io.BufferedOutputStream
@@ -341,6 +341,7 @@ class Server(dataPath: Path, pluginPath: Path) {
             override fun onConnectionRequest(address: InetSocketAddress): Boolean {
                 return true // TODO: check IP bans
             }
+
             override fun onQuery(address: InetSocketAddress): BedrockPong {
                 val pong = BedrockPong()
                 pong.edition = "MCPE"
@@ -798,6 +799,6 @@ class Server(dataPath: Path, pluginPath: Path) {
         @JvmStatic
         lateinit var instance: Server
 
-        val currentVersion = Bedrock_v448.V448_CODEC
+        val currentVersion = Bedrock_v475.V475_CODEC
     }
 }
