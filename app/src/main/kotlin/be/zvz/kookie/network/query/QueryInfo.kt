@@ -24,5 +24,4 @@ class QueryInfo(private val server: Server) {
     var maxPlayers: Int = 0
     var players: List<String> = mutableListOf()
     var motd: String = server.motd
-
 }
