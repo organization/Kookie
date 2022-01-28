@@ -33,7 +33,11 @@ import com.nukkitx.protocol.bedrock.BedrockPacket
 import com.nukkitx.protocol.bedrock.data.inventory.ContainerType
 import com.nukkitx.protocol.bedrock.packet.ContainerClosePacket
 import com.nukkitx.protocol.bedrock.packet.ContainerOpenPacket
+import com.nukkitx.protocol.bedrock.packet.ContainerSetDataPacket
+import com.nukkitx.protocol.bedrock.packet.CreativeContentPacket
 import com.nukkitx.protocol.bedrock.packet.InventoryContentPacket
+import com.nukkitx.protocol.bedrock.packet.InventorySlotPacket
+import com.nukkitx.protocol.bedrock.packet.MobEquipmentPacket
 import kotlin.math.max
 
 class InventoryManager(
@@ -189,6 +193,108 @@ class InventoryManager(
                 }
             }
         }
+    }
+
+    fun syncContents(inventory: Inventory) {
+        val windowId = getWindowId(inventory)
+        if (windowId != null) {
+            initiatedSlotChanges.remove(windowId)
+            if (windowId == ContainerIds.UI.id) {
+                // TODO: HACK!
+                // Since 1.13, cursor is now part of a larger "UI inventory", and sending contents for this larger inventory does
+                // not work the way it's intended to. Even if it did, it would be necessary to send all 51 slots just to update
+                // this one, which is just not worth it.
+                // This workaround isn't great, but it's at least simple.
+                session.sendDataPacket(
+                    InventorySlotPacket().apply {
+                        this.containerId = windowId
+                        this.slot = 0
+                        this.item = KookieToNukkitProtocolConverter.toItemData(
+                            ItemStackWrapper.legacy(
+                                TypeConverter.coreItemStackToNet(inventory.getItem(0))
+                            )
+                        )
+                    }
+                )
+            } else {
+                session.sendDataPacket(
+                    InventoryContentPacket().apply {
+                        this.containerId = windowId
+                        this.contents = inventory.getContents(true).map { (_, item) ->
+                            KookieToNukkitProtocolConverter.toItemData(
+                                ItemStackWrapper.legacy(
+                                    TypeConverter.coreItemStackToNet(item)
+                                )
+                            )
+                        }
+                    }
+                )
+            }
+        }
+    }
+
+    fun syncAll() {
+        windowMap.forEach {
+            syncContents(it.value)
+        }
+    }
+
+    fun syncData(inventory: Inventory, propertyId: Int, value: Int) {
+        val windowId = getWindowId(inventory)
+        if (windowId != null) {
+            session.sendDataPacket(
+                ContainerSetDataPacket().apply {
+                    this.windowId = windowId.toByte()
+                    this.property = propertyId
+                    this.value = value
+                }
+            )
+        }
+    }
+
+    fun onClientSelectHotbarSlot(slot: Int) {
+        clientSelectedHotbarSlot = slot
+    }
+
+    fun syncSelectedHotbarSlot() {
+        val selected = player.inventory.getHeldItemIndex()
+        if (selected != clientSelectedHotbarSlot) {
+            session.sendDataPacket(
+                MobEquipmentPacket().apply {
+                    this.runtimeEntityId = player.getId()
+                    this.item = KookieToNukkitProtocolConverter.toItemData(
+                        ItemStackWrapper.legacy(
+                            TypeConverter.coreItemStackToNet(player.inventory.getItemInHand())
+                        )
+                    )
+                    this.hotbarSlot = selected
+                    this.inventorySlot = selected
+                    this.containerId = ContainerIds.INVENTORY.id
+                }
+            )
+        }
+    }
+
+    fun syncCreative() {
+        // TODO: Implement this when we have proper Player implementation
+        var nextEntryId = 1
+        session.sendDataPacket(
+            CreativeContentPacket().apply {
+                /*
+                if (player.isSpectator()) {
+                    this.contents = listOf<ItemData>()
+                } else {
+                    this.contents = CreativeInventory::getInstance()->getAll().map { (_, item) ->
+                        KookieToNukkitProtocolConverter.toItemData(
+                            ItemStackWrapper.legacy(
+                                TypeConverter.coreItemStackToNet(item)
+                            )
+                        )
+                    }
+                }
+                 */
+            }
+        )
     }
 
     companion object {
