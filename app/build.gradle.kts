@@ -22,15 +22,15 @@ import org.jmailen.gradle.kotlinter.tasks.LintTask
 
 plugins {
     // Apply the org.jetbrains.kotlin.jvm Plugin to add support for Kotlin.
-    kotlin("jvm") version "1.5.31"
+    kotlin("jvm") version "1.6.10"
 
     // Apply the application plugin to add support for building a CLI application in Java.
     application
 
-    id("com.gorylenko.gradle-git-properties") version "2.3.1"
+    id("com.gorylenko.gradle-git-properties") version "2.3.2"
 
-    id("org.jmailen.kotlinter") version "3.6.0"
-    id("com.github.johnrengelman.shadow") version "7.1.0"
+    id("org.jmailen.kotlinter") version "3.8.0"
+    id("com.github.johnrengelman.shadow") version "7.1.2"
 }
 
 val tag = System.getenv("VERSION_TAG") ?: "SNAPSHOT"
@@ -74,8 +74,8 @@ dependencies {
     implementation(group = "org.jetbrains.kotlin", name = "kotlin-stdlib-jdk8")
 
     // Kotlin coroutines
-    implementation(group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version = "1.5.2")
-    implementation(group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-jdk8", version = "1.5.2")
+    implementation(group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version = "1.6.0")
+    implementation(group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-jdk8", version = "1.6.0")
 
     // RxKotlin
     implementation(group = "io.reactivex.rxjava3", name = "rxkotlin", version = "3.0.1")
@@ -85,24 +85,24 @@ dependencies {
     implementation(group = "net.minecrell", name = "terminalconsoleappender", version = "1.3.0")
 
     // Jackson
-    implementation(group = "com.fasterxml.jackson.module", name = "jackson-module-kotlin", version = "2.13.0")
-    implementation(group = "com.fasterxml.jackson.module", name = "jackson-module-afterburner", version = "2.13.0")
-    implementation(group = "com.fasterxml.jackson.dataformat", name = "jackson-dataformat-yaml", version = "2.13.0")
-    implementation(group = "com.fasterxml.jackson.dataformat", name = "jackson-dataformat-properties", version = "2.13.0")
+    implementation(group = "com.fasterxml.jackson.module", name = "jackson-module-kotlin", version = "2.13.1")
+    implementation(group = "com.fasterxml.jackson.module", name = "jackson-module-afterburner", version = "2.13.1")
+    implementation(group = "com.fasterxml.jackson.dataformat", name = "jackson-dataformat-yaml", version = "2.13.1")
+    implementation(group = "com.fasterxml.jackson.dataformat", name = "jackson-dataformat-properties", version = "2.13.1")
 
     // Apache commons IO
     implementation(group = "commons-io", name = "commons-io", version = "2.11.0")
 
     // jna
-    implementation(group = "net.java.dev.jna", name = "jna", version = "5.9.0")
+    implementation(group = "net.java.dev.jna", name = "jna", version = "5.10.0")
 
     // Logger
-    implementation(group = "org.slf4j", name = "slf4j-api", version = "1.7.32")
-    implementation(group = "ch.qos.logback", name = "logback-classic", version = "1.2.6")
-    implementation(group = "org.fusesource.jansi", name = "jansi", version = "1.18")
+    implementation(group = "org.slf4j", name = "slf4j-api", version = "1.7.35")
+    implementation(group = "ch.qos.logback", name = "logback-classic", version = "1.2.10")
+    implementation(group = "org.fusesource.jansi", name = "jansi", version = "2.4.0")
 
     // netty
-    implementation(group = "io.netty", name = "netty-all", version = "4.1.69.Final")
+    implementation(group = "io.netty", name = "netty-all", version = "4.1.73.Final")
 
     // bedrock-network
     implementation(group = "org.powernukkit.bedrock.network", name = "raknet", version = "1.6.25-PN.2")
