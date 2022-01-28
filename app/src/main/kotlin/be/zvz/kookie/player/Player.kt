@@ -59,7 +59,7 @@ open class Player(
     val username = playerInfo.getUsername()
     var displayName = username
     override val name: String get() = username
-    override val permissionRecalculationCallbacks: Set<(changedPermissionsOldValues: Map<String, Boolean>) -> Unit>
+    override val permissionRecalculationCallbacks: MutableSet<(changedPermissionsOldValues: Map<String, Boolean>) -> Unit>
         get() = TODO("Not yet implemented")
     lateinit var craftingGrid: CraftingGrid
         private set

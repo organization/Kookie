@@ -184,6 +184,11 @@ import be.zvz.kookie.network.mcpe.protocol.UpdateSoftEnumPacket
 import be.zvz.kookie.network.mcpe.protocol.UpdateTradePacket
 
 open class PacketHandler : PacketHandlerInterface {
+
+    open fun setUp() {
+
+    }
+
     override fun handleUnknown(packet: UnknownPacket): Boolean {
         return false
     }

@@ -25,6 +25,7 @@ import be.zvz.kookie.console.brightCyan
 import be.zvz.kookie.constant.CorePaths
 import be.zvz.kookie.constant.FilePermission
 import be.zvz.kookie.crafting.CraftingManager
+import be.zvz.kookie.event.player.PlayerLoginEvent
 import be.zvz.kookie.event.server.CommandEvent
 import be.zvz.kookie.event.server.DataPacketSendEvent
 import be.zvz.kookie.event.server.QueryRegenerateEvent
@@ -682,7 +683,26 @@ class Server(dataPath: Path, pluginPath: Path) {
         }
     }
 
-    fun addOnlinePlayer(player: Player) {
+    fun addOnlinePlayer(player: Player): Boolean {
+        val ev = PlayerLoginEvent(player, "Plugin reason")
+        ev.call()
+        if (ev.isCancelled /* TODO: || !player.isConnected() */) {
+            // TODO:  player.disconnect(ev.kickMessage)
+            return false
+        }
+
+        val session = player.networkSession
+        val position = player.getPosition()
+        logger.info(language.translateString(KnownTranslationKeys.POCKETMINE_PLAYER_LOGIN, listOf(
+            TextFormat.AQUA + player.name + TextFormat.WHITE,
+            session.ip,
+            session.port.toString(),
+            player.getId().toString(),
+            position.world!!.displayName,
+            position.floorX.toString(),
+            position.floorY.toString(),
+            position.floorZ.toString()
+        )))
         playerList.values.forEach {
             /** TODO: Implements after implementing NetworkSession::onPlayerAdded()
              * it.networkSession.onPlayerAdded(player)
@@ -692,6 +712,7 @@ class Server(dataPath: Path, pluginPath: Path) {
         if (sendUsageTicker > 0) {
             uniquePlayers.add(player.uuid)
         }
+        return true
     }
 
     fun removeOnlinePlayer(player: Player) {

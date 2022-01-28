@@ -1,7 +1,9 @@
 package be.zvz.kookie.network.mcpe.convert
 
 import be.zvz.kookie.network.mcpe.protocol.types.inventory.ItemStackWrapper
+import be.zvz.kookie.player.GameMode
 import com.nukkitx.nbt.NbtMap
+import com.nukkitx.protocol.bedrock.data.GameType
 import com.nukkitx.protocol.bedrock.data.inventory.ItemData
 
 object KookieToNukkitProtocolConverter {
@@ -26,5 +28,14 @@ object KookieToNukkitProtocolConverter {
             .usingNetId(itemStack.stackId != 0)
             .netId(itemStack.stackId)
             .build()
+    }
+
+    fun toGameType(gameMode: GameMode): GameType {
+        return when (gameMode) {
+            GameMode.SURVIVAL -> GameType.SURVIVAL
+            GameMode.CREATIVE -> GameType.CREATIVE
+            GameMode.ADVENTURE -> GameType.ADVENTURE
+            GameMode.SPECTATOR -> GameType.CREATIVE_VIEWER
+        }
     }
 }
