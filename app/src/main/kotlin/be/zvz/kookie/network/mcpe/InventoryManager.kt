@@ -18,12 +18,23 @@
 package be.zvz.kookie.network.mcpe
 
 import be.zvz.kookie.inventory.Inventory
+import be.zvz.kookie.inventory.transaction.InventoryTransaction
+import be.zvz.kookie.inventory.transaction.action.SlotChangeAction
 import be.zvz.kookie.item.Item
+import be.zvz.kookie.network.mcpe.convert.KookieToNukkitProtocolConverter
+import be.zvz.kookie.network.mcpe.convert.TypeConverter
 import be.zvz.kookie.network.mcpe.protocol.types.inventory.ContainerIds
+import be.zvz.kookie.network.mcpe.protocol.types.inventory.ItemStackWrapper
+import be.zvz.kookie.network.mcpe.protocol.types.inventory.WindowTypes
 import be.zvz.kookie.player.Player
 import com.koloboke.collect.map.hash.HashIntObjMaps
 import com.koloboke.collect.set.hash.HashObjSets
 import com.nukkitx.protocol.bedrock.BedrockPacket
+import com.nukkitx.protocol.bedrock.data.inventory.ContainerType
+import com.nukkitx.protocol.bedrock.packet.ContainerClosePacket
+import com.nukkitx.protocol.bedrock.packet.ContainerOpenPacket
+import com.nukkitx.protocol.bedrock.packet.InventoryContentPacket
+import kotlin.math.max
 
 class InventoryManager(
     val player: Player,
@@ -32,13 +43,15 @@ class InventoryManager(
 
     val windowMap: MutableMap<Int, Inventory> = HashIntObjMaps.newMutableMap()
 
-    val lastInventoryNetworkId: Int = ContainerIds.FIRST.id
+    var lastInventoryNetworkId: Int = ContainerIds.FIRST.id
 
     val initiatedSlotChanges: MutableMap<Int, MutableMap<Int, Item>> = HashIntObjMaps.newMutableMap()
 
     var clientSelectedHotbarSlot = -1
 
     val containerOpenCallbacks: MutableSet<(Int, Inventory) -> List<BedrockPacket>?> = HashObjSets.newMutableSet()
+
+    val openHardcodedWindows: MutableMap<Int, Boolean> = HashIntObjMaps.newMutableMap()
 
     init {
         /*
@@ -57,15 +70,133 @@ class InventoryManager(
         containerOpenCallbacks.add(::createContainerOpen)
     }
 
+    fun add(id: Int, inventory: Inventory) {
+        windowMap[id] = inventory
+    }
+
+    fun remove(id: Int) {
+        windowMap.remove(id)
+        initiatedSlotChanges.remove(id)
+    }
+
+    fun getWindowId(inventory: Inventory): Int? {
+        for ((key, value) in windowMap) {
+            if (value == inventory) {
+                return key
+            }
+        }
+        return null
+    }
+
+    fun getCurrentWindowId(): Int {
+        return lastInventoryNetworkId
+    }
+
+    fun getWindow(windowId: Int): Inventory? {
+        return windowMap[windowId]
+    }
+
+    fun onTransactionStart(tx: InventoryTransaction) {
+        tx.actions.forEach {
+            if (it is SlotChangeAction) {
+                val windowId = getWindowId(it.inventory)
+                windowId?.let { id ->
+                    initiatedSlotChanges.getOrPut(id, ::mutableMapOf)[it.slot] = it.targetItem
+                }
+            }
+        }
+    }
+
+    fun onCurrentWindowChange(inventory: Inventory) {
+        // onCurrentWindowRemove() TODO
+        lastInventoryNetworkId = max(ContainerIds.FIRST.id, (lastInventoryNetworkId + 1) % RESERVED_WINDOW_ID_RANGE_START)
+        add(lastInventoryNetworkId, inventory)
+
+        containerOpenCallbacks.forEach {
+            val packets = it(lastInventoryNetworkId, inventory)
+            packets?.forEach {
+                session.sendDataPacket(it)
+            }
+            // syncContents(inventory) TODO
+        }
+    }
+
+    fun onClientOpenMainInventory() {
+        val id = HARDCODED_INVENTORY_WINDOW_ID
+        if (!openHardcodedWindows.containsKey(id)) {
+            openHardcodedWindows[id] = true
+            session.sendDataPacket(
+                ContainerOpenPacket().apply {
+                    this.id = HARDCODED_INVENTORY_WINDOW_ID.toByte()
+                    this.type = ContainerType.from(WindowTypes.INVENTORY.value)
+                    this.uniqueEntityId = player.getId()
+                }
+            )
+        }
+    }
+
+    fun onCurrentWindowRemove() {
+        if (windowMap.containsKey(lastInventoryNetworkId)) {
+            remove(lastInventoryNetworkId)
+            session.sendDataPacket(
+                ContainerClosePacket().apply {
+                    this.id = lastInventoryNetworkId.toByte()
+                    this.isUnknownBool0 = true
+                }
+            )
+        }
+    }
+
+    fun onClientRemoveWindow(id: Int) {
+        if (openHardcodedWindows.containsKey(id)) {
+            openHardcodedWindows.remove(id)
+        } else if (id == lastInventoryNetworkId) {
+            remove(id)
+            // TODO: uncomment this when we implements Player.removeCurrentWindow()
+            //  player.removeCurrentWindow()
+        } else {
+            session.logger.debug("Attempted to close inventory with network ID $id, but current is $lastInventoryNetworkId")
+        }
+        // Always send this, even if no window matches. If we told the client to close a window, it will behave as if it
+        // initiated the close and expect an ack.
+        session.sendDataPacket(
+            ContainerClosePacket().apply {
+                this.id = id.toByte()
+                this.isUnknownBool0 = false
+            }
+        )
+    }
+
+    fun syncSlot(inventory: Inventory, slot: Int) {
+        val windowId = getWindowId(inventory)
+        if (windowId != null) {
+            val currentItem = inventory.getItem(slot)
+            val clientSideItem = initiatedSlotChanges[windowId]?.get(slot) ?: null
+            if (clientSideItem == null || !clientSideItem.equalsExact(currentItem)) {
+                val itemStackWrapper = ItemStackWrapper.legacy(TypeConverter.coreItemStackToNet(currentItem))
+                if (windowId == ContainerIds.OFFHAND.id) {
+                    // TODO: HACK!
+                    // The client may sometimes ignore the InventorySlotPacket for the offhand slot.
+                    // This can cause a lot of problems (totems, arrows, and more...).
+                    // The workaround is to send an InventoryContentPacket instead
+                    // BDS (Bedrock Dedicated Server) also seems to work this way.
+                    session.sendDataPacket(
+                        InventoryContentPacket().apply {
+                            this.containerId = windowId
+                            this.contents = listOf(KookieToNukkitProtocolConverter.toItemData(itemStackWrapper))
+                        }
+                    )
+                }
+            }
+        }
+    }
+
     companion object {
         // TODO: HACK!
         // these IDs are used for 1.16 to restore 1.14ish crafting & inventory behaviour; since they don't seem to have any
         // effect on the behaviour of inventory transactions I don't currently plan to integrate these into the main system.
         private val RESERVED_WINDOW_ID_RANGE_START = ContainerIds.LAST.id - 10
-        private val RESERVED_WINDOW_ID_RANGE_END = ContainerIds.LAST.id
-
-        val HARDCODED_CRAFTING_GRID_WINDOW_ID = RESERVED_WINDOW_ID_RANGE_START + 1
-        val HARDCODED_INVENTORY_WINDOW_ID = RESERVED_WINDOW_ID_RANGE_START + 2
+        private val HARDCODED_INVENTORY_WINDOW_ID = RESERVED_WINDOW_ID_RANGE_START + 2
 
         private fun createContainerOpen(id: Int, inv: Inventory): List<BedrockPacket>? {
             /*
@@ -113,7 +244,7 @@ class InventoryManager(
                     })
                 }
             }
-            
+
              */
             return null
         }
