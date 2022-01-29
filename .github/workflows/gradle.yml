@@ -15,7 +15,7 @@ jobs:
     if: ${{ !contains(github.event.head_commit.message, '[skip ci]') }}
     strategy:
       matrix:
-        java: [ '16', '8' ]
+        java: [ '17', '8' ]
 
     steps:
     - name: Checkout repository
