@@ -38,7 +38,11 @@ import java.nio.charset.StandardCharsets
 import java.util.UUID
 import kotlin.math.min
 
-open class Human(var skin: Skin, location: Location) : Living(location) {
+open class Human @JvmOverloads constructor(
+    var skin: Skin,
+    location: Location,
+    nbt: CompoundTag? = null
+) : Living(location, nbt) {
 
     override val entityNetworkIdentifier = EntityIds.PLAYER
 

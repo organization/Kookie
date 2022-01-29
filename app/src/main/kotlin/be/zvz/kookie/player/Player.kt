@@ -19,6 +19,7 @@ package be.zvz.kookie.player
 
 import be.zvz.kookie.Server
 import be.zvz.kookie.command.CommandSender
+import be.zvz.kookie.console.PrefixedLogger
 import be.zvz.kookie.crafting.CraftingGrid
 import be.zvz.kookie.entity.Human
 import be.zvz.kookie.entity.Location
@@ -32,6 +33,7 @@ import be.zvz.kookie.permission.PermissionAttachment
 import be.zvz.kookie.permission.PermissionAttachmentInfo
 import be.zvz.kookie.plugin.Plugin
 import be.zvz.kookie.timings.Timings
+import be.zvz.kookie.utils.TextFormat
 import be.zvz.kookie.world.ChunkHash
 import be.zvz.kookie.world.ChunkListener
 import be.zvz.kookie.world.World
@@ -49,13 +51,12 @@ open class Player(
     playerInfo: PlayerInfo,
     val authenticated: Boolean,
     spawnLocation: Location,
-    val namedTag: CompoundTag,
+    namedTag: CompoundTag?,
     skin: Skin,
     location: Location
-) : Human(skin, location), CommandSender, ChunkListener {
-    private val logger = LoggerFactory.getLogger(Player::class.java)
-
+) : Human(skin, location, namedTag), CommandSender, ChunkListener {
     override val language: Language get() = server.language
+
     val username = playerInfo.username
     var displayName = username
     override val name: String get() = username
@@ -63,14 +64,14 @@ open class Player(
         get() = TODO("Not yet implemented")
     lateinit var craftingGrid: CraftingGrid
         private set
-
     val usedChunks: MutableMap<ChunkHash, UsedChunkStatus> = HashLongObjMaps.newMutableMap()
+
     private val loadQueue: MutableSet<ChunkHash> = HashLongSets.newMutableSet()
     private var nextChunkOrderRun: Int = 5
     private val chunkSelector = ChunkSelector()
     private val chunkLoader = PlayerChunkLoader(spawnLocation)
-
     private var chunksPerTick: Int = server.configGroup.getProperty("chunk-sending.per-tick").asLong(4).toInt()
+
     private var spawnThreshold: Int =
         (server.configGroup.getProperty("chunk-sending.spawn-radius").asLong(4).toDouble().pow(2) * Math.PI).toInt()
     private var spawnChunkLoadCount: Int = 0
@@ -88,6 +89,13 @@ open class Player(
             // TODO: networkSession.syncViewAreaRadius(viewDistance)
             logger.debug("Setting view distance to $viewDistance (requested $value)")
         }
+
+    private val logger =
+        PrefixedLogger("Player: ${TextFormat.clean(username.lowercase())}", LoggerFactory.getLogger(Player::class.java))
+
+    init {
+        val username = TextFormat.clean(username)
+    }
 
     override fun sendMessage(message: String) {
         networkSession.sendDataPacket(
