@@ -17,7 +17,6 @@
  */
 package be.zvz.kookie.network.mcpe.protocol
 
-import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
 import be.zvz.kookie.network.mcpe.protocol.resourcepacks.ResourcePackType
 import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 
@@ -51,8 +50,6 @@ class ResourcePackDataInfoPacket : DataPacket(), ClientboundPacket {
         output.putBoolean(isPremium)
         output.putByte(packType.value)
     }
-
-    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleResourcePackDataInfo(this)
 
     companion object {
         @JvmStatic

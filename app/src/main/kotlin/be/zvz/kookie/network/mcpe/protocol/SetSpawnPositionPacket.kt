@@ -17,7 +17,6 @@
  */
 package be.zvz.kookie.network.mcpe.protocol
 
-import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
 import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 
 @ProtocolIdentify(ProtocolInfo.IDS.SET_SPAWN_POSITION_PACKET)
@@ -41,8 +40,6 @@ class SetSpawnPositionPacket : DataPacket(), ClientboundPacket {
         output.putVarInt(dimension)
         output.putBlockPosition(pos2)
     }
-
-    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleSetSpawnPosition(this)
 
     companion object {
         const val TYPE_PLAYER_SPAWN = 0

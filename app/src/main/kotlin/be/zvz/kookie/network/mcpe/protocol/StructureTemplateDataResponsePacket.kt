@@ -17,7 +17,6 @@
  */
 package be.zvz.kookie.network.mcpe.protocol
 
-import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
 import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 import be.zvz.kookie.network.mcpe.protocol.types.CacheableNbt
 
@@ -40,6 +39,4 @@ class StructureTemplateDataResponsePacket : DataPacket(), ClientboundPacket {
         output.putBoolean(namedtag != null)
         namedtag?.let { output.put(it.encodedNbt) }
     }
-
-    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleStructureTemplateDataResponse(this)
 }

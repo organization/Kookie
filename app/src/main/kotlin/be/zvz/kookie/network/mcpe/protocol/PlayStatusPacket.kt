@@ -17,7 +17,6 @@
  */
 package be.zvz.kookie.network.mcpe.protocol
 
-import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
 import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 
 @ProtocolIdentify(ProtocolInfo.IDS.PLAY_STATUS_PACKET)
@@ -32,8 +31,6 @@ class PlayStatusPacket : DataPacket(), ClientboundPacket {
     override fun encodePayload(output: PacketSerializer) {
         output.putInt(status.state)
     }
-
-    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handlePlayStatus(this)
 
     override fun canBeSentBeforeLogin(): Boolean = true
 

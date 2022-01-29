@@ -4,7 +4,6 @@ import be.zvz.kookie.Server
 import be.zvz.kookie.network.mcpe.InventoryManager
 import be.zvz.kookie.network.mcpe.NetworkSession
 import be.zvz.kookie.player.Player
-import com.nukkitx.protocol.bedrock.handler.BedrockPacketHandler
 import com.nukkitx.protocol.bedrock.packet.AvailableEntityIdentifiersPacket
 import com.nukkitx.protocol.bedrock.packet.BiomeDefinitionListPacket
 
@@ -13,7 +12,7 @@ class PreSpawnPacketHandler(
     val player: Player,
     val session: NetworkSession,
     val inventoryManager: InventoryManager
-) : BedrockPacketHandler {
+) : PacketHandler() {
 
     init {
         val location = player.location

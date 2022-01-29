@@ -17,7 +17,6 @@
  */
 package be.zvz.kookie.network.mcpe.protocol
 
-import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
 import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 
 @ProtocolIdentify(ProtocolInfo.IDS.COMMAND_BLOCK_UPDATE_PACKET)
@@ -82,6 +81,4 @@ class CommandBlockUpdatePacket : DataPacket(), ServerboundPacket {
         output.putLInt(tickDelay)
         output.putBoolean(executeOnFirstTick)
     }
-
-    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleCommandBlockUpdate(this)
 }

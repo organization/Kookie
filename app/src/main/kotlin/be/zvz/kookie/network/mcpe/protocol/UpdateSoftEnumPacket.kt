@@ -17,7 +17,6 @@
  */
 package be.zvz.kookie.network.mcpe.protocol
 
-import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
 import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 
 @ProtocolIdentify(ProtocolInfo.IDS.UPDATE_SOFT_ENUM_PACKET)
@@ -40,8 +39,6 @@ class UpdateSoftEnumPacket : DataPacket(), ClientboundPacket {
         values.forEach(output::putString)
         output.putByte(type)
     }
-
-    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleUpdateSoftEnum(this)
 
     enum class Type(val id: Int) {
         ADD(0),

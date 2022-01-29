@@ -17,7 +17,6 @@
  */
 package be.zvz.kookie.network.mcpe.protocol
 
-import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
 import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 
 /**
@@ -62,6 +61,4 @@ class CodeBuilderPacket : DataPacket(), ClientboundPacket {
         output.putString(url)
         output.putBoolean(openCodeBuilder)
     }
-
-    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleCodeBuilder(this)
 }

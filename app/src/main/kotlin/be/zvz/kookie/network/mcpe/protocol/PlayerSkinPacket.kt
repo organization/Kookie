@@ -17,7 +17,6 @@
  */
 package be.zvz.kookie.network.mcpe.protocol
 
-import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
 import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 import be.zvz.kookie.network.mcpe.protocol.types.skin.SkinData
 import java.util.UUID
@@ -45,8 +44,6 @@ class PlayerSkinPacket : DataPacket(), ClientboundPacket, ServerboundPacket {
         output.putString(oldSkinName)
         output.putBoolean(skin.isVerified)
     }
-
-    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handlePlayerSkin(this)
 
     companion object {
         @JvmStatic

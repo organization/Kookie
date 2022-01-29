@@ -17,7 +17,6 @@
  */
 package be.zvz.kookie.network.mcpe.protocol
 
-import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
 import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 
 @ProtocolIdentify(ProtocolInfo.IDS.ACTOR_EVENT_PACKET)
@@ -37,8 +36,6 @@ class ActorEventPacket : DataPacket(), ClientboundPacket, ServerboundPacket {
         output.putByte(eventId)
         output.putVarInt(data)
     }
-
-    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleActorEvent(this)
 
     companion object {
         const val JUMP = 1

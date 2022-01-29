@@ -17,7 +17,6 @@
  */
 package be.zvz.kookie.network.mcpe.protocol
 
-import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
 import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 
 @ProtocolIdentify(ProtocolInfo.IDS.REMOVE_OBJECTIVE_PACKET)
@@ -31,6 +30,4 @@ class RemoveObjectivePacket : DataPacket(), ClientboundPacket {
     override fun encodePayload(output: PacketSerializer) {
         output.putString(objectiveName)
     }
-
-    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleRemoveObjective(this)
 }

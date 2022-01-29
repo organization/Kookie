@@ -19,7 +19,6 @@ package be.zvz.kookie.network.mcpe.protocol
 
 import be.zvz.kookie.entity.Attribute
 import be.zvz.kookie.math.Vector3
-import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
 import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 import be.zvz.kookie.network.mcpe.protocol.types.entity.EntityLink
 import be.zvz.kookie.network.mcpe.protocol.types.entity.MetadataProperty
@@ -90,6 +89,4 @@ class AddActorPacket : DataPacket(), ClientboundPacket {
         output.putUnsignedVarInt(links.size)
         links.forEach(output::putEntityLink)
     }
-
-    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleAddActor(this)
 }

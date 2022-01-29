@@ -17,7 +17,6 @@
  */
 package be.zvz.kookie.network.mcpe.protocol
 
-import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
 import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 
 @ProtocolIdentify(ProtocolInfo.IDS.EVENT_PACKET)
@@ -42,8 +41,6 @@ class EventPacket : DataPacket(), ClientboundPacket {
 
         // TODO: also nice confusing mess
     }
-
-    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleEvent(this)
 
     enum class TYPE(value: Int) {
         ACHIEVEMENT_AWARDED(0),

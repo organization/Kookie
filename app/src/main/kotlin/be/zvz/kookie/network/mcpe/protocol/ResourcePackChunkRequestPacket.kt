@@ -17,7 +17,6 @@
  */
 package be.zvz.kookie.network.mcpe.protocol
 
-import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
 import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 
 @ProtocolIdentify(ProtocolInfo.IDS.RESOURCE_PACK_CHUNK_REQUEST_PACKET)
@@ -34,6 +33,4 @@ class ResourcePackChunkRequestPacket : DataPacket(), ServerboundPacket {
         output.putString(packId)
         output.putLInt(chunkIndex)
     }
-
-    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleResourcePackChunkRequest(this)
 }

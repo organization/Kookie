@@ -17,7 +17,6 @@
  */
 package be.zvz.kookie.network.mcpe.protocol
 
-import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
 import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 import be.zvz.kookie.network.mcpe.protocol.types.entity.NetworkAttribute
 
@@ -39,6 +38,4 @@ class UpdateAttributesPacket : DataPacket(), ClientboundPacket {
         output.putAttributeList(entries)
         output.putUnsignedVarLong(tick)
     }
-
-    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleUpdateAttributes(this)
 }

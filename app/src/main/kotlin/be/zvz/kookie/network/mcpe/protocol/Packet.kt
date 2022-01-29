@@ -17,7 +17,6 @@
  */
 package be.zvz.kookie.network.mcpe.protocol
 
-import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
 import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 
 interface Packet : Cloneable {
@@ -29,8 +28,6 @@ interface Packet : Cloneable {
     fun decode(input: PacketSerializer)
 
     fun encode(output: PacketSerializer)
-
-    fun handle(handler: PacketHandlerInterface): Boolean
 
     public override fun clone(): Packet = super.clone() as Packet
 }

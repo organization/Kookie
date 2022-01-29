@@ -17,7 +17,6 @@
  */
 package be.zvz.kookie.network.mcpe.protocol
 
-import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
 import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 
 @ProtocolIdentify(ProtocolInfo.IDS.SETTINGS_COMMAND_PACKET)
@@ -35,8 +34,6 @@ class SettingsCommandPacket : DataPacket(), ServerboundPacket {
         output.putString(command)
         output.putBoolean(suppressOutput)
     }
-
-    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleSettingsCommand(this)
 
     companion object {
         @JvmStatic

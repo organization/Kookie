@@ -18,7 +18,6 @@
 package be.zvz.kookie.network.mcpe.protocol
 
 import be.zvz.kookie.math.Vector3
-import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
 import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 
 @ProtocolIdentify(ProtocolInfo.IDS.MOVE_PLAYER_PACKET)
@@ -67,8 +66,6 @@ class MovePlayerPacket : DataPacket(), ClientboundPacket, ServerboundPacket {
         }
         output.putUnsignedVarLong(tick)
     }
-
-    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleMovePlayer(this)
 
     companion object {
         const val MODE_NORMAL = 0

@@ -17,7 +17,6 @@
  */
 package be.zvz.kookie.network.mcpe.protocol
 
-import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
 import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 
 @ProtocolIdentify(ProtocolInfo.IDS.LECTERN_UPDATE_PACKET)
@@ -41,6 +40,4 @@ class LecternUpdatePacket : DataPacket(), ServerboundPacket {
         output.putBlockPosition(position)
         output.putBoolean(dropBook)
     }
-
-    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleLecternUpdate(this)
 }

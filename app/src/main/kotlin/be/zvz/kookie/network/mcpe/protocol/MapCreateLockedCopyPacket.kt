@@ -17,7 +17,6 @@
  */
 package be.zvz.kookie.network.mcpe.protocol
 
-import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
 import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 
 @ProtocolIdentify(ProtocolInfo.IDS.MAP_CREATE_LOCKED_COPY_PACKET)
@@ -35,6 +34,4 @@ class MapCreateLockedCopyPacket : DataPacket(), ServerboundPacket {
         output.putEntityUniqueId(originalMapId)
         output.putEntityUniqueId(newMapId)
     }
-
-    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleMapCreateLockedCopy(this)
 }

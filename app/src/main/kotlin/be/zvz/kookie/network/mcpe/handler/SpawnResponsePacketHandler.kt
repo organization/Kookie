@@ -1,9 +1,8 @@
 package be.zvz.kookie.network.mcpe.handler
 
-import com.nukkitx.protocol.bedrock.handler.BedrockPacketHandler
 import com.nukkitx.protocol.bedrock.packet.SetLocalPlayerAsInitializedPacket
 
-class SpawnResponsePacketHandler(val responseCallback: () -> Unit) : BedrockPacketHandler {
+class SpawnResponsePacketHandler(val responseCallback: () -> Unit) : PacketHandler() {
 
     override fun handle(packet: SetLocalPlayerAsInitializedPacket): Boolean {
         responseCallback()

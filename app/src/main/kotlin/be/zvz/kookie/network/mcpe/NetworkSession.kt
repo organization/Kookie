@@ -30,6 +30,7 @@ import be.zvz.kookie.nbt.tag.CompoundTag
 import be.zvz.kookie.nbt.tag.StringTag
 import be.zvz.kookie.network.mcpe.convert.KookieToNukkitProtocolConverter
 import be.zvz.kookie.network.mcpe.handler.LoginPacketHandler
+import be.zvz.kookie.network.mcpe.handler.PacketHandler
 import be.zvz.kookie.network.mcpe.handler.PreSpawnPacketHandler
 import be.zvz.kookie.network.mcpe.handler.SpawnResponsePacketHandler
 import be.zvz.kookie.network.mcpe.protocol.types.DimensionIds
@@ -60,7 +61,6 @@ import com.nukkitx.protocol.bedrock.BedrockServerSession
 import com.nukkitx.protocol.bedrock.data.AttributeData
 import com.nukkitx.protocol.bedrock.data.PlayerPermission
 import com.nukkitx.protocol.bedrock.data.command.CommandPermission
-import com.nukkitx.protocol.bedrock.handler.BedrockPacketHandler
 import com.nukkitx.protocol.bedrock.packet.AdventureSettingsPacket
 import com.nukkitx.protocol.bedrock.packet.AvailableCommandsPacket
 import com.nukkitx.protocol.bedrock.packet.ChunkRadiusUpdatedPacket
@@ -99,7 +99,7 @@ class NetworkSession(
     var info: PlayerInfo? = null
         private set
 
-    private var handler: BedrockPacketHandler? = null
+    private var handler: PacketHandler? = null
 
     var connected = true
         private set
@@ -195,8 +195,9 @@ class NetworkSession(
     }
 
     @JvmOverloads
-    fun setHandler(handler: BedrockPacketHandler? = null) {
+    fun setHandler(handler: PacketHandler? = null) {
         this.handler = handler
+        handler?.setUp()
     }
 
     @JvmOverloads

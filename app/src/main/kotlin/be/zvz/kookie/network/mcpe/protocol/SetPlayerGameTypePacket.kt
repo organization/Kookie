@@ -17,7 +17,6 @@
  */
 package be.zvz.kookie.network.mcpe.protocol
 
-import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
 import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 
 @ProtocolIdentify(ProtocolInfo.IDS.SET_PLAYER_GAME_TYPE_PACKET)
@@ -32,8 +31,6 @@ class SetPlayerGameTypePacket : DataPacket(), ClientboundPacket, ServerboundPack
     override fun encodePayload(output: PacketSerializer) {
         output.putVarInt(gamemode)
     }
-
-    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleSetPlayerGameType(this)
 
     companion object {
         @JvmStatic

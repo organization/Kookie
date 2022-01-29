@@ -17,7 +17,6 @@
  */
 package be.zvz.kookie.network.mcpe.protocol
 
-import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
 import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 
 @ProtocolIdentify(ProtocolInfo.IDS.TRANSFER_PACKET)
@@ -35,8 +34,6 @@ class TransferPacket : DataPacket(), ClientboundPacket {
         output.putString(address)
         output.putLShort(port)
     }
-
-    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleTransfer(this)
 
     companion object {
         @JvmStatic

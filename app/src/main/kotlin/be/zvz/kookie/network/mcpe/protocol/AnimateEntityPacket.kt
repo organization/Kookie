@@ -17,7 +17,6 @@
  */
 package be.zvz.kookie.network.mcpe.protocol
 
-import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
 import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 
 @ProtocolIdentify(ProtocolInfo.IDS.ANIMATE_ENTITY_PACKET)
@@ -55,8 +54,6 @@ class AnimateEntityPacket : DataPacket(), ClientboundPacket {
             output.putEntityRuntimeId(id)
         }
     }
-
-    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleAnimateEntity(this)
 
     companion object {
         @JvmStatic

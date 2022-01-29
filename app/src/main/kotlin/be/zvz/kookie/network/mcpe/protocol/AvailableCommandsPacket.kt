@@ -17,7 +17,6 @@
  */
 package be.zvz.kookie.network.mcpe.protocol
 
-import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
 import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 import be.zvz.kookie.network.mcpe.protocol.types.command.CommandData
 import be.zvz.kookie.network.mcpe.protocol.types.command.CommandEnum
@@ -120,8 +119,6 @@ open class AvailableCommandsPacket : DataPacket(), ClientboundPacket {
         output.putUnsignedVarInt(enumConstraints.size)
         enumConstraints.forEach { putEnumConstraint(it, enumIndexes, enumValueIndexes, output) }
     }
-
-    override fun handle(handler: PacketHandlerInterface): Boolean = false
 
     protected fun getEnum(enumList: List<String>, input: PacketSerializer): CommandEnum {
         val enumName = input.getString()

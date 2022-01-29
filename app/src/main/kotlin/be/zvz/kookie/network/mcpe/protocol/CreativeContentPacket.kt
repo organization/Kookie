@@ -17,7 +17,6 @@
  */
 package be.zvz.kookie.network.mcpe.protocol
 
-import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
 import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 import be.zvz.kookie.network.mcpe.protocol.types.inventory.CreativeContentEntry
 
@@ -40,8 +39,6 @@ class CreativeContentPacket : DataPacket(), ClientboundPacket {
             entry.write(output)
         }
     }
-
-    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleCreativeContent(this)
 
     companion object {
         @JvmStatic

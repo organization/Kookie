@@ -17,7 +17,6 @@
  */
 package be.zvz.kookie.network.mcpe.protocol
 
-import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
 import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 
 @ProtocolIdentify(ProtocolInfo.IDS.GUI_DATA_PICK_ITEM_PACKET)
@@ -38,6 +37,4 @@ class GuiDataPickItemPacket : DataPacket(), ClientboundPacket {
         output.putString(itemEffects)
         output.putLInt(hotbarSlot)
     }
-
-    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleGuiDataPickItem(this)
 }

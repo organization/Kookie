@@ -17,7 +17,6 @@
  */
 package be.zvz.kookie.network.mcpe.protocol
 
-import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
 import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 
 @ProtocolIdentify(ProtocolInfo.IDS.CLIENT_CACHE_STATUS_PACKET)
@@ -32,8 +31,6 @@ class ClientCacheStatusPacket : DataPacket(), ServerboundPacket {
     override fun encodePayload(output: PacketSerializer) {
         output.putBoolean(enabled)
     }
-
-    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleClientCacheStatus(this)
 
     companion object {
         @JvmStatic

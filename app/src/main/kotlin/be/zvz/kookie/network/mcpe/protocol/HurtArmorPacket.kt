@@ -17,7 +17,6 @@
  */
 package be.zvz.kookie.network.mcpe.protocol
 
-import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
 import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 
 @ProtocolIdentify(ProtocolInfo.IDS.HURT_ARMOR_PACKET)
@@ -34,6 +33,4 @@ class HurtArmorPacket : DataPacket(), ClientboundPacket {
         output.putVarInt(cause)
         output.putVarInt(health)
     }
-
-    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleHurtArmor(this)
 }

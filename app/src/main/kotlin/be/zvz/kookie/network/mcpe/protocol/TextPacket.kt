@@ -17,7 +17,6 @@
  */
 package be.zvz.kookie.network.mcpe.protocol
 
-import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
 import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 
 @ProtocolIdentify(ProtocolInfo.IDS.TEXT_PACKET)
@@ -67,8 +66,6 @@ class TextPacket : DataPacket(), ClientboundPacket, ServerboundPacket {
         output.putString(xboxUserId)
         output.putString(platformChatId)
     }
-
-    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleText(this)
 
     companion object {
         const val TYPE_RAW = 0

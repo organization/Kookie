@@ -17,7 +17,6 @@
  */
 package be.zvz.kookie.network.mcpe.protocol
 
-import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
 import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 
 @ProtocolIdentify(ProtocolInfo.IDS.CONTAINER_SET_DATA_PACKET)
@@ -38,8 +37,6 @@ class ContainerSetDataPacket : DataPacket(), ClientboundPacket {
         output.putVarInt(property)
         output.putVarInt(value)
     }
-
-    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleContainerSetData(this)
 
     enum class PROPERTY(value: Int) {
         FURNACE_SMELT_PROGRESS(0),

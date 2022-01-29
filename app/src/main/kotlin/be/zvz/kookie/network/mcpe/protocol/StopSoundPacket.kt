@@ -17,7 +17,6 @@
  */
 package be.zvz.kookie.network.mcpe.protocol
 
-import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
 import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 
 @ProtocolIdentify(ProtocolInfo.IDS.STOP_SOUND_PACKET)
@@ -35,6 +34,4 @@ class StopSoundPacket : DataPacket(), ClientboundPacket {
         output.putString(soundName)
         output.putBoolean(stopAll)
     }
-
-    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleStopSound(this)
 }

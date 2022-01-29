@@ -17,7 +17,6 @@
  */
 package be.zvz.kookie.network.mcpe.protocol
 
-import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
 import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 
 @ProtocolIdentify(ProtocolInfo.IDS.SET_DEFAULT_GAME_TYPE_PACKET)
@@ -32,8 +31,6 @@ class SetDefaultGameTypePacket : DataPacket(), ClientboundPacket, ServerboundPac
     override fun encodePayload(output: PacketSerializer) {
         output.putUnsignedVarInt(gamemode)
     }
-
-    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleSetDefaultGameType(this)
 
     companion object {
         @JvmStatic

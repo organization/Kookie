@@ -17,7 +17,6 @@
  */
 package be.zvz.kookie.network.mcpe.protocol
 
-import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
 import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 
 @ProtocolIdentify(ProtocolInfo.IDS.SIMULATION_TYPE_PACKET)
@@ -42,9 +41,5 @@ class SimulationTypePacket : DataPacket(), ClientboundPacket {
 
     override fun encodePayload(output: PacketSerializer) {
         output.putByte(type.type)
-    }
-
-    override fun handle(handler: PacketHandlerInterface): Boolean {
-        return handler.handleSimulationType(this)
     }
 }

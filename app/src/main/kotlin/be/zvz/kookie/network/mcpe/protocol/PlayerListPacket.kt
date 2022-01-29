@@ -17,7 +17,6 @@
  */
 package be.zvz.kookie.network.mcpe.protocol
 
-import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
 import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 import be.zvz.kookie.network.mcpe.protocol.types.PlayerListEntry
 
@@ -82,8 +81,6 @@ class PlayerListPacket : DataPacket(), ClientboundPacket {
             }
         }
     }
-
-    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handlePlayerList(this)
 
     companion object {
         const val TYPE_ADD = 0

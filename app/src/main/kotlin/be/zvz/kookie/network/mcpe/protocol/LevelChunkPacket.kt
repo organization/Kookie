@@ -17,7 +17,6 @@
  */
 package be.zvz.kookie.network.mcpe.protocol
 
-import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
 import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 
 @ProtocolIdentify(ProtocolInfo.IDS.LEVEL_CHUNK_PACKET)
@@ -54,8 +53,6 @@ class LevelChunkPacket : DataPacket(), ClientboundPacket {
         }
         output.putString(extraPayload)
     }
-
-    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleLevelChunk(this)
 
     companion object {
         @JvmStatic

@@ -42,6 +42,7 @@ class CommandOriginData {
 
         companion object {
             private val VALUES = values()
+
             @JvmStatic
             fun from(findValue: Int): Origin = VALUES.firstOrNull { it.id == findValue } ?: UNKNOWN
         }

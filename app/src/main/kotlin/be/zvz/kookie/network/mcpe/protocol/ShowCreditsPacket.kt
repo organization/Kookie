@@ -17,7 +17,6 @@
  */
 package be.zvz.kookie.network.mcpe.protocol
 
-import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
 import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 
 /**
@@ -53,8 +52,6 @@ class ShowCreditsPacket : DataPacket(), ClientboundPacket, ServerboundPacket {
         output.putEntityRuntimeId(playerEid)
         output.putVarInt(status)
     }
-
-    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleShowCredits(this)
 
     companion object {
         const val STATUS_START_CREDITS = 0

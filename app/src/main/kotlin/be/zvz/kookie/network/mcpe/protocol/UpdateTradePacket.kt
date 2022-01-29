@@ -17,7 +17,6 @@
  */
 package be.zvz.kookie.network.mcpe.protocol
 
-import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
 import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 import be.zvz.kookie.network.mcpe.protocol.types.CacheableNbt
 import be.zvz.kookie.network.mcpe.protocol.types.inventory.WindowTypes
@@ -63,6 +62,4 @@ class UpdateTradePacket : DataPacket(), ClientboundPacket {
         output.putBoolean(isWilling)
         output.put(offers.encodedNbt)
     }
-
-    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleUpdateTrade(this)
 }

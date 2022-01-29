@@ -5,7 +5,6 @@ import be.zvz.kookie.player.PlayerInfo
 import com.nimbusds.jose.shaded.json.JSONArray
 import com.nimbusds.jose.shaded.json.JSONObject
 import com.nimbusds.jose.shaded.json.parser.JSONParser
-import com.nukkitx.protocol.bedrock.handler.BedrockPacketHandler
 import com.nukkitx.protocol.bedrock.packet.LoginPacket
 import com.nukkitx.protocol.bedrock.util.EncryptionUtils
 
@@ -13,7 +12,7 @@ class LoginPacketHandler(
     val networkSession: NetworkSession,
     val playerInfoConsumer: (PlayerInfo) -> Unit,
     val authenticatedConsumer: (Boolean, Boolean, String?, String?) -> Unit
-) : BedrockPacketHandler {
+) : PacketHandler() {
 
     override fun handle(packet: LoginPacket): Boolean {
         val parser =

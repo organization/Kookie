@@ -17,7 +17,6 @@
  */
 package be.zvz.kookie.network.mcpe.protocol
 
-import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
 import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 import be.zvz.kookie.network.mcpe.protocol.types.command.CommandOriginData
 import be.zvz.kookie.network.mcpe.protocol.types.command.CommandOutputMessage
@@ -83,8 +82,6 @@ open class CommandOutputPacket : DataPacket(), ClientboundPacket {
         output.putUnsignedVarInt(message.parameters.size)
         message.parameters.forEach(output::putString)
     }
-
-    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleCommandOutput(this)
 
     enum class Type(val id: Int) {
         LAST(1),

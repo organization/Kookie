@@ -18,7 +18,6 @@
 package be.zvz.kookie.network.mcpe.protocol
 
 import be.zvz.kookie.math.Vector3
-import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
 import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 import be.zvz.kookie.network.mcpe.protocol.types.CacheableNbt
 
@@ -36,8 +35,6 @@ class BlockActorDataPacket : DataPacket(), ClientboundPacket, ServerboundPacket 
         output.putBlockPosition(pos)
         output.put(namedtag.encodedNbt)
     }
-
-    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleBlockActorData(this)
 
     companion object {
         @JvmStatic

@@ -17,7 +17,6 @@
  */
 package be.zvz.kookie.network.mcpe.protocol
 
-import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
 import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 
 @ProtocolIdentify(ProtocolInfo.IDS.MODAL_FORM_REQUEST_PACKET)
@@ -42,6 +41,4 @@ class ModalFormRequestPacket : DataPacket(), ClientboundPacket {
         output.putUnsignedVarInt(formId)
         output.putString(formData)
     }
-
-    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleModalFormRequest(this)
 }

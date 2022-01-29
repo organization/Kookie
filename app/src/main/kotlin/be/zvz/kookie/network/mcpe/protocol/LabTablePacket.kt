@@ -17,7 +17,6 @@
  */
 package be.zvz.kookie.network.mcpe.protocol
 
-import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
 import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 
 /**
@@ -56,8 +55,6 @@ class LabTablePacket : DataPacket(), ClientboundPacket, ServerboundPacket {
         output.putSignedBlockPosition(position)
         output.putByte(reactionType)
     }
-
-    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleLabTable(this)
 
     companion object {
         const val TYPE_START_COMBINE = 0

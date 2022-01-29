@@ -17,7 +17,6 @@
  */
 package be.zvz.kookie.network.mcpe.protocol
 
-import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
 import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 
 @ProtocolIdentify(ProtocolInfo.IDS.BOSS_EVENT_PACKET)
@@ -85,8 +84,6 @@ class BossEventPacket : DataPacket(), ClientboundPacket, ServerboundPacket {
             TYPE_TITLE -> output.putString(title)
         }
     }
-
-    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleBossEvent(this)
 
     companion object {
         const val TYPE_SHOW = 0

@@ -17,7 +17,6 @@
  */
 package be.zvz.kookie.network.mcpe.protocol
 
-import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
 import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 
 @ProtocolIdentify(ProtocolInfo.IDS.NETWORK_STACK_LATENCY_PACKET)
@@ -35,8 +34,6 @@ class NetworkStackLatencyPacket : DataPacket(), ClientboundPacket, ServerboundPa
         output.putLLong(timestamp)
         output.putBoolean(needResponse)
     }
-
-    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleNetworkStackLatency(this)
 
     companion object {
         @JvmStatic

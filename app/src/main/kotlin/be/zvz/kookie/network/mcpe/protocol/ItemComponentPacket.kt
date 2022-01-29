@@ -18,7 +18,6 @@
 package be.zvz.kookie.network.mcpe.protocol
 
 import be.zvz.kookie.nbt.TreeRoot
-import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
 import be.zvz.kookie.network.mcpe.protocol.serializer.NetworkNbtSerializer
 import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 import be.zvz.kookie.network.mcpe.protocol.types.ItemComponentPacketEntry
@@ -45,8 +44,6 @@ class ItemComponentPacket : DataPacket(), ClientboundPacket {
             output.put(NetworkNbtSerializer().write(TreeRoot(it.componentNbt)))
         }
     }
-
-    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleItemComponent(this)
 
     companion object {
         @JvmStatic

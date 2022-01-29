@@ -17,7 +17,6 @@
  */
 package be.zvz.kookie.network.mcpe.protocol
 
-import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
 import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 
 @ProtocolIdentify(ProtocolInfo.IDS.ADD_ENTITY_PACKET)
@@ -39,6 +38,4 @@ class AddEntityPacket : DataPacket(), ClientboundPacket {
     override fun encodePayload(output: PacketSerializer) {
         output.putUnsignedVarInt(entityNetId)
     }
-
-    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleAddEntity(this)
 }

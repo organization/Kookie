@@ -17,7 +17,6 @@
  */
 package be.zvz.kookie.network.mcpe.protocol
 
-import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
 import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 import be.zvz.kookie.network.mcpe.protocol.types.command.CommandOriginData
 
@@ -39,6 +38,4 @@ class CommandRequestPacket : DataPacket(), ServerboundPacket {
         output.putCommandOriginData(originData)
         output.putBoolean(isInternal)
     }
-
-    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleCommandRequest(this)
 }

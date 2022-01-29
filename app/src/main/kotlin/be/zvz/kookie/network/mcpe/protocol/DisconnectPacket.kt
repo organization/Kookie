@@ -17,7 +17,6 @@
  */
 package be.zvz.kookie.network.mcpe.protocol
 
-import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
 import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 
 @ProtocolIdentify(ProtocolInfo.IDS.DISCONNECT_PACKET)
@@ -42,8 +41,6 @@ class DisconnectPacket : DataPacket(), ClientboundPacket, ServerboundPacket {
             output.putString(message)
         }
     }
-
-    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleDisconnect(this)
 
     companion object {
         @JvmStatic

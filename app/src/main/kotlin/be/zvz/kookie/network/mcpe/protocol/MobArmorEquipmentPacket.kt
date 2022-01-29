@@ -17,7 +17,6 @@
  */
 package be.zvz.kookie.network.mcpe.protocol
 
-import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
 import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 import be.zvz.kookie.network.mcpe.protocol.types.inventory.ItemStackWrapper
 
@@ -45,8 +44,6 @@ class MobArmorEquipmentPacket : DataPacket(), ClientboundPacket, ServerboundPack
         legs.write(output)
         feet.write(output)
     }
-
-    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleMobArmorEquipment(this)
 
     companion object {
         @JvmStatic

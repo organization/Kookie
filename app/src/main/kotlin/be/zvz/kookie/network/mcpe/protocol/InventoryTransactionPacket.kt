@@ -17,7 +17,6 @@
  */
 package be.zvz.kookie.network.mcpe.protocol
 
-import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
 import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 import be.zvz.kookie.network.mcpe.protocol.types.inventory.InventoryTransactionChangedSlotsHack
 import be.zvz.kookie.network.mcpe.protocol.types.inventory.MismatchTransactionData
@@ -66,8 +65,6 @@ class InventoryTransactionPacket : DataPacket(), ClientboundPacket, ServerboundP
         output.putUnsignedVarInt(trData.typeId)
         trData.encode(output)
     }
-
-    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleInventoryTransaction(this)
 
     companion object {
         const val TYPE_NORMAL = 0

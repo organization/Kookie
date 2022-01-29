@@ -19,7 +19,6 @@ package be.zvz.kookie.network.mcpe.protocol
 
 import be.zvz.kookie.nbt.TreeRoot
 import be.zvz.kookie.nbt.tag.CompoundTag
-import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
 import be.zvz.kookie.network.mcpe.protocol.serializer.NetworkNbtSerializer
 import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 
@@ -39,6 +38,4 @@ class AddVolumeEntityPacket : DataPacket(), ClientboundPacket {
         output.putUnsignedVarInt(entityNetId)
         output.put(NetworkNbtSerializer().write(TreeRoot(data)))
     }
-
-    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleAddVolumeEntity(this)
 }

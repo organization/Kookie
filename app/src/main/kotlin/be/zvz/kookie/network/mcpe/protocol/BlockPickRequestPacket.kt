@@ -17,7 +17,6 @@
  */
 package be.zvz.kookie.network.mcpe.protocol
 
-import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
 import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 
 @ProtocolIdentify(ProtocolInfo.IDS.BLOCK_PICK_REQUEST_PACKET)
@@ -37,6 +36,4 @@ class BlockPickRequestPacket : DataPacket(), ServerboundPacket {
         output.putBoolean(addUserData)
         output.putByte(hotbarSlot)
     }
-
-    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleBlockPickRequest(this)
 }

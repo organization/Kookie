@@ -17,7 +17,6 @@
  */
 package be.zvz.kookie.network.mcpe.protocol
 
-import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
 import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 
 @ProtocolIdentify(ProtocolInfo.IDS.NPC_DIALOGUE_PACKET)
@@ -55,9 +54,5 @@ class NpcDialoguePacket : DataPacket(), ClientboundPacket {
         output.putString(sceneName)
         output.putString(npcName)
         output.putString(actionJson)
-    }
-
-    override fun handle(handler: PacketHandlerInterface): Boolean {
-        return handler.handleNpcDialogue(this)
     }
 }

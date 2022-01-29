@@ -17,7 +17,6 @@
  */
 package be.zvz.kookie.network.mcpe.protocol
 
-import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
 import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 
 @ProtocolIdentify(ProtocolInfo.IDS.SHOW_STORE_OFFER_PACKET)
@@ -35,6 +34,4 @@ class ShowStoreOfferPacket : DataPacket(), ClientboundPacket {
         output.putString(offerId)
         output.putBoolean(showAll)
     }
-
-    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleShowStoreOffer(this)
 }

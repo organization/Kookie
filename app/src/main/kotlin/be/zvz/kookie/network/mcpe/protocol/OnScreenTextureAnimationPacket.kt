@@ -17,7 +17,6 @@
  */
 package be.zvz.kookie.network.mcpe.protocol
 
-import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
 import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 
 @ProtocolIdentify(ProtocolInfo.IDS.ON_SCREEN_TEXTURE_ANIMATION_PACKET)
@@ -32,6 +31,4 @@ class OnScreenTextureAnimationPacket : DataPacket(), ClientboundPacket {
     override fun encodePayload(output: PacketSerializer) {
         output.putLInt(effectId)
     }
-
-    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleOnScreenTextureAnimation(this)
 }

@@ -18,7 +18,6 @@
 package be.zvz.kookie.network.mcpe.protocol
 
 import be.zvz.kookie.math.Vector3
-import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
 import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 import be.zvz.kookie.network.mcpe.protocol.types.PlayMode
 
@@ -71,8 +70,6 @@ class PlayerAuthInputPacket : DataPacket(), ServerboundPacket {
         output.putUnsignedVarLong(tick)
         output.putVector3(delta)
     }
-
-    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handlePlayerAuthInput(this)
 
     companion object {
         @JvmStatic

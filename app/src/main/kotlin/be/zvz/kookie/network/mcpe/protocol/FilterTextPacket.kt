@@ -17,7 +17,6 @@
  */
 package be.zvz.kookie.network.mcpe.protocol
 
-import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
 import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 
 @ProtocolIdentify(ProtocolInfo.IDS.FILTER_TEXT_PACKET)
@@ -35,8 +34,6 @@ class FilterTextPacket : DataPacket(), ClientboundPacket, ServerboundPacket {
         output.putString(text)
         output.putBoolean(fromServer)
     }
-
-    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleFilterText(this)
 
     companion object {
         @JvmStatic

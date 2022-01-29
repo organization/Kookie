@@ -18,7 +18,6 @@
 package be.zvz.kookie.network.mcpe.protocol
 
 import be.zvz.kookie.math.Vector3
-import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
 import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 import be.zvz.kookie.network.mcpe.protocol.types.DeviceOS
 import be.zvz.kookie.network.mcpe.protocol.types.entity.EntityLink
@@ -112,6 +111,4 @@ class AddPlayerPacket : DataPacket(), ClientboundPacket {
         output.putString(deviceId)
         output.putLInt(buildPlatform.id)
     }
-
-    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleAddPlayer(this)
 }

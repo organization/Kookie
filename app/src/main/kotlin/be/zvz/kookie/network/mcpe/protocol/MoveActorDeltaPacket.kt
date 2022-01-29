@@ -17,7 +17,6 @@
  */
 package be.zvz.kookie.network.mcpe.protocol
 
-import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
 import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 
 @ProtocolIdentify(ProtocolInfo.IDS.MOVE_ACTOR_DELTA_PACKET)
@@ -79,8 +78,6 @@ class MoveActorDeltaPacket : DataPacket(), ClientboundPacket {
         maybeWriteRotation(FLAG_HAS_ROT_Y, yRot, output)
         maybeWriteRotation(FLAG_HAS_ROT_Z, zRot, output)
     }
-
-    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleMoveActorDelta(this)
 
     companion object {
         const val FLAG_HAS_X = 0x01

@@ -17,7 +17,6 @@
  */
 package be.zvz.kookie.network.mcpe.protocol
 
-import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
 import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 
 @ProtocolIdentify(ProtocolInfo.IDS.UPDATE_BLOCK_SYNCED_PACKET)
@@ -37,8 +36,6 @@ class UpdateBlockSyncedPacket : UpdateBlockPacket() {
         output.putUnsignedVarLong(entityUniqueId)
         output.putUnsignedVarLong(updateType)
     }
-
-    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleUpdateBlockSynced(this)
 
     companion object {
         const val NONE = 0

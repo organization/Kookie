@@ -17,7 +17,6 @@
  */
 package be.zvz.kookie.network.mcpe.protocol
 
-import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
 import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 
 @ProtocolIdentify(ProtocolInfo.IDS.REMOVE_ENTITY_PACKET)
@@ -31,8 +30,6 @@ class RemoveEntityPacket : DataPacket(), ClientboundPacket {
     override fun encodePayload(output: PacketSerializer) {
         output.putUnsignedVarInt(uvarInt1)
     }
-
-    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleRemoveEntity(this)
 
     companion object {
         @JvmStatic

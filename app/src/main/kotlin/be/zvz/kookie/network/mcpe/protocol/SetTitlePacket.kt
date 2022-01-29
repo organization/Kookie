@@ -17,7 +17,6 @@
  */
 package be.zvz.kookie.network.mcpe.protocol
 
-import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
 import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 
 @ProtocolIdentify(ProtocolInfo.IDS.SET_TITLE_PACKET)
@@ -50,8 +49,6 @@ class SetTitlePacket : DataPacket(), ClientboundPacket {
         output.putString(xuid)
         output.putString(platformOnlineId)
     }
-
-    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleSetTitle(this)
 
     companion object {
         const val TYPE_CLEAR_TITLE = 0

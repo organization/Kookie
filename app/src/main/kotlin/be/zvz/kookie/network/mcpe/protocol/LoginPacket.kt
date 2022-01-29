@@ -17,7 +17,6 @@
  */
 package be.zvz.kookie.network.mcpe.protocol
 
-import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
 import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 import be.zvz.kookie.network.mcpe.protocol.types.login.JwtChain
 import be.zvz.kookie.utils.BinaryStream
@@ -76,6 +75,4 @@ class LoginPacket : DataPacket(), ServerboundPacket {
 
         return connectionReqWriter.buffer.toString()
     }
-
-    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleLogin(this)
 }

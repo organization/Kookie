@@ -17,7 +17,6 @@
  */
 package be.zvz.kookie.network.mcpe.protocol
 
-import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
 import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 
 @ProtocolIdentify(ProtocolInfo.IDS.MULTIPLAYER_SETTINGS_PACKET)
@@ -31,8 +30,6 @@ class MultiplayerSettingsPacket : DataPacket(), ClientboundPacket, ServerboundPa
     override fun encodePayload(output: PacketSerializer) {
         output.putVarInt(action.value)
     }
-
-    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleMultiplayerSettings(this)
 
     enum class Action(val value: Int) {
         ENABLE_MULTIPLAYER(0),

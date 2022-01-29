@@ -17,7 +17,6 @@
  */
 package be.zvz.kookie.network.mcpe.protocol
 
-import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
 import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 import be.zvz.kookie.network.mcpe.protocol.types.inventory.ContainerIds
 
@@ -39,8 +38,6 @@ class PlayerHotbarPacket : DataPacket(), ClientboundPacket, ServerboundPacket {
         output.putByte(windowId)
         output.putBoolean(selectHotbarSlot)
     }
-
-    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handlePlayerHotbar(this)
 
     companion object {
         @JvmStatic

@@ -17,7 +17,6 @@
  */
 package be.zvz.kookie.network.mcpe.protocol
 
-import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
 import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 import be.zvz.kookie.network.mcpe.protocol.types.ScorePacketEntry
 import be.zvz.kookie.network.mcpe.protocol.types.ScorePacketEntry.Type as EntryType
@@ -66,14 +65,13 @@ class SetScorePacket : DataPacket(), ClientboundPacket {
         }
     }
 
-    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleSetScore(this)
-
     enum class Type(val id: Int) {
         CHANGE(0),
         REMOVE(1);
 
         companion object {
             private val VALUES = values()
+
             @JvmStatic
             fun from(value: Int) = VALUES.firstOrNull { it.id == value }
                 ?: throw PacketDecodeException("Unhandled set score type $value!")

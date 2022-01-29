@@ -17,7 +17,6 @@
  */
 package be.zvz.kookie.network.mcpe.protocol
 
-import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
 import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 import be.zvz.kookie.network.mcpe.protocol.types.inventory.stackresponse.ItemStackResponse
 
@@ -38,8 +37,6 @@ class ItemStackResponsePacket : DataPacket(), ClientboundPacket {
             it.write(output)
         }
     }
-
-    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleItemStackResponse(this)
 
     companion object {
         @JvmStatic

@@ -17,7 +17,6 @@
  */
 package be.zvz.kookie.network.mcpe.protocol
 
-import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
 import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 
 @ProtocolIdentify(ProtocolInfo.IDS.UPDATE_BLOCK_PACKET)
@@ -45,8 +44,6 @@ open class UpdateBlockPacket : DataPacket(), ClientboundPacket {
         output.putUnsignedVarInt(flags)
         output.putUnsignedVarInt(dataLayerId)
     }
-
-    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleUpdateBlock(this)
 
     companion object {
         const val DATA_LAYER_NORMAL = 0

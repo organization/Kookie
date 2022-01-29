@@ -17,7 +17,6 @@
  */
 package be.zvz.kookie.network.mcpe.protocol
 
-import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
 import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 
 @ProtocolIdentify(ProtocolInfo.IDS.PURCHASE_RECEIPT_PACKET)
@@ -34,6 +33,4 @@ class PurchaseReceiptPacket : DataPacket(), ServerboundPacket {
         output.putUnsignedVarInt(entries.size)
         entries.forEach(output::putString)
     }
-
-    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handlePurchaseReceipt(this)
 }

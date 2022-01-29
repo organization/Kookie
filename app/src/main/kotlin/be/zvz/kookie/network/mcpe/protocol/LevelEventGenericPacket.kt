@@ -18,7 +18,6 @@
 package be.zvz.kookie.network.mcpe.protocol
 
 import be.zvz.kookie.nbt.tag.CompoundTag
-import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
 import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 import be.zvz.kookie.network.mcpe.protocol.types.CacheableNbt
 
@@ -37,8 +36,6 @@ class LevelEventGenericPacket : DataPacket(), ClientboundPacket {
         output.putVarInt(eventId)
         output.put(eventData.encodedNbt)
     }
-
-    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleLevelEventGeneric(this)
 
     companion object {
         @JvmStatic

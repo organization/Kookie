@@ -18,7 +18,6 @@
 package be.zvz.kookie.network.mcpe.protocol
 
 import be.zvz.kookie.math.Vector3
-import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
 import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 
 @ProtocolIdentify(ProtocolInfo.IDS.LEVEL_EVENT_PACKET)
@@ -38,8 +37,6 @@ class LevelEventPacket : DataPacket(), ClientboundPacket {
         output.putVector3Nullable(position)
         output.putVarInt(data)
     }
-
-    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleLevelEvent(this)
 
     companion object {
         const val EVENT_SOUND_CLICK = 1000

@@ -17,7 +17,6 @@
  */
 package be.zvz.kookie.network.mcpe.protocol
 
-import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
 import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 
 @ProtocolIdentify(ProtocolInfo.IDS.EMOTE_PACKET)
@@ -38,8 +37,6 @@ class EmotePacket : DataPacket(), ClientboundPacket, ServerboundPacket {
         output.putString(emoteId)
         output.putByte(flags)
     }
-
-    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleEmote(this)
 
     companion object {
         const val FLAG_SERVER = 1 shl 0

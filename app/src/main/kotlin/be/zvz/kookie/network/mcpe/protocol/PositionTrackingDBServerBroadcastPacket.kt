@@ -17,7 +17,6 @@
  */
 package be.zvz.kookie.network.mcpe.protocol
 
-import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
 import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 import be.zvz.kookie.network.mcpe.protocol.types.CacheableNbt
 
@@ -46,8 +45,6 @@ class PositionTrackingDBServerBroadcastPacket : DataPacket(), ClientboundPacket 
         output.put(nbt.encodedNbt)
     }
 
-    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handlePositionTrackingDBServerBroadcast(this)
-
     enum class Action(val value: Int) {
         UPDATE(0),
         DESTROY(1),
@@ -55,6 +52,7 @@ class PositionTrackingDBServerBroadcastPacket : DataPacket(), ClientboundPacket 
 
         companion object {
             private val VALUES = values()
+
             @JvmStatic
             fun from(value: Int) = VALUES.first { it.value == value }
         }

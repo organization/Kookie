@@ -17,7 +17,6 @@
  */
 package be.zvz.kookie.network.mcpe.protocol
 
-import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
 import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 import be.zvz.kookie.network.mcpe.protocol.types.CacheableNbt
 
@@ -33,8 +32,6 @@ class BiomeDefinitionListPacket : DataPacket(), ClientboundPacket {
     override fun encodePayload(output: PacketSerializer) {
         output.put(defs.encodedNbt)
     }
-
-    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleBiomeDefinitionList(this)
 
     companion object {
         @JvmStatic

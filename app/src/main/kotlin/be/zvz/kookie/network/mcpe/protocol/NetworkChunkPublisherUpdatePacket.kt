@@ -17,7 +17,6 @@
  */
 package be.zvz.kookie.network.mcpe.protocol
 
-import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
 import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 
 @ProtocolIdentify(ProtocolInfo.IDS.NETWORK_CHUNK_PUBLISHER_UPDATE_PACKET)
@@ -35,8 +34,6 @@ class NetworkChunkPublisherUpdatePacket : DataPacket(), ClientboundPacket {
         output.putSignedBlockPosition(position)
         output.putUnsignedVarInt(radius)
     }
-
-    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleNetworkChunkPublisherUpdate(this)
 
     companion object {
         @JvmStatic

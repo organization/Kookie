@@ -17,7 +17,6 @@
  */
 package be.zvz.kookie.network.mcpe.protocol
 
-import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
 import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 import be.zvz.kookie.network.mcpe.protocol.types.StructureSettings
 
@@ -44,8 +43,6 @@ class StructureTemplateDataRequestPacket : DataPacket(), ServerboundPacket {
         output.putStructureSettings(structureSettings)
         output.putByte(structureTemplateResponseType)
     }
-
-    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleStructureTemplateDataRequest(this)
 
     enum class Type(val value: Int) {
         ALWAYS_LOAD(1),

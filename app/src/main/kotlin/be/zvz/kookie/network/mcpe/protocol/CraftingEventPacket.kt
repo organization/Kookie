@@ -17,7 +17,6 @@
  */
 package be.zvz.kookie.network.mcpe.protocol
 
-import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
 import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 import be.zvz.kookie.network.mcpe.protocol.types.inventory.ItemStackWrapper
 import java.util.UUID
@@ -60,6 +59,4 @@ class CraftingEventPacket : DataPacket(), ServerboundPacket {
             item.write(output)
         }
     }
-
-    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleCraftingEvent(this)
 }

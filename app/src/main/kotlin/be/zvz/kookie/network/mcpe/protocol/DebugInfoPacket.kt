@@ -17,7 +17,6 @@
  */
 package be.zvz.kookie.network.mcpe.protocol
 
-import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
 import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 
 @ProtocolIdentify(ProtocolInfo.IDS.DEBUG_INFO_PACKET)
@@ -35,8 +34,6 @@ class DebugInfoPacket : DataPacket(), ClientboundPacket, ServerboundPacket {
         output.putEntityUniqueId(entityUniqueId)
         output.putString(data)
     }
-
-    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleDebugInfo(this)
 
     companion object {
         @JvmStatic

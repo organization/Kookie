@@ -21,7 +21,6 @@ import be.zvz.kookie.VersionInfo
 import be.zvz.kookie.math.Vector3
 import be.zvz.kookie.nbt.LittleEndianNbtSerializer
 import be.zvz.kookie.nbt.TreeRoot
-import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
 import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 import be.zvz.kookie.network.mcpe.protocol.types.BlockPaletteEntry
 import be.zvz.kookie.network.mcpe.protocol.types.EducationOffer
@@ -185,9 +184,5 @@ class StartGamePacket : DataPacket(), ClientboundPacket {
         output.putString(multiplayerCorrelationId)
         output.putBoolean(enableNewInventorySystem)
         output.putString(serverSoftwareVersion)
-    }
-
-    override fun handle(handler: PacketHandlerInterface): Boolean {
-        TODO("Not yet implemented")
     }
 }

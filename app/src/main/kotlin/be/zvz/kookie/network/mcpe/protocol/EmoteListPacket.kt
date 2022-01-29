@@ -17,7 +17,6 @@
  */
 package be.zvz.kookie.network.mcpe.protocol
 
-import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
 import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 import java.util.UUID
 
@@ -41,8 +40,6 @@ class EmoteListPacket : DataPacket(), ClientboundPacket, ServerboundPacket {
         output.putUnsignedVarInt(emoteIds.size)
         emoteIds.forEach(output::putUUID)
     }
-
-    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleEmoteList(this)
 
     companion object {
         @JvmStatic

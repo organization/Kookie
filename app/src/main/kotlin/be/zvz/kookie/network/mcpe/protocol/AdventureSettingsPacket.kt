@@ -17,7 +17,6 @@
  */
 package be.zvz.kookie.network.mcpe.protocol
 
-import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
 import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 import be.zvz.kookie.network.mcpe.protocol.types.PlayerPermissions
 
@@ -62,8 +61,6 @@ class AdventureSettingsPacket : DataPacket(), ClientboundPacket, ServerboundPack
             Pair(1, false) -> flags2 = flags2 and flag.inv()
         }
     }
-
-    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleAdventureSettings(this)
 
     companion object {
         const val PERMISSION_NORMAL = 0

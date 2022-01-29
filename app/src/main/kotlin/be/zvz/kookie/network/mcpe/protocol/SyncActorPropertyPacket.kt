@@ -19,7 +19,6 @@ package be.zvz.kookie.network.mcpe.protocol
 
 import be.zvz.kookie.nbt.TreeRoot
 import be.zvz.kookie.nbt.tag.CompoundTag
-import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
 import be.zvz.kookie.network.mcpe.protocol.serializer.NetworkNbtSerializer
 import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 
@@ -35,6 +34,4 @@ class SyncActorPropertyPacket : DataPacket() {
     override fun encodePayload(output: PacketSerializer) {
         output.put(NetworkNbtSerializer().write(TreeRoot(data)))
     }
-
-    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleSyncActorProperty(this)
 }

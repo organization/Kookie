@@ -17,7 +17,6 @@
  */
 package be.zvz.kookie.network.mcpe.protocol
 
-import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
 import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 
 @ProtocolIdentify(ProtocolInfo.IDS.PLAYER_FOG_PACKET)
@@ -43,6 +42,4 @@ class PlayerFogPacket : DataPacket(), ClientboundPacket {
         output.putUnsignedVarInt(fogLayers.size)
         fogLayers.forEach(output::putString)
     }
-
-    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handlePlayerFog(this)
 }

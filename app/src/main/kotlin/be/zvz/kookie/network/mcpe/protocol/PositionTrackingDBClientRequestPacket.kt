@@ -17,7 +17,6 @@
  */
 package be.zvz.kookie.network.mcpe.protocol
 
-import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
 import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 
 @ProtocolIdentify(ProtocolInfo.IDS.POSITION_TRACKING_D_B_CLIENT_REQUEST_PACKET)
@@ -40,8 +39,6 @@ class PositionTrackingDBClientRequestPacket : DataPacket(), ServerboundPacket {
         output.putByte(action)
         output.putVarInt(trackingId)
     }
-
-    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handlePositionTrackingDBClientRequest(this)
 
     enum class Action(val id: Int) {
         QUERY(0);

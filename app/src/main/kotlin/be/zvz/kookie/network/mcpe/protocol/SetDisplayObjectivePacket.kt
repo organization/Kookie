@@ -17,7 +17,6 @@
  */
 package be.zvz.kookie.network.mcpe.protocol
 
-import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
 import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 
 @ProtocolIdentify(ProtocolInfo.IDS.SET_DISPLAY_OBJECTIVE_PACKET)
@@ -44,6 +43,4 @@ class SetDisplayObjectivePacket : DataPacket(), ClientboundPacket {
         output.putString(criteriaName)
         output.putVarInt(sortOrder)
     }
-
-    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleSetDisplayObjective(this)
 }

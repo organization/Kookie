@@ -17,7 +17,6 @@
  */
 package be.zvz.kookie.network.mcpe.protocol
 
-import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
 import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 import be.zvz.kookie.network.mcpe.protocol.types.entity.EntityLink
 
@@ -33,6 +32,4 @@ class SetActorLinkPacket : DataPacket(), ClientboundPacket {
     override fun encodePayload(output: PacketSerializer) {
         output.putEntityLink(link)
     }
-
-    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleSetActorLink(this)
 }

@@ -17,7 +17,6 @@
  */
 package be.zvz.kookie.network.mcpe.protocol
 
-import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
 import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 import be.zvz.kookie.network.mcpe.protocol.types.inventory.ItemStackWrapper
 
@@ -45,8 +44,6 @@ class MobEquipmentPacket : DataPacket(), ClientboundPacket, ServerboundPacket {
         output.putByte(hotbarSlot)
         output.putByte(windowId)
     }
-
-    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleMobEquipment(this)
 
     companion object {
         @JvmStatic

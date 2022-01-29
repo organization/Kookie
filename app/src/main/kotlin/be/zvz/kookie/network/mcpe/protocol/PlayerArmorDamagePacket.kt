@@ -17,7 +17,6 @@
  */
 package be.zvz.kookie.network.mcpe.protocol
 
-import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
 import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 
 @ProtocolIdentify(ProtocolInfo.IDS.PLAYER_ARMOR_DAMAGE_PACKET)
@@ -65,8 +64,6 @@ class PlayerArmorDamagePacket : DataPacket(), ClientboundPacket {
         maybeWriteDamage(legsSlotDamage, output)
         maybeWriteDamage(feetSlotDamage, output)
     }
-
-    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handlePlayerArmorDamage(this)
 
     companion object {
         const val FLAG_HEAD = 0

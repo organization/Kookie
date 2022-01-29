@@ -17,7 +17,6 @@
  */
 package be.zvz.kookie.network.mcpe.protocol
 
-import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
 import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 
 @ProtocolIdentify(ProtocolInfo.IDS.SERVER_SETTINGS_REQUEST_PACKET)
@@ -30,6 +29,4 @@ class ServerSettingsRequestPacket : DataPacket(), ServerboundPacket {
     override fun encodePayload(output: PacketSerializer) {
         // No payload
     }
-
-    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleServerSettingsRequest(this)
 }

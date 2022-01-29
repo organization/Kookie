@@ -17,7 +17,6 @@
  */
 package be.zvz.kookie.network.mcpe.protocol
 
-import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
 import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 
 @ProtocolIdentify(ProtocolInfo.IDS.TAKE_ITEM_ACTOR_PACKET)
@@ -35,6 +34,4 @@ class TakeItemActorPacket : DataPacket(), ClientboundPacket {
         output.putEntityRuntimeId(target)
         output.putEntityRuntimeId(eid)
     }
-
-    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleTakeItemActor(this)
 }

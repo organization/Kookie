@@ -17,7 +17,6 @@
  */
 package be.zvz.kookie.network.mcpe.protocol
 
-import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
 import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 
 @ProtocolIdentify(ProtocolInfo.IDS.SET_DIFFICULTY_PACKET)
@@ -32,8 +31,6 @@ class SetDifficultyPacket : DataPacket(), ClientboundPacket, ServerboundPacket {
     override fun encodePayload(output: PacketSerializer) {
         output.putUnsignedVarInt(difficulty)
     }
-
-    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleSetDifficulty(this)
 
     companion object {
         @JvmStatic

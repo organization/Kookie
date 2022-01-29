@@ -17,7 +17,6 @@
  */
 package be.zvz.kookie.network.mcpe.protocol
 
-import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
 import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 
 @ProtocolIdentify(ProtocolInfo.IDS.SERVER_TO_CLIENT_HANDSHAKE_PACKET)
@@ -36,6 +35,4 @@ class ServerToClientHandshakePacket : DataPacket(), ClientboundPacket {
     override fun encodePayload(output: PacketSerializer) {
         output.putString(jwt)
     }
-
-    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleServerToClientHandshake(this)
 }

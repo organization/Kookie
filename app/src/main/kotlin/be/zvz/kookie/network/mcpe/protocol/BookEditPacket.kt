@@ -17,7 +17,6 @@
  */
 package be.zvz.kookie.network.mcpe.protocol
 
-import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
 import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 
 @ProtocolIdentify(ProtocolInfo.IDS.BOOK_EDIT_PACKET)
@@ -84,8 +83,6 @@ class BookEditPacket : DataPacket(), ServerboundPacket {
             else -> throw IllegalArgumentException("Unknown book edit type type!")
         }
     }
-
-    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleBookEdit(this)
 
     companion object {
         const val TYPE_REPLACE_PAGE = 0

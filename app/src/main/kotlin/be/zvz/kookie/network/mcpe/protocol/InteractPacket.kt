@@ -17,7 +17,6 @@
  */
 package be.zvz.kookie.network.mcpe.protocol
 
-import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
 import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 
 @ProtocolIdentify(ProtocolInfo.IDS.INTERACT_PACKET)
@@ -50,8 +49,6 @@ class InteractPacket : DataPacket(), ServerboundPacket {
             output.putLFloat(z)
         }
     }
-
-    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleInteract(this)
 
     companion object {
         const val ACTION_LEAVE_VEHICLE = 3

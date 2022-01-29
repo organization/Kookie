@@ -17,7 +17,6 @@
  */
 package be.zvz.kookie.network.mcpe.protocol
 
-import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
 import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 import be.zvz.kookie.network.mcpe.protocol.types.StructureEditorData
 
@@ -39,6 +38,4 @@ class StructureBlockUpdatePacket : DataPacket(), ServerboundPacket {
         output.putStructureEditorData(structureEditorData)
         output.putBoolean(isPowered)
     }
-
-    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleStructureBlockUpdate(this)
 }

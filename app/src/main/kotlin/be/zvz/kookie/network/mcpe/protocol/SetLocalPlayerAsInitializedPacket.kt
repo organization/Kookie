@@ -17,7 +17,6 @@
  */
 package be.zvz.kookie.network.mcpe.protocol
 
-import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
 import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 
 @ProtocolIdentify(ProtocolInfo.IDS.SET_LOCAL_PLAYER_AS_INITIALIZED_PACKET)
@@ -32,6 +31,4 @@ class SetLocalPlayerAsInitializedPacket : DataPacket(), ServerboundPacket {
     override fun encodePayload(output: PacketSerializer) {
         output.putEntityRuntimeId(entityRuntimeId)
     }
-
-    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleSetLocalPlayerAsInitialized(this)
 }

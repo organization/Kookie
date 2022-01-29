@@ -17,7 +17,6 @@
  */
 package be.zvz.kookie.network.mcpe.protocol
 
-import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
 import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 import be.zvz.kookie.network.mcpe.protocol.types.resourcepack.BehaviorPackEntry
 import be.zvz.kookie.network.mcpe.protocol.types.resourcepack.ResourcePackEntry
@@ -63,6 +62,4 @@ class ResourcePacksInfoPacket : DataPacket(), ClientboundPacket {
             it.write(output)
         }
     }
-
-    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleResourcePacksInfo(this)
 }

@@ -17,7 +17,6 @@
  */
 package be.zvz.kookie.network.mcpe.protocol
 
-import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
 import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 
 @ProtocolIdentify(ProtocolInfo.IDS.PHOTO_TRANSFER_PACKET)
@@ -40,6 +39,4 @@ class PhotoTransferPacket : DataPacket(), ClientboundPacket {
         output.putString(photoData)
         output.putString(bookId)
     }
-
-    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handlePhotoTransfer(this)
 }

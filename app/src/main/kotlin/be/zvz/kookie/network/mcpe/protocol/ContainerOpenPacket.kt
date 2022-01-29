@@ -18,7 +18,6 @@
 package be.zvz.kookie.network.mcpe.protocol
 
 import be.zvz.kookie.math.Vector3
-import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
 import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 
 @ProtocolIdentify(ProtocolInfo.IDS.CONTAINER_OPEN_PACKET)
@@ -42,8 +41,6 @@ class ContainerOpenPacket : DataPacket(), ClientboundPacket {
         output.putBlockPosition(pos)
         output.putEntityUniqueId(entityUniqueId)
     }
-
-    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleContainerOpen(this)
 
     companion object {
         @JvmStatic

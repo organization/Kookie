@@ -17,7 +17,6 @@
  */
 package be.zvz.kookie.network.mcpe.protocol
 
-import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
 import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 
 @ProtocolIdentify(ProtocolInfo.IDS.CONTAINER_CLOSE_PACKET)
@@ -35,8 +34,6 @@ class ContainerClosePacket : DataPacket(), ClientboundPacket, ServerboundPacket 
         output.putByte(windowId)
         output.putBoolean(server)
     }
-
-    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleContainerClose(this)
 
     companion object {
         @JvmStatic

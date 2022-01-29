@@ -18,7 +18,6 @@
 package be.zvz.kookie.network.mcpe.protocol
 
 import be.zvz.kookie.math.Facing
-import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
 import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 
 @ProtocolIdentify(ProtocolInfo.IDS.PLAYER_ACTION_PACKET)
@@ -41,8 +40,6 @@ class PlayerActionPacket : DataPacket(), ServerboundPacket {
         output.putBlockPosition(pos)
         output.putVarInt(face.value)
     }
-
-    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handlePlayerAction(this)
 
     companion object {
         const val ACTION_START_BREAK = 0

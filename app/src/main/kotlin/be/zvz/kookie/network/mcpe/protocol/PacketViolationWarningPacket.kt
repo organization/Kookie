@@ -17,7 +17,6 @@
  */
 package be.zvz.kookie.network.mcpe.protocol
 
-import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
 import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 
 @ProtocolIdentify(ProtocolInfo.IDS.PACKET_VIOLATION_WARNING_PACKET)
@@ -41,8 +40,6 @@ class PacketViolationWarningPacket : DataPacket(), ServerboundPacket {
         output.putVarInt(packetId)
         output.putString(message)
     }
-
-    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handlePacketViolationWarning(this)
 
     companion object {
         const val TYPE_MALFORMED = 0

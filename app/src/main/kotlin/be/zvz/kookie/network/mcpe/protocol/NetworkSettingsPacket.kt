@@ -17,7 +17,6 @@
  */
 package be.zvz.kookie.network.mcpe.protocol
 
-import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
 import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 
 @ProtocolIdentify(ProtocolInfo.IDS.NETWORK_SETTINGS_PACKET)
@@ -41,6 +40,4 @@ class NetworkSettingsPacket : DataPacket(), ClientboundPacket {
     override fun encodePayload(output: PacketSerializer) {
         output.putLShort(compressionThreshold)
     }
-
-    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleNetworkSettings(this)
 }

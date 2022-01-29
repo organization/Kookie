@@ -18,7 +18,6 @@
 package be.zvz.kookie.network.mcpe.protocol
 
 import be.zvz.kookie.math.Vector3
-import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
 import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 
 @ProtocolIdentify(ProtocolInfo.IDS.SPAWN_EXPERIENCE_ORB_PACKET)
@@ -36,6 +35,4 @@ class SpawnExperienceOrbPacket : DataPacket(), ServerboundPacket {
         output.putVector3(position)
         output.putVarInt(amount)
     }
-
-    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleSpawnExperienceOrb(this)
 }

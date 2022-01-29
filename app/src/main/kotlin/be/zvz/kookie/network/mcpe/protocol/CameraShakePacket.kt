@@ -17,7 +17,6 @@
  */
 package be.zvz.kookie.network.mcpe.protocol
 
-import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
 import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 
 @ProtocolIdentify(ProtocolInfo.IDS.CAMERA_SHAKE_PACKET)
@@ -40,9 +39,6 @@ class CameraShakePacket : DataPacket(), ClientboundPacket {
         output.putByte(shakeType)
         output.putByte(shakeAction)
     }
-
-    override fun handle(handler: PacketHandlerInterface) =
-        handler.handleCameraShake(this)
 
     companion object {
         const val TYPE_POSITIONAL = 0

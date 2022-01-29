@@ -17,7 +17,6 @@
  */
 package be.zvz.kookie.network.mcpe.protocol
 
-import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
 import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 import be.zvz.kookie.network.mcpe.protocol.types.CacheableNbt
 
@@ -44,6 +43,4 @@ class UpdateEquipPacket : DataPacket(), ClientboundPacket {
         output.putEntityUniqueId(entityUniqueId)
         output.put(namedtag.encodedNbt)
     }
-
-    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleUpdateEquip(this)
 }

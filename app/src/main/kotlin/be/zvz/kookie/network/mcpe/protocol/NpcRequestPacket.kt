@@ -17,7 +17,6 @@
  */
 package be.zvz.kookie.network.mcpe.protocol
 
-import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
 import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 
 @ProtocolIdentify(ProtocolInfo.IDS.NPC_REQUEST_PACKET)
@@ -44,8 +43,6 @@ class NpcRequestPacket : DataPacket(), ServerboundPacket {
         output.putByte(actionType)
         output.putString(sceneName)
     }
-
-    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleNpcRequest(this)
 
     companion object {
         const val REQUEST_SET_ACTIONS = 0

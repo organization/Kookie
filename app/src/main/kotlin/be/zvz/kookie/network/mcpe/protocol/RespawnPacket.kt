@@ -18,7 +18,6 @@
 package be.zvz.kookie.network.mcpe.protocol
 
 import be.zvz.kookie.math.Vector3
-import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
 import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 
 @ProtocolIdentify(ProtocolInfo.IDS.RESPAWN_PACKET)
@@ -49,8 +48,6 @@ class RespawnPacket : DataPacket(), ClientboundPacket, ServerboundPacket {
         output.putEntityRuntimeId(entityRuntimeId)
     }
 
-    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleRespawn(this)
-
     enum class RespawnStatus(val state: Int) {
         SEARCHING_FOR_SPAWN(0),
         READY_TO_SPAWN(1),
@@ -58,6 +55,7 @@ class RespawnPacket : DataPacket(), ClientboundPacket, ServerboundPacket {
 
         companion object {
             private val VALUES = values()
+
             @JvmStatic
             fun from(value: Int) = VALUES.first { it.state == value }
         }

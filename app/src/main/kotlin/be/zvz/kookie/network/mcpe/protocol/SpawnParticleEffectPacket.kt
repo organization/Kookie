@@ -18,7 +18,6 @@
 package be.zvz.kookie.network.mcpe.protocol
 
 import be.zvz.kookie.math.Vector3
-import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
 import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 import be.zvz.kookie.network.mcpe.protocol.types.DimensionIds
 
@@ -43,6 +42,4 @@ class SpawnParticleEffectPacket : DataPacket(), ClientboundPacket {
         output.putVector3(position)
         output.putString(particleName)
     }
-
-    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleSpawnParticleEffect(this)
 }

@@ -30,6 +30,7 @@ enum class ResourcePackType(val value: Int) {
 
     companion object {
         private val VALUES = values()
+
         @JvmStatic
         fun from(findValue: Int) = VALUES.first { it.value == findValue }
     }

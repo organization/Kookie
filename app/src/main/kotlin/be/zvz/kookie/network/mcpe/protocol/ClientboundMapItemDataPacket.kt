@@ -18,7 +18,6 @@
 package be.zvz.kookie.network.mcpe.protocol
 
 import be.zvz.kookie.color.Color
-import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
 import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 import be.zvz.kookie.network.mcpe.protocol.types.DimensionIds
 import be.zvz.kookie.network.mcpe.protocol.types.MapDecoration
@@ -189,8 +188,6 @@ class ClientboundMapItemDataPacket : DataPacket(), ClientboundPacket {
             }
         }
     }
-
-    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleClientboundMapItemData(this)
 
     companion object {
         const val BITFLAG_TEXTURE_UPDATE = 0x02

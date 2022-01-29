@@ -17,7 +17,6 @@
  */
 package be.zvz.kookie.network.mcpe.protocol
 
-import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
 import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 import be.zvz.kookie.network.mcpe.protocol.types.entity.MetadataProperty
 
@@ -38,8 +37,6 @@ class SetActorDataPacket : DataPacket(), ClientboundPacket, ServerboundPacket {
         output.putEntityMetadata(metadata)
         output.putUnsignedVarLong(tick)
     }
-
-    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleSetActorData(this)
 
     companion object {
         @JvmStatic

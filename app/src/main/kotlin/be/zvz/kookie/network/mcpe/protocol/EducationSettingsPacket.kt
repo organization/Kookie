@@ -17,7 +17,6 @@
  */
 package be.zvz.kookie.network.mcpe.protocol
 
-import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
 import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 
 @ProtocolIdentify(ProtocolInfo.IDS.EDUCATION_SETTINGS_PACKET)
@@ -49,8 +48,6 @@ class EducationSettingsPacket : DataPacket(), ClientboundPacket {
         codeBuilderOverrideUri?.let(output::putString)
         output.putBoolean(hasQuiz)
     }
-
-    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleEducationSettings(this)
 
     companion object {
         @JvmStatic

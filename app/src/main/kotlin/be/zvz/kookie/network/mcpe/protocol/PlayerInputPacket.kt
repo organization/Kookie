@@ -17,7 +17,6 @@
  */
 package be.zvz.kookie.network.mcpe.protocol
 
-import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
 import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 
 @ProtocolIdentify(ProtocolInfo.IDS.PLAYER_INPUT_PACKET)
@@ -41,6 +40,4 @@ class PlayerInputPacket : DataPacket(), ServerboundPacket {
         output.putBoolean(jumping)
         output.putBoolean(sneaking)
     }
-
-    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handlePlayerInput(this)
 }

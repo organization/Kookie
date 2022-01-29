@@ -18,7 +18,6 @@
 package be.zvz.kookie.network.mcpe.protocol
 
 import be.zvz.kookie.math.Vector3
-import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
 import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 
 /**
@@ -59,8 +58,6 @@ class MotionPredictionHintsPacket : DataPacket(), ClientboundPacket {
         output.putVector3(motion)
         output.putBoolean(onGround)
     }
-
-    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleMotionPredictionHints(this)
 
     companion object {
         @JvmStatic

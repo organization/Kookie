@@ -17,7 +17,6 @@
  */
 package be.zvz.kookie.network.mcpe.protocol
 
-import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
 import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 
 @ProtocolIdentify(ProtocolInfo.IDS.REQUEST_CHUNK_RADIUS_PACKET)
@@ -31,6 +30,4 @@ class RequestChunkRadiusPacket : DataPacket(), ServerboundPacket {
     override fun encodePayload(output: PacketSerializer) {
         output.putVarInt(radius)
     }
-
-    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleRequestChunkRadius(this)
 }

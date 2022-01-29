@@ -17,7 +17,6 @@
  */
 package be.zvz.kookie.network.mcpe.protocol
 
-import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
 import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 
 @ProtocolIdentify(ProtocolInfo.IDS.CLIENT_CACHE_BLOB_STATUS_PACKET)
@@ -43,8 +42,6 @@ class ClientCacheBlobStatusPacket : DataPacket(), ServerboundPacket {
         missHashes.forEach(output::putLLong)
         hitHashes.forEach(output::putLLong)
     }
-
-    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleClientCacheBlobStatus(this)
 
     companion object {
         @JvmStatic

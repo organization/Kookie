@@ -17,7 +17,6 @@
  */
 package be.zvz.kookie.network.mcpe.protocol
 
-import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
 import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 
 @ProtocolIdentify(ProtocolInfo.IDS.SERVER_SETTINGS_RESPONSE_PACKET)
@@ -35,6 +34,4 @@ class ServerSettingsResponsePacket : DataPacket(), ClientboundPacket {
         output.putUnsignedVarInt(formId)
         output.putString(formData)
     }
-
-    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleServerSettingsResponse(this)
 }

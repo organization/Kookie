@@ -17,7 +17,6 @@
  */
 package be.zvz.kookie.network.mcpe.protocol
 
-import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
 import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 
 @ProtocolIdentify(ProtocolInfo.IDS.MAP_INFO_REQUEST_PACKET)
@@ -32,6 +31,4 @@ class MapInfoRequestPacket : DataPacket(), ServerboundPacket {
     override fun encodePayload(output: PacketSerializer) {
         output.putEntityUniqueId(mapId)
     }
-
-    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleMapInfoRequest(this)
 }

@@ -18,7 +18,6 @@
 package be.zvz.kookie.network.mcpe.protocol
 
 import be.zvz.kookie.math.Vector3
-import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
 import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 
 @ProtocolIdentify(ProtocolInfo.IDS.LEVEL_SOUND_EVENT_PACKET)
@@ -48,8 +47,6 @@ class LevelSoundEventPacket : DataPacket(), ClientboundPacket, ServerboundPacket
         output.putBoolean(isBabyMob)
         output.putBoolean(disableRelativeVolume)
     }
-
-    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleLevelSoundEvent(this)
 
     companion object {
         @JvmStatic

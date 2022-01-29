@@ -17,7 +17,6 @@
  */
 package be.zvz.kookie.network.mcpe.protocol
 
-import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
 import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 import be.zvz.kookie.network.mcpe.protocol.types.recipe.FurnaceRecipe
 import be.zvz.kookie.network.mcpe.protocol.types.recipe.MultiRecipe
@@ -97,8 +96,6 @@ class CraftingDataPacket : DataPacket(), ClientboundPacket {
         }
         output.putBoolean(cleanRecipes)
     }
-
-    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleCraftingData(this)
 
     enum class Entry(val value: Int) {
         UNKNOWN(-1),

@@ -17,7 +17,6 @@
  */
 package be.zvz.kookie.network.mcpe.protocol
 
-import be.zvz.kookie.network.mcpe.handler.PacketHandlerInterface
 import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 
 @ProtocolIdentify(ProtocolInfo.IDS.COMPLETED_USING_ITEM_PACKET)
@@ -35,8 +34,6 @@ class CompletedUsingItemPacket : DataPacket(), ClientboundPacket {
         output.putShort(itemId)
         output.putLInt(action)
     }
-
-    override fun handle(handler: PacketHandlerInterface): Boolean = handler.handleCompletedUsingItem(this)
 
     enum class Action(val action: Int) {
         UNKNOWN(-1),
