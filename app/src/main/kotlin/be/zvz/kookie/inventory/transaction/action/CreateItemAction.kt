@@ -34,7 +34,7 @@ class CreateItemAction(sourceItem: Item) : InventoryAction(sourceItem, ItemFacto
         if (!CreativeInventory.contains(sourceItem)) {
             throw TransactionValidationException("Creative inventory does not contain requested item")
         }
-        
+
          */
     }
 
