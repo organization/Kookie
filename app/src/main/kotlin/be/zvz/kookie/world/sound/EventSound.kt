@@ -18,13 +18,21 @@
 package be.zvz.kookie.world.sound
 
 import be.zvz.kookie.math.Vector3
-import be.zvz.kookie.network.mcpe.protocol.ClientboundPacket
-import be.zvz.kookie.network.mcpe.protocol.LevelEventPacket
+import com.nukkitx.math.vector.Vector3f
+import com.nukkitx.protocol.bedrock.BedrockPacket
+import com.nukkitx.protocol.bedrock.data.LevelEventType
+import com.nukkitx.protocol.bedrock.packet.LevelEventPacket
 
 abstract class EventSound(
-    val id: Int,
+    val id: LevelEventType,
     open val data: Int = 0
 ) : Sound {
-    override fun encode(pos: Vector3): List<ClientboundPacket> =
-        listOf(LevelEventPacket.create(this.id, this.data, pos))
+    override fun encode(pos: Vector3): List<BedrockPacket> =
+        listOf(
+            LevelEventPacket().apply {
+                type = id
+                position = Vector3f.ZERO.add(pos.x, pos.y, pos.z)
+                data = this@EventSound.data
+            }
+        )
 }

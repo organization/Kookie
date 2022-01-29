@@ -17,9 +17,9 @@
  */
 package be.zvz.kookie.network.mcpe.protocol.types.recipe
 
-import be.zvz.kookie.network.mcpe.protocol.CraftingDataPacket
 import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
+import com.nukkitx.protocol.bedrock.data.inventory.CraftingDataType
 
-abstract class RecipeWithTypeId(val type: CraftingDataPacket.Entry) {
+abstract class RecipeWithTypeId(val type: CraftingDataType) {
     abstract fun encode(output: PacketSerializer)
 }

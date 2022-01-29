@@ -17,4 +17,6 @@
  */
 package be.zvz.kookie.world.sound
 
-class ExplodeSound : StandardSound(Type.EXPLODE)
+import com.nukkitx.protocol.bedrock.data.SoundEvent
+
+class ExplodeSound : StandardSound(SoundEvent.EXPLODE)

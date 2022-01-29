@@ -17,7 +17,7 @@
  */
 package be.zvz.kookie.network.mcpe.protocol.types.inventory
 
-import be.zvz.kookie.network.mcpe.protocol.PacketDecodeException
+import be.zvz.kookie.network.mcpe.protocol.PacketHandlingException
 import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 
 class NetworkInventoryAction {
@@ -40,7 +40,7 @@ class NetworkInventoryAction {
             SOURCE_CREATIVE -> {
             }
             SOURCE_TODO -> windowId = input.getVarInt()
-            else -> throw PacketDecodeException("Unknown inventory action source type $sourceType")
+            else -> throw PacketHandlingException("Unknown inventory action source type $sourceType")
         }
         inventorySlot = input.getUnsignedVarInt()
         oldItem = ItemStackWrapper.read(input)

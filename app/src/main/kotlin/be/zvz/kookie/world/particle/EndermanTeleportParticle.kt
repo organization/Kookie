@@ -17,6 +17,6 @@
  */
 package be.zvz.kookie.world.particle
 
-import be.zvz.kookie.network.mcpe.protocol.LevelEventPacket
+import com.nukkitx.protocol.bedrock.data.LevelEventType
 
-class EndermanTeleportParticle : EventParticle(LevelEventPacket.EVENT_PARTICLE_ENDERMAN_TELEPORT)
+class EndermanTeleportParticle : EventParticle(LevelEventType.PARTICLE_TELEPORT)

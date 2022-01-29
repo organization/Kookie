@@ -17,12 +17,12 @@
  */
 package be.zvz.kookie.network.mcpe.protocol.types.recipe
 
-import be.zvz.kookie.network.mcpe.protocol.CraftingDataPacket
 import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
+import com.nukkitx.protocol.bedrock.data.inventory.CraftingDataType
 import java.util.UUID
 
 class MultiRecipe(
-    type: CraftingDataPacket.Entry,
+    type: CraftingDataType,
     val recipeId: UUID,
     val recipeNetId: Int
 ) : RecipeWithTypeId(type) {
@@ -34,7 +34,7 @@ class MultiRecipe(
 
     companion object {
         @JvmStatic
-        fun decode(type: CraftingDataPacket.Entry, input: PacketSerializer) =
+        fun decode(type: CraftingDataType, input: PacketSerializer) =
             MultiRecipe(
                 type = type,
                 recipeId = input.getUUID(),

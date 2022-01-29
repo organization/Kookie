@@ -18,9 +18,10 @@
 package be.zvz.kookie.world.sound
 
 import be.zvz.kookie.entity.Entity
+import com.nukkitx.protocol.bedrock.data.SoundEvent
 
 class EntityShortFallSound(
     val entity: Entity
-) : StandardSound(Type.FALL_SMALL) {
+) : StandardSound(SoundEvent.FALL_SMALL) {
     override val entityType: String get() = TODO("Implements after implemented Entity::getNetworkTypeId()")
 }

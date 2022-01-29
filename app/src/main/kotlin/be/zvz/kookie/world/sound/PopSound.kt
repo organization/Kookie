@@ -17,7 +17,8 @@
  */
 package be.zvz.kookie.world.sound
 
-import be.zvz.kookie.network.mcpe.protocol.LevelEventPacket
+import com.nukkitx.protocol.bedrock.data.LevelEventType
 
 class PopSound @JvmOverloads constructor(pitch: Float = 0F) :
-    EventSound(LevelEventPacket.EVENT_SOUND_POP, (pitch * 1000).toInt())
+    EventSound(LevelEventType.SOUND_INFINITY_ARROW_PICKUP, (pitch * 1000).toInt())
+// WTF Cloudburst, why pop sound is INFINITY_ARROW_PICKUP? :(

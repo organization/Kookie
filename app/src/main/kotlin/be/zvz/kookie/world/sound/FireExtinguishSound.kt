@@ -17,4 +17,6 @@
  */
 package be.zvz.kookie.world.sound
 
-class FireExtinguishSound : StandardSound(Type.EXTINGUISH_FIRE)
+import com.nukkitx.protocol.bedrock.data.SoundEvent
+
+class FireExtinguishSound : StandardSound(SoundEvent.EXTINGUISH_FIRE)

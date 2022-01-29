@@ -18,8 +18,8 @@
 package be.zvz.kookie.world.particle
 
 import be.zvz.kookie.color.Color
-import be.zvz.kookie.network.mcpe.protocol.LevelEventPacket
+import com.nukkitx.protocol.bedrock.data.LevelEventType
 
-class PotionSplashParticle(val color: Color) : EventParticle(LevelEventPacket.EVENT_PARTICLE_SPLASH) {
+class PotionSplashParticle(val color: Color) : EventParticle(LevelEventType.PARTICLE_POTION_SPLASH) {
     override val data: Int get() = color.toARGB()
 }

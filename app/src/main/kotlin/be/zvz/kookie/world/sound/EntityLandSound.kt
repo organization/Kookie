@@ -19,11 +19,12 @@ package be.zvz.kookie.world.sound
 
 import be.zvz.kookie.block.Block
 import be.zvz.kookie.entity.Entity
+import com.nukkitx.protocol.bedrock.data.SoundEvent
 
 class EntityLandSound(
     val entity: Entity,
     val blockLandedOn: Block
-) : StandardSound(Type.LAND) {
+) : StandardSound(SoundEvent.LAND) {
     override val entityType: String get() = TODO("Implements after implemented Entity::getNetworkTypeId()")
 
     override val extraData: Int

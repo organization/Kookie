@@ -17,4 +17,7 @@
  */
 package be.zvz.kookie.world.particle
 
-class BlockForceFieldParticle @JvmOverloads constructor(data: Int = 0) : StandardParticle(Type.BLOCK_FORCE_FIELD, data)
+import com.nukkitx.protocol.bedrock.data.LevelEventType
+
+class BlockForceFieldParticle @JvmOverloads constructor(data: Int = 0) :
+    StandardParticle(LevelEventType.PARTICLE_BLOCK_FORCE_FIELD, data)

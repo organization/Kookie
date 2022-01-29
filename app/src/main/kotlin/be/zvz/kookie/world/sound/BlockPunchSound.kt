@@ -18,5 +18,6 @@
 package be.zvz.kookie.world.sound
 
 import be.zvz.kookie.block.Block
+import com.nukkitx.protocol.bedrock.data.SoundEvent
 
-class BlockPunchSound(block: Block) : BlockSound(Type.HIT, block)
+class BlockPunchSound(block: Block) : BlockSound(SoundEvent.HIT, block)

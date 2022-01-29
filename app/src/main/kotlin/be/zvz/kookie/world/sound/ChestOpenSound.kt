@@ -17,4 +17,6 @@
  */
 package be.zvz.kookie.world.sound
 
-class ChestOpenSound : StandardSound(Type.CHEST_OPEN)
+import com.nukkitx.protocol.bedrock.data.SoundEvent
+
+class ChestOpenSound : StandardSound(SoundEvent.CHEST_OPEN)

@@ -17,4 +17,6 @@
  */
 package be.zvz.kookie.world.sound
 
-class RedstonePowerOnSound : StandardSound(Type.POWER_ON)
+import com.nukkitx.protocol.bedrock.data.SoundEvent
+
+class RedstonePowerOnSound : StandardSound(SoundEvent.POWER_ON)

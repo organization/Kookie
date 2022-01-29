@@ -17,4 +17,6 @@
  */
 package be.zvz.kookie.world.sound
 
-class BarrelOpenSound : StandardSound(Type.BLOCK_BARREL_OPEN)
+import com.nukkitx.protocol.bedrock.data.SoundEvent
+
+class BarrelOpenSound : StandardSound(SoundEvent.BARREL_CLOSE)

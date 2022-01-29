@@ -17,7 +17,7 @@
  */
 package be.zvz.kookie.world.sound
 
-import be.zvz.kookie.network.mcpe.protocol.LevelEventPacket
+import com.nukkitx.protocol.bedrock.data.LevelEventType
 
 class DoorSound @JvmOverloads constructor(pitch: Float = 0F) :
-    EventSound(LevelEventPacket.EVENT_SOUND_DOOR, (pitch * 1000).toInt())
+    EventSound(LevelEventType.SOUND_DOOR_OPEN, (pitch * 1000).toInt())

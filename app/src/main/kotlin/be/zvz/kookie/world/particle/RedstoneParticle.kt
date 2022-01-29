@@ -17,4 +17,6 @@
  */
 package be.zvz.kookie.world.particle
 
-class RedstoneParticle(lifetime: Int = 1) : StandardParticle(Type.REDSTONE, lifetime)
+import com.nukkitx.protocol.bedrock.data.LevelEventType
+
+class RedstoneParticle(lifetime: Int = 1) : StandardParticle(LevelEventType.PARTICLE_REDSTONE, lifetime)

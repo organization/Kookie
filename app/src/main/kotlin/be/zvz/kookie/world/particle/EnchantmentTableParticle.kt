@@ -17,4 +17,6 @@
  */
 package be.zvz.kookie.world.particle
 
-class EnchantmentTableParticle : StandardParticle(Type.ENCHANTMENT_TABLE)
+import com.nukkitx.protocol.bedrock.data.LevelEventType
+
+class EnchantmentTableParticle : StandardParticle(LevelEventType.PARTICLE_ENCHANTMENT_TABLE)

@@ -17,4 +17,6 @@
  */
 package be.zvz.kookie.world.particle
 
-class SplashParticle : StandardParticle(Type.WATER_SPLASH)
+import com.nukkitx.protocol.bedrock.data.LevelEventType
+
+class SplashParticle : StandardParticle(LevelEventType.PARTICLE_SPLASH_MANUAL)

@@ -17,4 +17,6 @@
  */
 package be.zvz.kookie.world.sound
 
-class RecordStopSound : StandardSound(Type.STOP_RECORD)
+import com.nukkitx.protocol.bedrock.data.SoundEvent
+
+class RecordStopSound : StandardSound(SoundEvent.STOP_RECORD)

@@ -17,4 +17,6 @@
  */
 package be.zvz.kookie.world.particle
 
-class SnowballPoofParticle : StandardParticle(Type.SNOWBALL_POOF)
+import com.nukkitx.protocol.bedrock.data.LevelEventType
+
+class SnowballPoofParticle : StandardParticle(LevelEventType.PARTICLE_SNOWBALL_POOF)

@@ -18,14 +18,15 @@
 package be.zvz.kookie.entity.animation
 
 import be.zvz.kookie.entity.Living
-import be.zvz.kookie.network.mcpe.protocol.ActorEventPacket
-import be.zvz.kookie.network.mcpe.protocol.ClientboundPacket
+import com.nukkitx.protocol.bedrock.BedrockPacket
+import com.nukkitx.protocol.bedrock.data.entity.EntityEventType
+import com.nukkitx.protocol.bedrock.packet.EntityEventPacket
 
 class DeathAnimation(private val entity: Living) : Animation {
-    override fun encode(): List<ClientboundPacket> = listOf(
-        ActorEventPacket().apply {
-            entityRuntimeId = entity.getId()
-            eventId = ActorEventPacket.DEATH_ANIMATION
+    override fun encode(): List<BedrockPacket> = listOf(
+        EntityEventPacket().apply {
+            runtimeEntityId = entity.getId()
+            type = EntityEventType.DEATH
             data = 0
         }
     )

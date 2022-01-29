@@ -18,9 +18,9 @@
 package be.zvz.kookie.world.particle
 
 import be.zvz.kookie.block.Block
-import be.zvz.kookie.network.mcpe.protocol.LevelEventPacket
+import com.nukkitx.protocol.bedrock.data.LevelEventType
 
-class BlockBreakParticle(val block: Block) : EventParticle(LevelEventPacket.EVENT_PARTICLE_DESTROY) {
+class BlockBreakParticle(val block: Block) : EventParticle(LevelEventType.PARTICLE_DESTROY_BLOCK) {
     override val data: Int
         get() {
             TODO("Implements after implemented RuntimeBlockMapping")

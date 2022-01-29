@@ -18,7 +18,8 @@
 package be.zvz.kookie.world.particle
 
 import be.zvz.kookie.color.Color
+import com.nukkitx.protocol.bedrock.data.LevelEventType
 
-abstract class ColoredParticle(type: Type, val color: Color) : StandardParticle(type) {
+abstract class ColoredParticle(type: LevelEventType, val color: Color) : StandardParticle(type) {
     override val data: Int get() = color.toARGB()
 }

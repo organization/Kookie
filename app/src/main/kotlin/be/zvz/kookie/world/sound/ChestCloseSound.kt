@@ -17,4 +17,6 @@
  */
 package be.zvz.kookie.world.sound
 
-class ChestCloseSound : StandardSound(Type.CHEST_CLOSED)
+import com.nukkitx.protocol.bedrock.data.SoundEvent
+
+class ChestCloseSound : StandardSound(SoundEvent.CHEST_CLOSED)

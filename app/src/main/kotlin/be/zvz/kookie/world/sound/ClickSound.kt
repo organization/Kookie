@@ -17,7 +17,7 @@
  */
 package be.zvz.kookie.world.sound
 
-import be.zvz.kookie.network.mcpe.protocol.LevelEventPacket
+import com.nukkitx.protocol.bedrock.data.LevelEventType
 
 class ClickSound @JvmOverloads constructor(pitch: Float = 0F) :
-    EventSound(LevelEventPacket.EVENT_SOUND_CLICK, (pitch * 1000).toInt())
+    EventSound(LevelEventType.SOUND_CLICK, (pitch * 1000).toInt())

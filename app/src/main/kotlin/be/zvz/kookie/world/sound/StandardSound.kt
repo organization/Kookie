@@ -18,18 +18,29 @@
 package be.zvz.kookie.world.sound
 
 import be.zvz.kookie.math.Vector3
-import be.zvz.kookie.network.mcpe.protocol.ClientboundPacket
-import be.zvz.kookie.network.mcpe.protocol.LevelSoundEventPacket
 import be.zvz.kookie.world.particle.StandardParticle
+import com.nukkitx.math.vector.Vector3f
+import com.nukkitx.protocol.bedrock.BedrockPacket
+import com.nukkitx.protocol.bedrock.data.SoundEvent
+import com.nukkitx.protocol.bedrock.packet.LevelSoundEventPacket
 
 abstract class StandardSound(
-    open val type: Type,
+    open val type: SoundEvent,
     open val extraData: Int = -1,
     open val entityType: String = ":",
     open val isBabyMob: Boolean = false
 ) : Sound {
-    override fun encode(pos: Vector3): List<ClientboundPacket> =
-        listOf(LevelSoundEventPacket.create(type.id, pos, extraData, entityType, isBabyMob))
+    override fun encode(pos: Vector3): List<BedrockPacket> =
+        listOf(
+            LevelSoundEventPacket().apply {
+                sound = type
+                extraData = this@StandardSound.extraData
+                position = Vector3f.ZERO.add(pos.x, pos.y, pos.z)
+                isBabySound = isBabyMob
+                isRelativeVolumeDisabled = false
+                identifier = ":" // ???
+            }
+        )
 
     enum class Type(val id: Int) {
         ITEM_USE_ON(0),

@@ -17,7 +17,7 @@
  */
 package be.zvz.kookie.network.mcpe.protocol.types
 
-import be.zvz.kookie.network.mcpe.protocol.PacketDecodeException
+import be.zvz.kookie.network.mcpe.protocol.PacketHandlingException
 
 data class ScorePacketEntry @JvmOverloads constructor(
     val scoreboardId: Long,
@@ -38,7 +38,7 @@ data class ScorePacketEntry @JvmOverloads constructor(
 
             @JvmStatic
             fun from(value: Int) = VALUES.firstOrNull { it.id == value }
-                ?: throw PacketDecodeException("Unhandled set score entry type $value!")
+                ?: throw PacketHandlingException("Unhandled set score entry type $value!")
         }
     }
 }

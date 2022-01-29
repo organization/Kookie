@@ -24,7 +24,7 @@ import be.zvz.kookie.nbt.NbtDataException
 import be.zvz.kookie.nbt.TreeRoot
 import be.zvz.kookie.nbt.tag.CompoundTag
 import be.zvz.kookie.network.mcpe.convert.GlobalItemTypeDictionary
-import be.zvz.kookie.network.mcpe.protocol.PacketDecodeException
+import be.zvz.kookie.network.mcpe.protocol.PacketHandlingException
 import be.zvz.kookie.network.mcpe.protocol.types.BooleanGameRule
 import be.zvz.kookie.network.mcpe.protocol.types.FloatGameRule
 import be.zvz.kookie.network.mcpe.protocol.types.GameRule
@@ -322,19 +322,19 @@ class PacketSerializer @JvmOverloads constructor(
             if (nbtLen == 0xffff) {
                 val nbtDataVersion = extraData.getByte()
                 if (nbtDataVersion != 1) {
-                    throw PacketDecodeException("Unexpected NBT data version $nbtDataVersion")
+                    throw PacketHandlingException("Unexpected NBT data version $nbtDataVersion")
                 }
                 val offset = extraData.offset
                 try {
                     compound =
                         LittleEndianNbtSerializer().read(extraData.buffer.toString(), offset, 512).mustGetCompoundTag()
                 } catch (e: NbtDataException) {
-                    throw PacketDecodeException.wrap(e, "Failed decoding NBT root")
+                    throw PacketHandlingException.wrap(e, "Failed decoding NBT root")
                 } finally {
                     extraData.offset.set(offset.get())
                 }
             } else if (nbtLen != 0) {
-                throw PacketDecodeException("Unexpected fake NBT length $nbtLen")
+                throw PacketHandlingException("Unexpected fake NBT length $nbtLen")
             }
             val canPlaceOn = mutableListOf<String>()
             repeat(extraData.getLInt()) {
@@ -352,7 +352,7 @@ class PacketSerializer @JvmOverloads constructor(
                 null
             }
             if (!extraData.feof()) {
-                throw PacketDecodeException("Unexpected trailing extradata for network item $id")
+                throw PacketHandlingException("Unexpected trailing extradata for network item $id")
             }
             return@run ItemStack(
                 id,
@@ -407,7 +407,7 @@ class PacketSerializer @JvmOverloads constructor(
         GameRuleType.BOOL -> BooleanGameRule.decode(this, playerModifiable)
         GameRuleType.INT -> IntGameRule.decode(this, playerModifiable)
         GameRuleType.FLOAT -> FloatGameRule.decode(this, playerModifiable)
-        else -> throw PacketDecodeException("Unknown gamerule type $type")
+        else -> throw PacketHandlingException("Unknown gamerule type $type")
     }
 
     fun getGameRules(): Map<String, GameRule> {
@@ -436,7 +436,7 @@ class PacketSerializer @JvmOverloads constructor(
         try {
             return getNbtRoot().mustGetCompoundTag()
         } catch (ignored: NbtDataException) {
-            throw PacketDecodeException.wrap(ignored, "Expected Compound NBT root")
+            throw PacketHandlingException.wrap(ignored, "Expected Compound NBT root")
         }
     }
 
@@ -444,7 +444,7 @@ class PacketSerializer @JvmOverloads constructor(
         try {
             return LittleEndianNbtSerializer().read(buffer.toString(), offset, 512)
         } catch (ignored: NbtDataException) {
-            throw PacketDecodeException.wrap(ignored, "Failed to decode NBT root")
+            throw PacketHandlingException.wrap(ignored, "Failed to decode NBT root")
         }
     }
 
@@ -459,7 +459,7 @@ class PacketSerializer @JvmOverloads constructor(
             EntityMetadataTypes.POS -> BlockPosMetadataProperty.read(this)
             EntityMetadataTypes.LONG -> LongMetadataProperty.read(this)
             EntityMetadataTypes.VECTOR3F -> Vec3MetadataProperty.read(this)
-            else -> throw PacketDecodeException("Unknown entity metadata type $type")
+            else -> throw PacketHandlingException("Unknown entity metadata type $type")
         }
     }
 
@@ -637,7 +637,7 @@ class PacketSerializer @JvmOverloads constructor(
             val idString = getString()
             val id = Attribute.Identifier.from(idString)
             if (id == Attribute.Identifier.UNKNOWN) {
-                throw PacketDecodeException("Unhandled attribute id : $idString")
+                throw PacketHandlingException("Unhandled attribute id : $idString")
             }
             list.add(
                 NetworkAttribute(

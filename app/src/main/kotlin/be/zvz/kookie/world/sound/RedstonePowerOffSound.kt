@@ -17,4 +17,6 @@
  */
 package be.zvz.kookie.world.sound
 
-class RedstonePowerOffSound : StandardSound(Type.POWER_OFF)
+import com.nukkitx.protocol.bedrock.data.SoundEvent
+
+class RedstonePowerOffSound : StandardSound(SoundEvent.POWER_OFF)

@@ -17,4 +17,6 @@
  */
 package be.zvz.kookie.world.sound
 
-class BucketEmptyWaterSound : StandardSound(Type.BUCKET_EMPTY_WATER)
+import com.nukkitx.protocol.bedrock.data.SoundEvent
+
+class BucketEmptyWaterSound : StandardSound(SoundEvent.BUCKET_EMPTY_WATER)

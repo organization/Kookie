@@ -18,5 +18,6 @@
 package be.zvz.kookie.world.sound
 
 import be.zvz.kookie.block.Block
+import com.nukkitx.protocol.bedrock.data.SoundEvent
 
-class BlockBreakSound(block: Block) : BlockSound(Type.BREAK, block)
+class BlockBreakSound(block: Block) : BlockSound(SoundEvent.BREAK_BLOCK, block)

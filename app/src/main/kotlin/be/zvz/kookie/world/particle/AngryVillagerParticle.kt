@@ -17,4 +17,6 @@
  */
 package be.zvz.kookie.world.particle
 
-class AngryVillagerParticle : StandardParticle(Type.VILLAGER_ANGRY)
+import com.nukkitx.protocol.bedrock.data.LevelEventType
+
+class AngryVillagerParticle : StandardParticle(LevelEventType.PARTICLE_VILLAGER_ANGRY)

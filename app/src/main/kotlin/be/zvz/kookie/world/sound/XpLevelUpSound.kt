@@ -17,6 +17,7 @@
  */
 package be.zvz.kookie.world.sound
 
+import com.nukkitx.protocol.bedrock.data.SoundEvent
 import kotlin.math.min
 
-class XpLevelUpSound(xpLevel: Int) : StandardSound(Type.LEVELUP, 0x10000000 * min(30, xpLevel) / 5)
+class XpLevelUpSound(xpLevel: Int) : StandardSound(SoundEvent.LEVELUP, 0x10000000 * min(30, xpLevel) / 5)
