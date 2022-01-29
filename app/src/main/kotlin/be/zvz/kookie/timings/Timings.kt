@@ -29,18 +29,11 @@ object Timings {
 
     private val timings: MutableMap<String, TimingsHandler> = HashObjObjMaps.newMutableMap()
 
-    private val entityTimings: MutableMap<String, TimingsHandler> = HashObjObjMaps.newMutableMap()
-    private val pluginTaskTimings: MutableMap<String, TimingsHandler> = HashObjObjMaps.newMutableMap()
-
-    var schedulerSync = TimingsHandler(INCLUDED_BY_OTHER_TIMINGS_PREFIX + "Scheduler - Sync Tasks")
-    var tickEntity = TimingsHandler(INCLUDED_BY_OTHER_TIMINGS_PREFIX + "tickEntity")
-
-    val playerChunkSend = TimingsHandler("Player Send Chunks")
-    val playerChunkOrder = TimingsHandler("Player Order Chunks")
-    val worldLoad = TimingsHandler("World Load")
-    val worldSave = TimingsHandler("World Save")
-    val population = TimingsHandler("World Population")
-    val generation = TimingsHandler("World Generation")
+    val fullTick = TimingsHandler("Full Server Tick")
+    val serverTick = TimingsHandler(INCLUDED_BY_OTHER_TIMINGS_PREFIX + "Full Server Tick", fullTick)
+    val memoryManager = TimingsHandler("Memory Manager")
+    val garbageCollector = TimingsHandler("Garbage Collector", memoryManager)
+    val titleTick = TimingsHandler("Console Title Tick")
 
     val playerNetworkSend = TimingsHandler("Player Network Send")
     val playerNetworkSendCompress =
@@ -48,7 +41,49 @@ object Timings {
     val playerNetworkSendEncrypt =
         TimingsHandler(INCLUDED_BY_OTHER_TIMINGS_PREFIX + "Player Network Send - Encryption", playerNetworkSend)
 
+    val playerNetworkReceive = TimingsHandler("Player Network Receive")
+    val playerNetworkReceiveDecompress =
+        TimingsHandler(INCLUDED_BY_OTHER_TIMINGS_PREFIX + "Player Network Receive - Decompression", playerNetworkReceive)
+    val playerNetworkReceiveDecrypt =
+        TimingsHandler(INCLUDED_BY_OTHER_TIMINGS_PREFIX + "Player Network Receive - Decryption", playerNetworkReceive)
+
     val broadcastPackets = TimingsHandler(INCLUDED_BY_OTHER_TIMINGS_PREFIX + "Broadcast Packets", playerNetworkSend)
+
+    val playerChunkOrder = TimingsHandler("Player Order Chunks")
+    val playerChunkSend = TimingsHandler("Player Send Chunks")
+
+    val connection = TimingsHandler("Connection Handler")
+    val scheduler = TimingsHandler("Scheduler")
+    val worldLoad = TimingsHandler("World Load")
+    val worldSave = TimingsHandler("World Save")
+    val population = TimingsHandler("World Population")
+    val generation = TimingsHandler("World Generation")
+    val generationCallback = TimingsHandler("World Generation Callback")
+    val permissibleCalculation = TimingsHandler("Permissible Calculation")
+    val permissibleCalculationDiff =
+        TimingsHandler(INCLUDED_BY_OTHER_TIMINGS_PREFIX + "Permission Calculation - Diff", permissibleCalculation)
+    val permissibleCalculationCallback =
+        TimingsHandler(INCLUDED_BY_OTHER_TIMINGS_PREFIX + "Permission Calculation - Callbacks", permissibleCalculation)
+
+    val syncPlayerDataLoad = TimingsHandler("Player Data Load")
+    val syncPlayerDataSave = TimingsHandler("Player Data Save")
+
+    val entityMove = TimingsHandler(INCLUDED_BY_OTHER_TIMINGS_PREFIX + "entityMove")
+    val playerCHeckNearEntities = TimingsHandler(INCLUDED_BY_OTHER_TIMINGS_PREFIX + "checkNearEntities")
+    val tickEntity = TimingsHandler(INCLUDED_BY_OTHER_TIMINGS_PREFIX + "tickEntity")
+    val tickTileEntity = TimingsHandler(INCLUDED_BY_OTHER_TIMINGS_PREFIX + "tickTileEntity")
+
+    val entityBaseTick = TimingsHandler(INCLUDED_BY_OTHER_TIMINGS_PREFIX + "entityBaseTick")
+    val livingEntityBaseTick = TimingsHandler(INCLUDED_BY_OTHER_TIMINGS_PREFIX + "livingEntityBaseTick")
+
+    var schedulerSync = TimingsHandler(INCLUDED_BY_OTHER_TIMINGS_PREFIX + "Scheduler - Sync Tasks")
+    val schedulerAsync = TimingsHandler(INCLUDED_BY_OTHER_TIMINGS_PREFIX + "Scheduler - Async Tasks")
+
+    val playerCommand = TimingsHandler(INCLUDED_BY_OTHER_TIMINGS_PREFIX + "playerCommand")
+    val craftingDataCacheRebuild = TimingsHandler(INCLUDED_BY_OTHER_TIMINGS_PREFIX + "craftingDataCacheRebuild")
+    
+    private val entityTimings: MutableMap<String, TimingsHandler> = HashObjObjMaps.newMutableMap()
+    private val pluginTaskTimings: MutableMap<String, TimingsHandler> = HashObjObjMaps.newMutableMap()
 
     @JvmStatic
     fun getTileEntityTimings(tile: Tile): TimingsHandler {
