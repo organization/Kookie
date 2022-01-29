@@ -30,6 +30,8 @@ import be.zvz.kookie.math.Vector3
 import be.zvz.kookie.nbt.tag.CompoundTag
 import be.zvz.kookie.nbt.tag.StringTag
 import be.zvz.kookie.network.mcpe.convert.KookieToNukkitProtocolConverter
+import be.zvz.kookie.network.mcpe.convert.LegacySkinAdapter
+import be.zvz.kookie.network.mcpe.convert.SkinAdapterSingleton
 import be.zvz.kookie.network.mcpe.convert.TypeConverter
 import be.zvz.kookie.network.mcpe.handler.LoginPacketHandler
 import be.zvz.kookie.network.mcpe.handler.PacketHandler
@@ -70,18 +72,22 @@ import com.nukkitx.protocol.bedrock.packet.AdventureSettingsPacket
 import com.nukkitx.protocol.bedrock.packet.AvailableCommandsPacket
 import com.nukkitx.protocol.bedrock.packet.ChunkRadiusUpdatedPacket
 import com.nukkitx.protocol.bedrock.packet.DisconnectPacket
+import com.nukkitx.protocol.bedrock.packet.EmotePacket
 import com.nukkitx.protocol.bedrock.packet.MobEffectPacket
 import com.nukkitx.protocol.bedrock.packet.MobEquipmentPacket
 import com.nukkitx.protocol.bedrock.packet.ModalFormRequestPacket
 import com.nukkitx.protocol.bedrock.packet.MovePlayerPacket
 import com.nukkitx.protocol.bedrock.packet.NetworkChunkPublisherUpdatePacket
 import com.nukkitx.protocol.bedrock.packet.PlayStatusPacket
+import com.nukkitx.protocol.bedrock.packet.PlayerListPacket
 import com.nukkitx.protocol.bedrock.packet.RemoveEntityPacket
 import com.nukkitx.protocol.bedrock.packet.SetDifficultyPacket
 import com.nukkitx.protocol.bedrock.packet.SetEntityDataPacket
 import com.nukkitx.protocol.bedrock.packet.SetPlayerGameTypePacket
 import com.nukkitx.protocol.bedrock.packet.SetSpawnPositionPacket
 import com.nukkitx.protocol.bedrock.packet.SetTimePacket
+import com.nukkitx.protocol.bedrock.packet.SetTitlePacket
+import com.nukkitx.protocol.bedrock.packet.TakeItemEntityPacket
 import com.nukkitx.protocol.bedrock.packet.TextPacket
 import com.nukkitx.protocol.bedrock.packet.TransferPacket
 import com.nukkitx.protocol.bedrock.packet.UpdateAttributesPacket
@@ -810,6 +816,139 @@ class NetworkSession(
                     )
                 this.hotbarSlot = 0
                 this.inventorySlot = ContainerIds.OFFHAND.id
+            }
+        )
+    }
+
+    fun onPlayerPickUpItem(collector: Player, pickedUp: Entity) {
+        sendDataPacket(
+            TakeItemEntityPacket().apply {
+                runtimeEntityId = collector.getId()
+                itemRuntimeEntityId = pickedUp.getId()
+            }
+        )
+    }
+
+    fun syncPlayerList(players: List<Player>) {
+        sendDataPacket(
+            PlayerListPacket().apply {
+                action = PlayerListPacket.Action.ADD
+                players.forEach {
+                    entries.add(
+                        PlayerListPacket.Entry(it.uuid).apply {
+                            name = it.name
+                            entityId = it.getId()
+                            skin = (SkinAdapterSingleton.adapter as LegacySkinAdapter).toSerializedSkinData(
+                                (SkinAdapterSingleton.adapter as LegacySkinAdapter).toSkinData(it.skin)
+                            )
+                            xuid = (if (info is XboxLivePlayerInfo) (info as XboxLivePlayerInfo).xuid else "")
+                            platformChatId = ""
+                            buildPlatform = -1
+                            isTeacher = false
+                            isHost = false
+                        }
+                    )
+                }
+            }
+        )
+    }
+
+    fun onPlayerAdded(p: Player) {
+        if (p != player) {
+            sendDataPacket(
+                PlayerListPacket().apply {
+                    action = PlayerListPacket.Action.ADD
+                    entries.add(
+                        PlayerListPacket.Entry(p.uuid).apply {
+                            name = p.name
+                            entityId = p.getId()
+                            skin = (SkinAdapterSingleton.adapter as LegacySkinAdapter).toSerializedSkinData(
+                                (SkinAdapterSingleton.adapter as LegacySkinAdapter).toSkinData(p.skin)
+                            )
+                            xuid = (if (info is XboxLivePlayerInfo) (info as XboxLivePlayerInfo).xuid else "")
+                            platformChatId = ""
+                            buildPlatform = -1
+                            isTeacher = false
+                            isHost = false
+                        }
+                    )
+                }
+            )
+        }
+    }
+
+    fun onPlayerRemoved(p: Player) {
+        if (p != player) {
+            sendDataPacket(
+                PlayerListPacket().apply {
+                    action = PlayerListPacket.Action.REMOVE
+                    entries.add(
+                        PlayerListPacket.Entry(p.uuid)
+                    )
+                }
+            )
+        }
+    }
+
+    fun onTitle(title: String) {
+        sendDataPacket(
+            SetTitlePacket().apply {
+                type = SetTitlePacket.Type.TITLE
+                text = title
+            }
+        )
+    }
+
+    fun onSubTitle(subTitle: String) {
+        sendDataPacket(
+            SetTitlePacket().apply {
+                type = SetTitlePacket.Type.SUBTITLE
+                text = subTitle
+            }
+        )
+    }
+
+    fun onActionBar(actionBar: String) {
+        sendDataPacket(
+            SetTitlePacket().apply {
+                type = SetTitlePacket.Type.ACTIONBAR
+                text = actionBar
+            }
+        )
+    }
+
+    fun onClearTitle() {
+        sendDataPacket(
+            SetTitlePacket().apply {
+                type = SetTitlePacket.Type.CLEAR
+            }
+        )
+    }
+
+    fun onResetTitleOptions() {
+        sendDataPacket(
+            SetTitlePacket().apply {
+                type = SetTitlePacket.Type.RESET
+            }
+        )
+    }
+
+    fun onTitleDuration(fadeIn: Int, stay: Int, fadeOut: Int) {
+        sendDataPacket(
+            SetTitlePacket().apply {
+                type = SetTitlePacket.Type.TIMES
+                fadeInTime = fadeIn
+                stayTime = stay
+                fadeOutTime = fadeOut
+            }
+        )
+    }
+
+    fun onEmote(from: Player, emoteId: String) {
+        sendDataPacket(
+            EmotePacket().apply {
+                this.emoteId = emoteId
+                runtimeEntityId = from.getId()
             }
         )
     }
