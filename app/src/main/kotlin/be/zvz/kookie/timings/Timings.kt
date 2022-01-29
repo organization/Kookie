@@ -81,7 +81,7 @@ object Timings {
 
     val playerCommand = TimingsHandler(INCLUDED_BY_OTHER_TIMINGS_PREFIX + "playerCommand")
     val craftingDataCacheRebuild = TimingsHandler(INCLUDED_BY_OTHER_TIMINGS_PREFIX + "craftingDataCacheRebuild")
-    
+
     private val entityTimings: MutableMap<String, TimingsHandler> = HashObjObjMaps.newMutableMap()
     private val pluginTaskTimings: MutableMap<String, TimingsHandler> = HashObjObjMaps.newMutableMap()
 

@@ -713,7 +713,7 @@ class Server(dataPath: Path, pluginPath: Path) {
             return
         }
 
-        // TODO: Timings.serverTick.startTiming()
+        Timings.serverTick.startTiming()
 
         ++tickCounter
 
@@ -721,15 +721,15 @@ class Server(dataPath: Path, pluginPath: Path) {
         // TODO: pluginManager.tickSchedulers()
         Timings.schedulerSync.startTiming()
 
-        // TODO: Timings.schedulerAsync.startTiming()
+        Timings.schedulerAsync.startTiming()
         // TODO: asyncPool.collectTasks()
-        // TODO: Timings.schedulerAsync.stopTiming()
+        Timings.schedulerAsync.stopTiming()
 
-        // TODO: worldManager.tick(tickCounter)
+        worldManager.tick(tickCounter)
 
-        // TODO: Timings.connection.startTiming()
+        Timings.connection.startTiming()
         // TODO: network.tick()
-        // TODO: Timings.connection.stopTiming()
+        Timings.connection.stopTiming()
         if ((tickCounter % 20) == 0L) {
             if (doTitleTick) {
                 titleTick()
@@ -751,13 +751,9 @@ class Server(dataPath: Path, pluginPath: Path) {
         }
 
         if ((tickCounter % 100) == 0L) {
-            /*
-            TODO:
-            worldManager.worlds.forEach {
-                it.clearCache()
+            worldManager.worlds.forEach { (_, world) ->
+                world.clearCache()
             }
-
-             */
 
             if (ticksPerSecondAverage < 12) {
                 logger.warn(language.translateString("pocketmine.server.tickOverload"))
@@ -766,7 +762,7 @@ class Server(dataPath: Path, pluginPath: Path) {
 
         memoryManager.check()
 
-        // TODO: Timings.serverTick.stopTiming()
+        Timings.serverTick.stopTiming()
 
         val now = System.currentTimeMillis()
 
