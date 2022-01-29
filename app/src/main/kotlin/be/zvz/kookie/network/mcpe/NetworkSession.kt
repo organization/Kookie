@@ -153,8 +153,7 @@ class NetworkSession(
 
     protected fun createPlayer() {
         // TODO
-        server.createPlayer(this, info!!, authenticated, cachedOfflinePlayerData).onCompletion({
-        }) {
+        server.createPlayer(this, info!!, authenticated, cachedOfflinePlayerData).onCompletion(::onPlayerCreated) {
             disconnect("Player creation failed")
         }
     }
@@ -172,11 +171,11 @@ class NetworkSession(
 
         val effectManager = player.effectManager
         val effectAddHook = { effect: EffectInstance, replaceOldEffect: Boolean ->
-            // TODO: onEntityEffectAdded(player, effect, replaceOldEffect)
+            onEntityEffectAdded(player, effect, replaceOldEffect)
         }
         effectManager.effectAddHooks.add(effectAddHook)
         val effectRemoveHook = { effect: EffectInstance ->
-            // TODO: onEntityEffectRemoved(player, effect)
+            onEntityEffectRemoved(player, effect)
         }
         effectManager.effectRemoveHooks.add(effectRemoveHook)
         disposeHooks.add {
@@ -187,8 +186,8 @@ class NetworkSession(
         val permissionHooks = player.permissionRecalculationCallbacks
         val permHook = { _: Map<String, Boolean> ->
             logger.debug("Syncing available commands and adventure settings due to permission recalculation")
-            // TODO: syncAdventureSettings(player)
-            // TODO: syncAvailableCommands()
+            syncAdventureSettings(player)
+            syncAvailableCommands()
         }
         permissionHooks.add(permHook)
         disposeHooks.add {
@@ -416,9 +415,11 @@ class NetworkSession(
     }
 
     fun onServerRespawn() {
-        player?.sendData(null)
+        player?.let {
+            it.sendData(null)
 
-        // TODO: syncAdventureSettings(player)
+            syncAdventureSettings(it)
+        }
     }
 
     @JvmOverloads
