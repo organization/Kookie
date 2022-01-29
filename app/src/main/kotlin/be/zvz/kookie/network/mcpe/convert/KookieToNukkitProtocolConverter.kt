@@ -31,6 +31,7 @@ object KookieToNukkitProtocolConverter {
             .build()
     }
 
+    @JvmStatic
     fun toGameType(gameMode: GameMode): GameType {
         return when (gameMode) {
             GameMode.SURVIVAL -> GameType.SURVIVAL
@@ -40,6 +41,7 @@ object KookieToNukkitProtocolConverter {
         }
     }
 
+    @JvmStatic
     fun toEntityData(id: Int, value: Any): EntityData {
         val constructor = EntityData::class.java.getDeclaredConstructor(Int::class.java)
         return constructor.newInstance(id, value)
