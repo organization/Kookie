@@ -20,6 +20,7 @@ package be.zvz.kookie.network.mcpe
 import be.zvz.kookie.Server
 import be.zvz.kookie.entity.Attribute
 import be.zvz.kookie.entity.Entity
+import be.zvz.kookie.entity.Human
 import be.zvz.kookie.entity.Living
 import be.zvz.kookie.entity.effect.EffectInstance
 import be.zvz.kookie.event.player.PlayerDuplicateLoginEvent
@@ -29,10 +30,12 @@ import be.zvz.kookie.math.Vector3
 import be.zvz.kookie.nbt.tag.CompoundTag
 import be.zvz.kookie.nbt.tag.StringTag
 import be.zvz.kookie.network.mcpe.convert.KookieToNukkitProtocolConverter
+import be.zvz.kookie.network.mcpe.convert.TypeConverter
 import be.zvz.kookie.network.mcpe.handler.LoginPacketHandler
 import be.zvz.kookie.network.mcpe.handler.PacketHandler
 import be.zvz.kookie.network.mcpe.handler.PreSpawnPacketHandler
 import be.zvz.kookie.network.mcpe.handler.SpawnResponsePacketHandler
+import be.zvz.kookie.network.mcpe.handler.batch.DefaultBatchHandler
 import be.zvz.kookie.network.mcpe.protocol.types.DimensionIds
 import be.zvz.kookie.network.mcpe.protocol.types.entity.ByteMetadataProperty
 import be.zvz.kookie.network.mcpe.protocol.types.entity.CompoundMetadataProperty
@@ -44,6 +47,8 @@ import be.zvz.kookie.network.mcpe.protocol.types.entity.MetadataProperty
 import be.zvz.kookie.network.mcpe.protocol.types.entity.ShortMetadataProperty
 import be.zvz.kookie.network.mcpe.protocol.types.entity.StringMetadataProperty
 import be.zvz.kookie.network.mcpe.protocol.types.entity.Vec3MetadataProperty
+import be.zvz.kookie.network.mcpe.protocol.types.inventory.ContainerIds
+import be.zvz.kookie.network.mcpe.protocol.types.inventory.ItemStackWrapper
 import be.zvz.kookie.permission.DefaultPermissions
 import be.zvz.kookie.player.GameMode
 import be.zvz.kookie.player.Player
@@ -66,6 +71,7 @@ import com.nukkitx.protocol.bedrock.packet.AvailableCommandsPacket
 import com.nukkitx.protocol.bedrock.packet.ChunkRadiusUpdatedPacket
 import com.nukkitx.protocol.bedrock.packet.DisconnectPacket
 import com.nukkitx.protocol.bedrock.packet.MobEffectPacket
+import com.nukkitx.protocol.bedrock.packet.MobEquipmentPacket
 import com.nukkitx.protocol.bedrock.packet.ModalFormRequestPacket
 import com.nukkitx.protocol.bedrock.packet.MovePlayerPacket
 import com.nukkitx.protocol.bedrock.packet.NetworkChunkPublisherUpdatePacket
@@ -124,6 +130,9 @@ class NetworkSession(
         get() = session.address.port
 
     init {
+        session.batchHandler = lazy(LazyThreadSafetyMode.PUBLICATION) {
+            DefaultBatchHandler(this)
+        }.value
         setHandler(
             LoginPacketHandler(this, { info ->
                 // TODO
@@ -765,6 +774,42 @@ class NetworkSession(
         sendDataPacket(
             SetDifficultyPacket().apply {
                 this.difficulty = difficulty
+            }
+        )
+    }
+
+    fun onMobMainHandItemChange(mob: Human) {
+        val inv = mob.inventory
+        sendDataPacket(
+            MobEquipmentPacket().apply {
+                this.runtimeEntityId = mob.getId()
+                this.item =
+                    KookieToNukkitProtocolConverter.toItemData(
+                        ItemStackWrapper.legacy(TypeConverter.coreItemStackToNet(inv.getItemInHand()))
+                    )
+                this.hotbarSlot = inv.getHeldItemIndex()
+                this.inventorySlot = ContainerIds.INVENTORY.id
+            }
+        )
+    }
+
+    fun onMobOffHandItemChange(mob: Human) {
+        val inv = mob.offHandInventory
+        sendDataPacket(
+            MobEquipmentPacket().apply {
+                this.runtimeEntityId = mob.getId()
+                this.item =
+                    KookieToNukkitProtocolConverter.toItemData(
+                        ItemStackWrapper.legacy(
+                            TypeConverter.coreItemStackToNet(
+                                inv.getItem(
+                                    0
+                                )
+                            )
+                        )
+                    )
+                this.hotbarSlot = 0
+                this.inventorySlot = ContainerIds.OFFHAND.id
             }
         )
     }
