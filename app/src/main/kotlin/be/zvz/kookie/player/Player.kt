@@ -56,7 +56,7 @@ open class Player(
     private val logger = LoggerFactory.getLogger(Player::class.java)
 
     override val language: Language get() = server.language
-    val username = playerInfo.getUsername()
+    val username = playerInfo.username
     var displayName = username
     override val name: String get() = username
     override val permissionRecalculationCallbacks: MutableSet<(changedPermissionsOldValues: Map<String, Boolean>) -> Unit>
@@ -213,7 +213,7 @@ open class Player(
                         return@onCompletion
                     }
                     loadQueue.remove(chunkHash)
-                    usedChunks[chunkHash] = UsedChunkStatus.REQUESTED
+                    usedChunks[chunkHash] = UsedChunkStatus.REQUESTED_SENDING
 
                     /** TODO: Implements after implemented NetworkSession::startUsingChunk
                      * networkSession.startUsingChunk(X, Z) {

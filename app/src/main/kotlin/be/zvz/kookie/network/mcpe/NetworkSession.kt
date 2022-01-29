@@ -19,34 +19,71 @@ package be.zvz.kookie.network.mcpe
 
 import be.zvz.kookie.Server
 import be.zvz.kookie.entity.Attribute
+import be.zvz.kookie.entity.Entity
 import be.zvz.kookie.entity.Living
 import be.zvz.kookie.entity.effect.EffectInstance
 import be.zvz.kookie.event.player.PlayerDuplicateLoginEvent
+import be.zvz.kookie.form.Form
 import be.zvz.kookie.lang.KnownTranslationKeys
 import be.zvz.kookie.math.Vector3
 import be.zvz.kookie.nbt.tag.CompoundTag
 import be.zvz.kookie.nbt.tag.StringTag
+import be.zvz.kookie.network.mcpe.convert.KookieToNukkitProtocolConverter
 import be.zvz.kookie.network.mcpe.handler.LoginPacketHandler
 import be.zvz.kookie.network.mcpe.handler.PreSpawnPacketHandler
 import be.zvz.kookie.network.mcpe.handler.SpawnResponsePacketHandler
+import be.zvz.kookie.network.mcpe.protocol.types.DimensionIds
+import be.zvz.kookie.network.mcpe.protocol.types.entity.ByteMetadataProperty
+import be.zvz.kookie.network.mcpe.protocol.types.entity.CompoundMetadataProperty
+import be.zvz.kookie.network.mcpe.protocol.types.entity.EntityMetadataTypes
+import be.zvz.kookie.network.mcpe.protocol.types.entity.FloatMetadataProperty
+import be.zvz.kookie.network.mcpe.protocol.types.entity.IntMetadataProperty
+import be.zvz.kookie.network.mcpe.protocol.types.entity.LongMetadataProperty
+import be.zvz.kookie.network.mcpe.protocol.types.entity.MetadataProperty
+import be.zvz.kookie.network.mcpe.protocol.types.entity.ShortMetadataProperty
+import be.zvz.kookie.network.mcpe.protocol.types.entity.StringMetadataProperty
+import be.zvz.kookie.network.mcpe.protocol.types.entity.Vec3MetadataProperty
+import be.zvz.kookie.permission.DefaultPermissions
+import be.zvz.kookie.player.GameMode
 import be.zvz.kookie.player.Player
 import be.zvz.kookie.player.PlayerInfo
 import be.zvz.kookie.player.XboxLivePlayerInfo
 import be.zvz.kookie.utils.TextFormat
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.databind.json.JsonMapper
+import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 import com.nukkitx.math.vector.Vector3f
+import com.nukkitx.math.vector.Vector3i
+import com.nukkitx.nbt.NbtMap
 import com.nukkitx.protocol.bedrock.BedrockPacket
 import com.nukkitx.protocol.bedrock.BedrockServerSession
 import com.nukkitx.protocol.bedrock.data.AttributeData
+import com.nukkitx.protocol.bedrock.data.PlayerPermission
+import com.nukkitx.protocol.bedrock.data.command.CommandPermission
 import com.nukkitx.protocol.bedrock.handler.BedrockPacketHandler
+import com.nukkitx.protocol.bedrock.packet.AdventureSettingsPacket
+import com.nukkitx.protocol.bedrock.packet.AvailableCommandsPacket
+import com.nukkitx.protocol.bedrock.packet.ChunkRadiusUpdatedPacket
 import com.nukkitx.protocol.bedrock.packet.DisconnectPacket
+import com.nukkitx.protocol.bedrock.packet.MobEffectPacket
+import com.nukkitx.protocol.bedrock.packet.ModalFormRequestPacket
 import com.nukkitx.protocol.bedrock.packet.MovePlayerPacket
+import com.nukkitx.protocol.bedrock.packet.NetworkChunkPublisherUpdatePacket
 import com.nukkitx.protocol.bedrock.packet.PlayStatusPacket
+import com.nukkitx.protocol.bedrock.packet.RemoveEntityPacket
+import com.nukkitx.protocol.bedrock.packet.SetDifficultyPacket
+import com.nukkitx.protocol.bedrock.packet.SetEntityDataPacket
+import com.nukkitx.protocol.bedrock.packet.SetPlayerGameTypePacket
+import com.nukkitx.protocol.bedrock.packet.SetSpawnPositionPacket
+import com.nukkitx.protocol.bedrock.packet.SetTimePacket
+import com.nukkitx.protocol.bedrock.packet.TextPacket
 import com.nukkitx.protocol.bedrock.packet.TransferPacket
 import com.nukkitx.protocol.bedrock.packet.UpdateAttributesPacket
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.net.InetSocketAddress
 import java.util.Date
+import kotlin.math.pow
 
 class NetworkSession(
     private val server: Server,
@@ -394,25 +431,95 @@ class NetworkSession(
          */
     }
 
-    fun tick(): Boolean {
-        info?.let {
-            if (connectedTime.time <= Date().time + 10) {
-                disconnect("Login Timeout")
-                return false
+    fun syncViewRadius(distance: Int) {
+        sendDataPacket(
+            ChunkRadiusUpdatedPacket().apply {
+                radius = distance
             }
-            return true
-        }
+        )
+    }
 
+    fun syncViewAreaCenterPoint(newPos: Vector3, viewDisttance: Int) {
+        sendDataPacket(
+            NetworkChunkPublisherUpdatePacket().apply {
+                position = Vector3i.ZERO.add(newPos.x, newPos.y, newPos.z)
+                radius = viewDisttance.toDouble().pow(2.0).toInt()
+            }
+        )
+    }
+
+    fun syncPlayerSpawnPoint(newSpawn: Vector3) {
+        sendDataPacket(
+            SetSpawnPositionPacket().apply {
+                spawnType = SetSpawnPositionPacket.Type.PLAYER_SPAWN
+                spawnPosition = Vector3i.ZERO.add(newSpawn.x, newSpawn.y, newSpawn.z)
+                dimensionId = DimensionIds.OVERWORLD.id
+                blockPosition = Vector3i.ZERO.add(newSpawn.x, newSpawn.y, newSpawn.z)
+            }
+        )
+    }
+
+    fun syncWorldSpawnPoint(newSpawn: Vector3) {
+        sendDataPacket(
+            SetSpawnPositionPacket().apply {
+                spawnType = SetSpawnPositionPacket.Type.WORLD_SPAWN
+                spawnPosition = Vector3i.ZERO.add(newSpawn.x, newSpawn.y, newSpawn.z)
+                dimensionId = DimensionIds.OVERWORLD.id
+                blockPosition = Vector3i.ZERO.add(newSpawn.x, newSpawn.y, newSpawn.z)
+            }
+        )
+    }
+
+    fun syncGameMode(mode: GameMode, isRollBack: Boolean) {
+        sendDataPacket(
+            SetPlayerGameTypePacket().apply {
+                gamemode = mode.id()
+            }
+        )
         player?.let {
-            it.doChunkRequest()
-            val dirtyAttributes = it.attributeMap.needSend()
-            syncAttributes(it, dirtyAttributes)
-            dirtyAttributes.values.forEach { attribute ->
-                attribute.markSynchronized()
-            }
+            syncAdventureSettings(it)
         }
+        if (!isRollBack && invManager != null) {
+            invManager!!.syncCreative()
+        }
+    }
 
-        return true
+    fun syncAdventureSettings(player: Player) {
+        val isOp = player.hasPermission(DefaultPermissions.ROOT_OPERATOR)
+        val pk = AdventureSettingsPacket().apply {
+            uniqueEntityId = player.getId()
+            commandPermission = if (isOp) {
+                CommandPermission.OPERATOR
+            } else {
+                CommandPermission.NORMAL
+            }
+            playerPermission = if (isOp) {
+                PlayerPermission.OPERATOR
+            } else {
+                PlayerPermission.MEMBER
+            }
+            /*
+            TODO:
+            if (player.isSpectator()) {
+                settings.add(AdventureSetting.WORLD_IMMUTABLE)
+                settings.add(AdventureSetting.NO_PVM)
+                settings.add(AdventureSetting.NO_MVP)
+                settings.add(AdventureSetting.NO_CLIP)
+            }
+
+            if (player.hasAutoJump()) {
+                settings.add(AdventureSetting.AUTO_JUMP)
+            }
+            if (player.getAllowFlight()) {
+                settings.add(AdventureSetting.MAY_FLY)
+            }
+            if (player.isFlying()) {
+                settings.add(AdventureSetting.FLYING)
+            }
+
+             */
+        }
+        sendDataPacket(pk)
     }
 
     fun syncAttributes(entity: Living, attributes: Map<Attribute.Identifier, Attribute>) {
@@ -435,5 +542,255 @@ class NetworkSession(
             pk.runtimeEntityId = 0 // TODO: Entity runtime id
             sendDataPacket(pk)
         }
+    }
+
+    fun syncActorData(entity: Entity, properties: Map<Int, MetadataProperty>) {
+        sendDataPacket(
+            SetEntityDataPacket().apply {
+                runtimeEntityId = entity.getId()
+                properties.forEach { (id, property) ->
+                    when (property.id) {
+                        EntityMetadataTypes.FLOAT -> {
+                            val value = (property as FloatMetadataProperty).value
+                            metadata[KookieToNukkitProtocolConverter.toEntityData(id, value)] = value
+                        }
+                        EntityMetadataTypes.BYTE -> {
+                            val value = (property as ByteMetadataProperty).value
+                            metadata[KookieToNukkitProtocolConverter.toEntityData(id, value)] = value
+                        }
+                        EntityMetadataTypes.SHORT -> {
+                            val value = (property as ShortMetadataProperty).value
+                            metadata[KookieToNukkitProtocolConverter.toEntityData(id, value)] = value
+                        }
+                        EntityMetadataTypes.INT -> {
+                            val value = (property as IntMetadataProperty).value
+                            metadata[KookieToNukkitProtocolConverter.toEntityData(id, value)] = value
+                        }
+                        EntityMetadataTypes.STRING -> {
+                            val value = (property as StringMetadataProperty).value
+                            metadata[KookieToNukkitProtocolConverter.toEntityData(id, value)] = value
+                        }
+                        EntityMetadataTypes.COMPOUND_TAG -> {
+                            val value = (property as CompoundMetadataProperty).value
+                            val builder = NbtMap.builder()
+                            value.value.forEach {
+                                builder[it.key] = it.value
+                            }
+                            metadata[KookieToNukkitProtocolConverter.toEntityData(id, value)] = builder.build()
+                        }
+                        EntityMetadataTypes.POS -> {
+                            val value = (property as Vec3MetadataProperty).value
+                            metadata[KookieToNukkitProtocolConverter.toEntityData(id, value)] =
+                                Vector3i.ZERO.add(value.x, value.y, value.z)
+                        }
+                        EntityMetadataTypes.LONG -> {
+                            val value = (property as LongMetadataProperty).value
+                            metadata[KookieToNukkitProtocolConverter.toEntityData(id, value)] = value
+                        }
+                        EntityMetadataTypes.VECTOR3F -> {
+                            val value = (property as Vec3MetadataProperty).value
+                            metadata[KookieToNukkitProtocolConverter.toEntityData(id, value)] =
+                                Vector3f.ZERO.add(value.x, value.y, value.z)
+                        }
+                    }
+                }
+                tick = 0
+            }
+        )
+    }
+
+    fun onEntityEffectAdded(entity: Entity, effect: EffectInstance, replaceOldEffect: Boolean) {
+        sendDataPacket(
+            MobEffectPacket().apply {
+                runtimeEntityId = entity.getId()
+                effectId = effect.effectType.internalRuntimeId
+                amplifier = effect.amplifier
+                duration = effect.duration
+                event = if (replaceOldEffect) MobEffectPacket.Event.MODIFY else MobEffectPacket.Event.ADD
+                isParticles = effect.visible
+            }
+        )
+    }
+
+    fun onEntityEffectRemoved(entity: Entity, effect: EffectInstance) {
+        sendDataPacket(
+            MobEffectPacket().apply {
+                runtimeEntityId = entity.getId()
+                effectId = effect.effectType.internalRuntimeId
+                amplifier = effect.amplifier
+                duration = effect.duration
+                event = MobEffectPacket.Event.REMOVE
+                isParticles = effect.visible
+            }
+        )
+    }
+
+    fun onEntityRemoved(entity: Entity) {
+        sendDataPacket(
+            RemoveEntityPacket().apply {
+                uniqueEntityId = entity.getId()
+            }
+        )
+    }
+
+    fun syncAvailableCommands() {
+        // TODO
+        sendDataPacket(
+            AvailableCommandsPacket().apply {
+                // TODO
+            }
+        )
+    }
+
+    fun onRawChatMessage(message: String) {
+        sendDataPacket(
+            TextPacket().apply {
+                type = TextPacket.Type.RAW
+                this.message = message
+            }
+        )
+    }
+
+    fun onTranslatedChatMessage(key: String, parameters: List<String>) {
+        sendDataPacket(
+            TextPacket().apply {
+                type = TextPacket.Type.TRANSLATION
+                this.message = key
+                this.parameters = parameters
+                isNeedsTranslation = true
+            }
+        )
+    }
+
+    fun onJukeboxPopup(key: String, parameters: List<String>) {
+        sendDataPacket(
+            TextPacket().apply {
+                type = TextPacket.Type.JUKEBOX_POPUP
+                this.message = key
+                this.parameters = parameters
+                isNeedsTranslation = true
+            }
+        )
+    }
+
+    fun onPopup(message: String) {
+        sendDataPacket(
+            TextPacket().apply {
+                type = TextPacket.Type.POPUP
+                this.message = message
+            }
+        )
+    }
+
+    fun translatedPopup(key: String, parameters: List<String>) {
+        sendDataPacket(
+            TextPacket().apply {
+                type = TextPacket.Type.POPUP
+                this.message = key
+                this.parameters = parameters
+                isNeedsTranslation = true
+            }
+        )
+    }
+
+    fun onTip(message: String) {
+        sendDataPacket(
+            TextPacket().apply {
+                type = TextPacket.Type.TIP
+                this.message = message
+            }
+        )
+    }
+
+    fun onFormSent(id: Int, form: Form) {
+        sendDataPacket(
+            ModalFormRequestPacket().apply {
+                formId = id
+                formData = jsonMapper.writeValueAsString(form.jsonSerialize())
+            }
+        )
+    }
+
+    fun startUsingChunk(chunkX: Int, chunkZ: Int, onCompletion: () -> Unit) {
+        val world = player!!.world
+
+        /*
+        TODO: This will need a re-implement of ChunkCache with the NukkitX Protocol implementaion
+        ChunkCache.getInstance(world).request(chunkX, chunkZ).onResolve(
+            listOf {
+                if (!isConnected()) {
+                    return@listOf
+                }
+                val currentWorld = player!!.location.world!!
+                val status = player!!.getUsedChunkStatus(chunkX, chunkZ)
+                if (world != currentWorld || status == null) {
+                    logger.debug("Tried to send no-longer-active chunk $chunkX $chunkZ in world ${world.folderName}")
+                    return@listOf
+                }
+                if (status != UsedChunkStatus.REQUESTED_SENDING) {
+                    // TODO: make this an error
+                    // this could be triggered due to the shitty way that chunk resends are handled
+                    // right now - not because of the spammy re-requesting, but because the chunk status reverts
+                    // to NEEDED if they want to be resent.
+                    return@listOf
+                }
+                world.timings.syncChunkSend.startTiming()
+            }
+        )
+         */
+    }
+
+    fun stopUsingChunk(chunkX: Int, chunkZ: Int) {
+    }
+
+    fun onEnterWorld() {
+        player?.let {
+            val world = it.world
+            syncWorldTime(world.time)
+            syncWorldDifficulty(world.difficulty)
+            syncWorldSpawnPoint(world.spawnLocation)
+        }
+    }
+
+    fun syncWorldTime(time: Long) {
+        sendDataPacket(
+            SetTimePacket().apply {
+                this.time = time.toInt()
+            }
+        )
+    }
+
+    fun syncWorldDifficulty(difficulty: Int) {
+        sendDataPacket(
+            SetDifficultyPacket().apply {
+                this.difficulty = difficulty
+            }
+        )
+    }
+
+    fun tick(): Boolean {
+        info?.let {
+            if (connectedTime.time <= Date().time + 10) {
+                disconnect("Login Timeout")
+                return false
+            }
+            return true
+        }
+
+        player?.let {
+            it.doChunkRequest()
+            val dirtyAttributes = it.attributeMap.needSend()
+            syncAttributes(it, dirtyAttributes)
+            dirtyAttributes.values.forEach { attribute ->
+                attribute.markSynchronized()
+            }
+        }
+
+        return true
+    }
+
+    companion object {
+        @JvmStatic
+        val jsonMapper: ObjectMapper = JsonMapper().registerKotlinModule()
     }
 }

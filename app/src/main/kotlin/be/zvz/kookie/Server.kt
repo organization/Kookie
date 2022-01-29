@@ -693,16 +693,21 @@ class Server(dataPath: Path, pluginPath: Path) {
 
         val session = player.networkSession
         val position = player.getPosition()
-        logger.info(language.translateString(KnownTranslationKeys.POCKETMINE_PLAYER_LOGIN, listOf(
-            TextFormat.AQUA + player.name + TextFormat.WHITE,
-            session.ip,
-            session.port.toString(),
-            player.getId().toString(),
-            position.world!!.displayName,
-            position.floorX.toString(),
-            position.floorY.toString(),
-            position.floorZ.toString()
-        )))
+        logger.info(
+            language.translateString(
+                KnownTranslationKeys.POCKETMINE_PLAYER_LOGIN,
+                listOf(
+                    TextFormat.AQUA + player.name + TextFormat.WHITE,
+                    session.ip,
+                    session.port.toString(),
+                    player.getId().toString(),
+                    position.world!!.displayName,
+                    position.floorX.toString(),
+                    position.floorY.toString(),
+                    position.floorZ.toString()
+                )
+            )
+        )
         playerList.values.forEach {
             /** TODO: Implements after implementing NetworkSession::onPlayerAdded()
              * it.networkSession.onPlayerAdded(player)

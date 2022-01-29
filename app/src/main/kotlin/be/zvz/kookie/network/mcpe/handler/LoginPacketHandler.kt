@@ -3,11 +3,11 @@ package be.zvz.kookie.network.mcpe.handler
 import be.zvz.kookie.network.mcpe.NetworkSession
 import be.zvz.kookie.player.PlayerInfo
 import com.nimbusds.jose.shaded.json.JSONArray
+import com.nimbusds.jose.shaded.json.JSONObject
 import com.nimbusds.jose.shaded.json.parser.JSONParser
 import com.nukkitx.protocol.bedrock.handler.BedrockPacketHandler
 import com.nukkitx.protocol.bedrock.packet.LoginPacket
 import com.nukkitx.protocol.bedrock.util.EncryptionUtils
-import net.minidev.json.JSONObject
 
 class LoginPacketHandler(
     val networkSession: NetworkSession,
