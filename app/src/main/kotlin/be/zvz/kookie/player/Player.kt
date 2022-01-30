@@ -28,10 +28,8 @@ import be.zvz.kookie.lang.Language
 import be.zvz.kookie.lang.TranslationContainer
 import be.zvz.kookie.nbt.tag.CompoundTag
 import be.zvz.kookie.network.mcpe.NetworkSession
-import be.zvz.kookie.permission.Permission
-import be.zvz.kookie.permission.PermissionAttachment
-import be.zvz.kookie.permission.PermissionAttachmentInfo
-import be.zvz.kookie.plugin.Plugin
+import be.zvz.kookie.permission.PermissibleBase
+import be.zvz.kookie.permission.PermissibleDelegate
 import be.zvz.kookie.timings.Timings
 import be.zvz.kookie.utils.TextFormat
 import be.zvz.kookie.world.ChunkHash
@@ -54,7 +52,7 @@ open class Player(
     namedTag: CompoundTag?,
     skin: Skin,
     location: Location
-) : Human(skin, location, namedTag), CommandSender, ChunkListener {
+) : Human(skin, location, namedTag), CommandSender, ChunkListener, PermissibleDelegate {
     override val language: Language get() = server.language
 
     val username = playerInfo.username
@@ -71,6 +69,8 @@ open class Player(
     private val chunkSelector = ChunkSelector()
     private val chunkLoader = PlayerChunkLoader(spawnLocation)
     private var chunksPerTick: Int = server.configGroup.getProperty("chunk-sending.per-tick").asLong(4).toInt()
+
+    override val perm: PermissibleBase = PermissibleBase(mapOf())
 
     private var spawnThreshold: Int =
         (server.configGroup.getProperty("chunk-sending.spawn-radius").asLong(4).toDouble().pow(2) * Math.PI).toInt()
@@ -121,54 +121,6 @@ open class Player(
     }
 
     override fun setScreenLineHeight(height: Int?) {
-        TODO("Not yet implemented")
-    }
-
-    override fun setBasePermission(name: String, grant: Boolean) {
-        TODO("Not yet implemented")
-    }
-
-    override fun setBasePermission(permission: Permission, grant: Boolean) {
-        TODO("Not yet implemented")
-    }
-
-    override fun unsetBasePermission(name: String) {
-        TODO("Not yet implemented")
-    }
-
-    override fun unsetBasePermission(permission: Permission) {
-        TODO("Not yet implemented")
-    }
-
-    override fun isPermissionSet(name: String): Boolean {
-        TODO("Not yet implemented")
-    }
-
-    override fun isPermissionSet(permission: Permission): Boolean {
-        TODO("Not yet implemented")
-    }
-
-    override fun hasPermission(name: String): Boolean {
-        TODO("Not yet implemented")
-    }
-
-    override fun hasPermission(permission: Permission): Boolean {
-        TODO("Not yet implemented")
-    }
-
-    override fun addAttachment(plugin: Plugin, name: String?, value: Boolean?): PermissionAttachment {
-        TODO("Not yet implemented")
-    }
-
-    override fun removeAttachment(attachment: PermissionAttachment) {
-        TODO("Not yet implemented")
-    }
-
-    override fun recalculatePermissions(): Map<String, Boolean> {
-        TODO("Not yet implemented")
-    }
-
-    override fun getEffectivePermissions(): Map<String, PermissionAttachmentInfo> {
         TODO("Not yet implemented")
     }
 
