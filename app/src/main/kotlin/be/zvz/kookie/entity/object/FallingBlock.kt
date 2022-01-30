@@ -23,6 +23,7 @@ import be.zvz.kookie.entity.Entity
 import be.zvz.kookie.entity.EntitySizeInfo
 import be.zvz.kookie.entity.Location
 import be.zvz.kookie.event.entity.EntityBlockChangeEvent
+import be.zvz.kookie.event.entity.EntityDamageEvent
 import be.zvz.kookie.math.Vector3
 import be.zvz.kookie.nbt.tag.ByteTag
 import be.zvz.kookie.nbt.tag.CompoundTag
@@ -51,12 +52,10 @@ open class FallingBlock @JvmOverloads constructor(
         return false
     }
 
-    override fun attack(source: Any) {
-        /*
-        TODO:
+    override fun attack(source: EntityDamageEvent) {
         if (source.cause == EntityDamageEvent.Type.VOID) {
-           super.attack(source)
-         */
+            super.attack(source)
+        }
     }
 
     override fun entityBaseTick(tickDiff: Long): Boolean {

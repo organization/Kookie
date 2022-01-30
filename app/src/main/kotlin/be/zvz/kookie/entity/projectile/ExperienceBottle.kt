@@ -41,11 +41,11 @@ open class ExperienceBottle @JvmOverloads constructor(
 
     override fun onHit(event: ProjectileHitEvent) {
         /*
-        TODO: 
+        TODO:
         world.addParticle(location, PotionSplashParticle(PotionSplashParticle.DEFAULT_COLOR))
         broadcastSound(PotionSplashSound())
         world.dropExperience(location, Math.random(3, 11))
-        
+
          */
     }
 }

@@ -51,12 +51,10 @@ abstract class Projectile @JvmOverloads constructor(
         }
     }
 
-    open override fun attack(source: Any) {
-        /*
-        TODO:
-        if (source.cause == EntityDamageEvent.CAUSE_VOID) {
-        super.attack(source)
-         */
+    open override fun attack(source: EntityDamageEvent) {
+        if (source.cause == EntityDamageEvent.Type.VOID) {
+            super.attack(source)
+        }
     }
 
     open override fun initEntity(nbt: CompoundTag) {
@@ -171,7 +169,7 @@ abstract class Projectile @JvmOverloads constructor(
                 hitResult = blockHitResult
                 return@forEach
             }
-            
+
              */
         }
 

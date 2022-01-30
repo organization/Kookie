@@ -17,6 +17,7 @@
  */
 package be.zvz.kookie.entity
 
+import be.zvz.kookie.event.entity.EntityDamageEvent
 import be.zvz.kookie.inventory.CallbackInventoryListener
 import be.zvz.kookie.inventory.PlayerEnderInventory
 import be.zvz.kookie.inventory.PlayerInventory
@@ -214,7 +215,7 @@ open class Human @JvmOverloads constructor(
         return hasUpdate
     }
 
-    override fun applyDamageModifiers(source: Any) {
+    override fun applyDamageModifiers(source: EntityDamageEvent) {
         super.applyDamageModifiers(source)
         // TODO
     }
