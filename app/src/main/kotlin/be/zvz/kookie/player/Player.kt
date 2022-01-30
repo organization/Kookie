@@ -175,20 +175,18 @@ open class Player(
                     loadQueue.remove(chunkHash)
                     usedChunks[chunkHash] = UsedChunkStatus.REQUESTED_SENDING
 
-                    /** TODO: Implements after implemented NetworkSession::startUsingChunk
-                     * networkSession.startUsingChunk(X, Z) {
-                     *     usedChunks[chunkHash] = UsedChunkStatus.SENT
-                     *     if (spawnChunkLoadCount == -1) {
-                     *         spawnEntitiesOnChunk(X, Z)
-                     *     } else if (spawnChunkLoadCount++ == spawnThreshold) {
-                     *         spawnChunkLoadCount = -1
-                     *
-                     *         spawnEntitiesOnAllChunks()
-                     *
-                     *         networkSession.notifyTerrainReady()
-                     *     }
-                     * }
-                     */
+                    networkSession.startUsingChunk(X, Z) {
+                        usedChunks[chunkHash] = UsedChunkStatus.SENT
+                        if (spawnChunkLoadCount == -1) {
+                            spawnEntitiesOnChunk(X, Z)
+                        } else if (spawnChunkLoadCount++ == spawnThreshold) {
+                            spawnChunkLoadCount = -1
+
+                            spawnEntitiesOnAllChunks()
+
+                            networkSession.notifyTerrainReady()
+                        }
+                    }
                 },
                 { }
             )
