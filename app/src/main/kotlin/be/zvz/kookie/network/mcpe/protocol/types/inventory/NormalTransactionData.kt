@@ -17,12 +17,13 @@
  */
 package be.zvz.kookie.network.mcpe.protocol.types.inventory
 
-import be.zvz.kookie.network.mcpe.protocol.InventoryTransactionPacket
 import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
+import com.nukkitx.protocol.bedrock.data.inventory.TransactionType
 
 class NormalTransactionData : TransactionData() {
 
-    override val typeId = InventoryTransactionPacket.TYPE_NORMAL
+    override val typeId = TransactionType.NORMAL
+
     override fun decodeData(input: PacketSerializer) {
     }
 

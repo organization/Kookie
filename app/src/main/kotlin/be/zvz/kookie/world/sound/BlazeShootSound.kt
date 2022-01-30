@@ -17,6 +17,6 @@
  */
 package be.zvz.kookie.world.sound
 
-import be.zvz.kookie.network.mcpe.protocol.LevelEventPacket
+import com.nukkitx.protocol.bedrock.data.LevelEventType
 
-class BlazeShootSound : EventSound(LevelEventPacket.EVENT_SOUND_BLAZE_SHOOT)
+class BlazeShootSound : EventSound(LevelEventType.SOUND_BLAZE_FIREBALL)

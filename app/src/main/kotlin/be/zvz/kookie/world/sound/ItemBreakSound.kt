@@ -17,4 +17,6 @@
  */
 package be.zvz.kookie.world.sound
 
-class ItemBreakSound : StandardSound(Type.BREAK)
+import com.nukkitx.protocol.bedrock.data.SoundEvent
+
+class ItemBreakSound : StandardSound(SoundEvent.BREAK)

@@ -19,8 +19,8 @@ package be.zvz.kookie.event.server
 
 import be.zvz.kookie.event.Cancellable
 import be.zvz.kookie.network.mcpe.NetworkSession
-import be.zvz.kookie.network.mcpe.protocol.ClientboundPacket
+import com.nukkitx.protocol.bedrock.BedrockPacket
 
-class DataPacketSendEvent(val targets: List<NetworkSession>, val packets: List<ClientboundPacket>) : ServerEvent(), Cancellable {
+class DataPacketSendEvent(val targets: List<NetworkSession>, val packets: List<BedrockPacket>) : ServerEvent(), Cancellable {
     override var isCancelled: Boolean = false
 }

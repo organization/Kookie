@@ -18,12 +18,13 @@
 package be.zvz.kookie.network.mcpe.protocol.types.inventory
 
 import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
+import com.nukkitx.protocol.bedrock.data.inventory.TransactionType
 
 abstract class TransactionData {
 
     private var actions: MutableList<NetworkInventoryAction> = mutableListOf()
 
-    abstract val typeId: Int
+    abstract val typeId: TransactionType
 
     fun getActions(): MutableList<NetworkInventoryAction> = actions
 

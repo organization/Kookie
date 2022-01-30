@@ -19,9 +19,6 @@ package be.zvz.kookie.network.mcpe.cache
 
 import be.zvz.kookie.math.Vector3
 import be.zvz.kookie.network.mcpe.compression.CompressBatchPromise
-import be.zvz.kookie.network.mcpe.compression.Compressor
-import be.zvz.kookie.network.mcpe.protocol.LevelChunkPacket
-import be.zvz.kookie.network.mcpe.protocol.serializer.PacketBatch
 import be.zvz.kookie.network.mcpe.serializer.ChunkSerializer
 import be.zvz.kookie.scheduler.AsyncTask
 import be.zvz.kookie.world.ChunkHash
@@ -30,7 +27,7 @@ import be.zvz.kookie.world.World
 import be.zvz.kookie.world.format.Chunk
 import com.koloboke.collect.map.hash.HashIntObjMaps
 import com.koloboke.collect.map.hash.HashLongObjMaps
-import com.koloboke.collect.map.hash.HashObjObjMaps
+import com.nukkitx.protocol.bedrock.packet.LevelChunkPacket
 import java.util.concurrent.ExecutionException
 
 /**
@@ -43,25 +40,12 @@ import java.util.concurrent.ExecutionException
 typealias WorldId = Int
 
 class ChunkCache(
-    private val world: World,
-    private val compressor: Compressor
+    private val world: World
 ) : ChunkListener {
     /** @var CompressBatchPromise[] */
     private val caches: MutableMap<ChunkHash, CompressBatchPromise> = HashLongObjMaps.newMutableMap()
     private var hits: Int = 0
     private var misses: Int = 0
-
-    /** Returns the size in bytes of the cache data excluding the size of the promise. */
-    val cacheSize: Int
-        get() {
-            var result = 0
-            caches.values.forEach { cache ->
-                cache.result?.let {
-                    result += it.length
-                }
-            }
-            return result
-        }
 
     /** Returns the percentage of requests to the cache which resulted in a cache hit. */
     val hitPercentage: Float
@@ -103,16 +87,14 @@ class ChunkCache(
                 AsyncTask(
                     {
                         promise.resolve(
-                            compressor.compress(
-                                PacketBatch.fromPackets(
-                                    LevelChunkPacket.withoutCache(
-                                        chunkX,
-                                        chunkZ,
-                                        subChunkCount = chunk.subChunks.size,
-                                        payload = ChunkSerializer.serialize(chunk)
-                                    )
-                                ).getBuffer()
-                            )
+                            LevelChunkPacket().apply {
+                                this.chunkX = chunkX
+                                this.chunkZ = chunkZ
+                                subChunksLength = chunk.subChunks.size
+                                data = ChunkSerializer.serialize(chunk)
+                                    .toByteArray() // TODO: replace this with Cloudburst Protocol chunk serializer
+                                isCachingEnabled = false // TODO: What is this?
+                            }
                         )
                     },
                     Unit
@@ -179,24 +161,25 @@ class ChunkCache(
 
     companion object {
         /** @var self[][] */
-        private val instances: MutableMap<WorldId, MutableMap<Compressor, ChunkCache>> = HashIntObjMaps.newMutableMap()
+        private val instances: MutableMap<WorldId, MutableList<ChunkCache>> = HashIntObjMaps.newMutableMap()
 
         /** Fetches the ChunkCache instance for the given world. This lazily creates cache systems as needed. */
         @JvmStatic
-        fun getInstance(world: World, compressor: Compressor): ChunkCache =
+        fun getInstance(world: World): ChunkCache {
+            val chunkCache = ChunkCache(world)
             instances.getOrPut(world.id) {
-                val cacheMap = HashObjObjMaps.newMutableMap<Compressor, ChunkCache>()
+                val cacheMap = mutableListOf<ChunkCache>()
                 world.addOnUnloadCallback {
-                    cacheMap.values.forEach { cache ->
+                    cacheMap.forEach { cache ->
                         cache.caches.clear()
                     }
                     instances.remove(world.id)
                     world.logger.debug("Destroyed chunk packet caches for world#worldId")
                 }
                 cacheMap
-            }.getOrPut(compressor) {
-                world.logger.debug("Created chunk packet cache (world#worldId, compressor#compressorId)")
-                ChunkCache(world, compressor)
-            }
+            }.add(chunkCache)
+            world.logger.debug("Created chunk packet cache (world#worldId, compressor#compressorId)")
+            return chunkCache
+        }
     }
 }

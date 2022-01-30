@@ -17,6 +17,6 @@
  */
 package be.zvz.kookie.world.sound
 
-import be.zvz.kookie.network.mcpe.protocol.LevelEventPacket
+import com.nukkitx.protocol.bedrock.data.LevelEventType
 
-class DoorCrashSound : EventSound(LevelEventPacket.EVENT_SOUND_DOOR_CRASH)
+class DoorCrashSound : EventSound(LevelEventType.SOUND_ZOMBIE_DOOR_CRASH)

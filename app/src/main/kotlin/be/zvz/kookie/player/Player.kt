@@ -19,6 +19,7 @@ package be.zvz.kookie.player
 
 import be.zvz.kookie.Server
 import be.zvz.kookie.command.CommandSender
+import be.zvz.kookie.console.PrefixedLogger
 import be.zvz.kookie.crafting.CraftingGrid
 import be.zvz.kookie.entity.Human
 import be.zvz.kookie.entity.Location
@@ -27,50 +28,50 @@ import be.zvz.kookie.lang.Language
 import be.zvz.kookie.lang.TranslationContainer
 import be.zvz.kookie.nbt.tag.CompoundTag
 import be.zvz.kookie.network.mcpe.NetworkSession
-import be.zvz.kookie.network.mcpe.protocol.TextPacket
-import be.zvz.kookie.permission.Permission
-import be.zvz.kookie.permission.PermissionAttachment
-import be.zvz.kookie.permission.PermissionAttachmentInfo
-import be.zvz.kookie.plugin.Plugin
+import be.zvz.kookie.permission.PermissibleBase
+import be.zvz.kookie.permission.PermissibleDelegate
 import be.zvz.kookie.timings.Timings
+import be.zvz.kookie.utils.TextFormat
 import be.zvz.kookie.world.ChunkHash
 import be.zvz.kookie.world.ChunkListener
 import be.zvz.kookie.world.World
 import be.zvz.kookie.world.format.Chunk
 import com.koloboke.collect.map.hash.HashLongObjMaps
 import com.koloboke.collect.set.hash.HashLongSets
+import com.nukkitx.protocol.bedrock.packet.TextPacket
 import org.slf4j.LoggerFactory
 import kotlin.math.min
 import kotlin.math.pow
 
-class Player(
+open class Player(
     override var server: Server,
     val networkSession: NetworkSession,
     playerInfo: PlayerInfo,
     val authenticated: Boolean,
     spawnLocation: Location,
-    val namedTag: CompoundTag,
+    namedTag: CompoundTag?,
     skin: Skin,
     location: Location
-) : Human(skin, location), CommandSender, ChunkListener {
-    private val logger = LoggerFactory.getLogger(Player::class.java)
-
+) : Human(skin, location, namedTag), CommandSender, ChunkListener, PermissibleDelegate {
     override val language: Language get() = server.language
-    val username = playerInfo.getUsername()
+
+    val username = playerInfo.username
     var displayName = username
     override val name: String get() = username
-    override val permissionRecalculationCallbacks: Set<(changedPermissionsOldValues: Map<String, Boolean>) -> Unit>
+    override val permissionRecalculationCallbacks: MutableSet<(changedPermissionsOldValues: Map<String, Boolean>) -> Unit>
         get() = TODO("Not yet implemented")
     lateinit var craftingGrid: CraftingGrid
         private set
-
     val usedChunks: MutableMap<ChunkHash, UsedChunkStatus> = HashLongObjMaps.newMutableMap()
+
     private val loadQueue: MutableSet<ChunkHash> = HashLongSets.newMutableSet()
     private var nextChunkOrderRun: Int = 5
     private val chunkSelector = ChunkSelector()
     private val chunkLoader = PlayerChunkLoader(spawnLocation)
-
     private var chunksPerTick: Int = server.configGroup.getProperty("chunk-sending.per-tick").asLong(4).toInt()
+
+    override val perm: PermissibleBase = PermissibleBase(mapOf())
+
     private var spawnThreshold: Int =
         (server.configGroup.getProperty("chunk-sending.spawn-radius").asLong(4).toDouble().pow(2) * Math.PI).toInt()
     private var spawnChunkLoadCount: Int = 0
@@ -79,19 +80,40 @@ class Player(
             field = server.getAllowedViewDistance(value)
             spawnThreshold = min(
                 value,
-                (server.configGroup.getProperty("chunk-sending.spawn-radius").asLong(4).toDouble().pow(2) * Math.PI).toInt()
+                (
+                    server.configGroup.getProperty("chunk-sending.spawn-radius").asLong(4).toDouble()
+                        .pow(2) * Math.PI
+                    ).toInt()
             )
             nextChunkOrderRun = 0
             // TODO: networkSession.syncViewAreaRadius(viewDistance)
             logger.debug("Setting view distance to $viewDistance (requested $value)")
         }
 
+    private val logger =
+        PrefixedLogger("Player: ${TextFormat.clean(username.lowercase())}", LoggerFactory.getLogger(Player::class.java))
+
+    init {
+        val username = TextFormat.clean(username)
+    }
+
     override fun sendMessage(message: String) {
-        networkSession.sendDataPacket(TextPacket.raw(message))
+        networkSession.sendDataPacket(
+            TextPacket().apply {
+                type = TextPacket.Type.RAW
+                this.message = message
+            }
+        )
     }
 
     override fun sendMessage(message: TranslationContainer) {
-        networkSession.sendDataPacket(TextPacket.translation(message.text, message.params.toMutableList()))
+        networkSession.sendDataPacket(
+            TextPacket().apply {
+                type = TextPacket.Type.TRANSLATION
+                this.message = message.text
+                parameters = message.params
+            }
+        )
     }
 
     override fun getScreenLineHeight(): Int {
@@ -102,55 +124,7 @@ class Player(
         TODO("Not yet implemented")
     }
 
-    override fun setBasePermission(name: String, grant: Boolean) {
-        TODO("Not yet implemented")
-    }
-
-    override fun setBasePermission(permission: Permission, grant: Boolean) {
-        TODO("Not yet implemented")
-    }
-
-    override fun unsetBasePermission(name: String) {
-        TODO("Not yet implemented")
-    }
-
-    override fun unsetBasePermission(permission: Permission) {
-        TODO("Not yet implemented")
-    }
-
-    override fun isPermissionSet(name: String): Boolean {
-        TODO("Not yet implemented")
-    }
-
-    override fun isPermissionSet(permission: Permission): Boolean {
-        TODO("Not yet implemented")
-    }
-
-    override fun hasPermission(name: String): Boolean {
-        TODO("Not yet implemented")
-    }
-
-    override fun hasPermission(permission: Permission): Boolean {
-        TODO("Not yet implemented")
-    }
-
-    override fun addAttachment(plugin: Plugin, name: String?, value: Boolean?): PermissionAttachment {
-        TODO("Not yet implemented")
-    }
-
-    override fun removeAttachment(attachment: PermissionAttachment) {
-        TODO("Not yet implemented")
-    }
-
-    override fun recalculatePermissions(): Map<String, Boolean> {
-        TODO("Not yet implemented")
-    }
-
-    override fun getEffectivePermissions(): Map<String, PermissionAttachmentInfo> {
-        TODO("Not yet implemented")
-    }
-
-    fun doChunkRequest() {
+    open fun doChunkRequest() {
         if (nextChunkOrderRun != Int.MAX_VALUE && nextChunkOrderRun-- <= 0) {
             nextChunkOrderRun = Int.MAX_VALUE
             orderChunks()
@@ -199,7 +173,7 @@ class Player(
                         return@onCompletion
                     }
                     loadQueue.remove(chunkHash)
-                    usedChunks[chunkHash] = UsedChunkStatus.REQUESTED
+                    usedChunks[chunkHash] = UsedChunkStatus.REQUESTED_SENDING
 
                     /** TODO: Implements after implemented NetworkSession::startUsingChunk
                      * networkSession.startUsingChunk(X, Z) {
@@ -237,13 +211,14 @@ class Player(
         loadQueue.clear()
         val unloadChunks = HashLongObjMaps.newMutableMap(usedChunks)
 
-        chunkSelector.selectChunks(viewDistance, location.x.toInt() shr 4, location.z.toInt() shr 4).forEach { chunkHash ->
-            val status = usedChunks[chunkHash]?.equals(UsedChunkStatus.NEEDED)
-            if (status === null || status == true) {
-                loadQueue.add(chunkHash)
+        chunkSelector.selectChunks(viewDistance, location.x.toInt() shr 4, location.z.toInt() shr 4)
+            .forEach { chunkHash ->
+                val status = usedChunks[chunkHash]?.equals(UsedChunkStatus.NEEDED)
+                if (status === null || status == true) {
+                    loadQueue.add(chunkHash)
+                }
+                unloadChunks.remove(chunkHash)
             }
-            unloadChunks.remove(chunkHash)
-        }
 
         unloadChunks.keys.forEach { chunkHash ->
             val (chunkX, chunkZ) = World.parseChunkHash(chunkHash)
@@ -298,13 +273,15 @@ class Player(
      * Returns whether the player is using the chunk with the given coordinates,
      *  irrespective of whether the chunk has been sent yet.
      */
-    fun isUsingChunk(chunkX: Int, chunkZ: Int): Boolean = usedChunks.containsKey(World.chunkHash(chunkX, chunkZ))
+    open fun isUsingChunk(chunkX: Int, chunkZ: Int): Boolean = usedChunks.containsKey(World.chunkHash(chunkX, chunkZ))
 
     /** Returns a usage status of the given chunk, or null if the player is not using the given chunk.  */
-    fun getUsedChunkStatus(chunkX: Int, chunkZ: Int): UsedChunkStatus? = usedChunks[World.chunkHash(chunkX, chunkZ)]
+    open fun getUsedChunkStatus(chunkX: Int, chunkZ: Int): UsedChunkStatus? =
+        usedChunks[World.chunkHash(chunkX, chunkZ)]
 
     /** Returns whether the target chunk has been sent to this player. */
-    fun hasReceivedChunk(chunkX: Int, chunkZ: Int): Boolean = getUsedChunkStatus(chunkX, chunkZ) == UsedChunkStatus.SENT
+    open fun hasReceivedChunk(chunkX: Int, chunkZ: Int): Boolean =
+        getUsedChunkStatus(chunkX, chunkZ) == UsedChunkStatus.SENT
 
     override fun onChunkChanged(chunkX: Int, chunkZ: Int, chunk: Chunk) {
         if (hasReceivedChunk(chunkX, chunkZ)) {

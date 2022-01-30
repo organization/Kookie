@@ -17,6 +17,6 @@
  */
 package be.zvz.kookie.world.sound
 
-import be.zvz.kookie.network.mcpe.protocol.LevelEventPacket
+import com.nukkitx.protocol.bedrock.data.LevelEventType
 
-class GhastShootSound : EventSound(LevelEventPacket.EVENT_SOUND_GHAST_SHOOT)
+class GhastShootSound : EventSound(LevelEventType.SOUND_GHAST_FIREBALL)

@@ -22,18 +22,20 @@ import org.jmailen.gradle.kotlinter.tasks.LintTask
 
 plugins {
     // Apply the org.jetbrains.kotlin.jvm Plugin to add support for Kotlin.
-    kotlin("jvm") version "1.5.30"
+    kotlin("jvm") version "1.6.10"
 
     // Apply the application plugin to add support for building a CLI application in Java.
     application
 
-    id("com.gorylenko.gradle-git-properties") version "2.3.1"
+    id("com.gorylenko.gradle-git-properties") version "2.3.2"
 
-    id("org.jmailen.kotlinter") version "3.5.1"
-    id("com.github.johnrengelman.shadow") version "7.0.0"
+    id("org.jmailen.kotlinter") version "3.8.0"
+    id("com.github.johnrengelman.shadow") version "7.1.2"
 }
 
 val tag = System.getenv("VERSION_TAG") ?: "SNAPSHOT"
+
+val protocolVer = 475 // 1.18
 
 group = "be.zvz"
 version = "0.0.1-$tag"
@@ -51,6 +53,14 @@ repositories {
         url = uri("https://oss.sonatype.org/content/repositories/snapshots")
     }
     maven {
+        name = "nukkitx-repo-release"
+        url = uri("https://repo.nukkitx.com/maven-releases/")
+    }
+    maven {
+        name = "nukkitx-repo-snapshots"
+        url = uri("https://repo.nukkitx.com/maven-snapshots/")
+    }
+    maven {
         name = "jitpack"
         url = uri("https://jitpack.io")
     }
@@ -64,35 +74,35 @@ dependencies {
     implementation(group = "org.jetbrains.kotlin", name = "kotlin-stdlib-jdk8")
 
     // Kotlin coroutines
-    implementation(group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version = "1.5.1")
-    implementation(group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-jdk8", version = "1.5.1")
+    implementation(group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version = "1.6.0")
+    implementation(group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-jdk8", version = "1.6.0")
 
     // RxKotlin
     implementation(group = "io.reactivex.rxjava3", name = "rxkotlin", version = "3.0.1")
 
     // jline (console)
-    implementation(group = "org.jline", name = "jline", version = "3.20.0")
-    implementation(group = "net.minecrell", name = "terminalconsoleappender", version = "1.2.0")
+    implementation(group = "org.jline", name = "jline", version = "3.21.0")
+    implementation(group = "net.minecrell", name = "terminalconsoleappender", version = "1.3.0")
 
     // Jackson
-    implementation(group = "com.fasterxml.jackson.module", name = "jackson-module-kotlin", version = "2.12.4")
-    implementation(group = "com.fasterxml.jackson.module", name = "jackson-module-afterburner", version = "2.12.4")
-    implementation(group = "com.fasterxml.jackson.dataformat", name = "jackson-dataformat-yaml", version = "2.12.4")
-    implementation(group = "com.fasterxml.jackson.dataformat", name = "jackson-dataformat-properties", version = "2.12.4")
+    implementation(group = "com.fasterxml.jackson.module", name = "jackson-module-kotlin", version = "2.13.1")
+    implementation(group = "com.fasterxml.jackson.module", name = "jackson-module-afterburner", version = "2.13.1")
+    implementation(group = "com.fasterxml.jackson.dataformat", name = "jackson-dataformat-yaml", version = "2.13.1")
+    implementation(group = "com.fasterxml.jackson.dataformat", name = "jackson-dataformat-properties", version = "2.13.1")
 
     // Apache commons IO
     implementation(group = "commons-io", name = "commons-io", version = "2.11.0")
 
     // jna
-    implementation(group = "net.java.dev.jna", name = "jna", version = "5.9.0")
+    implementation(group = "net.java.dev.jna", name = "jna", version = "5.10.0")
 
     // Logger
-    implementation(group = "org.slf4j", name = "slf4j-api", version = "1.7.32")
-    implementation(group = "ch.qos.logback", name = "logback-classic", version = "1.2.5")
-    implementation(group = "org.fusesource.jansi", name = "jansi", version = "1.18")
+    implementation(group = "org.slf4j", name = "slf4j-api", version = "1.7.35")
+    implementation(group = "ch.qos.logback", name = "logback-classic", version = "1.2.10")
+    implementation(group = "org.fusesource.jansi", name = "jansi", version = "2.4.0")
 
     // netty
-    implementation(group = "io.netty", name = "netty-all", version = "4.1.67.Final")
+    implementation(group = "io.netty", name = "netty-all", version = "4.1.73.Final")
 
     // bedrock-network
     implementation(group = "org.powernukkit.bedrock.network", name = "raknet", version = "1.6.25-PN.2")
@@ -101,7 +111,7 @@ dependencies {
     implementation(group = "org.powernukkit.bedrock.leveldb", name = "bedrock-leveldb", version = "0.11.0-PN")
 
     // guava
-    implementation(group = "com.google.guava", name = "guava", version = "30.1.1-jre")
+    implementation(group = "com.google.guava", name = "guava", version = "31.0.1-jre")
 
     // koloboke
     implementation(group = "com.koloboke", name = "koloboke-impl-common-jdk8", version = "1.0.0")
@@ -113,6 +123,9 @@ dependencies {
     runtimeOnly(group = "io.jsonwebtoken", name = "jjwt-impl", version = "0.11.2")
     runtimeOnly(group = "io.jsonwebtoken", name = "jjwt-jackson", version = "0.11.2")
     implementation(group = "org.whispersystems", name = "curve25519-java", version = "0.5.0")
+
+    // Bedrock Protocol
+    implementation(group = "org.powernukkit.bedrock.protocol", name = "bedrock-v$protocolVer", version = "2.9.4-PN-SNAPSHOT")
 
     // Use the Kotlin test library.
     testImplementation(group = "org.jetbrains.kotlin", name = "kotlin-test")

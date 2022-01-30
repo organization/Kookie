@@ -18,12 +18,12 @@
 package be.zvz.kookie.network.mcpe.protocol.types.inventory
 
 import be.zvz.kookie.math.Vector3
-import be.zvz.kookie.network.mcpe.protocol.InventoryTransactionPacket
 import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
+import com.nukkitx.protocol.bedrock.data.inventory.TransactionType
 
 class UseItemOnEntityTransactionData : TransactionData() {
 
-    override val typeId = InventoryTransactionPacket.TYPE_USE_ITEM_ON_ENTITY
+    override val typeId = TransactionType.ITEM_USE_ON_ENTITY
 
     private var entityRuntimeId: Long = -1L
 

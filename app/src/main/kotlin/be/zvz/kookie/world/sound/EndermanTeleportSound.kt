@@ -17,6 +17,6 @@
  */
 package be.zvz.kookie.world.sound
 
-import be.zvz.kookie.network.mcpe.protocol.LevelEventPacket
+import com.nukkitx.protocol.bedrock.data.LevelEventType
 
-class EndermanTeleportSound : EventSound(LevelEventPacket.EVENT_SOUND_ENDERMAN_TELEPORT)
+class EndermanTeleportSound : EventSound(LevelEventType.SOUND_ENDERMAN_TELEPORT)

@@ -17,4 +17,6 @@
  */
 package be.zvz.kookie.world.particle
 
-class LavaParticle : StandardParticle(Type.LAVA)
+import com.nukkitx.protocol.bedrock.data.LevelEventType
+
+class LavaParticle : StandardParticle(LevelEventType.PARTICLE_LAVA)

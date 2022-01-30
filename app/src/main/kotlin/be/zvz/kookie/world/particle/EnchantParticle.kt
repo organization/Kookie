@@ -18,5 +18,6 @@
 package be.zvz.kookie.world.particle
 
 import be.zvz.kookie.color.Color
+import com.nukkitx.protocol.bedrock.data.LevelEventType
 
-class EnchantParticle(color: Color) : ColoredParticle(Type.MOB_SPELL, color)
+class EnchantParticle(color: Color) : ColoredParticle(LevelEventType.PARTICLE_MOB_SPELL, color)

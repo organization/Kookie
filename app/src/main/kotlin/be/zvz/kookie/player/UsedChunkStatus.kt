@@ -19,6 +19,7 @@ package be.zvz.kookie.player
 
 enum class UsedChunkStatus {
     NEEDED(),
-    REQUESTED(),
+    REQUESTED_GENERATION(),
+    REQUESTED_SENDING(),
     SENT()
 }

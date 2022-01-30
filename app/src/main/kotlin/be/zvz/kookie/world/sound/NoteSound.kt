@@ -17,7 +17,9 @@
  */
 package be.zvz.kookie.world.sound
 
-class NoteSound(val instrument: Instrument, val note: Int) : StandardSound(Type.NOTE) {
+import com.nukkitx.protocol.bedrock.data.SoundEvent
+
+class NoteSound(val instrument: Instrument, val note: Int) : StandardSound(SoundEvent.NOTE) {
     init {
         if (note !in 0 until 0xff) {
             throw IllegalArgumentException("Note $note is outside accepted range")

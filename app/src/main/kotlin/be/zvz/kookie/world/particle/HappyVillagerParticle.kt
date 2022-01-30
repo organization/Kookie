@@ -17,4 +17,6 @@
  */
 package be.zvz.kookie.world.particle
 
-class HappyVillagerParticle : StandardParticle(Type.VILLAGER_HAPPY)
+import com.nukkitx.protocol.bedrock.data.LevelEventType
+
+class HappyVillagerParticle : StandardParticle(LevelEventType.PARTICLE_VILLAGER_HAPPY)

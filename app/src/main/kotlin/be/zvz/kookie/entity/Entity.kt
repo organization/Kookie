@@ -32,13 +32,11 @@ import be.zvz.kookie.math.Vector3
 import be.zvz.kookie.nbt.tag.ByteTag
 import be.zvz.kookie.nbt.tag.CompoundTag
 import be.zvz.kookie.nbt.tag.StringTag
-import be.zvz.kookie.network.mcpe.protocol.AddActorPacket
 import be.zvz.kookie.network.mcpe.protocol.types.entity.EntityIds
 import be.zvz.kookie.network.mcpe.protocol.types.entity.EntityMetadataCollection
 import be.zvz.kookie.network.mcpe.protocol.types.entity.EntityMetadataFlags
 import be.zvz.kookie.network.mcpe.protocol.types.entity.EntityMetadataProperties
 import be.zvz.kookie.network.mcpe.protocol.types.entity.MetadataProperty
-import be.zvz.kookie.network.mcpe.protocol.types.entity.NetworkAttribute
 import be.zvz.kookie.player.Player
 import be.zvz.kookie.timings.Timings
 import be.zvz.kookie.timings.TimingsHandler
@@ -46,6 +44,9 @@ import be.zvz.kookie.world.Position
 import be.zvz.kookie.world.World
 import be.zvz.kookie.world.sound.Sound
 import com.koloboke.collect.map.hash.HashLongObjMaps
+import com.nukkitx.math.vector.Vector3f
+import com.nukkitx.protocol.bedrock.data.AttributeData
+import com.nukkitx.protocol.bedrock.packet.AddEntityPacket
 import org.slf4j.LoggerFactory
 import kotlin.math.PI
 import kotlin.math.abs
@@ -1034,26 +1035,17 @@ abstract class Entity @JvmOverloads constructor(var location: Location, nbt: Com
     fun getViewers(): MutableMap<Long, Player> = hasSpawned
 
     open fun sendSpawnPacket(player: Player) {
-        val pk = AddActorPacket()
-        pk.entityRuntimeId = getId()
-        pk.type = entityNetworkIdentifier.value
-        pk.position = location.asVector3()
-        pk.motion = motion
-        pk.yaw = location.yaw.toFloat()
-        pk.headYaw = location.yaw.toFloat()
-        pk.pitch = location.pitch.toFloat()
-        attributeMap.getAll().forEach { (_, attr) ->
-            pk.attributes.add(
-                NetworkAttribute(
-                    attr.id,
-                    attr.minValue,
-                    attr.maxValue,
-                    attr.currentValue,
-                    attr.defaultValue
-                )
-            )
+
+        val pk = AddEntityPacket()
+        pk.runtimeEntityId = getId()
+        pk.entityType = -1 // TODO entityNetworkIdentifier.value
+        pk.position = Vector3f.ZERO.add(location.x, location.y, location.z)
+        pk.motion = Vector3f.ZERO.add(motion.x, motion.y, motion.z)
+        pk.rotation = Vector3f.ZERO.add(getDirectionVector().x, getDirectionVector().y, getDirectionVector().z)
+        attributeMap.getAll().forEach { (v, attr) ->
+            pk.attributes.add(AttributeData(v.name, attr.minValue, attr.maxValue, attr.currentValue, attr.defaultValue))
         }
-        pk.metadata = getAllNetworkData()
+        // TODO: pk.metadata
 
         player.networkSession.sendDataPacket(pk)
     }

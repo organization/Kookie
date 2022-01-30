@@ -17,13 +17,13 @@
  */
 package be.zvz.kookie.world.format.io.data
 
+import be.zvz.kookie.Server
 import be.zvz.kookie.nbt.LittleEndianNbtSerializer
 import be.zvz.kookie.nbt.NbtDataException
 import be.zvz.kookie.nbt.TreeRoot
 import be.zvz.kookie.nbt.tag.CompoundTag
 import be.zvz.kookie.nbt.tag.IntTag
 import be.zvz.kookie.nbt.tag.StringTag
-import be.zvz.kookie.network.mcpe.protocol.ProtocolInfo
 import be.zvz.kookie.utils.Binary
 import be.zvz.kookie.world.WorldCreationOptions
 import be.zvz.kookie.world.format.io.exception.CorruptedWorldException
@@ -88,7 +88,7 @@ class BedrockWorldData(dataPath: Path) : BaseNbtWorldData(dataPath) {
     }
 
     override fun save() {
-        compoundTag.setInt("NetworkVersion", ProtocolInfo.CURRENT_PROTOCOL)
+        compoundTag.setInt("NetworkVersion", Server.currentVersion.protocolVersion)
         compoundTag.setInt("StorageVersion", CURRENT_STORAGE_VERSION)
 
         val rawLevelData = appendHeader(LittleEndianNbtSerializer().write(TreeRoot(compoundTag)))
@@ -119,7 +119,7 @@ class BedrockWorldData(dataPath: Path) : BaseNbtWorldData(dataPath) {
                     )
                     setLong("LastPlayed", System.currentTimeMillis())
                     setString("LevelName", name)
-                    setInt("NetworkVersion", ProtocolInfo.CURRENT_PROTOCOL)
+                    setInt("NetworkVersion", Server.currentVersion.protocolVersion)
                     setLong("RandomSeed", options.seed)
                     setInt("SpawnX", options.spawnPosition.floorX)
                     setInt("SpawnY", options.spawnPosition.floorY)

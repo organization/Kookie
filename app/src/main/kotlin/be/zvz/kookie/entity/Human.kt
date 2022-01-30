@@ -32,14 +32,7 @@ import be.zvz.kookie.nbt.tag.IntTag
 import be.zvz.kookie.nbt.tag.ListTag
 import be.zvz.kookie.nbt.tag.StringTag
 import be.zvz.kookie.network.mcpe.convert.SkinAdapterSingleton
-import be.zvz.kookie.network.mcpe.convert.TypeConverter
-import be.zvz.kookie.network.mcpe.protocol.AddPlayerPacket
-import be.zvz.kookie.network.mcpe.protocol.PlayerListPacket
-import be.zvz.kookie.network.mcpe.protocol.types.PlayerListEntry
 import be.zvz.kookie.network.mcpe.protocol.types.entity.EntityIds
-import be.zvz.kookie.network.mcpe.protocol.types.entity.EntityMetadataProperties
-import be.zvz.kookie.network.mcpe.protocol.types.entity.StringMetadataProperty
-import be.zvz.kookie.network.mcpe.protocol.types.inventory.ItemStackWrapper
 import be.zvz.kookie.player.Player
 import java.nio.charset.StandardCharsets
 import java.util.UUID
@@ -311,20 +304,24 @@ open class Human @JvmOverloads constructor(
 
     override fun sendSpawnPacket(player: Player) {
         if (this !is Player) {
+            val curSkin = skin
             player.networkSession.sendDataPacket(
-                PlayerListPacket.add(
+                com.nukkitx.protocol.bedrock.packet.PlayerListPacket().apply {
                     listOf(
-                        PlayerListEntry.createAdditionEntry(
-                            uuid,
-                            getId(),
-                            nameTag,
-                            SkinAdapterSingleton.adapter!!.toSkinData(skin)
-                        )
+                        com.nukkitx.protocol.bedrock.packet.PlayerListPacket.Entry(uuid).apply {
+                            val skinData = SkinAdapterSingleton.adapter!!.toSkinData(curSkin)
+                            skin = SkinAdapterSingleton.adapter!!.toSerializedSkinData(skinData)
+                            entityId = getId()
+                            name = nameTag
+                            xuid = ""
+                        }
                     )
-                )
+                }
             )
         }
         if (this !is Player) {
+            /*
+            TODO
             player.networkSession.sendDataPacket(
                 AddPlayerPacket().also {
                     it.uuid = uuid
@@ -346,6 +343,8 @@ open class Human @JvmOverloads constructor(
                     // TODO: player.networkSession.onMobOffHandItemChange(this)
                 }
             )
+
+             */
         }
     }
 

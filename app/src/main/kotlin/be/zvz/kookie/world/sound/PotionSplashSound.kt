@@ -17,4 +17,6 @@
  */
 package be.zvz.kookie.world.sound
 
-class PotionSplashSound : StandardSound(Type.GLASS)
+import com.nukkitx.protocol.bedrock.data.SoundEvent
+
+class PotionSplashSound : StandardSound(SoundEvent.GLASS)

@@ -17,4 +17,6 @@
  */
 package be.zvz.kookie.world.particle
 
-class ExplodeParticle : StandardParticle(Type.EXPLODE)
+import com.nukkitx.protocol.bedrock.data.LevelEventType
+
+class ExplodeParticle : StandardParticle(LevelEventType.PARTICLE_EXPLODE)

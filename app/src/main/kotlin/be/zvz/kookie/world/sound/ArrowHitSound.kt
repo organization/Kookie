@@ -17,4 +17,6 @@
  */
 package be.zvz.kookie.world.sound
 
-class ArrowHitSound : StandardSound(Type.BOW_HIT)
+import com.nukkitx.protocol.bedrock.data.SoundEvent
+
+class ArrowHitSound : StandardSound(SoundEvent.BOW_HIT)

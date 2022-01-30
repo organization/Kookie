@@ -18,8 +18,8 @@
 package be.zvz.kookie.utils
 
 class Promise<T> {
-    private val onSuccessHandlers: MutableList<(T) -> Unit> = mutableListOf()
-    private val onFailureHandlers: MutableList<() -> Unit> = mutableListOf()
+    val onSuccessHandlers: MutableList<(T) -> Unit> = mutableListOf()
+    val onFailureHandlers: MutableList<() -> Unit> = mutableListOf()
     private var resolved: Boolean = false
 
     private var result: T? = null
@@ -31,6 +31,12 @@ class Promise<T> {
             onSuccessHandlers.add(onSuccess)
             onFailureHandlers.add(onFailure)
         }
+    }
+
+    fun hasResult(): Boolean = result != null && resolved
+
+    fun cancel() {
+        resolved = true
     }
 
     fun resolve(value: T) {

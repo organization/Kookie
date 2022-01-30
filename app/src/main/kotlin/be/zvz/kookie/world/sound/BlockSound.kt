@@ -18,8 +18,9 @@
 package be.zvz.kookie.world.sound
 
 import be.zvz.kookie.block.Block
+import com.nukkitx.protocol.bedrock.data.SoundEvent
 
-abstract class BlockSound(type: Type, val block: Block) : StandardSound(type) {
+abstract class BlockSound(type: SoundEvent, val block: Block) : StandardSound(type) {
     override val extraData: Int
         get() {
             TODO("Implements after implemented RuntimeBlockMapping")

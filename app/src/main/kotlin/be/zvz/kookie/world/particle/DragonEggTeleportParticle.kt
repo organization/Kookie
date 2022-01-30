@@ -17,11 +17,11 @@
  */
 package be.zvz.kookie.world.particle
 
-import be.zvz.kookie.network.mcpe.protocol.LevelEventPacket
+import com.nukkitx.protocol.bedrock.data.LevelEventType
 import kotlin.math.abs
 
 class DragonEggTeleportParticle(val xDiff: Int, val yDiff: Int, val zDiff: Int) :
-    EventParticle(LevelEventPacket.EVENT_PARTICLE_DRAGON_EGG_TELEPORT) {
+    EventParticle(LevelEventType.PARTICLE_TELEPORT) {
     init {
         listOf(xDiff, yDiff, zDiff).forEach {
             if (it !in -255 until 255) {

@@ -17,8 +17,8 @@
  */
 package be.zvz.kookie.network.mcpe
 
-import be.zvz.kookie.network.mcpe.protocol.ClientboundPacket
+import com.nukkitx.protocol.bedrock.BedrockPacket
 
 interface PacketBroadcaster {
-    fun broadcastPackets(recipients: List<NetworkSession>, packets: List<ClientboundPacket>)
+    fun broadcastPackets(recipients: List<NetworkSession>, packets: List<BedrockPacket>)
 }

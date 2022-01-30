@@ -17,4 +17,6 @@
  */
 package be.zvz.kookie.world.sound
 
-class BucketEmptyLavaSound : StandardSound(Type.BUCKET_EMPTY_LAVA)
+import com.nukkitx.protocol.bedrock.data.SoundEvent
+
+class BucketEmptyLavaSound : StandardSound(SoundEvent.BUCKET_EMPTY_LAVA)

@@ -17,6 +17,6 @@
  */
 package be.zvz.kookie.world.sound
 
-import be.zvz.kookie.network.mcpe.protocol.LevelEventPacket
+import com.nukkitx.protocol.bedrock.data.LevelEventType
 
-class PaintingPlaceSound : EventSound(LevelEventPacket.EVENT_SOUND_ITEMFRAME_PLACE)
+class PaintingPlaceSound : EventSound(LevelEventType.SOUND_ITEMFRAME_PLACE)

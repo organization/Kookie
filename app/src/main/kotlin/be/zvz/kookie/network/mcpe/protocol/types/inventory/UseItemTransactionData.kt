@@ -19,11 +19,11 @@ package be.zvz.kookie.network.mcpe.protocol.types.inventory
 
 import be.zvz.kookie.math.Facing
 import be.zvz.kookie.math.Vector3
-import be.zvz.kookie.network.mcpe.protocol.InventoryTransactionPacket
 import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
+import com.nukkitx.protocol.bedrock.data.inventory.TransactionType
 
 class UseItemTransactionData : TransactionData() {
-    override val typeId = InventoryTransactionPacket.TYPE_USE_ITEM
+    override val typeId = TransactionType.ITEM_USE
 
     private var actionType: Int = -1
 

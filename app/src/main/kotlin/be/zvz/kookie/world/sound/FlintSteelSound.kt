@@ -17,4 +17,6 @@
  */
 package be.zvz.kookie.world.sound
 
-class FlintSteelSound : StandardSound(Type.IGNITE)
+import com.nukkitx.protocol.bedrock.data.SoundEvent
+
+class FlintSteelSound : StandardSound(SoundEvent.IGNITE)

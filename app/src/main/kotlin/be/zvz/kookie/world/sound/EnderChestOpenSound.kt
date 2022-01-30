@@ -17,4 +17,6 @@
  */
 package be.zvz.kookie.world.sound
 
-class EnderChestOpenSound : StandardSound(Type.ENDERCHEST_OPEN)
+import com.nukkitx.protocol.bedrock.data.SoundEvent
+
+class EnderChestOpenSound : StandardSound(SoundEvent.ENDERCHEST_OPEN)

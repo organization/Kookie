@@ -17,4 +17,6 @@
  */
 package be.zvz.kookie.world.sound
 
-class EntityAttackSound : StandardSound(Type.ATTACK_STRONG)
+import com.nukkitx.protocol.bedrock.data.SoundEvent
+
+class EntityAttackSound : StandardSound(SoundEvent.ATTACK_STRONG)

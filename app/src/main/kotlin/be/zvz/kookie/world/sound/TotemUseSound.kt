@@ -17,6 +17,6 @@
  */
 package be.zvz.kookie.world.sound
 
-import be.zvz.kookie.network.mcpe.protocol.LevelEventPacket
+import com.nukkitx.protocol.bedrock.data.LevelEventType
 
-class TotemUseSound : EventSound(LevelEventPacket.EVENT_SOUND_TOTEM)
+class TotemUseSound : EventSound(LevelEventType.SOUND_TOTEM_USED)

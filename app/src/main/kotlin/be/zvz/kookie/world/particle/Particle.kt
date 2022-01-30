@@ -18,8 +18,8 @@
 package be.zvz.kookie.world.particle
 
 import be.zvz.kookie.math.Vector3
-import be.zvz.kookie.network.mcpe.protocol.ClientboundPacket
+import com.nukkitx.protocol.bedrock.BedrockPacket
 
 interface Particle {
-    fun encode(pos: Vector3): List<ClientboundPacket>
+    fun encode(pos: Vector3): List<BedrockPacket>
 }

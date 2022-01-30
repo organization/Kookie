@@ -101,7 +101,7 @@ class ExperienceManager(private val entity: Human) {
         ev.call()
         if (ev.isCancelled()) {
         return false
-        } 
+        }
          */
 
         // TODO: level = ev.getNewLevel()

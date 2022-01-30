@@ -17,4 +17,6 @@
  */
 package be.zvz.kookie.world.particle
 
-class FlameParticle : StandardParticle(Type.FLAME)
+import com.nukkitx.protocol.bedrock.data.LevelEventType
+
+class FlameParticle : StandardParticle(LevelEventType.PARTICLE_FLAME)

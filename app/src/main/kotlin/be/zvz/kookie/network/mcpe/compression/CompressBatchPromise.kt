@@ -22,7 +22,7 @@ private typealias CallBack = (CompressBatchPromise) -> Unit
 class CompressBatchPromise {
     val callbacks: MutableList<CallBack> = mutableListOf()
 
-    var result: String? = null
+    var result: Any? = null
         get() {
             assertNotCancelled()
 
@@ -52,7 +52,7 @@ class CompressBatchPromise {
         }
     }
 
-    fun resolve(result: String) {
+    fun resolve(result: Any) {
         if (!isCancelled) {
             assertResultIsNull()
 

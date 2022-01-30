@@ -17,4 +17,6 @@
  */
 package be.zvz.kookie.world.particle
 
-class SmokeParticle(scale: Int = 0) : StandardParticle(Type.SMOKE, scale)
+import com.nukkitx.protocol.bedrock.data.LevelEventType
+
+class SmokeParticle(scale: Int = 0) : StandardParticle(LevelEventType.PARTICLE_SMOKE, scale)

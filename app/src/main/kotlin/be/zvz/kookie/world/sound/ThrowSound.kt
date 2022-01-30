@@ -17,4 +17,6 @@
  */
 package be.zvz.kookie.world.sound
 
-class ThrowSound : StandardSound(type = Type.THROW, entityType = "minecraft:player")
+import com.nukkitx.protocol.bedrock.data.SoundEvent
+
+class ThrowSound : StandardSound(type = SoundEvent.THROW, entityType = "minecraft:player")

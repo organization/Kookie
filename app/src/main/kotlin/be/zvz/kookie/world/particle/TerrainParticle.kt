@@ -18,8 +18,9 @@
 package be.zvz.kookie.world.particle
 
 import be.zvz.kookie.block.Block
+import com.nukkitx.protocol.bedrock.data.LevelEventType
 
-class TerrainParticle(val block: Block) : StandardParticle(Type.TERRAIN) {
+class TerrainParticle(val block: Block) : StandardParticle(LevelEventType.PARTICLE_TERRAIN) {
     override val data: Int
         get() {
             TODO("Implements after implemented RuntimeBlockMapping")

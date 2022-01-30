@@ -17,4 +17,6 @@
  */
 package be.zvz.kookie.world.particle
 
-class WaterDripParticle : StandardParticle(Type.DRIP_WATER)
+import com.nukkitx.protocol.bedrock.data.LevelEventType
+
+class WaterDripParticle : StandardParticle(LevelEventType.PARTICLE_DRIP_WATER)

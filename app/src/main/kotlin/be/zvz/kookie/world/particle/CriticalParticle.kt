@@ -17,4 +17,6 @@
  */
 package be.zvz.kookie.world.particle
 
-class CriticalParticle @JvmOverloads constructor(scale: Int = 2) : StandardParticle(Type.CRITICAL, scale)
+import com.nukkitx.protocol.bedrock.data.LevelEventType
+
+class CriticalParticle @JvmOverloads constructor(scale: Int = 2) : StandardParticle(LevelEventType.PARTICLE_CRITICAL, scale)
