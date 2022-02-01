@@ -25,6 +25,7 @@ import be.zvz.kookie.entity.Location
 import be.zvz.kookie.entity.Skin
 import be.zvz.kookie.event.player.PlayerChangeSkinEvent
 import be.zvz.kookie.event.player.PlayerDisplayNameChangeEvent
+import be.zvz.kookie.event.player.PlayerJoinEvent
 import be.zvz.kookie.form.Form
 import be.zvz.kookie.inventory.CallbackInventoryListener
 import be.zvz.kookie.inventory.Inventory
@@ -38,6 +39,7 @@ import be.zvz.kookie.math.Vector3
 import be.zvz.kookie.nbt.tag.CompoundTag
 import be.zvz.kookie.nbt.tag.IntTag
 import be.zvz.kookie.network.mcpe.NetworkSession
+import be.zvz.kookie.permission.DefaultPermissionNames
 import be.zvz.kookie.permission.DefaultPermissions
 import be.zvz.kookie.permission.PermissibleBase
 import be.zvz.kookie.permission.PermissibleDelegate
@@ -151,7 +153,7 @@ open class Player(
     var locale: String = "en_US"
 
     var startAction: Long = -1
-    val usedItemsCooldown: MutableMap<Int, Int> = HashIntIntMaps.newMutableMap()
+    val usedItemsCooldown: MutableMap<Int, Long> = HashIntIntMaps.newMutableMap()
 
     var lastEmoteTick: Int = 0
 
@@ -294,6 +296,12 @@ open class Player(
     }
 
     fun isOnline(): Boolean {
+        return isConnected()
+    }
+
+    fun isConnected(): Boolean {
+        // TODO: networkSession should be null, but I hate null checks
+        // This might need a new property to implement this
         return networkSession.isConnected()
     }
 
@@ -323,33 +331,90 @@ open class Player(
 
     // TODO: getItemCooldownExpiry
 
-    override fun sendMessage(message: String) {
-        networkSession.sendDataPacket(
-            TextPacket().apply {
-                type = TextPacket.Type.RAW
-                this.message = message
-            }
-        )
+    fun getItemCooldownExpiry(item: Item): Long {
+        checkItemCooldowns()
+        return usedItemsCooldown[item.getId()] ?: -1L
     }
 
-    override fun sendMessage(message: TranslationContainer) {
-        networkSession.sendDataPacket(
-            TextPacket().apply {
-                type = TextPacket.Type.TRANSLATION
-                this.message = message.text
-                parameters = message.params
-            }
-        )
+    fun hasItemCooldown(item: Item): Boolean {
+        checkItemCooldowns()
+        return usedItemsCooldown.containsKey(item.getId())
     }
 
-    open fun doChunkRequest() {
-        if (nextChunkOrderRun != Int.MAX_VALUE && nextChunkOrderRun-- <= 0) {
-            nextChunkOrderRun = Int.MAX_VALUE
-            orderChunks()
+    @JvmOverloads
+    fun resetItemCooldown(item: Item, ticks: Long? = null) {
+        val ticks = ticks ?: server.tickCounter
+        if (ticks > 0) {
+            usedItemsCooldown[item.getId()] = server.tickCounter + ticks
         }
+    }
 
-        if (loadQueue.isNotEmpty()) {
-            requestChunks()
+    protected fun checkItemCooldowns() {
+        val serverTick = server.tickCounter
+        val iterator = usedItemsCooldown.iterator()
+        while (iterator.hasNext()) {
+            val (_, cooldownUntil) = iterator.next()
+            if (cooldownUntil <= serverTick) {
+                iterator.remove()
+            }
+        }
+    }
+
+    override fun setPosition(pos: Vector3): Boolean {
+        val oldWorld = if (location.isValid()) location.world else null
+        if (super.setPosition(pos)) {
+            val newWorld = world
+            if (oldWorld != newWorld) {
+                if (oldWorld != null) {
+                    for (index in usedChunks.keys) {
+                        val (X, Z) = World.getXZ(index)
+                        unloadChunk(X, Z, oldWorld)
+                    }
+                }
+
+                usedChunks.clear()
+                loadQueue.clear()
+                networkSession.onEnterWorld()
+            }
+
+            return true
+        }
+        return false
+    }
+
+    private fun unloadChunk(chunkX: Int, chunkZ: Int, world: World = this.world) {
+        val chunkHash = World.chunkHash(chunkX, chunkZ)
+        if (usedChunks.containsKey(chunkHash)) {
+            world.getChunk(chunkX, chunkZ)?.entities?.values?.forEach {
+                if (it !== this) {
+                    it.despawnFrom(this)
+                }
+            }
+            // stopUsingChunk() always empty method...Why call it?
+            // TODO: networkSession.stopUsingChunk(chunkX, chunkZ)
+            usedChunks.remove(chunkHash)
+        }
+        world.unregisterChunkLoader(chunkLoader, chunkX, chunkZ)
+        world.unregisterChunkListener(this, chunkX, chunkZ)
+        loadQueue.remove(chunkHash)
+    }
+
+    private fun spawnEntitiesOnAllChunks() {
+        usedChunks.forEach { (chunkHash, status) ->
+            if (status == UsedChunkStatus.SENT) {
+                val (chunkX, chunkZ) = World.parseChunkHash(chunkHash)
+                spawnEntitiesOnChunk(chunkX, chunkZ)
+            }
+        }
+    }
+
+    private fun spawnEntitiesOnChunk(chunkX: Int, chunkZ: Int) {
+        world.getChunk(chunkX, chunkZ)?.let {
+            it.entities.values.forEach { entity ->
+                if (entity !== this && !entity.isFlaggedForDespawn()) {
+                    entity.spawnTo(this)
+                }
+            }
         }
     }
 
@@ -358,7 +423,7 @@ open class Player(
      * This operates on the results of the most recent chunk order.
      */
     private fun requestChunks() {
-        /** TODO: if(isConnected) return */
+        if (!isConnected()) return
 
         Timings.playerChunkSend.startTiming()
 
@@ -413,6 +478,59 @@ open class Player(
         Timings.playerChunkSend.stopTiming()
     }
 
+    private fun recheckBroadcastPermissions() {
+        mapOf(
+            DefaultPermissionNames.BROADCAST_ADMIN to Server.BROADCAST_CHANNEL_ADMINISTRATIVE,
+            DefaultPermissionNames.BROADCAST_USER to Server.BROADCAST_CHANNEL_USERS
+        ).forEach { (permission, channel) ->
+            if (hasPermission(permission)) {
+                server.subscribeToBroadcastChannel(channel, this)
+            } else {
+                server.unsubscribeFromBroadcastChannel(channel, this)
+            }
+        }
+    }
+
+    /**
+     * Called by the network system when the pre-spawn sequence is completed (e.g. after sending spawn chunks).
+     * This fires join events and broadcasts join messages to other online players.
+     */
+    fun doFirstSpawn() {
+        if (spawned) {
+            return
+        }
+        spawned = true
+        recheckBroadcastPermissions()
+        permissionRecalculationCallbacks.add { changedPermissionOldValues ->
+            if (changedPermissionOldValues.containsKey(Server.BROADCAST_CHANNEL_ADMINISTRATIVE) ||
+                changedPermissionOldValues.containsKey(Server.BROADCAST_CHANNEL_USERS)
+            ) {
+                recheckBroadcastPermissions()
+            }
+        }
+        val ev = PlayerJoinEvent(
+            this,
+            TranslationContainer(KnownTranslationKeys.MULTIPLAYER_PLAYER_JOINED.key, listOf(Union.U3.ofA(displayName)))
+        )
+        ev.call()
+        if (ev.joinMessage is TranslationContainer || ev.joinMessage is String) {
+            if (ev.joinMessage is TranslationContainer) {
+                server.broadcastMessage(ev.joinMessage as TranslationContainer)
+            } else if (ev.joinMessage is String) {
+                server.broadcastMessage(ev.joinMessage as String)
+            }
+        }
+
+        noDamageTicks = 60
+
+        spawnToAll()
+
+        if (getHealth() <= 0) {
+            logger.debug("Quit while dead, forcing respawn")
+            // TODO: actuallyRespawn()
+        }
+    }
+
     /**
      * Calculates which new chunks this player needs to use, and which currently-used chunks it needs to stop using.
      * This is based on factors including the player's current render radius and current position.
@@ -449,42 +567,6 @@ open class Player(
         Timings.playerChunkOrder.stopTiming()
     }
 
-    private fun unloadChunk(chunkX: Int, chunkZ: Int, world: World = this.world) {
-        val chunkHash = World.chunkHash(chunkX, chunkZ)
-        if (usedChunks.containsKey(chunkHash)) {
-            world.getChunk(chunkX, chunkZ)?.entities?.values?.forEach {
-                if (it !== this) {
-                    it.despawnFrom(this)
-                }
-            }
-            // stopUsingChunk() always empty method...Why call it?
-            // TODO: networkSession.stopUsingChunk(chunkX, chunkZ)
-            usedChunks.remove(chunkHash)
-        }
-        world.unregisterChunkLoader(chunkLoader, chunkX, chunkZ)
-        world.unregisterChunkListener(this, chunkX, chunkZ)
-        loadQueue.remove(chunkHash)
-    }
-
-    private fun spawnEntitiesOnAllChunks() {
-        usedChunks.forEach { (chunkHash, status) ->
-            if (status == UsedChunkStatus.SENT) {
-                val (chunkX, chunkZ) = World.parseChunkHash(chunkHash)
-                spawnEntitiesOnChunk(chunkX, chunkZ)
-            }
-        }
-    }
-
-    private fun spawnEntitiesOnChunk(chunkX: Int, chunkZ: Int) {
-        world.getChunk(chunkX, chunkZ)?.let {
-            it.entities.values.forEach { entity ->
-                if (entity !== this && !entity.isFlaggedForDespawn()) {
-                    entity.spawnTo(this)
-                }
-            }
-        }
-    }
-
     /**
      * Returns whether the player is using the chunk with the given coordinates,
      *  irrespective of whether the chunk has been sent yet.
@@ -495,9 +577,53 @@ open class Player(
     open fun getUsedChunkStatus(chunkX: Int, chunkZ: Int): UsedChunkStatus? =
         usedChunks[World.chunkHash(chunkX, chunkZ)]
 
+    open fun doChunkRequest() {
+        if (nextChunkOrderRun != Int.MAX_VALUE && nextChunkOrderRun-- <= 0) {
+            nextChunkOrderRun = Int.MAX_VALUE
+            orderChunks()
+        }
+
+        if (loadQueue.isNotEmpty()) {
+            requestChunks()
+        }
+    }
+
     /** Returns whether the target chunk has been sent to this player. */
     open fun hasReceivedChunk(chunkX: Int, chunkZ: Int): Boolean =
         getUsedChunkStatus(chunkX, chunkZ) == UsedChunkStatus.SENT
+
+    fun getSpawn(): Position {
+        if (hasValidSpawn()) {
+            return spawnPosition!!
+        }
+        val world = server.worldManager.defaultWorld!!
+        return world.spawnLocation
+    }
+
+    fun hasValidSpawn(): Boolean {
+        return spawnPosition != null && spawnPosition!!.isValid()
+    }
+
+    // TODO: setSpawn()
+
+    override fun sendMessage(message: String) {
+        networkSession.sendDataPacket(
+            TextPacket().apply {
+                type = TextPacket.Type.RAW
+                this.message = message
+            }
+        )
+    }
+
+    override fun sendMessage(message: TranslationContainer) {
+        networkSession.sendDataPacket(
+            TextPacket().apply {
+                type = TextPacket.Type.TRANSLATION
+                this.message = message.text
+                parameters = message.params
+            }
+        )
+    }
 
     override fun onChunkChanged(chunkX: Int, chunkZ: Int, chunk: Chunk) {
         if (hasReceivedChunk(chunkX, chunkZ)) {

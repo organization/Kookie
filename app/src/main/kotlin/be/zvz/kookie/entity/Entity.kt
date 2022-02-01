@@ -926,7 +926,7 @@ abstract class Entity @JvmOverloads constructor(var location: Location, nbt: Com
 
     fun getPosition(): Position = location.asPosition()
 
-    fun setPosition(pos: Vector3): Boolean {
+    open fun setPosition(pos: Vector3): Boolean {
         if (!closed) {
             return false
         }
