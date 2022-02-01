@@ -20,26 +20,43 @@ package be.zvz.kookie.player
 import be.zvz.kookie.Server
 import be.zvz.kookie.command.CommandSender
 import be.zvz.kookie.console.PrefixedLogger
-import be.zvz.kookie.crafting.CraftingGrid
 import be.zvz.kookie.entity.Human
 import be.zvz.kookie.entity.Location
 import be.zvz.kookie.entity.Skin
+import be.zvz.kookie.event.player.PlayerChangeSkinEvent
+import be.zvz.kookie.event.player.PlayerDisplayNameChangeEvent
+import be.zvz.kookie.form.Form
+import be.zvz.kookie.inventory.CallbackInventoryListener
+import be.zvz.kookie.inventory.Inventory
+import be.zvz.kookie.inventory.PlayerCraftingInventory
+import be.zvz.kookie.inventory.PlayerCursorInventory
+import be.zvz.kookie.item.Item
+import be.zvz.kookie.lang.KnownTranslationKeys
 import be.zvz.kookie.lang.Language
 import be.zvz.kookie.lang.TranslationContainer
+import be.zvz.kookie.math.Vector3
 import be.zvz.kookie.nbt.tag.CompoundTag
+import be.zvz.kookie.nbt.tag.IntTag
 import be.zvz.kookie.network.mcpe.NetworkSession
+import be.zvz.kookie.permission.DefaultPermissions
 import be.zvz.kookie.permission.PermissibleBase
 import be.zvz.kookie.permission.PermissibleDelegate
 import be.zvz.kookie.timings.Timings
 import be.zvz.kookie.utils.TextFormat
+import be.zvz.kookie.utils.Union
 import be.zvz.kookie.world.ChunkHash
 import be.zvz.kookie.world.ChunkListener
+import be.zvz.kookie.world.Position
 import be.zvz.kookie.world.World
 import be.zvz.kookie.world.format.Chunk
+import com.koloboke.collect.map.hash.HashIntIntMaps
+import com.koloboke.collect.map.hash.HashIntObjMaps
 import com.koloboke.collect.map.hash.HashLongObjMaps
+import com.koloboke.collect.map.hash.HashObjObjMaps
 import com.koloboke.collect.set.hash.HashLongSets
 import com.nukkitx.protocol.bedrock.packet.TextPacket
 import org.slf4j.LoggerFactory
+import java.util.UUID
 import kotlin.math.min
 import kotlin.math.pow
 
@@ -55,26 +72,30 @@ open class Player(
 ) : Human(skin, location, namedTag), CommandSender, ChunkListener, PermissibleDelegate {
     override val language: Language get() = server.language
 
-    val username = playerInfo.username
-    var displayName = username
-    override val name: String get() = username
-    override val permissionRecalculationCallbacks: MutableSet<(changedPermissionsOldValues: Map<String, Boolean>) -> Unit>
-        get() = TODO("Not yet implemented")
-    lateinit var craftingGrid: CraftingGrid
-        private set
+    protected var spawned: Boolean = false
+    protected val username: String = playerInfo.username
+    var displayName: String = playerInfo.username
+        set(value) {
+            val ev = PlayerDisplayNameChangeEvent(this, displayName, value)
+            ev.call()
+            field = ev.newName
+        }
+    var xuid: String = ""
+    var currentWindow: Inventory? = null
+    val permanentWindows: MutableMap<Int, Inventory> = HashIntObjMaps.newMutableMap()
+    lateinit var cursorInventory: PlayerCursorInventory
+    lateinit var craftingGrid: PlayerCraftingInventory
+
+    var messageCounter: Int = 2
+
+    var firstPlayed: Long = 0
+    var lastPlayed: Long = 0
+
+    lateinit var gameMode: GameMode
+
     val usedChunks: MutableMap<ChunkHash, UsedChunkStatus> = HashLongObjMaps.newMutableMap()
-
+    val activeChunkGenerationRequest: MutableMap<ChunkHash, Boolean> = HashLongObjMaps.newMutableMap()
     private val loadQueue: MutableSet<ChunkHash> = HashLongSets.newMutableSet()
-    private var nextChunkOrderRun: Int = 5
-    private val chunkSelector = ChunkSelector()
-    private val chunkLoader = PlayerChunkLoader(spawnLocation)
-    private var chunksPerTick: Int = server.configGroup.getProperty("chunk-sending.per-tick").asLong(4).toInt()
-
-    override val perm: PermissibleBase = PermissibleBase(mapOf())
-
-    private var spawnThreshold: Int =
-        (server.configGroup.getProperty("chunk-sending.spawn-radius").asLong(4).toDouble().pow(2) * Math.PI).toInt()
-    private var spawnChunkLoadCount: Int = 0
     var viewDistance: Int = -1
         set(value) {
             field = server.getAllowedViewDistance(value)
@@ -86,16 +107,221 @@ open class Player(
                     ).toInt()
             )
             nextChunkOrderRun = 0
-            // TODO: networkSession.syncViewAreaRadius(viewDistance)
+            networkSession.syncViewRadius(viewDistance)
             logger.debug("Setting view distance to $viewDistance (requested $value)")
         }
+    var spawnThreshold: Int =
+        (server.configGroup.getProperty("chunk-sending.spawn-radius").asLong(4).toDouble().pow(2) * Math.PI).toInt()
+    var spawnChunkLoadCount: Int = 0
+    var chunkSelector: ChunkSelector = ChunkSelector()
+    lateinit var chunkLoader: PlayerChunkLoader
+
+    val hiddenPlayers: MutableMap<UUID, Boolean> = HashObjObjMaps.newMutableMap()
+
+    var moveRateLimit: Float = 10f * MOVES_PER_TICK
+    var lastMovementProcess: Float? = null
+
+    var inAirTicks: Long = 0
+    override var stepHeight: Float = 0.6f
+
+    var sleeping: Vector3? = null
+    var spawnPosition: Position? = null
+
+    var respawnLocked: Boolean = false
+
+    var autoJump: Boolean = true
+        set(value) {
+            field = value
+            networkSession.syncAdventureSettings(this)
+        }
+    var allowFlight: Boolean = false
+        set(value) {
+            field = value
+            networkSession.syncAdventureSettings(this)
+        }
+    var flying: Boolean = false
+        set(value) {
+            if (field != value) {
+                field = value
+                networkSession.syncAdventureSettings(this)
+            }
+        }
+
+    var lineHeight: Int? = null
+    var locale: String = "en_US"
+
+    var startAction: Long = -1
+    val usedItemsCooldown: MutableMap<Int, Int> = HashIntIntMaps.newMutableMap()
+
+    var lastEmoteTick: Int = 0
+
+    var formIdCounter: Long = 0
+    val forms: MutableMap<Int, Form> = HashIntObjMaps.newMutableMap()
 
     private val logger =
         PrefixedLogger("Player: ${TextFormat.clean(username.lowercase())}", LoggerFactory.getLogger(Player::class.java))
 
+    override val name: String get() = username
+    override val permissionRecalculationCallbacks: MutableSet<(changedPermissionsOldValues: Map<String, Boolean>) -> Unit>
+        get() = TODO("Not yet implemented")
+
+    private var nextChunkOrderRun: Int = 5
+    private var chunksPerTick: Int = server.configGroup.getProperty("chunk-sending.per-tick").asLong(4).toInt()
+
+    override lateinit var perm: PermissibleBase
+
     init {
         val username = TextFormat.clean(username)
+
+        xuid = if (playerInfo is XboxLivePlayerInfo) playerInfo.xuid else ""
+
+        val rootPermissions: MutableMap<String, Boolean> = mutableMapOf(
+            DefaultPermissions.ROOT_USER to true
+        )
+        if (server.isOp(username)) {
+            rootPermissions[DefaultPermissions.ROOT_OPERATOR] = true
+        }
+
+        perm = PermissibleBase(rootPermissions)
+        chunkLoader = PlayerChunkLoader(spawnLocation)
+        val world = spawnLocation.world!!
+        val xSpawnChunk = spawnLocation.x.toInt() shr 4
+        val zSpawnChunk = spawnLocation.z.toInt() shr 4
+        world.registerChunkLoader(chunkLoader, xSpawnChunk, zSpawnChunk)
+        @Suppress("LeakingThis")
+        world.registerChunkListener(this, xSpawnChunk, zSpawnChunk)
+        usedChunks[World.chunkHash(xSpawnChunk, zSpawnChunk)] = UsedChunkStatus.NEEDED
     }
+
+    override fun initHumanData(nbt: CompoundTag) {
+        nameTag = username
+    }
+
+    override fun initEntity(nbt: CompoundTag) {
+        super.initEntity(nbt)
+        // TODO: addDefaultWindows()
+        inventory.getListeners().add(
+            CallbackInventoryListener(
+                (
+                    { _, slot, _ ->
+                        if (slot == inventory.getHeldItemIndex()) {
+                            // TODO: setUsingItem(false)
+                        }
+                    }
+                    ),
+                (
+                    { inventory, oldContents ->
+                        // TODO: setUsingItem(false)
+                    }
+                    )
+            )
+        )
+        val now = System.currentTimeMillis() * 1000
+        firstPlayed = nbt.getLong("firstPlayed", now)
+        lastPlayed = nbt.getLong("lastPlayed", now)
+        val gameModeTag = nbt.getTag("playerGameType")
+        if (!server.forceGamemode && gameModeTag is IntTag) {
+            // TODO: internalSetGameMode(GameModeIdMap.getInstance().fromId(gameModeTag.value) ?: GameMode.SURVIVAL)
+        } else {
+            // TODO: internalSetGameMode(server.gamemode)
+        }
+        keepMovement = true
+        nameTagVisible = true
+        alwaysShowNameTag = true
+        canClimb = true
+
+        val world = server.worldManager.getWorldByName(nbt.getString("SpawnLevel", ""))
+        if (world is World) {
+            spawnPosition = Position(nbt.getInt("SpawnX"), nbt.getInt("SpawnY"), nbt.getInt("SpawnZ"), world)
+        }
+    }
+
+    fun getLeaveMessage(): TranslationContainer {
+        return TranslationContainer(
+            KnownTranslationKeys.MULTIPLAYER_PLAYER_LEFT.key,
+            listOf(
+                Union.U3.ofA(username)
+            )
+        )
+    }
+
+    fun hasPlayedBefore(): Boolean = lastPlayed - firstPlayed > 1
+
+    override fun spawnTo(player: Player) {
+        if (isAlive() && player.isAlive() && canSee(player)/* TODO: && !isSpectator()*/) {
+            super.spawnTo(player)
+        }
+    }
+
+    override fun getScreenLineHeight(): Int {
+        return lineHeight ?: 7
+    }
+
+    override fun setScreenLineHeight(height: Int?) {
+        if (height != null && height < 1) {
+            throw IllegalArgumentException("Line height must be at least 1")
+        }
+        lineHeight = height
+    }
+
+    fun canSee(player: Player): Boolean = !hiddenPlayers.containsKey(player.uuid)
+
+    fun hidePlayer(player: Player) {
+        if (player == this) {
+            return
+        }
+        hiddenPlayers[player.uuid] = true
+        player.despawnFrom(this)
+    }
+
+    fun showPlayer(player: Player) {
+        if (player == this) {
+            return
+        }
+        hiddenPlayers.remove(player.uuid)
+        if (player.isOnline()) {
+            player.spawnTo(this)
+        }
+    }
+
+    override fun canBeCollidedWith(): Boolean {
+        return /* TODO: !isSpectator() &&*/ super.canBeCollidedWith()
+    }
+
+    override fun resetFallDistance() {
+        super.resetFallDistance()
+        inAirTicks = 0
+    }
+
+    fun isOnline(): Boolean {
+        return networkSession.isConnected()
+    }
+
+    fun changeSkin(skin: Skin, newSkinName: String, oldSkinName: String): Boolean {
+        val ev = PlayerChangeSkinEvent(this, this.skin, skin)
+        ev.call()
+        if (ev.isCancelled) {
+            sendSkin(listOf(this))
+        }
+        // TODO: setSkin(ev.newSkin)
+        // TODO: sendSkin(server.onlinePlayers)
+        return true
+    }
+
+    override fun sendSkin(targets: List<Player>) {
+        // TODO: super.sendSkin(if (targets.isEmpty()) server.onlinePlayers else targets)
+    }
+
+    fun isUsingItem(): Boolean = startAction > -1
+
+    fun setUsingItem(value: Boolean) {
+        startAction = if (value) server.tickCounter else -1
+        networkPropertiesDirty = true
+    }
+
+    fun getItemUseDuration(): Long = if (startAction == -1L) -1 else server.tickCounter - startAction
+
+    // TODO: getItemCooldownExpiry
 
     override fun sendMessage(message: String) {
         networkSession.sendDataPacket(
@@ -114,14 +340,6 @@ open class Player(
                 parameters = message.params
             }
         )
-    }
-
-    override fun getScreenLineHeight(): Int {
-        TODO("Not yet implemented")
-    }
-
-    override fun setScreenLineHeight(height: Int?) {
-        TODO("Not yet implemented")
     }
 
     open fun doChunkRequest() {
@@ -305,5 +523,16 @@ open class Player(
             val len = name.length
             return lname != "rcon" && lname != "console" && len in 1..16 && name.matches(Regex("[a-zA-Z0-9_ ]+"))
         }
+
+        @JvmStatic
+        private fun populateInventoryFromListTag(inventory: Inventory, items: Map<Int, Item>) {
+            val listeners = inventory.getListeners().toTypedArray()
+            inventory.getListeners().clear()
+            inventory.setContents(items)
+            inventory.getListeners().addAll(listeners)
+        }
+
+        private const val MOVES_PER_TICK = 2
+        private const val MOVE_BACKLOG_SIZE = 100 * MOVES_PER_TICK; // 100 ticks backlog (5 seconds)
     }
 }

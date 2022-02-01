@@ -25,7 +25,7 @@ import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.pow
 
-class CraftingGrid(val holder: Player, val gridWidth: Int) : SimpleInventory(gridWidth.toDouble().pow(2).toInt()) {
+open class CraftingGrid(val holder: Player, val gridWidth: Int) : SimpleInventory(gridWidth.toDouble().pow(2).toInt()) {
     private var startX: Int? = null
     private var startY: Int? = null
 

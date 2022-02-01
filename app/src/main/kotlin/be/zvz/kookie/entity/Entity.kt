@@ -81,7 +81,7 @@ abstract class Entity @JvmOverloads constructor(var location: Location, nbt: Com
     open var maxHealth: Int = 20
 
     protected var ySize: Float = 0F
-    protected var stepHeight: Float = 0F
+    protected open var stepHeight: Float = 0F
     var keepMovement: Boolean = false
     var fallDistance: Float = 0F
     var ticksLived: Long = 0

@@ -63,7 +63,7 @@ open class Human @JvmOverloads constructor(
 
     var xpSeed: Int = 0
 
-    fun sendSkin(targets: List<Player>) {
+    open fun sendSkin(targets: List<Player>) {
         /* TODO: server.broadcastPackets
         server.broadcastPackets(
             targets.ifEmpty {
@@ -102,7 +102,7 @@ open class Human @JvmOverloads constructor(
         return min(100, 7 * xpManager.getXpLevel())
     }
 
-    fun initHumanData(nbt: CompoundTag) {
+    open fun initHumanData(nbt: CompoundTag) {
         val nameTag = nbt.getTag("NameTag")
         if (nameTag is StringTag) {
             this.nameTag = nameTag.value
