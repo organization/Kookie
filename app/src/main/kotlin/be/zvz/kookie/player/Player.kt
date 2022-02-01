@@ -294,4 +294,16 @@ open class Player(
             unloadChunk(chunkX, chunkZ)
         }
     }
+
+    companion object {
+        @JvmStatic
+        fun isValidUserName(name: String?): Boolean {
+            if (name == null) {
+                return false
+            }
+            val lname = name.lowercase()
+            val len = name.length
+            return lname != "rcon" && lname != "console" && len in 1..16 && name.matches(Regex("[a-zA-Z0-9_ ]+"))
+        }
+    }
 }
