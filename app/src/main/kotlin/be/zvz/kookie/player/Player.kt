@@ -51,7 +51,7 @@ import be.zvz.kookie.world.ChunkListener
 import be.zvz.kookie.world.Position
 import be.zvz.kookie.world.World
 import be.zvz.kookie.world.format.Chunk
-import com.koloboke.collect.map.hash.HashIntIntMaps
+import com.koloboke.collect.map.hash.HashIntLongMaps
 import com.koloboke.collect.map.hash.HashIntObjMaps
 import com.koloboke.collect.map.hash.HashLongObjMaps
 import com.koloboke.collect.map.hash.HashObjObjMaps
@@ -153,7 +153,7 @@ open class Player(
     var locale: String = "en_US"
 
     var startAction: Long = -1
-    val usedItemsCooldown: MutableMap<Int, Long> = HashIntIntMaps.newMutableMap()
+    val usedItemsCooldown: MutableMap<Int, Long> = HashIntLongMaps.newMutableMap()
 
     var lastEmoteTick: Int = 0
 
