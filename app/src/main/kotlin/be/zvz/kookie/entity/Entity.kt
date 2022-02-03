@@ -415,7 +415,7 @@ abstract class Entity @JvmOverloads constructor(var location: Location, nbt: Com
         return false
     }
 
-    fun isFireProof(): Boolean = false
+    open fun isFireProof(): Boolean = false
 
     fun extinguish() {
         fireTicks = 0

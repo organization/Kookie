@@ -23,8 +23,11 @@ import be.zvz.kookie.console.PrefixedLogger
 import be.zvz.kookie.entity.Human
 import be.zvz.kookie.entity.Location
 import be.zvz.kookie.entity.Skin
+import be.zvz.kookie.event.player.PlayerBedEnterEvent
+import be.zvz.kookie.event.player.PlayerBedLeaveEvent
 import be.zvz.kookie.event.player.PlayerChangeSkinEvent
 import be.zvz.kookie.event.player.PlayerDisplayNameChangeEvent
+import be.zvz.kookie.event.player.PlayerGameModeChangeEvent
 import be.zvz.kookie.event.player.PlayerJoinEvent
 import be.zvz.kookie.form.Form
 import be.zvz.kookie.inventory.CallbackInventoryListener
@@ -56,6 +59,7 @@ import com.koloboke.collect.map.hash.HashIntObjMaps
 import com.koloboke.collect.map.hash.HashLongObjMaps
 import com.koloboke.collect.map.hash.HashObjObjMaps
 import com.koloboke.collect.set.hash.HashLongSets
+import com.nukkitx.protocol.bedrock.packet.AnimatePacket
 import com.nukkitx.protocol.bedrock.packet.TextPacket
 import org.slf4j.LoggerFactory
 import java.util.UUID
@@ -93,7 +97,25 @@ open class Player(
     var firstPlayed: Long = 0
     var lastPlayed: Long = 0
 
-    lateinit var gameMode: GameMode
+    var gameMode: GameMode = GameMode.SURVIVAL
+        set(value) {
+            if (gameMode == value) {
+                return
+            }
+
+            val ev = PlayerGameModeChangeEvent(this, value)
+            ev.call()
+            if (ev.isCancelled) {
+                return
+            }
+            internalSetGameMode(value)
+            if (isSpectator()) {
+                despawnFromAll()
+            } else {
+                spawnToAll()
+            }
+            networkSession.syncGameMode(value)
+        }
 
     val usedChunks: MutableMap<ChunkHash, UsedChunkStatus> = HashLongObjMaps.newMutableMap()
     val activeChunkGenerationRequest: MutableMap<ChunkHash, Boolean> = HashLongObjMaps.newMutableMap()
@@ -329,8 +351,6 @@ open class Player(
 
     fun getItemUseDuration(): Long = if (startAction == -1L) -1 else server.tickCounter - startAction
 
-    // TODO: getItemCooldownExpiry
-
     fun getItemCooldownExpiry(item: Item): Long {
         checkItemCooldowns()
         return usedItemsCooldown[item.getId()] ?: -1L
@@ -391,7 +411,7 @@ open class Player(
                 }
             }
             // stopUsingChunk() always empty method...Why call it?
-            // TODO: networkSession.stopUsingChunk(chunkX, chunkZ)
+            networkSession.stopUsingChunk(chunkX, chunkZ)
             usedChunks.remove(chunkHash)
         }
         world.unregisterChunkLoader(chunkLoader, chunkX, chunkZ)
@@ -604,7 +624,190 @@ open class Player(
         return spawnPosition != null && spawnPosition!!.isValid()
     }
 
-    // TODO: setSpawn()
+    fun setSpawn(pos: Vector3?) {
+        if (pos == null) {
+            spawnPosition = null
+        } else {
+            val world = if (pos is Position) pos.world else world
+            spawnPosition = Position(pos.x, pos.y, pos.z, world)
+        }
+        networkSession.syncPlayerSpawnPoint(getSpawn())
+    }
+
+    fun isSleeping(): Boolean = sleeping != null
+
+    fun sleepOn(pos: Vector3): Boolean {
+        val pos = pos.floor()
+        val b = world.getBlock(pos)
+
+        val ev = PlayerBedEnterEvent(this, b)
+        if (ev.isCancelled) {
+            return false
+        }
+
+        // TODO:
+        /*
+        if (b is Bed) {
+            b.setOccupied()
+            world.setBlock(pos, b)
+         */
+        sleeping = pos
+        networkPropertiesDirty = true
+
+        setSpawn(pos)
+
+        world.sleepTicks = 60
+
+        return true
+    }
+
+    fun stopSleep() {
+        if (sleeping is Vector3) {
+            val b = world.getBlock(sleeping!!)
+            // TODO:
+            /*
+            if (b is Bed) {
+                b.setOccupied(false)
+                world.setBlock(sleeping, b)
+             */
+            PlayerBedLeaveEvent(this, b).call()
+
+            sleeping = null
+            networkPropertiesDirty = true
+            world.sleepTicks = 0
+            networkSession.sendDataPacket(
+                AnimatePacket().apply {
+                    runtimeEntityId = getId()
+                    action = AnimatePacket.Action.WAKE_UP
+                }
+            )
+        }
+    }
+
+    protected fun internalSetGameMode(gameMode: GameMode) {
+        this.gameMode = gameMode
+
+        allowFlight = isCreative()
+        hungerManager.enabled = isSurvival()
+
+        if (isSpectator()) {
+            flying = true
+            silent = true
+            onGround = false
+
+            // TODO: HACK! this syncs the onground flag with the client so that flying works properly
+            // this is a yucky hack but we don't have any other options :(
+            // TOOD:  sendPosition(location, null, null, MovePlayerPacket.Mode.TELEPORT)
+        } else {
+            if (isSurvival()) {
+                flying = false
+            }
+            silent = false
+            checkGroundState(0.0, 0.0, 0.0, 0.0, 0.0, 0.0)
+        }
+    }
+
+    /**
+     * NOTE: Because Survival and Adventure Mode share some similar behaviour, this method will also return true if the player is
+     * in Adventure Mode. Supply the $literal parameter as true to force a literal Survival Mode check.
+     *
+     * @param literal whether a literal check should be performed
+     */
+    @JvmOverloads fun isSurvival(literal: Boolean = false): Boolean {
+        return gameMode == GameMode.SURVIVAL || (!literal && gameMode == GameMode.ADVENTURE)
+    }
+
+    /**
+     * NOTE: Because Creative and Spectator Mode share some similar behaviour, this method will also return true if the player is
+     * in Spectator Mode. Supply the $literal parameter as true to force a literal Creative Mode check.
+     *
+     * @param literal $literal whether a literal check should be performed
+     */
+    @JvmOverloads fun isCreative(literal: Boolean = false): Boolean {
+        return gameMode == GameMode.CREATIVE || (!literal && gameMode == GameMode.SPECTATOR)
+    }
+
+    /**
+     * NOTE: Because Adventure and Spectator Mode share some similar behaviour, this method will also return true if the player is
+     * in Spectator Mode. Supply the $literal parameter as true to force a literal Adventure Mode check.
+     *
+     * @param literal $literal whether a literal check should be performed
+     */
+    @JvmOverloads fun isAdventure(literal: Boolean = false): Boolean {
+        return gameMode == GameMode.ADVENTURE || (!literal && gameMode == GameMode.SPECTATOR)
+    }
+
+    fun isSpectator(): Boolean {
+        return gameMode == GameMode.SPECTATOR
+    }
+
+    /**
+     * TODO: make this a dynamic ability instead of being hardcoded
+     */
+    fun hasFiniteResources(): Boolean {
+        return gameMode == GameMode.SURVIVAL || gameMode == GameMode.ADVENTURE
+    }
+
+    override fun isFireProof(): Boolean {
+        return isCreative()
+    }
+
+    override fun getDrops(): MutableList<Item> {
+        return if (hasFiniteResources()) {
+            super.getDrops()
+        } else {
+            mutableListOf()
+        }
+    }
+
+    override fun getXpDropAmount(): Int {
+        return if (hasFiniteResources()) {
+            super.getXpDropAmount()
+        } else {
+            0
+        }
+    }
+
+    override fun checkGroundState(movX: Double, movY: Double, movZ: Double, dx: Double, dy: Double, dz: Double) {
+        if (isSpectator()) {
+            onGround = false
+        } else {
+            val bb = boundingBox.clone()
+            bb.minY = location.y - 0.2
+            bb.maxY = location.y + 0.2
+
+            // we're already at the new position at this point; check if there are blocks we might have landed on between
+            // the old and new positions (running down stairs necessitates this)
+            bb.addCoord(-dx, -dy, -dz)
+
+            val state = world.getCollisionBlocks(bb, true).isNotEmpty()
+            onGround = state
+            isCollided = state
+        }
+    }
+
+    override fun canBeMovedByCurrents(): Boolean {
+        return false // currently has no server-side movement
+    }
+
+    fun checkNearEntities() {
+        world.getNearbyEntities(boundingBox.expandedCopy(1.0, 0.5, 1.0), this).forEach {
+            it.scheduleUpdate()
+
+            if (!it.isAlive() || it.isFlaggedForDespawn()) {
+                return@forEach
+            }
+
+            it.onCollideWithPlayer(this)
+        }
+    }
+
+    /**
+     * Fires movement events and synchronizes player movement, every tick.
+     */
+    fun handleMovement(newPos: Vector3) {
+        // TODO
+    }
 
     override fun sendMessage(message: String) {
         networkSession.sendDataPacket(

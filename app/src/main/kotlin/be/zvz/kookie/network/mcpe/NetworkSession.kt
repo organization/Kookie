@@ -487,7 +487,7 @@ class NetworkSession(
         )
     }
 
-    fun syncGameMode(mode: GameMode, isRollBack: Boolean) {
+    @JvmOverloads fun syncGameMode(mode: GameMode, isRollBack: Boolean = false) {
         sendDataPacket(
             SetPlayerGameTypePacket().apply {
                 gamemode = mode.id()
