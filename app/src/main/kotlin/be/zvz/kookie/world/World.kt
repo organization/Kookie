@@ -2263,6 +2263,8 @@ class World(
         fun chunkRange(minX: Double, maxX: Double, expansion: Float): IntRange =
             ((minX - expansion).toInt() shr 4)..((maxX + expansion).toInt() shr 4)
 
+        fun getXZ(hash: Long): Pair<Int, Int> = Morton2D.decode(hash)
+
         inline fun chunkRepeat(pos: Vector3, expansion: Float, action: (Int, Int) -> Unit) {
             for (chunkX in chunkRange(pos.x, expansion)) {
                 for (chunkZ in chunkRange(pos.z, expansion)) {

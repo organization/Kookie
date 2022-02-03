@@ -1,3 +1,8 @@
+<?php
+
+$absolutePath = realpath("../app/src/main/kotlin");
+
+$copyright = <<<COPYRIGHT
 /**
  *
  * _  __           _    _
@@ -15,16 +20,15 @@
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  */
-package be.zvz.kookie.network.mcpe.protocol
-
-class PacketHandlingException(override val message: String?) : RuntimeException() {
-
-    companion object {
-
-        fun wrap(e: Throwable, message: String?): PacketHandlingException {
-            return PacketHandlingException(message).apply {
-                initCause(e)
-            }
+COPYRIGHT;
+$directoryIterator = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($absolutePath));
+/** @var SplFileInfo $fileInfo */
+foreach($directoryIterator as $fileInfo){
+    if($fileInfo->isFile()){
+        $content = file_get_contents($fileInfo->getPathname());
+        if(!str_starts_with($content, "/**")){
+            $content = $copyright . "\n" . $content;
+            file_put_contents($fileInfo->getPathname(), $content);
         }
     }
 }

@@ -15,16 +15,6 @@
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  */
-package be.zvz.kookie.network.mcpe.protocol
+package be.zvz.kookie.inventory
 
-class PacketHandlingException(override val message: String?) : RuntimeException() {
-
-    companion object {
-
-        fun wrap(e: Throwable, message: String?): PacketHandlingException {
-            return PacketHandlingException(message).apply {
-                initCause(e)
-            }
-        }
-    }
-}
+interface TemporaryInventory
