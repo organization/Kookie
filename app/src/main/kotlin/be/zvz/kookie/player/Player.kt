@@ -786,9 +786,8 @@ open class Player(
         }
     }
 
-    override fun canBeMovedByCurrents(): Boolean {
+    override fun canBeMovedByCurrents(): Boolean =
         return false // currently has no server-side movement
-    }
 
     fun checkNearEntities() {
         world.getNearbyEntities(boundingBox.expandedCopy(1.0, 0.5, 1.0), this).forEach {
