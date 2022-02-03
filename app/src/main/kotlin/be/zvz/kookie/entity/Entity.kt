@@ -156,18 +156,20 @@ abstract class Entity @JvmOverloads constructor(var location: Location, nbt: Com
     private var ownerId: Long = -1
     private var targetId: Long = -1
 
-    var initialized: Boolean = false
-
     abstract val entityNetworkIdentifier: EntityIds
 
     var owningEntity: Entity? = null
         get() {
-            TODO("Should be implemented with World")
+            return world.entities[ownerId]
+        }
+        set(value) {
+            ownerId = value?.entityRuntimeId ?: -1
+            field = value
         }
 
     val targetEntity: Entity?
         get() {
-            TODO("Should be implemented with world")
+            return world.entities[targetId]
         }
 
     abstract val initialSizeInfo: EntitySizeInfo
@@ -188,7 +190,14 @@ abstract class Entity @JvmOverloads constructor(var location: Location, nbt: Com
             Vector3()
         }
 
-        // TODO: lastUpdate = server.tick
+        recalculateBoundingBox()
+        resetLastMovement()
+        addAttributes()
+        @Suppress("LeakingThis")
+        world.addEntity(this)
+        initEntity(nbt ?: CompoundTag.create())
+
+        lastUpdate = server.tickCounter
 
         // TODO: EntitySpawnEvent call
 
@@ -378,10 +387,10 @@ abstract class Entity @JvmOverloads constructor(var location: Location, nbt: Com
     @JvmOverloads
     fun sendData(targets: MutableMap<Long, Player>?, data: MutableMap<Int, MetadataProperty>? = null) {
         val target = targets ?: hasSpawned
-        // TODO: var sendData = data ?: getAllNetworkData()
+        var sendData = data ?: getAllNetworkData()
 
         target.forEach { (_, player) ->
-            // TODO: player.networkSession.syncActorData()
+            player.networkSession.syncActorData(this, sendData)
         }
     }
 
@@ -689,7 +698,7 @@ abstract class Entity @JvmOverloads constructor(var location: Location, nbt: Com
 
             Timings.getEntityTimings(this).startTiming()
             val hasUpdate = entityBaseTick(tickDiff)
-            // TODO: Timings.entityBaseTick.stopTiming()
+            Timings.getEntityTimings(this).stopTiming()
             hasUpdate
         }
     }
@@ -1051,9 +1060,6 @@ abstract class Entity @JvmOverloads constructor(var location: Location, nbt: Com
     }
 
     open fun spawnTo(player: Player) {
-        if (!initialized) {
-            throw AssertionError("Entity must be initialized before calling spawnTo()")
-        }
         if (
             !hasSpawned.containsKey(player.getId()) &&
             player.hasReceivedChunk(floor(location.x).toInt() shr 4, floor(location.z).toInt() shr 4)
@@ -1088,7 +1094,7 @@ abstract class Entity @JvmOverloads constructor(var location: Location, nbt: Com
         val id = player.getId()
         if (hasSpawned.containsKey(id)) {
             if (send) {
-                // TODO: player.networkSession.onEntityRemoved(this)
+                player.networkSession.onEntityRemoved(this)
             }
             hasSpawned.remove(id)
         }
