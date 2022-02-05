@@ -106,7 +106,7 @@ class World(
 
     private val entityLastKnownPositions: MutableMap<EntityId, Vector3> = HashLongObjMaps.newMutableMap()
 
-    private val updateEntities: MutableMap<EntityId, Entity> = HashLongObjMaps.newMutableMap()
+    val updateEntities: MutableMap<EntityId, Entity> = HashLongObjMaps.newMutableMap()
     private var blockCache: MutableMap<ChunkHash, MutableMap<BlockHash, Block>> = HashLongObjMaps.newMutableMap()
 
     private var sendTimeTicker: Int = 0

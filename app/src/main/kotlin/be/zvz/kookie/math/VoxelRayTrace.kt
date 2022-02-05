@@ -22,11 +22,11 @@ import kotlin.math.floor
 object VoxelRayTrace {
 
     @JvmStatic
-    suspend fun inDirection(start: Vector3, directionVector: Vector3, maxDistance: Double) =
+    fun inDirection(start: Vector3, directionVector: Vector3, maxDistance: Double) =
         betweenPoints(start, start.add(directionVector.multiply(maxDistance)))
 
     @JvmStatic
-    suspend fun betweenPoints(start: Vector3, end: Vector3) = sequence {
+    fun betweenPoints(start: Vector3, end: Vector3) = sequence {
         var currentBlock = start.floor()
 
         val directionVector = end.subtract(start).normalize()

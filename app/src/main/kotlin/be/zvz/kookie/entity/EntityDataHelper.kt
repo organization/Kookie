@@ -98,22 +98,4 @@ object EntityDataHelper {
     @JvmOverloads
     fun createBaseNBT(location: Location, motion: Vector3? = null): CompoundTag =
         createBaseNBT(location.asVector3(), motion, location.yaw, location.pitch)
-
-    /**
-     * Used to initialize an entity.
-     * Calling Entity.spawnTo() without calling
-     * this method will result in an AssertionError.
-     *
-     * @see Entity.spawnTo
-     */
-    @JvmStatic
-    @JvmOverloads
-    fun initDefaults(entity: Entity, nbt: CompoundTag? = null) {
-        entity.recalculateBoundingBox()
-        entity.resetLastMovement()
-        entity.addAttributes()
-        // TODO: world.addEntity(entity)
-        entity.initEntity(nbt ?: CompoundTag.create())
-        entity.initialized = true
-    }
 }

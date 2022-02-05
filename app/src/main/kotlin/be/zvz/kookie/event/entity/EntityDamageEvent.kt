@@ -18,6 +18,7 @@
 package be.zvz.kookie.event.entity
 
 import be.zvz.kookie.entity.Entity
+import be.zvz.kookie.event.Cancellable
 import com.koloboke.collect.map.hash.HashObjObjMaps
 import kotlin.math.max
 
@@ -26,7 +27,17 @@ open class EntityDamageEvent @JvmOverloads constructor(
     var cause: Type,
     var damage: Float,
     val modifiers: MutableMap<ModifierType, Float> = HashObjObjMaps.newMutableMap()
-) : EntityEvent(entity) {
+) : EntityEvent(entity), Cancellable {
+
+    @JvmOverloads
+    constructor(
+        entity: Entity,
+        cause: Type,
+        damage: Int,
+        modifiers: MutableMap<ModifierType, Float> = HashObjObjMaps.newMutableMap()
+    ) : this(entity, cause, damage.toFloat(), modifiers)
+
+    override var isCancelled: Boolean = false
 
     var baseDamage: Float = damage
     val originalBase: Float = damage
