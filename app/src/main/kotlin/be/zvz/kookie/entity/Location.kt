@@ -43,6 +43,10 @@ open class Location @JvmOverloads constructor(
 
     fun asLocation(): Location = Location(x, y, z, yaw, pitch, world)
 
+    override fun clone(): Location {
+        return Location(x, y, z, yaw, pitch, world)
+    }
+
     companion object {
         @JvmStatic
         @JvmOverloads

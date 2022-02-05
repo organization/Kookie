@@ -27,8 +27,10 @@ import be.zvz.kookie.event.player.PlayerBedEnterEvent
 import be.zvz.kookie.event.player.PlayerBedLeaveEvent
 import be.zvz.kookie.event.player.PlayerChangeSkinEvent
 import be.zvz.kookie.event.player.PlayerDisplayNameChangeEvent
+import be.zvz.kookie.event.player.PlayerExhaustEvent
 import be.zvz.kookie.event.player.PlayerGameModeChangeEvent
 import be.zvz.kookie.event.player.PlayerJoinEvent
+import be.zvz.kookie.event.player.PlayerMoveEvent
 import be.zvz.kookie.form.Form
 import be.zvz.kookie.inventory.CallbackInventoryListener
 import be.zvz.kookie.inventory.Inventory
@@ -63,8 +65,11 @@ import com.nukkitx.protocol.bedrock.packet.AnimatePacket
 import com.nukkitx.protocol.bedrock.packet.TextPacket
 import org.slf4j.LoggerFactory
 import java.util.UUID
+import kotlin.math.abs
+import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.pow
+import kotlin.math.sqrt
 
 open class Player(
     override var server: Server,
@@ -142,8 +147,8 @@ open class Player(
 
     val hiddenPlayers: MutableMap<UUID, Boolean> = HashObjObjMaps.newMutableMap()
 
-    var moveRateLimit: Float = 10f * MOVES_PER_TICK
-    var lastMovementProcess: Float? = null
+    var moveRateLimit: Int = 10 * MOVES_PER_TICK
+    var lastMovementProcess: Long? = null
 
     var inAirTicks: Long = 0
     override var stepHeight: Float = 0.6f
@@ -804,7 +809,98 @@ open class Player(
      * Fires movement events and synchronizes player movement, every tick.
      */
     fun handleMovement(newPos: Vector3) {
-        // TODO
+        moveRateLimit--
+        if (moveRateLimit < 0) {
+            return
+        }
+        val oldPos = location.clone()
+        val distanceSquard = newPos.distanceSquared(oldPos)
+
+        var revert = false
+
+        if (distanceSquard > 100) {
+            // TODO: this is probably too big if we process every movement
+            /* !!! BEWARE YE WHO ENTER HERE !!!
+             *
+             * This is NOT an anti-cheat check. It is a safety check.
+             * Without it hackers can teleport with freedom on their own and cause lots of undesirable behaviour, like
+             * freezes, lag spikes and memory exhaustion due to sync chunk loading and collision checks across large distances.
+             * Not only that, but high-latency players can trigger such behaviour innocently.
+             *
+             * If you must tamper with this code, be aware that this can cause very nasty results. Do not waste our time
+             * asking for help if you suffer the consequences of messing with this.
+             */
+            logger.debug("Moved too fast, reverting movement")
+            logger.debug("Old position: ${oldPos.asVector3()}, new position: ${newPos.asVector3()}")
+            revert = true
+        } else if (!world.isInLoadedTerrain(newPos)) {
+            revert = true
+            nextChunkOrderRun = 0
+        }
+        if (!revert && distanceSquard != 0.0) {
+            val dx = newPos.x - oldPos.x
+            val dy = newPos.y - oldPos.y
+            val dz = newPos.z - oldPos.z
+
+            move(dx, dy, dz)
+        }
+        if (revert) {
+            revertMovement(oldPos)
+        }
+    }
+
+    protected fun processMostRecentMovements() {
+        val now = System.currentTimeMillis()
+        val multiplier = if (lastMovementProcess != null) (now - lastMovementProcess!!) * 20 else 1
+        val exceedRateLimit = moveRateLimit < 0
+        moveRateLimit = min(MOVE_BACKLOG_SIZE, (max(0, moveRateLimit) + MOVES_PER_TICK * multiplier).toInt())
+        lastMovementProcess = now
+
+        val from = lastLocation.clone()
+        val to = location.clone()
+
+        val delta = to.subtract(from)
+
+        val deltaAngle = abs(lastLocation.yaw - to.yaw) + abs(lastLocation.pitch - to.pitch)
+
+        if (deltaAngle > 0.0001 || deltaAngle > 1.0) {
+            val ev = PlayerMoveEvent(this, from, to)
+            ev.call()
+
+            if (ev.isCancelled) {
+                revertMovement(from)
+            }
+
+            if (to.distanceSquared(ev.to) > 0.01) { // If plugins modify the destination
+                teleport(ev.to)
+                return
+            }
+            lastLocation = to
+            broadcastMovement()
+
+            val horizontalDistanceTravelled = sqrt(((from.x - to.x).pow(2) + (from.z - to.z).pow(2)))
+
+            if (horizontalDistanceTravelled > 0) {
+                // TODO: check swimming (adds 0.015 exhaustion in MCPE)
+                if (isSprinting()) {
+                    hungerManager.exhaust((0.1 * horizontalDistanceTravelled).toFloat(), PlayerExhaustEvent.Type.SPRINTING)
+                } else {
+                    hungerManager.exhaust((0.01 * horizontalDistanceTravelled).toFloat(), PlayerExhaustEvent.Type.WALKING)
+                }
+                if (nextChunkOrderRun > 20) {
+                    nextChunkOrderRun = 20
+                }
+            }
+        }
+        if (exceedRateLimit) { // client and server positions will be out of sync if this happens
+            logger.debug("Exceed movement rate limit, forcing to last accepted position")
+            // TODO: sendPosition(location, location.yaw, location.pitch, MovePlayerPacket.Mode.RESPAWN)
+        }
+    }
+
+    protected fun revertMovement(from: Location) {
+        setPosition(from)
+        // TODO: sendPosition(from, from.yaw, from.pitch, MovePlayerPacket.Mode.RESPAWN)
     }
 
     override fun sendMessage(message: String) {

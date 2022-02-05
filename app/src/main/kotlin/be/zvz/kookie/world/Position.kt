@@ -60,6 +60,10 @@ open class Position @JvmOverloads constructor(
         }
     } ?: false
 
+    override fun clone(): Position {
+        return Position(x, y, z, world)
+    }
+
     override fun getSide(side: Facing, step: Int) = fromObject(super.getSide(side, step), world)
 
     companion object {
