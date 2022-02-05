@@ -28,7 +28,7 @@ open class EntityDamageByEntityEvent @JvmOverloads constructor(
     cause: Type,
     damage: Float,
     modifiers: MutableMap<ModifierType, Float> = HashObjFloatMaps.newMutableMap(),
-    var knockBack: Float
+    var knockBack: Float = 0.4F
 ) : EntityDamageEvent(entity, cause, damage, modifiers) {
     val damager: Entity? = damagerEntity
         get() {
