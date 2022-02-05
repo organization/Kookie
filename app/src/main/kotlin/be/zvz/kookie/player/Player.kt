@@ -94,7 +94,7 @@ open class Player(
     namedTag: CompoundTag?,
     skin: Skin,
     location: Location
-) : Human(skin, location, namedTag), CommandSender, ChunkListener, PermissibleDelegate {
+) : Human(skin, location, namedTag), CommandSender, ChunkListener, PermissibleDelegate, IPlayer {
     override val language: Language get() = server.language
 
     protected var spawned: Boolean = false
@@ -113,8 +113,8 @@ open class Player(
 
     var messageCounter: Int = 2
 
-    var firstPlayed: Long = 0
-    var lastPlayed: Long = 0
+    override var firstPlayed: Long = 0
+    override var lastPlayed: Long = 0
 
     var gameMode: GameMode = GameMode.SURVIVAL
         set(value) {
@@ -296,7 +296,7 @@ open class Player(
         )
     }
 
-    fun hasPlayedBefore(): Boolean = lastPlayed - firstPlayed > 1
+    override fun hasPlayedBefore(): Boolean = lastPlayed - firstPlayed > 1
 
     override fun spawnTo(player: Player) {
         if (isAlive() && player.isAlive() && canSee(player)/* TODO: && !isSpectator()*/) {
