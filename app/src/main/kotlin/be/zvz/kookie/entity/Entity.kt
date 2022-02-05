@@ -985,7 +985,7 @@ abstract class Entity @JvmOverloads constructor(var location: Location, nbt: Com
         return false
     }
 
-    fun setMotion(motion: Vector3): Boolean {
+    open fun setMotion(motion: Vector3): Boolean {
         if (!justCreated) {
             val ev = EntityMotionEvent(this, motion)
             ev.call()

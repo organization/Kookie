@@ -43,6 +43,7 @@ import be.zvz.kookie.network.mcpe.protocol.types.entity.EntityMetadataCollection
 import be.zvz.kookie.network.mcpe.protocol.types.entity.EntityMetadataFlags
 import be.zvz.kookie.network.mcpe.protocol.types.entity.EntityMetadataProperties
 import be.zvz.kookie.player.Player
+import be.zvz.kookie.timings.Timings
 import be.zvz.kookie.utils.Binary
 import be.zvz.kookie.world.sound.EntityLandSound
 import be.zvz.kookie.world.sound.EntityLongFallSound
@@ -261,6 +262,31 @@ abstract class Living @JvmOverloads constructor(
         }
     }
 
+    open fun calculateFallDamage(fallDistance: Float): Float {
+        return ceil(fallDistance - 3 - (effectManager.get(VanillaEffects.JUMP_BOOST.effect)?.effectLevel ?: 0))
+    }
+
+    open fun onHitGround(): Float? {
+        var fallBlockPos = location.floor()
+        var fallBlock = world.getBlock(fallBlockPos)
+        if (fallBlock.collisionBoxes.isEmpty()) {
+            fallBlockPos = fallBlockPos.down()
+            fallBlock = world.getBlock(fallBlockPos)
+        }
+        val newVerticalVelocity = fallBlock.onEntityLand(this)
+
+        val damage = calculateFallDamage(fallDistance)
+        if (damage > 0) {
+            val ev = EntityDamageEvent(this, EntityDamageEvent.Type.FALL, damage)
+            attack(ev)
+
+            broadcastSound(if (damage > 4) EntityLongFallSound(this) else EntityShortFallSound(this))
+        } else if (fallBlock.getId() != /*BlockLegacyIds.AIR.id*/0) {
+            broadcastSound(EntityLandSound(this, fallBlock))
+        }
+        return newVerticalVelocity
+    }
+
     override fun fall(fallDistance: Float) {
         val jumpBoost = effectManager.get(VanillaEffects.JUMP_BOOST.effect)
         val damage = ceil(fallDistance - 3 - (jumpBoost?.effectLevel ?: 0))
@@ -354,7 +380,7 @@ abstract class Living @JvmOverloads constructor(
     }
 
     open fun applyPostDamageEffects(source: Any) {
-        // TODO
+// TODO
     }
 
     open fun damageItem(item: Durable, durabilityRemoved: Int) {
@@ -362,7 +388,7 @@ abstract class Living @JvmOverloads constructor(
     }
 
     override fun attack(source: EntityDamageEvent) {
-        // TODO: implement attack()
+// TODO: implement attack()
     }
 
     open fun doHitAnimation() {
@@ -422,7 +448,7 @@ abstract class Living @JvmOverloads constructor(
     }
 
     override fun entityBaseTick(tickDiff: Long): Boolean {
-        // TODO: Timings.livingEntityBaseTick.startTiming()
+        Timings.livingEntityBaseTick.startTiming()
         var hasUpdate = super.entityBaseTick(tickDiff)
         if (isAlive()) {
             if (effectManager.tick(tickDiff)) {
@@ -442,7 +468,7 @@ abstract class Living @JvmOverloads constructor(
             attackTime -= tickDiff
         }
 
-        // TODO: Timings.livingEntityBaseTick.stopTiming()
+        Timings.livingEntityBaseTick.stopTiming()
         return hasUpdate
     }
 

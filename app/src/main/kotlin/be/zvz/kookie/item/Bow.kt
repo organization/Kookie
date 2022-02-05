@@ -25,4 +25,8 @@ class Bow(identifier: ItemIdentifier, name: String) : Tool(identifier, name), Re
     override fun onReleaseUsing(player: Player): ItemUseResult {
         TODO("Bow Not yet implemented")
     }
+
+    override fun canStartUsingItem(player: Player): Boolean {
+        TODO("Not yet implemented")
+    }
 }

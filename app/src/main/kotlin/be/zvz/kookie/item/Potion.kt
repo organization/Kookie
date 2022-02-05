@@ -19,6 +19,7 @@ package be.zvz.kookie.item
 
 import be.zvz.kookie.entity.Living
 import be.zvz.kookie.entity.effect.EffectInstance
+import be.zvz.kookie.player.Player
 
 class Potion(identifier: ItemIdentifier, name: String, val potionType: PotionType) : Item(identifier, name), ConsumableItem {
     override fun getAdditionalEffects(): List<EffectInstance> = potionType.effectsGetter()
@@ -26,4 +27,8 @@ class Potion(identifier: ItemIdentifier, name: String, val potionType: PotionTyp
     override fun onConsume(consumer: Living) {}
 
     override fun getResidue(): Item = VanillaItems.GLASS_BOTTLE.item
+
+    override fun canStartUsingItem(player: Player): Boolean {
+        TODO("Not yet implemented")
+    }
 }

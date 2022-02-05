@@ -18,6 +18,7 @@
 package be.zvz.kookie.entity
 
 import be.zvz.kookie.event.entity.EntityDamageEvent
+import be.zvz.kookie.event.player.PlayerExhaustEvent
 import be.zvz.kookie.inventory.CallbackInventoryListener
 import be.zvz.kookie.inventory.PlayerEnderInventory
 import be.zvz.kookie.inventory.PlayerInventory
@@ -78,9 +79,9 @@ open class Human @JvmOverloads constructor(
     override fun jump() {
         super.jump()
         if (isSprinting()) {
-            hungerManager.exhaust(0.8F, 10)
+            hungerManager.exhaust(0.8F, PlayerExhaustEvent.Type.SPRINT_JUMPING)
         } else {
-            hungerManager.exhaust(0.2F, 9)
+            hungerManager.exhaust(0.2F, PlayerExhaustEvent.Type.JUMPING)
         }
     }
 

@@ -26,17 +26,27 @@ import be.zvz.kookie.entity.Skin
 import be.zvz.kookie.event.player.PlayerBedEnterEvent
 import be.zvz.kookie.event.player.PlayerBedLeaveEvent
 import be.zvz.kookie.event.player.PlayerChangeSkinEvent
+import be.zvz.kookie.event.player.PlayerChatEvent
+import be.zvz.kookie.event.player.PlayerCommandPreprocessEvent
 import be.zvz.kookie.event.player.PlayerDisplayNameChangeEvent
 import be.zvz.kookie.event.player.PlayerExhaustEvent
 import be.zvz.kookie.event.player.PlayerGameModeChangeEvent
+import be.zvz.kookie.event.player.PlayerItemConsumeEvent
+import be.zvz.kookie.event.player.PlayerItemHeldEvent
+import be.zvz.kookie.event.player.PlayerItemUseEvent
 import be.zvz.kookie.event.player.PlayerJoinEvent
+import be.zvz.kookie.event.player.PlayerJumpEvent
 import be.zvz.kookie.event.player.PlayerMoveEvent
 import be.zvz.kookie.form.Form
 import be.zvz.kookie.inventory.CallbackInventoryListener
 import be.zvz.kookie.inventory.Inventory
 import be.zvz.kookie.inventory.PlayerCraftingInventory
 import be.zvz.kookie.inventory.PlayerCursorInventory
+import be.zvz.kookie.item.ConsumableItem
+import be.zvz.kookie.item.Durable
 import be.zvz.kookie.item.Item
+import be.zvz.kookie.item.ItemUseResult
+import be.zvz.kookie.item.Releasable
 import be.zvz.kookie.lang.KnownTranslationKeys
 import be.zvz.kookie.lang.Language
 import be.zvz.kookie.lang.TranslationContainer
@@ -49,6 +59,7 @@ import be.zvz.kookie.permission.DefaultPermissions
 import be.zvz.kookie.permission.PermissibleBase
 import be.zvz.kookie.permission.PermissibleDelegate
 import be.zvz.kookie.timings.Timings
+import be.zvz.kookie.utils.M_SQRT3
 import be.zvz.kookie.utils.TextFormat
 import be.zvz.kookie.utils.Union
 import be.zvz.kookie.world.ChunkHash
@@ -56,12 +67,15 @@ import be.zvz.kookie.world.ChunkListener
 import be.zvz.kookie.world.Position
 import be.zvz.kookie.world.World
 import be.zvz.kookie.world.format.Chunk
+import be.zvz.kookie.world.sound.ItemBreakSound
 import com.koloboke.collect.map.hash.HashIntLongMaps
 import com.koloboke.collect.map.hash.HashIntObjMaps
 import com.koloboke.collect.map.hash.HashLongObjMaps
 import com.koloboke.collect.map.hash.HashObjObjMaps
 import com.koloboke.collect.set.hash.HashLongSets
+import com.nukkitx.math.vector.Vector3f
 import com.nukkitx.protocol.bedrock.packet.AnimatePacket
+import com.nukkitx.protocol.bedrock.packet.SetEntityMotionPacket
 import com.nukkitx.protocol.bedrock.packet.TextPacket
 import org.slf4j.LoggerFactory
 import java.util.UUID
@@ -189,6 +203,14 @@ open class Player(
 
     private val logger =
         PrefixedLogger("Player: ${TextFormat.clean(username.lowercase())}", LoggerFactory.getLogger(Player::class.java))
+
+    var blockBreakHandler: SurvivalBreakHandler? = null
+        set(value) {
+            if (value == null && field != null) {
+                field!!.close()
+            }
+            field = value
+        }
 
     override val name: String get() = username
     override val permissionRecalculationCallbacks: MutableSet<(changedPermissionsOldValues: Map<String, Boolean>) -> Unit>
@@ -902,6 +924,220 @@ open class Player(
         setPosition(from)
         // TODO: sendPosition(from, from.yaw, from.pitch, MovePlayerPacket.Mode.RESPAWN)
     }
+
+    override fun calculateFallDamage(fallDistance: Float): Float {
+        return if (flying) 0f else super.calculateFallDamage(fallDistance)
+    }
+
+    override fun jump() {
+        PlayerJumpEvent(this).call()
+        super.jump()
+    }
+
+    override fun setMotion(motion: Vector3): Boolean {
+        return if (super.setMotion(motion)) {
+            broadcastMotion()
+            networkSession.sendDataPacket(
+                SetEntityMotionPacket().apply {
+                    runtimeEntityId = getId()
+                    setMotion(Vector3f.ZERO.add(motion.x, motion.y, motion.z))
+                }
+            )
+            true
+        } else false
+    }
+
+    override fun updateMovement(teleport: Boolean) {
+    }
+
+    override fun tryChangeMovement() {
+    }
+
+    override fun onUpdate(currentTick: Long): Boolean {
+        val tickDiff = currentTick - lastUpdate
+        if (tickDiff <= 0) {
+            return true
+        }
+
+        messageCounter = 2
+
+        lastUpdate = currentTick
+
+        if (!isAlive() && spawned) {
+            onDeathUpdate(tickDiff)
+            return true
+        }
+        timings.startTiming()
+        if (spawned) {
+            processMostRecentMovements()
+            motion = Vector3(0, 0, 0)
+            inAirTicks = if (onGround) 0 else inAirTicks + tickDiff
+
+            Timings.entityBaseTick.startTiming()
+            entityBaseTick(tickDiff)
+            Timings.entityBaseTick.stopTiming()
+
+            if (!isSpectator() && isAlive()) {
+                Timings.playerCheckNearEntities.startTiming()
+                checkNearEntities()
+                Timings.playerCheckNearEntities.stopTiming()
+            }
+            if (blockBreakHandler != null && !blockBreakHandler!!.update()) {
+                blockBreakHandler = null
+            }
+        }
+        timings.stopTiming()
+        return true
+    }
+
+    override fun canBreath(): Boolean {
+        return isCreative() || super.canBreath()
+    }
+
+    fun canInteract(pos: Vector3, maxDistance: Float, maxDiff: Float = M_SQRT3): Boolean {
+        val eyePos = getEyePos()
+        if (eyePos.distanceSquared(pos) > maxDistance.pow(2)) {
+            return false
+        }
+        val dV = getDirectionVector()
+        val eyeDot = dV.dot(eyePos)
+        val targetDot = dV.dot(pos)
+        return (targetDot - eyeDot) >= -maxDiff
+    }
+
+    /**
+     * Sends a chat message as this player. If the message begins with a / (forward-slash) it will be treated
+     * as a command.
+     */
+    fun chat(message: String): Boolean {
+        // TODO: removeCurrentWindow()
+
+        message.split("\n").forEach { messagePart ->
+            var messagePart = messagePart
+            if (messagePart.trim() != "" && messagePart.length <= 512 * 4 && messageCounter-- > 0) {
+                if (messagePart.startsWith("./")) {
+                    messagePart = messagePart.substring(1)
+                }
+                val ev = PlayerCommandPreprocessEvent(this, messagePart)
+                ev.call()
+                if (ev.isCancelled) {
+                    return@forEach
+                }
+
+                if (ev.message.startsWith("/")) {
+                    Timings.playerCommand.startTiming()
+                    server.dispatchCommand(ev.player, ev.message.substring(1))
+                    Timings.playerCommand.stopTiming()
+                } else {
+                    val ev =
+                        PlayerChatEvent(this, ev.message, server.getBroadcastChannelSubscribers(Server.BROADCAST_CHANNEL_USERS))
+                    ev.call()
+                    if (!ev.isCancelled) {
+                        server.broadcastMessage(
+                            server.language.translateString(
+                                ev.format,
+                                listOf(ev.player.displayName, ev.message),
+                            ),
+                            ev.recipients
+                        )
+                    }
+                }
+            }
+        }
+        return true
+    }
+
+    fun selectHotbarSlot(hotbarSlot: Int): Boolean {
+        if (!inventory.isHotbarSlot(hotbarSlot)) {
+            return false
+        }
+        if (hotbarSlot == inventory.getHeldItemIndex()) {
+            return true
+        }
+        val ev = PlayerItemHeldEvent(this, inventory.getItem(hotbarSlot), hotbarSlot)
+        ev.call()
+        if (ev.isCancelled) {
+            return false
+        }
+
+        inventory.setHeldItemIndex(hotbarSlot)
+        setUsingItem(false)
+
+        return true
+    }
+
+    /**
+     * Activates the item in hand, for example throwing a projectile.
+     *
+     * @return Boolean if it did something
+     */
+    fun useHeldItem(): Boolean {
+        val directionVector = getDirectionVector()
+        val item = inventory.getItemInHand()
+
+        val oldItem = item.clone()
+
+        val ev = PlayerItemUseEvent(this, item, directionVector)
+        if (hasItemCooldown(item) || isSpectator()) {
+            ev.isCancelled = true
+        }
+        ev.call()
+        if (ev.isCancelled) {
+            return false
+        }
+
+        val result = item.onClickAir(this, directionVector)
+
+        if (result == ItemUseResult.FAIL) {
+            return false
+        }
+
+        resetItemCooldown(item)
+
+        if (hasFiniteResources() && !item.equalsExact(oldItem) && oldItem.equalsExact(inventory.getItemInHand())) {
+            if (item is Durable && item.isBroken()) {
+                broadcastSound(ItemBreakSound())
+            }
+            inventory.setItemInHand(item)
+        }
+        setUsingItem(item is Releasable && (item as Releasable).canStartUsingItem(this))
+        return true
+    }
+
+    /**
+     * Consumes the currently-held item.
+     *
+     * @return Boolean if the consumption succeeded.
+     */
+    fun consumeHeldItem(): Boolean {
+        val slot = inventory.getItemInHand()
+        if (slot is ConsumableItem) {
+            val oldItem = slot.clone()
+
+            val ev = PlayerItemConsumeEvent(this, slot)
+            if (hasItemCooldown(slot)) {
+                ev.isCancelled = true
+            }
+            ev.call()
+
+            if (ev.isCancelled || !consumeObject(slot)) {
+                return false
+            }
+
+            setUsingItem(false)
+            resetItemCooldown(slot)
+
+            if (hasFiniteResources() && oldItem.equalsExact(inventory.getItemInHand())) {
+                slot.pop()
+                inventory.setItemInHand(slot)
+                inventory.addItem(slot.getResidue())
+            }
+            return true
+        }
+        return false
+    }
+
+    // TODO: releaseHeldItem()
 
     override fun sendMessage(message: String) {
         networkSession.sendDataPacket(

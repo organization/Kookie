@@ -69,7 +69,7 @@ object Timings {
     val syncPlayerDataSave = TimingsHandler("Player Data Save")
 
     val entityMove = TimingsHandler(INCLUDED_BY_OTHER_TIMINGS_PREFIX + "entityMove")
-    val playerCHeckNearEntities = TimingsHandler(INCLUDED_BY_OTHER_TIMINGS_PREFIX + "checkNearEntities")
+    val playerCheckNearEntities = TimingsHandler(INCLUDED_BY_OTHER_TIMINGS_PREFIX + "checkNearEntities")
     val tickEntity = TimingsHandler(INCLUDED_BY_OTHER_TIMINGS_PREFIX + "tickEntity")
     val tickTileEntity = TimingsHandler(INCLUDED_BY_OTHER_TIMINGS_PREFIX + "tickTileEntity")
 

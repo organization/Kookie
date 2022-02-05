@@ -15,11 +15,6 @@
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  */
-package be.zvz.kookie.item
+package be.zvz.kookie.utils
 
-import be.zvz.kookie.player.Player
-
-interface Releasable {
-
-    fun canStartUsingItem(player: Player): Boolean
-}
+const val M_SQRT3 = 1.7320508075689f
