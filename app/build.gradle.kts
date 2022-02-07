@@ -27,7 +27,7 @@ plugins {
     // Apply the application plugin to add support for building a CLI application in Java.
     application
 
-    id("com.gorylenko.gradle-git-properties") version "2.3.2"
+    id("com.gorylenko.gradle-git-properties") version "2.4.0"
 
     id("org.jmailen.kotlinter") version "3.8.0"
     id("com.github.johnrengelman.shadow") version "7.1.2"
