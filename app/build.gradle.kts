@@ -95,7 +95,7 @@ dependencies {
     implementation(group = "io.netty", name = "netty-all", version = "4.1.76.Final")
 
     // bedrock-network
-    implementation(group = "org.powernukkit.bedrock.network", name = "raknet", version = "1.6.25-PN.2")
+    implementation(group = "org.powernukkit.bedrock.network", name = "raknet", version = "1.6.28-PN.3")
 
     // bedrock-leveldb
     implementation(group = "org.powernukkit.bedrock.leveldb", name = "bedrock-leveldb", version = "0.11.0-PN")
