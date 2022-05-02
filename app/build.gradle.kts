@@ -65,7 +65,7 @@ dependencies {
 
     // Kotlin coroutines
     implementation(group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version = "1.6.0")
-    implementation(group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-jdk8", version = "1.6.0")
+    implementation(group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-jdk8", version = "1.6.1")
 
     // RxKotlin
     implementation(group = "io.reactivex.rxjava3", name = "rxkotlin", version = "3.0.1")
@@ -77,14 +77,14 @@ dependencies {
     // Jackson
     implementation(group = "com.fasterxml.jackson.module", name = "jackson-module-kotlin", version = "2.13.1")
     implementation(group = "com.fasterxml.jackson.module", name = "jackson-module-afterburner", version = "2.13.2")
-    implementation(group = "com.fasterxml.jackson.dataformat", name = "jackson-dataformat-yaml", version = "2.13.1")
+    implementation(group = "com.fasterxml.jackson.dataformat", name = "jackson-dataformat-yaml", version = "2.13.2")
     implementation(group = "com.fasterxml.jackson.dataformat", name = "jackson-dataformat-properties", version = "2.13.2")
 
     // Apache commons IO
     implementation(group = "commons-io", name = "commons-io", version = "2.11.0")
 
     // jna
-    implementation(group = "net.java.dev.jna", name = "jna", version = "5.10.0")
+    implementation(group = "net.java.dev.jna", name = "jna", version = "5.11.0")
 
     // Logger
     implementation(group = "org.slf4j", name = "slf4j-api", version = "1.7.36")
