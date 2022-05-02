@@ -109,7 +109,7 @@ dependencies {
     implementation(group = "com.koloboke", name = "koloboke-api-jdk8", version = "1.0.0")
 
     // JWT
-    implementation(group = "io.jsonwebtoken", name = "jjwt-api", version = "0.11.2")
+    implementation(group = "io.jsonwebtoken", name = "jjwt-api", version = "0.11.5")
     runtimeOnly(group = "io.jsonwebtoken", name = "jjwt-impl", version = "0.11.2")
     runtimeOnly(group = "io.jsonwebtoken", name = "jjwt-jackson", version = "0.11.2")
     implementation(group = "org.whispersystems", name = "curve25519-java", version = "0.5.0")
