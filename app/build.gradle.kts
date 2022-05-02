@@ -29,7 +29,7 @@ plugins {
 
     id("com.gorylenko.gradle-git-properties") version "2.4.0"
 
-    id("org.jmailen.kotlinter") version "3.8.0"
+    id("org.jmailen.kotlinter") version "3.10.0"
     id("com.github.johnrengelman.shadow") version "7.1.2"
 }
 
@@ -65,7 +65,7 @@ dependencies {
 
     // Kotlin coroutines
     implementation(group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version = "1.6.0")
-    implementation(group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-jdk8", version = "1.6.0")
+    implementation(group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-jdk8", version = "1.6.1")
 
     // RxKotlin
     implementation(group = "io.reactivex.rxjava3", name = "rxkotlin", version = "3.0.1")
@@ -76,9 +76,9 @@ dependencies {
 
     // Jackson
     implementation(group = "com.fasterxml.jackson.module", name = "jackson-module-kotlin", version = "2.13.1")
-    implementation(group = "com.fasterxml.jackson.module", name = "jackson-module-afterburner", version = "2.13.1")
+    implementation(group = "com.fasterxml.jackson.module", name = "jackson-module-afterburner", version = "2.13.2")
     implementation(group = "com.fasterxml.jackson.dataformat", name = "jackson-dataformat-yaml", version = "2.13.1")
-    implementation(group = "com.fasterxml.jackson.dataformat", name = "jackson-dataformat-properties", version = "2.13.1")
+    implementation(group = "com.fasterxml.jackson.dataformat", name = "jackson-dataformat-properties", version = "2.13.2")
 
     // Apache commons IO
     implementation(group = "commons-io", name = "commons-io", version = "2.11.0")
@@ -101,7 +101,7 @@ dependencies {
     implementation(group = "org.powernukkit.bedrock.leveldb", name = "bedrock-leveldb", version = "0.11.0-PN")
 
     // guava
-    implementation(group = "com.google.guava", name = "guava", version = "31.0.1-jre")
+    implementation(group = "com.google.guava", name = "guava", version = "31.1-jre")
 
     // koloboke
     implementation(group = "com.koloboke", name = "koloboke-impl-common-jdk8", version = "1.0.0")
