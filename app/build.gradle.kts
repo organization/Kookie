@@ -88,7 +88,7 @@ dependencies {
 
     // Logger
     implementation(group = "org.slf4j", name = "slf4j-api", version = "1.7.36")
-    implementation(group = "ch.qos.logback", name = "logback-classic", version = "1.2.10")
+    implementation(group = "ch.qos.logback", name = "logback-classic", version = "1.2.11")
     implementation(group = "org.fusesource.jansi", name = "jansi", version = "2.4.0")
 
     // netty
