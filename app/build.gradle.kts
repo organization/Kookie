@@ -22,7 +22,7 @@ import org.jmailen.gradle.kotlinter.tasks.LintTask
 
 plugins {
     // Apply the org.jetbrains.kotlin.jvm Plugin to add support for Kotlin.
-    kotlin("jvm") version "1.6.10"
+    kotlin("jvm") version "1.6.21"
 
     // Apply the application plugin to add support for building a CLI application in Java.
     application
@@ -84,7 +84,7 @@ dependencies {
     implementation(group = "commons-io", name = "commons-io", version = "2.11.0")
 
     // jna
-    implementation(group = "net.java.dev.jna", name = "jna", version = "5.11.0")
+    implementation(group = "net.java.dev.jna", name = "jna", version = "5.10.0")
 
     // Logger
     implementation(group = "org.slf4j", name = "slf4j-api", version = "1.7.36")
