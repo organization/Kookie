@@ -110,7 +110,7 @@ dependencies {
 
     // JWT
     implementation(group = "io.jsonwebtoken", name = "jjwt-api", version = "0.11.5")
-    runtimeOnly(group = "io.jsonwebtoken", name = "jjwt-impl", version = "0.11.2")
+    runtimeOnly(group = "io.jsonwebtoken", name = "jjwt-impl", version = "0.11.5")
     runtimeOnly(group = "io.jsonwebtoken", name = "jjwt-jackson", version = "0.11.5")
     implementation(group = "org.whispersystems", name = "curve25519-java", version = "0.5.0")
 
