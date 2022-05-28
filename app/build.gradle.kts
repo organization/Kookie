@@ -76,7 +76,7 @@ dependencies {
 
     // Jackson
     implementation(group = "com.fasterxml.jackson.module", name = "jackson-module-kotlin", version = "2.13.2")
-    implementation(group = "com.fasterxml.jackson.module", name = "jackson-module-afterburner", version = "2.13.2")
+    implementation(group = "com.fasterxml.jackson.module", name = "jackson-module-afterburner", version = "2.13.3")
     implementation(group = "com.fasterxml.jackson.dataformat", name = "jackson-dataformat-yaml", version = "2.13.3")
     implementation(group = "com.fasterxml.jackson.dataformat", name = "jackson-dataformat-properties", version = "2.13.3")
 
