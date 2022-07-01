@@ -84,7 +84,7 @@ dependencies {
     implementation(group = "commons-io", name = "commons-io", version = "2.11.0")
 
     // jna
-    implementation(group = "net.java.dev.jna", name = "jna", version = "5.12.0")
+    implementation(group = "net.java.dev.jna", name = "jna", version = "5.12.1")
 
     // Logger
     implementation(group = "org.slf4j", name = "slf4j-api", version = "1.7.36")
