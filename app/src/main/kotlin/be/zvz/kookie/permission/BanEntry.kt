@@ -19,6 +19,7 @@ package be.zvz.kookie.permission
 
 import java.text.SimpleDateFormat
 import java.util.Date
+import java.util.Locale
 
 data class BanEntry(
     var name: String
@@ -32,9 +33,15 @@ data class BanEntry(
         Date().time > it.time
     } ?: false
 
-    override fun toString(): String = "$name|$creationTime|$source|${expirationDate?.let {
-        DATETIME_FORMAT.format(it)
-    } ?: "Forever"}|$reason"
+    init {
+        name = name.lowercase(Locale.getDefault())
+    }
+
+    override fun toString(): String = "$name|$creationTime|$source|${
+        expirationDate?.let {
+            DATETIME_FORMAT.format(it)
+        } ?: "Forever"
+    }|$reason"
 
     companion object {
         private val DATETIME_FORMAT = SimpleDateFormat("Y-m-d H:i:s O")
