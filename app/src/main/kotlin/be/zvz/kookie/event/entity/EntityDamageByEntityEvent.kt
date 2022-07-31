@@ -8,7 +8,7 @@
  *
  * A server software for Minecraft: Bedrock Edition
  *
- * Copyright (C) 2021 organization Team
+ * Copyright (C) 2021 - 2022 organization Team
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -28,7 +28,7 @@ open class EntityDamageByEntityEvent @JvmOverloads constructor(
     cause: Type,
     damage: Float,
     modifiers: MutableMap<ModifierType, Float> = HashObjFloatMaps.newMutableMap(),
-    var knockBack: Float
+    var knockBack: Float = 0.4F
 ) : EntityDamageEvent(entity, cause, damage, modifiers) {
     val damager: Entity? = damagerEntity
         get() {

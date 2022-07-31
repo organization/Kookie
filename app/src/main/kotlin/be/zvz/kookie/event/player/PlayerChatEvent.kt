@@ -8,7 +8,7 @@
  *
  * A server software for Minecraft: Bedrock Edition
  *
- * Copyright (C) 2021 organization Team
+ * Copyright (C) 2021 - 2022 organization Team
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -18,6 +18,7 @@
 package be.zvz.kookie.event.player
 
 import be.zvz.kookie.command.CommandSender
+import be.zvz.kookie.event.Cancellable
 import be.zvz.kookie.player.Player
 
 class PlayerChatEvent @JvmOverloads constructor(
@@ -25,4 +26,6 @@ class PlayerChatEvent @JvmOverloads constructor(
     var message: String,
     var recipients: List<CommandSender> = mutableListOf(),
     var format: String = "chat.type.text"
-) : PlayerEvent(player)
+) : PlayerEvent(player), Cancellable {
+    override var isCancelled: Boolean = false
+}

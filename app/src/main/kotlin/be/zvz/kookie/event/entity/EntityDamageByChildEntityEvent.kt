@@ -8,7 +8,7 @@
  *
  * A server software for Minecraft: Bedrock Edition
  *
- * Copyright (C) 2021 organization Team
+ * Copyright (C) 2021 - 2022 organization Team
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -22,11 +22,12 @@ import com.koloboke.collect.map.hash.HashObjObjMaps
 
 class EntityDamageByChildEntityEvent @JvmOverloads constructor(
     damagerEntity: Entity,
+    val childEntity: Entity,
     entity: Entity,
     cause: Type,
     damage: Float,
     modifiers: MutableMap<ModifierType, Float> = HashObjObjMaps.newMutableMap(),
-    knockBack: Float
+    knockBack: Float = 0.4F
 ) : EntityDamageByEntityEvent(
     damagerEntity,
     entity,

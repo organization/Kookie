@@ -8,7 +8,7 @@
  *
  * A server software for Minecraft: Bedrock Edition
  *
- * Copyright (C) 2021 organization Team
+ * Copyright (C) 2021 - 2022 organization Team
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -19,6 +19,7 @@ package be.zvz.kookie.permission
 
 import be.zvz.kookie.plugin.Plugin
 import be.zvz.kookie.plugin.PluginException
+import be.zvz.kookie.timings.Timings
 import com.koloboke.collect.map.hash.HashIntObjMaps
 import com.koloboke.collect.map.hash.HashObjObjMaps
 import com.koloboke.collect.set.hash.HashObjSets
@@ -72,7 +73,7 @@ class PermissibleBase(rootPermissionsMap: Map<String, Boolean>) : Permissible {
     }
 
     override fun recalculatePermissions(): Map<String, Boolean> {
-        // TODO: Timings permissibleCalculation
+        Timings.permissibleCalculation.startTiming()
         PermissionManager.unsubscribeFromAllPermissions(this)
         val oldPermission = HashMap(permissions)
         permissions.clear()
@@ -91,7 +92,7 @@ class PermissibleBase(rootPermissionsMap: Map<String, Boolean>) : Permissible {
             calculateChildPermissions(attachment.permissions, false, attachment, null)
         }
 
-        // TODO: Timings permissibleCalculationDiff
+        Timings.permissibleCalculationDiff.stopTiming()
         // TODO: Timings permissibleCalculationCallback
         // TODO: Timings permissibleCalculation
         return HashObjObjMaps.newMutableMap()

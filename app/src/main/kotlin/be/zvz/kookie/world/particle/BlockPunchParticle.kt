@@ -8,7 +8,7 @@
  *
  * A server software for Minecraft: Bedrock Edition
  *
- * Copyright (C) 2021 organization Team
+ * Copyright (C) 2021 - 2022 organization Team
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -19,9 +19,9 @@ package be.zvz.kookie.world.particle
 
 import be.zvz.kookie.block.Block
 import be.zvz.kookie.math.Facing
-import be.zvz.kookie.network.mcpe.protocol.LevelEventPacket
+import com.nukkitx.protocol.bedrock.data.LevelEventType
 
-class BlockPunchParticle(val block: Block, val face: Facing) : EventParticle(LevelEventPacket.EVENT_PARTICLE_PUNCH_BLOCK) {
+class BlockPunchParticle(val block: Block, val face: Facing) : EventParticle(LevelEventType.PARTICLE_CRACK_BLOCK) {
     override val data: Int
         get() {
             TODO("Implements after implemented RuntimeBlockMapping")

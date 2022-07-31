@@ -8,7 +8,7 @@
  *
  * A server software for Minecraft: Bedrock Edition
  *
- * Copyright (C) 2021 organization Team
+ * Copyright (C) 2021 - 2022 organization Team
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -19,6 +19,7 @@ package be.zvz.kookie.item
 
 import be.zvz.kookie.entity.Living
 import be.zvz.kookie.entity.effect.EffectInstance
+import be.zvz.kookie.player.Player
 
 abstract class Food(identifier: ItemIdentifier, name: String) : Item(identifier, name), FoodSourceItem {
 
@@ -29,5 +30,9 @@ abstract class Food(identifier: ItemIdentifier, name: String) : Item(identifier,
     override fun getAdditionalEffects(): List<EffectInstance> = listOf()
 
     override fun onConsume(consumer: Living) {
+    }
+
+    override fun canStartUsingItem(player: Player): Boolean {
+        return !requiresHunger || player.hungerManager.isHungry()
     }
 }

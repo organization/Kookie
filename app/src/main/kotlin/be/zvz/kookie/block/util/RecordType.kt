@@ -8,7 +8,7 @@
  *
  * A server software for Minecraft: Bedrock Edition
  *
- * Copyright (C) 2021 organization Team
+ * Copyright (C) 2021 - 2022 organization Team
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -17,19 +17,19 @@
  */
 package be.zvz.kookie.block.util
 
-import be.zvz.kookie.network.mcpe.protocol.LevelSoundEventPacket
+import com.nukkitx.protocol.bedrock.data.SoundEvent
 
-enum class RecordType(val soundName: String, val soundId: Int, val translationKey: String) {
-    DISK_13("C418 - 13", LevelSoundEventPacket.Sound.RECORD_13.sound, "item.record_13.desc"),
-    DISK_CAT("C418 - cat", LevelSoundEventPacket.Sound.RECORD_CAT.sound, "item.record_cat.desc"),
-    DISK_BLOCKS("C418 - blocks", LevelSoundEventPacket.Sound.RECORD_BLOCKS.sound, "item.record_blocks.desc"),
-    DISK_CHIRP("C418 - chirp", LevelSoundEventPacket.Sound.RECORD_CHIRP.sound, "item.record_chirp.desc"),
-    DISK_FAR("C418 - far", LevelSoundEventPacket.Sound.RECORD_FAR.sound, "item.record_far.desc"),
-    DISK_MALL("C418 - mall", LevelSoundEventPacket.Sound.RECORD_MALL.sound, "item.record_mall.desc"),
-    DISK_MELLOHI("C418 - mellohi", LevelSoundEventPacket.Sound.RECORD_MELLOHI.sound, "item.record_mellohi.desc"),
-    DISK_STAL("C418 - stal", LevelSoundEventPacket.Sound.RECORD_STAL.sound, "item.record_stal.desc"),
-    DISK_STRAD("C418 - strad", LevelSoundEventPacket.Sound.RECORD_STRAD.sound, "item.record_strad.desc"),
-    DISK_WARD("C418 - ward", LevelSoundEventPacket.Sound.RECORD_WARD.sound, "item.record_ward.desc"),
-    DISK_11("C418 - 11", LevelSoundEventPacket.Sound.RECORD_11.sound, "item.record_11.desc"),
-    DISK_WAIT("C418 - wait", LevelSoundEventPacket.Sound.RECORD_WAIT.sound, "item.record_wait.desc"),
+enum class RecordType(val soundName: String, val soundId: SoundEvent, val translationKey: String) {
+    DISK_13("C418 - 13", SoundEvent.RECORD_13, "item.record_13.desc"),
+    DISK_CAT("C418 - cat", SoundEvent.RECORD_CAT, "item.record_cat.desc"),
+    DISK_BLOCKS("C418 - blocks", SoundEvent.RECORD_BLOCKS, "item.record_blocks.desc"),
+    DISK_CHIRP("C418 - chirp", SoundEvent.RECORD_CHIRP, "item.record_chirp.desc"),
+    DISK_FAR("C418 - far", SoundEvent.RECORD_FAR, "item.record_far.desc"),
+    DISK_MALL("C418 - mall", SoundEvent.RECORD_MALL, "item.record_mall.desc"),
+    DISK_MELLOHI("C418 - mellohi", SoundEvent.RECORD_MELLOHI, "item.record_mellohi.desc"),
+    DISK_STAL("C418 - stal", SoundEvent.RECORD_STAL, "item.record_stal.desc"),
+    DISK_STRAD("C418 - strad", SoundEvent.RECORD_STRAD, "item.record_strad.desc"),
+    DISK_WARD("C418 - ward", SoundEvent.RECORD_WARD, "item.record_ward.desc"),
+    DISK_11("C418 - 11", SoundEvent.RECORD_11, "item.record_11.desc"),
+    DISK_WAIT("C418 - wait", SoundEvent.RECORD_WAIT, "item.record_wait.desc"),
 }

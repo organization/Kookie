@@ -8,7 +8,7 @@
  *
  * A server software for Minecraft: Bedrock Edition
  *
- * Copyright (C) 2021 organization Team
+ * Copyright (C) 2021 - 2022 organization Team
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -17,7 +17,7 @@
  */
 package be.zvz.kookie.network.mcpe.protocol.types
 
-import be.zvz.kookie.network.mcpe.protocol.PacketDecodeException
+import be.zvz.kookie.network.mcpe.protocol.PacketHandlingException
 
 data class ScorePacketEntry @JvmOverloads constructor(
     val scoreboardId: Long,
@@ -35,9 +35,10 @@ data class ScorePacketEntry @JvmOverloads constructor(
 
         companion object {
             private val VALUES = values()
+
             @JvmStatic
             fun from(value: Int) = VALUES.firstOrNull { it.id == value }
-                ?: throw PacketDecodeException("Unhandled set score entry type $value!")
+                ?: throw PacketHandlingException("Unhandled set score entry type $value!")
         }
     }
 }

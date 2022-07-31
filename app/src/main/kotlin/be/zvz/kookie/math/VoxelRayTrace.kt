@@ -8,7 +8,7 @@
  *
  * A server software for Minecraft: Bedrock Edition
  *
- * Copyright (C) 2021 organization Team
+ * Copyright (C) 2021 - 2022 organization Team
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -22,11 +22,11 @@ import kotlin.math.floor
 object VoxelRayTrace {
 
     @JvmStatic
-    suspend fun inDirection(start: Vector3, directionVector: Vector3, maxDistance: Double) =
+    fun inDirection(start: Vector3, directionVector: Vector3, maxDistance: Double) =
         betweenPoints(start, start.add(directionVector.multiply(maxDistance)))
 
     @JvmStatic
-    suspend fun betweenPoints(start: Vector3, end: Vector3) = sequence {
+    fun betweenPoints(start: Vector3, end: Vector3) = sequence {
         var currentBlock = start.floor()
 
         val directionVector = end.subtract(start).normalize()

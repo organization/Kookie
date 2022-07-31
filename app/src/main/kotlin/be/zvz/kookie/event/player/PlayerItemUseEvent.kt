@@ -8,7 +8,7 @@
  *
  * A server software for Minecraft: Bedrock Edition
  *
- * Copyright (C) 2021 organization Team
+ * Copyright (C) 2021 - 2022 organization Team
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -17,8 +17,11 @@
  */
 package be.zvz.kookie.event.player
 
+import be.zvz.kookie.event.Cancellable
 import be.zvz.kookie.item.Item
 import be.zvz.kookie.math.Vector3
 import be.zvz.kookie.player.Player
 
-class PlayerItemUseEvent(player: Player, val item: Item, val directionVector: Vector3) : PlayerEvent(player)
+class PlayerItemUseEvent(player: Player, val item: Item, val directionVector: Vector3) : PlayerEvent(player), Cancellable {
+    override var isCancelled: Boolean = false
+}

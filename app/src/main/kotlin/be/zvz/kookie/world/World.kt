@@ -8,7 +8,7 @@
  *
  * A server software for Minecraft: Bedrock Edition
  *
- * Copyright (C) 2021 organization Team
+ * Copyright (C) 2021 - 2022 organization Team
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -43,9 +43,7 @@ import be.zvz.kookie.math.Facing
 import be.zvz.kookie.math.Morton2D
 import be.zvz.kookie.math.Morton3D
 import be.zvz.kookie.math.Vector3
-import be.zvz.kookie.network.mcpe.protocol.BlockActorDataPacket
-import be.zvz.kookie.network.mcpe.protocol.ClientboundPacket
-import be.zvz.kookie.network.mcpe.protocol.UpdateBlockPacket
+import be.zvz.kookie.nbt.tag.CompoundTag
 import be.zvz.kookie.player.Player
 import be.zvz.kookie.scheduler.AsyncPool
 import be.zvz.kookie.scheduler.AsyncTask
@@ -73,6 +71,11 @@ import com.koloboke.collect.map.hash.HashObjIntMaps
 import com.koloboke.collect.set.hash.HashIntSets
 import com.koloboke.collect.set.hash.HashLongSets
 import com.koloboke.collect.set.hash.HashObjSets
+import com.nukkitx.math.vector.Vector3i
+import com.nukkitx.nbt.NbtMap
+import com.nukkitx.protocol.bedrock.BedrockPacket
+import com.nukkitx.protocol.bedrock.packet.BlockEntityDataPacket
+import com.nukkitx.protocol.bedrock.packet.UpdateBlockPacket
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.util.LinkedList
@@ -103,7 +106,7 @@ class World(
 
     private val entityLastKnownPositions: MutableMap<EntityId, Vector3> = HashLongObjMaps.newMutableMap()
 
-    private val updateEntities: MutableMap<EntityId, Entity> = HashLongObjMaps.newMutableMap()
+    val updateEntities: MutableMap<EntityId, Entity> = HashLongObjMaps.newMutableMap()
     private var blockCache: MutableMap<ChunkHash, MutableMap<BlockHash, Block>> = HashLongObjMaps.newMutableMap()
 
     private var sendTimeTicker: Int = 0
@@ -134,7 +137,7 @@ class World(
     private val chunkListeners: MutableMap<ChunkHash, MutableSet<ChunkListener>> = HashLongObjMaps.newMutableMap()
     private val playerChunkListeners: MutableMap<ChunkHash, MutableSet<Player>> = HashLongObjMaps.newMutableMap()
 
-    private var packetBuffersByChunk: MutableMap<ChunkHash, MutableList<ClientboundPacket>> = HashLongObjMaps.newMutableMap()
+    private var packetBuffersByChunk: MutableMap<ChunkHash, MutableList<BedrockPacket>> = HashLongObjMaps.newMutableMap()
     private var unloadQueue: MutableMap<ChunkHash, Long> = HashLongLongMaps.newMutableMap()
 
     var time: Long = provider.worldData.time
@@ -271,7 +274,7 @@ class World(
 
     @JvmOverloads
     fun addSound(pos: Vector3, sound: Sound, players: List<Player>? = null) {
-        sound.encode(pos).takeIf(List<ClientboundPacket>::isNotEmpty)?.let {
+        sound.encode(pos).takeIf(List<BedrockPacket>::isNotEmpty)?.let {
             if (players === null) {
                 it.forEach { pk ->
                     broadcastPacketToViewers(pos, pk)
@@ -286,7 +289,7 @@ class World(
 
     @JvmOverloads
     fun addParticle(pos: Vector3, particle: Particle, players: List<Player>? = null) {
-        particle.encode(pos).takeIf(List<ClientboundPacket>::isNotEmpty)?.let {
+        particle.encode(pos).takeIf(List<BedrockPacket>::isNotEmpty)?.let {
             if (players === null) {
                 it.forEach { pk ->
                     broadcastPacketToViewers(pos, pk)
@@ -316,15 +319,15 @@ class World(
 
     /** @see broadcastPacketToViewers */
     @Deprecated("It has problem with the naming", ReplaceWith("broadcastPacketToViewers(chunkX, chunkZ)"))
-    fun broadcastPacketToPlayersUsingChunk(chunkX: Int, chunkZ: Int, packet: ClientboundPacket) {
+    fun broadcastPacketToPlayersUsingChunk(chunkX: Int, chunkZ: Int, packet: BedrockPacket) {
         broadcastPacketToViewers(chunkX, chunkZ, packet)
     }
 
-    fun broadcastPacketToViewers(pos: Vector3, packet: ClientboundPacket) {
+    fun broadcastPacketToViewers(pos: Vector3, packet: BedrockPacket) {
         packetBuffersByChunk.getOrPut(chunkHash(pos), ::mutableListOf).add(packet)
     }
 
-    fun broadcastPacketToViewers(chunkX: Int, chunkZ: Int, packet: ClientboundPacket) {
+    fun broadcastPacketToViewers(chunkX: Int, chunkZ: Int, packet: BedrockPacket) {
         packetBuffersByChunk.getOrPut(chunkHash(chunkX, chunkZ), ::mutableListOf).add(packet)
     }
 
@@ -560,29 +563,29 @@ class World(
         }
     }
 
-    fun createBlockUpdatePackets(blocks: List<Vector3>): List<ClientboundPacket> {
-        val packets = mutableListOf<ClientboundPacket>()
+    fun createBlockUpdatePackets(blocks: List<Vector3>): List<BedrockPacket> {
+        val packets = mutableListOf<BedrockPacket>()
 
         blocks.forEach { vec ->
             val fullBlock = getBlockAt(vec.floorX, vec.floorY, vec.floorZ)
             packets.add(
                 UpdateBlockPacket().apply {
-                    pos.x = vec.floorX
-                    pos.y = vec.floorY
-                    pos.z = vec.floorZ
-                    blockRuntimeId = 0 // TODO: RuntimeBlockMapping.getBlockRuntimeId(fullBlock.getFullId())
+                    blockPosition = Vector3i.ZERO.add(vec.floorX, vec.floorY, vec.floorZ)
+                    runtimeId = 0 // TODO: RuntimeBlockMapping.getBlockRuntimeId(fullBlock.getFullId())
                 }
             )
 
             val tile = getTileAt(vec.floorX, vec.floorY, vec.floorZ)
             if (tile is Spawnable) {
                 packets.add(
-                    BlockActorDataPacket.create(
-                        vec.floorX,
-                        vec.floorY,
-                        vec.floorZ,
-                        tile.serializedSpawnCompound
-                    )
+                    BlockEntityDataPacket().apply {
+                        blockPosition = Vector3i.ZERO.add(vec.floorX, vec.floorY, vec.floorZ)
+                        val builder = NbtMap.builder()
+                        (tile.serializedSpawnCompound.root as CompoundTag).value.forEach {
+                            builder[it.key] = it.value
+                        }
+                        data = builder.build()
+                    }
                 )
             }
         }
@@ -2259,6 +2262,8 @@ class World(
         fun chunkRange(x: Double, expansion: Float): IntRange = chunkRange(x, x, expansion)
         fun chunkRange(minX: Double, maxX: Double, expansion: Float): IntRange =
             ((minX - expansion).toInt() shr 4)..((maxX + expansion).toInt() shr 4)
+
+        fun getXZ(hash: Long): Pair<Int, Int> = Morton2D.decode(hash)
 
         inline fun chunkRepeat(pos: Vector3, expansion: Float, action: (Int, Int) -> Unit) {
             for (chunkX in chunkRange(pos.x, expansion)) {

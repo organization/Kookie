@@ -8,7 +8,7 @@
  *
  * A server software for Minecraft: Bedrock Edition
  *
- * Copyright (C) 2021 organization Team
+ * Copyright (C) 2021 - 2022 organization Team
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -18,6 +18,7 @@
 package be.zvz.kookie.entity
 
 import be.zvz.kookie.block.Block
+import be.zvz.kookie.block.VanillaBlocks
 import be.zvz.kookie.data.bedrock.EffectIdMap
 import be.zvz.kookie.entity.animation.DeathAnimation
 import be.zvz.kookie.entity.animation.HurtAnimation
@@ -25,8 +26,11 @@ import be.zvz.kookie.entity.animation.RespawnAnimation
 import be.zvz.kookie.entity.effect.EffectInstance
 import be.zvz.kookie.entity.effect.EffectManager
 import be.zvz.kookie.entity.effect.VanillaEffects
+import be.zvz.kookie.event.entity.EntityDamageEvent
+import be.zvz.kookie.event.entity.EntityDeathEvent
 import be.zvz.kookie.inventory.ArmorInventory
 import be.zvz.kookie.inventory.CallbackInventoryListener
+import be.zvz.kookie.item.Armor
 import be.zvz.kookie.item.Durable
 import be.zvz.kookie.item.Item
 import be.zvz.kookie.item.enchantment.Enchantment
@@ -39,13 +43,22 @@ import be.zvz.kookie.network.mcpe.protocol.types.entity.EntityMetadataCollection
 import be.zvz.kookie.network.mcpe.protocol.types.entity.EntityMetadataFlags
 import be.zvz.kookie.network.mcpe.protocol.types.entity.EntityMetadataProperties
 import be.zvz.kookie.player.Player
+import be.zvz.kookie.timings.Timings
 import be.zvz.kookie.utils.Binary
+import be.zvz.kookie.world.sound.EntityLandSound
+import be.zvz.kookie.world.sound.EntityLongFallSound
+import be.zvz.kookie.world.sound.EntityShortFallSound
 import kotlin.math.ceil
 import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.sqrt
 
-abstract class Living(location: Location) : Entity(location) {
+typealias KookieMath = be.zvz.kookie.math.Math
+
+abstract class Living @JvmOverloads constructor(
+    location: Location,
+    nbt: CompoundTag? = null
+) : Entity(location, nbt) {
     override val gravity: Float = 0.08F
     override val drag: Float = 0.02F
 
@@ -249,30 +262,51 @@ abstract class Living(location: Location) : Entity(location) {
         }
     }
 
+    open fun calculateFallDamage(fallDistance: Float): Float {
+        return ceil(fallDistance - 3 - (effectManager.get(VanillaEffects.JUMP_BOOST.effect)?.effectLevel ?: 0))
+    }
+
+    open fun onHitGround(): Float? {
+        var fallBlockPos = location.floor()
+        var fallBlock = world.getBlock(fallBlockPos)
+        if (fallBlock.collisionBoxes.isEmpty()) {
+            fallBlockPos = fallBlockPos.down()
+            fallBlock = world.getBlock(fallBlockPos)
+        }
+        val newVerticalVelocity = fallBlock.onEntityLand(this)
+
+        val damage = calculateFallDamage(fallDistance)
+        if (damage > 0) {
+            val ev = EntityDamageEvent(this, EntityDamageEvent.Type.FALL, damage)
+            attack(ev)
+
+            broadcastSound(if (damage > 4) EntityLongFallSound(this) else EntityShortFallSound(this))
+        } else if (fallBlock.getId() != /*BlockLegacyIds.AIR.id*/0) {
+            broadcastSound(EntityLandSound(this, fallBlock))
+        }
+        return newVerticalVelocity
+    }
+
     override fun fall(fallDistance: Float) {
         val jumpBoost = effectManager.get(VanillaEffects.JUMP_BOOST.effect)
         val damage = ceil(fallDistance - 3 - (jumpBoost?.effectLevel ?: 0))
         if (damage > 0) {
-            /** TODO: Implements after implemented EntityDamageEvent
-             * val ev = EntityDamageEvent(this, EntityDamageEvent.CAUSE_FALL, damage)
-             * attack(ev)
-             *
-             * broadcastSound(
-             *     if (damage > 4) EntityLongFallSound(this) else EntityShortFallSound(this)
-             * )
-             */
+            val ev = EntityDamageEvent(this, EntityDamageEvent.Type.FALL, damage)
+            attack(ev)
+
+            broadcastSound(
+                if (damage > 4) EntityLongFallSound(this) else EntityShortFallSound(this)
+            )
         } else {
-            /** TODO: Implements after implemented World methods
-             * var fallBlockPos = location.floor()
-             * var fallBlock = world.getBlockAt(fallBlockPos)
-             * if (fallBlock.getId() == VanillaBlocks.AIR.id) {
-             *     fallBlockPos = fallBlockPos.subtract(0, 1, 0)
-             *     fallBlock = world.getBlock(fallBlockPos)
-             * }
-             * if (fallBlock.getId() != VanillaBlocks.AIR.id) {
-             *     broadcastSound(EntityLandSound(this, fallBlock))
-             * }
-             */
+            var fallBlockPos = location.floor()
+            var fallBlock = world.getBlock(fallBlockPos)
+            if (fallBlock.getId() == VanillaBlocks.AIR.id) {
+                fallBlockPos = fallBlockPos.subtract(0, 1, 0)
+                fallBlock = world.getBlock(fallBlockPos)
+            }
+            if (fallBlock.getId() != VanillaBlocks.AIR.id) {
+                broadcastSound(EntityLandSound(this, fallBlock))
+            }
         }
     }
 
@@ -303,20 +337,58 @@ abstract class Living(location: Location) : Entity(location) {
         )
     }
 
-    open fun applyDamageModifiers(source: Any) {
-        // TODO
+    open fun applyDamageModifiers(source: EntityDamageEvent) {
+        if (lastDamageCause != null && attackTime > 0) {
+            if (lastDamageCause!!.baseDamage >= source.baseDamage) {
+                source.isCancelled = true
+            }
+            source.modifiers[EntityDamageEvent.ModifierType.PREVIOUS_DAMAGE_COOLDOWN] = -lastDamageCause!!.baseDamage
+        }
+        if (source.canBeReducedByArmor()) {
+            source.modifiers[EntityDamageEvent.ModifierType.ARMOR] = -source.getFinalDamage() * getArmorPoints() * 0.04F
+        }
+
+        val cause = source.cause
+
+        val resistance = effectManager.get(VanillaEffects.RESISTANCE.effect)
+        if (resistance != null && cause != EntityDamageEvent.Type.VOID && cause != EntityDamageEvent.Type.SUICIDE) {
+            source.modifiers[EntityDamageEvent.ModifierType.RESISTANCE] =
+                (-source.getFinalDamage() * min(1.0, 0.2 * resistance.effectLevel)).toFloat()
+        }
+
+        var totalEpf = 0
+        armorInventory.getContents().forEach { (slot, item) ->
+            if (item is Armor) {
+                totalEpf += item.getEnchantmentProtectionFactor(source)
+            }
+        }
+        source.modifiers[EntityDamageEvent.ModifierType.ARMOR_ENCHANTMENTS] =
+            (
+                -source.getFinalDamage() * min(
+                    ceil(
+                        min(totalEpf, 25) * (
+                            KookieMath.random(
+                                50,
+                                100
+                            ) / 100
+                            ).toDouble()
+                    ),
+                    20.0
+                ) * 0.04
+                ).toFloat()
+        source.modifiers[EntityDamageEvent.ModifierType.ABSORPTION] = -min(getAbsorption(), source.getFinalDamage())
     }
 
     open fun applyPostDamageEffects(source: Any) {
-        // TODO
+// TODO
     }
 
     open fun damageItem(item: Durable, durabilityRemoved: Int) {
         item.applyDamage(durabilityRemoved)
     }
 
-    override fun attack(source: Any) {
-        // TODO: implement attack()
+    override fun attack(source: EntityDamageEvent) {
+// TODO: implement attack()
     }
 
     open fun doHitAnimation() {
@@ -348,17 +420,13 @@ abstract class Living(location: Location) : Entity(location) {
     }
 
     override fun onDeath() {
-        /** TODO: Implements after implemented EntityDeathEvent
-         * $ev = new EntityDeathEvent($this, $this->getDrops(), $this->getXpDropAmount());
-         * $ev->call();
-         * foreach($ev->getDrops() as $item){
-         *     $this->getWorld()->dropItem($this->location, $item);
-         * }
-         * //TODO: check death conditions (must have been damaged by player < 5 seconds from death)
-         * $this->getWorld()->dropExperience($this->location, $ev->getXpDropAmount());
-         *
-         * $this->startDeathAnimation();
-         */
+        val ev = EntityDeathEvent(this, getDrops().toMutableList(), getXpDropAmount())
+        ev.call()
+        ev.drops.forEach {
+            world.dropItem(location, it)
+        }
+        world.dropExperience(location, ev.xp)
+        startDeathAnimation()
     }
 
     override fun onDeathUpdate(tickDiff: Long): Boolean {
@@ -380,7 +448,7 @@ abstract class Living(location: Location) : Entity(location) {
     }
 
     override fun entityBaseTick(tickDiff: Long): Boolean {
-        // TODO: Timings.livingEntityBaseTick.startTiming()
+        Timings.livingEntityBaseTick.startTiming()
         var hasUpdate = super.entityBaseTick(tickDiff)
         if (isAlive()) {
             if (effectManager.tick(tickDiff)) {
@@ -400,7 +468,7 @@ abstract class Living(location: Location) : Entity(location) {
             attackTime -= tickDiff
         }
 
-        // TODO: Timings.livingEntityBaseTick.stopTiming()
+        Timings.livingEntityBaseTick.stopTiming()
         return hasUpdate
     }
 
@@ -410,7 +478,8 @@ abstract class Living(location: Location) : Entity(location) {
         if (!canBreath()) {
             breathing = false
 
-            val respirationLevel = armorInventory.getHelmet().getEnchantmentLevel(VanillaEnchantments.RESPIRATION.enchantment)
+            val respirationLevel =
+                armorInventory.getHelmet().getEnchantmentLevel(VanillaEnchantments.RESPIRATION.enchantment)
             if (respirationLevel <= 0 || Math.random() <= (1 / respirationLevel + 1)) {
                 ticks -= tickDiff
                 if (ticks <= -20) {
@@ -442,16 +511,18 @@ abstract class Living(location: Location) : Entity(location) {
     open fun isBreathing(): Boolean = breathing
 
     open fun onAirExpired() {
-        /** TODO: Implements after implemented EntityDamageEvent
-         * attack(EntityDamageEvent(this, EntityDamageEvent.CAUSE_DROWNING, 2))
-         */
+        attack(EntityDamageEvent(this, EntityDamageEvent.Type.DROWNING, 2))
     }
 
     open fun getDrops(): List<Item> = listOf()
 
     open fun getXpDropAmount(): Int = 0
 
-    open suspend fun getLineOfSight(maxDistance: Int, maxLength: Int = 0, transparent: Map<Int, Boolean>): MutableList<Block> {
+    open suspend fun getLineOfSight(
+        maxDistance: Int,
+        maxLength: Int = 0,
+        transparent: Map<Int, Boolean>
+    ): MutableList<Block> {
         var maxDistance = maxDistance
         if (maxDistance > 120) {
             maxDistance = 120
@@ -465,27 +536,25 @@ abstract class Living(location: Location) : Entity(location) {
             getDirectionVector(),
             maxDistance.toDouble()
         ).forEach {
-            /** TODO: Implements after implemented World methods
-             * val block = world.getBlockAt(it.x, it.y, it.z)
-             * blocks[nextIndex++] = block
-             *
-             * if (maxLength != 0 && blocks.size > maxLength) {
-             *     blocks.removeFirst()
-             *     --nextIndex
-             * }
-             *
-             * val id = block.getId()
-             *
-             * if (transparent.isEmpty()) {
-             *     if (id != 0){
-             *         return@forEach
-             *     }
-             * } else {
-             *     if (!transparent.containsKey(id)){
-             *         return@forEach
-             *     }
-             * }
-             */
+            val block = world.getBlock(it)
+            blocks[nextIndex++] = block
+
+            if (maxLength != 0 && blocks.size > maxLength) {
+                blocks.removeFirst()
+                --nextIndex
+            }
+
+            val id = block.getId()
+
+            if (transparent.isEmpty()) {
+                if (id != 0) {
+                    return@forEach
+                }
+            } else {
+                if (!transparent.containsKey(id)) {
+                    return@forEach
+                }
+            }
         }
         return blocks
     }

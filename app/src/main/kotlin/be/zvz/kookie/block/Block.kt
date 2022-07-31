@@ -8,7 +8,7 @@
  *
  * A server software for Minecraft: Bedrock Edition
  *
- * Copyright (C) 2021 organization Team
+ * Copyright (C) 2021 - 2022 organization Team
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -20,6 +20,7 @@ package be.zvz.kookie.block
 import be.zvz.kookie.block.tile.Spawnable
 import be.zvz.kookie.block.tile.Tile
 import be.zvz.kookie.entity.Entity
+import be.zvz.kookie.entity.Living
 import be.zvz.kookie.item.Item
 import be.zvz.kookie.item.ItemFactory
 import be.zvz.kookie.item.enchantment.VanillaEnchantments
@@ -361,6 +362,8 @@ open class Block(val idInfo: BlockIdentifier, val name: String, val breakInfo: B
             }
         return currentHit
     }
+
+    open fun onEntityLand(living: Living): Float? = null
 
     companion object {
         const val INTERNAL_METADATA_BITS = 4

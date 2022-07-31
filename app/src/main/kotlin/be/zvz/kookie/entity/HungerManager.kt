@@ -8,7 +8,7 @@
  *
  * A server software for Minecraft: Bedrock Edition
  *
- * Copyright (C) 2021 organization Team
+ * Copyright (C) 2021 - 2022 organization Team
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -17,6 +17,7 @@
  */
 package be.zvz.kookie.entity
 
+import be.zvz.kookie.event.player.PlayerExhaustEvent
 import kotlin.math.max
 import kotlin.math.min
 
@@ -73,18 +74,17 @@ class HungerManager(private val entity: Human) {
         exhauseAttr.setValue(amount)
     }
 
-    fun exhaust(amount: Float, cause: Int = 0): Float {
+    @JvmOverloads
+    fun exhaust(amount: Float, cause: PlayerExhaustEvent.Type = PlayerExhaustEvent.Type.WALKING): Float {
         if (!enabled) {
             return 0F
         }
-        /*
-        TODO:
+
         val ev = PlayerExhaustEvent(entity, amount, cause)
         ev.call()
-        if (ev.isCancelled()) {
-        return 0F
+        if (ev.isCancelled) {
+            return 0F
         }
-         */
         var exhaustion = getExhaustion()
         // TODO: exhaustion += ev.getAmount()
         // TODO: replace exhaustion += amount to ev.getAmount()

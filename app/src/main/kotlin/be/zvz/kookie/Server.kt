@@ -8,7 +8,7 @@
  *
  * A server software for Minecraft: Bedrock Edition
  *
- * Copyright (C) 2021 organization Team
+ * Copyright (C) 2021 - 2022 organization Team
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -25,6 +25,7 @@ import be.zvz.kookie.console.brightCyan
 import be.zvz.kookie.constant.CorePaths
 import be.zvz.kookie.constant.FilePermission
 import be.zvz.kookie.crafting.CraftingManager
+import be.zvz.kookie.event.player.PlayerLoginEvent
 import be.zvz.kookie.event.server.CommandEvent
 import be.zvz.kookie.event.server.DataPacketSendEvent
 import be.zvz.kookie.event.server.QueryRegenerateEvent
@@ -34,13 +35,9 @@ import be.zvz.kookie.lang.TranslationContainer
 import be.zvz.kookie.nbt.tag.CompoundTag
 import be.zvz.kookie.network.Network
 import be.zvz.kookie.network.mcpe.NetworkSession
+import be.zvz.kookie.network.mcpe.NetworkSessionManager
 import be.zvz.kookie.network.mcpe.PacketBroadcaster
-import be.zvz.kookie.network.mcpe.compression.CompressBatchPromise
-import be.zvz.kookie.network.mcpe.compression.Compressor
-import be.zvz.kookie.network.mcpe.protocol.ClientboundPacket
-import be.zvz.kookie.network.mcpe.protocol.ProtocolInfo
-import be.zvz.kookie.network.mcpe.protocol.serializer.PacketBatch
-import be.zvz.kookie.network.mcpe.raklib.RakLibInterface
+import be.zvz.kookie.network.mcpe.convert.TypeConverter
 import be.zvz.kookie.network.query.QueryInfo
 import be.zvz.kookie.permission.BanList
 import be.zvz.kookie.permission.DefaultPermissions
@@ -51,7 +48,6 @@ import be.zvz.kookie.plugin.PluginEnableOrder
 import be.zvz.kookie.plugin.PluginManager
 import be.zvz.kookie.plugin.PluginOwned
 import be.zvz.kookie.scheduler.AsyncPool
-import be.zvz.kookie.scheduler.AsyncTask
 import be.zvz.kookie.timings.Timings
 import be.zvz.kookie.timings.TimingsHandler
 import be.zvz.kookie.utils.Config
@@ -65,6 +61,12 @@ import be.zvz.kookie.world.WorldManager
 import ch.qos.logback.classic.Logger
 import com.koloboke.collect.map.hash.HashObjObjMaps
 import com.koloboke.collect.set.hash.HashObjSets
+import com.nukkitx.protocol.bedrock.BedrockPacket
+import com.nukkitx.protocol.bedrock.BedrockPong
+import com.nukkitx.protocol.bedrock.BedrockServer
+import com.nukkitx.protocol.bedrock.BedrockServerEventHandler
+import com.nukkitx.protocol.bedrock.BedrockServerSession
+import com.nukkitx.protocol.bedrock.v475.Bedrock_v475
 import org.apache.commons.io.IOUtils
 import org.slf4j.LoggerFactory
 import java.io.BufferedOutputStream
@@ -84,7 +86,7 @@ class Server(dataPath: Path, pluginPath: Path) {
     val name: String get() = VersionInfo.NAME
     val kookieVersion: String = TODO()
     val apiVersion: String get() = VersionInfo.BASE_VERSION
-    val version: String get() = ProtocolInfo.MINECRAFT_VERSION_NETWORK
+    val version: String get() = currentVersion.minecraftVersion
 
     val ip: String get() = configGroup.getConfigString("server-ip", "0.0.0.0").takeIf { it.isNotBlank() } ?: "0.0.0.0"
     val port: Int get() = configGroup.getConfigLong("server-port", 19132).toInt()
@@ -197,6 +199,10 @@ class Server(dataPath: Path, pluginPath: Path) {
     private val playerList: MutableMap<UUID, Player> = HashObjObjMaps.newMutableMap()
 
     private val broadcastSubscribers: MutableMap<String, MutableSet<CommandSender>> = HashObjObjMaps.newMutableMap()
+
+    private val bedrockServer: BedrockServer
+
+    val sessionManager: NetworkSessionManager = NetworkSessionManager()
 
     init {
         instance = this
@@ -317,17 +323,55 @@ class Server(dataPath: Path, pluginPath: Path) {
             }
         }
 
-        network.addInterface(
-            RakLibInterface(
-                this,
-                network.getSessionManager(),
-                InetSocketAddress("0.0.0.0", configGroup.getConfigLong("server-port").toInt())
-            )
-        )
+        bedrockServer = BedrockServer(InetSocketAddress("0.0.0.0", port))
+        bedrockServer.bind().whenComplete { _, throwable ->
+            if (throwable != null) {
+                logger.error("Failed to start server")
+                throwable.printStackTrace()
+                return@whenComplete
+            }
+        }
+
+        bedrockServer.handler = object : BedrockServerEventHandler {
+
+            override fun onConnectionRequest(address: InetSocketAddress): Boolean {
+                return true // TODO: check IP bans
+            }
+
+            override fun onQuery(address: InetSocketAddress): BedrockPong {
+                val pong = BedrockPong()
+                pong.edition = "MCPE"
+                pong.motd = motd
+                pong.protocolVersion = currentVersion.protocolVersion
+                pong.version = currentVersion.minecraftVersion
+                pong.gameType = TypeConverter.protocolGameModeName(GameMode.SURVIVAL) // TODO
+                pong.playerCount = playerList.size
+                pong.maximumPlayerCount = maxPlayers
+                /*
+                val plugins: MutableList<String> = mutableListOf()
+                val extraData: MutableMap<String, String> = mutableMapOf()
+                extraData.put("spliitnum", 0x128.toChar().toString())
+                extraData.put("hostname", motd) // TODO: Server Name
+                extraData.put("gametype", TypeConverter.protocolGameModeName(GameMode.SURVIVAL)) // TODO
+                extraData.put("game_id", "MINECRAFTPE")
+                extraData.put("version", currentVersion.minecraftVersion)
+                extraData.put("server_engine", )
+                extraData.put("plugins", )
+                 */
+                // TODO
+                return pong
+            }
+
+            override fun onSessionCreation(serverSession: BedrockServerSession) {
+                sessionManager.add(
+                    NetworkSession(this@Server, sessionManager, serverSession)
+                )
+            }
+        }
 
         language.translateString(
             KnownTranslationKeys.POCKETMINE_SERVER_START,
-            listOf(ProtocolInfo.MINECRAFT_VERSION_NETWORK.brightCyan())
+            listOf(currentVersion.minecraftVersion.brightCyan())
         )
 
         thread(isDaemon = true, name = "${VersionInfo.NAME}-console") {
@@ -337,7 +381,7 @@ class Server(dataPath: Path, pluginPath: Path) {
         asyncPool = AsyncPool(
             configGroup.getProperty("settings.async-workers").text().run {
                 var poolSize = 2
-                if (this ?: "auto" == "auto") {
+                if ((this ?: "auto") == "auto") {
                     val processors = Runtime.getRuntime().availableProcessors() - 2
 
                     if (processors > 0) {
@@ -450,7 +494,8 @@ class Server(dataPath: Path, pluginPath: Path) {
         }
     }
 
-    fun isWhitelisted(username: String): Boolean = !hasWhiteList || isOp(username) || whitelist.exists(username.lowercase())
+    fun isWhitelisted(username: String): Boolean =
+        !hasWhiteList || isOp(username) || whitelist.exists(username.lowercase())
 
     /**
      * Subscribes to a particular message broadcast channel.
@@ -531,7 +576,7 @@ class Server(dataPath: Path, pluginPath: Path) {
         return recipients.size
     }
 
-    fun broadcastPackets(players: List<Player>, packets: List<ClientboundPacket>): Boolean {
+    fun broadcastPackets(players: List<Player>, packets: List<BedrockPacket>): Boolean {
         if (players.isEmpty() || packets.isEmpty()) return true
 
         Timings.broadcastPackets.time {
@@ -541,7 +586,8 @@ class Server(dataPath: Path, pluginPath: Path) {
                 return false
             }
 
-            val broadcasterTargets: MutableMap<PacketBroadcaster, MutableList<NetworkSession>> = HashObjObjMaps.newMutableMap()
+            val broadcasterTargets: MutableMap<PacketBroadcaster, MutableList<NetworkSession>> =
+                HashObjObjMaps.newMutableMap()
             ev.targets.forEach { recipient ->
                 /** TODO: Implements after implementing NetworkSession::getBroadcaster()
                  * val broadcaster = recipient.getBroadcaster()
@@ -553,32 +599,6 @@ class Server(dataPath: Path, pluginPath: Path) {
             }
 
             return true
-        }
-    }
-
-    /** Broadcasts a list of packets in a batch to a list of players */
-    fun prepareBatch(stream: PacketBatch, compressor: Compressor, sync: Boolean? = null): CompressBatchPromise {
-        try {
-            Timings.playerNetworkSendCompress.startTiming()
-
-            val buffer = stream.getBuffer()
-            val promise = CompressBatchPromise()
-            if (!(sync ?: !(networkCompressionAsync && compressor.willCompress(buffer)))) {
-                asyncPool.submit(
-                    AsyncTask(
-                        {
-                            promise.resolve(compressor.compress(buffer))
-                        },
-                        Unit
-                    )
-                )
-            } else {
-                promise.resolve(compressor.compress(buffer))
-            }
-
-            return promise
-        } finally {
-            Timings.playerNetworkSendCompress.stopTiming()
         }
     }
 
@@ -632,7 +652,31 @@ class Server(dataPath: Path, pluginPath: Path) {
         }
     }
 
-    fun addOnlinePlayer(player: Player) {
+    fun addOnlinePlayer(player: Player): Boolean {
+        val ev = PlayerLoginEvent(player, "Plugin reason")
+        ev.call()
+        if (ev.isCancelled /* TODO: || !player.isConnected() */) {
+            // TODO:  player.disconnect(ev.kickMessage)
+            return false
+        }
+
+        val session = player.networkSession
+        val position = player.getPosition()
+        logger.info(
+            language.translateString(
+                KnownTranslationKeys.POCKETMINE_PLAYER_LOGIN,
+                listOf(
+                    TextFormat.AQUA + player.name + TextFormat.WHITE,
+                    session.ip,
+                    session.port.toString(),
+                    player.getId().toString(),
+                    position.world!!.displayName,
+                    position.floorX.toString(),
+                    position.floorY.toString(),
+                    position.floorZ.toString()
+                )
+            )
+        )
         playerList.values.forEach {
             /** TODO: Implements after implementing NetworkSession::onPlayerAdded()
              * it.networkSession.onPlayerAdded(player)
@@ -642,6 +686,7 @@ class Server(dataPath: Path, pluginPath: Path) {
         if (sendUsageTicker > 0) {
             uniquePlayers.add(player.uuid)
         }
+        return true
     }
 
     fun removeOnlinePlayer(player: Player) {
@@ -668,7 +713,7 @@ class Server(dataPath: Path, pluginPath: Path) {
             return
         }
 
-        // TODO: Timings.serverTick.startTiming()
+        Timings.serverTick.startTiming()
 
         ++tickCounter
 
@@ -676,15 +721,15 @@ class Server(dataPath: Path, pluginPath: Path) {
         // TODO: pluginManager.tickSchedulers()
         Timings.schedulerSync.startTiming()
 
-        // TODO: Timings.schedulerAsync.startTiming()
+        Timings.schedulerAsync.startTiming()
         // TODO: asyncPool.collectTasks()
-        // TODO: Timings.schedulerAsync.stopTiming()
+        Timings.schedulerAsync.stopTiming()
 
-        // TODO: worldManager.tick(tickCounter)
+        worldManager.tick(tickCounter)
 
-        // TODO: Timings.connection.startTiming()
+        Timings.connection.startTiming()
         // TODO: network.tick()
-        // TODO: Timings.connection.stopTiming()
+        Timings.connection.stopTiming()
         if ((tickCounter % 20) == 0L) {
             if (doTitleTick) {
                 titleTick()
@@ -706,13 +751,9 @@ class Server(dataPath: Path, pluginPath: Path) {
         }
 
         if ((tickCounter % 100) == 0L) {
-            /*
-            TODO:
-            worldManager.worlds.forEach {
-                it.clearCache()
+            worldManager.worlds.forEach { (_, world) ->
+                world.clearCache()
             }
-
-             */
 
             if (ticksPerSecondAverage < 12) {
                 logger.warn(language.translateString("pocketmine.server.tickOverload"))
@@ -721,7 +762,7 @@ class Server(dataPath: Path, pluginPath: Path) {
 
         memoryManager.check()
 
-        // TODO: Timings.serverTick.stopTiming()
+        Timings.serverTick.stopTiming()
 
         val now = System.currentTimeMillis()
 
@@ -748,5 +789,7 @@ class Server(dataPath: Path, pluginPath: Path) {
 
         @JvmStatic
         lateinit var instance: Server
+
+        val currentVersion = Bedrock_v475.V475_CODEC
     }
 }
