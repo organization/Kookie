@@ -22,7 +22,7 @@ import org.jmailen.gradle.kotlinter.tasks.LintTask
 
 plugins {
     // Apply the org.jetbrains.kotlin.jvm Plugin to add support for Kotlin.
-    kotlin("jvm") version "1.7.10"
+    kotlin("jvm") version "1.7.20"
 
     // Apply the application plugin to add support for building a CLI application in Java.
     application
