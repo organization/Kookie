@@ -8,7 +8,7 @@
  *
  * A server software for Minecraft: Bedrock Edition
  *
- * Copyright (C) 2021 organization Team
+ * Copyright (C) 2021 - 2022 organization Team
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -17,13 +17,13 @@
  */
 package be.zvz.kookie.network.mcpe.protocol.types.recipe
 
-import be.zvz.kookie.network.mcpe.protocol.CraftingDataPacket
 import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 import be.zvz.kookie.network.mcpe.protocol.types.inventory.ItemStackWrapper
+import com.nukkitx.protocol.bedrock.data.inventory.CraftingDataType
 import java.util.UUID
 
 abstract class CraftRecipe<I>(
-    type: CraftingDataPacket.Entry,
+    type: CraftingDataType,
     val recipeId: String,
     val inputs: I,
     val outputs: List<ItemStackWrapper>,
@@ -52,10 +52,10 @@ abstract class CraftRecipe<I>(
     companion object {
         @JvmStatic
         protected fun <I, T> decodeWith(
-            type: CraftingDataPacket.Entry,
+            type: CraftingDataType,
             input: PacketSerializer,
             inputsDecoder: () -> I,
-            constructor: (CraftingDataPacket.Entry, String, I, List<ItemStackWrapper>, UUID, String, Int, Int) -> T
+            constructor: (CraftingDataType, String, I, List<ItemStackWrapper>, UUID, String, Int, Int) -> T
         ): T {
             val recipeId = input.getString()
             val inputs = inputsDecoder()

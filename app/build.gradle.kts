@@ -8,7 +8,7 @@
  *
  * A server software for Minecraft: Bedrock Edition
  *
- * Copyright (C) 2021 organization Team
+ * Copyright (C) 2021 - 2022 organization Team
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -35,6 +35,8 @@ plugins {
 
 val tag = System.getenv("VERSION_TAG") ?: "SNAPSHOT"
 
+val protocolVer = 475 // 1.18
+
 group = "be.zvz"
 version = "0.0.1-$tag"
 java.sourceCompatibility = JavaVersion.VERSION_1_8
@@ -49,6 +51,14 @@ repositories {
     maven {
         name = "powernukkit-snapshots"
         url = uri("https://oss.sonatype.org/content/repositories/snapshots")
+    }
+    maven {
+        name = "nukkitx-repo-release"
+        url = uri("https://repo.nukkitx.com/maven-releases/")
+    }
+    maven {
+        name = "nukkitx-repo-snapshots"
+        url = uri("https://repo.nukkitx.com/maven-snapshots/")
     }
     maven {
         name = "jitpack"
@@ -113,6 +123,9 @@ dependencies {
     runtimeOnly(group = "io.jsonwebtoken", name = "jjwt-impl", version = "0.11.5")
     runtimeOnly(group = "io.jsonwebtoken", name = "jjwt-jackson", version = "0.11.5")
     implementation(group = "org.whispersystems", name = "curve25519-java", version = "0.5.0")
+
+    // Bedrock Protocol
+    implementation(group = "org.powernukkit.bedrock.protocol", name = "bedrock-v$protocolVer", version = "2.9.4-PN-SNAPSHOT")
 
     // Use the Kotlin test library.
     testImplementation(group = "org.jetbrains.kotlin", name = "kotlin-test")

@@ -8,7 +8,7 @@
  *
  * A server software for Minecraft: Bedrock Edition
  *
- * Copyright (C) 2021 organization Team
+ * Copyright (C) 2021 - 2022 organization Team
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -17,6 +17,8 @@
  */
 package be.zvz.kookie.entity
 
+import be.zvz.kookie.event.entity.EntityDamageEvent
+import be.zvz.kookie.event.player.PlayerExhaustEvent
 import be.zvz.kookie.inventory.CallbackInventoryListener
 import be.zvz.kookie.inventory.PlayerEnderInventory
 import be.zvz.kookie.inventory.PlayerInventory
@@ -32,20 +34,17 @@ import be.zvz.kookie.nbt.tag.IntTag
 import be.zvz.kookie.nbt.tag.ListTag
 import be.zvz.kookie.nbt.tag.StringTag
 import be.zvz.kookie.network.mcpe.convert.SkinAdapterSingleton
-import be.zvz.kookie.network.mcpe.convert.TypeConverter
-import be.zvz.kookie.network.mcpe.protocol.AddPlayerPacket
-import be.zvz.kookie.network.mcpe.protocol.PlayerListPacket
-import be.zvz.kookie.network.mcpe.protocol.types.PlayerListEntry
 import be.zvz.kookie.network.mcpe.protocol.types.entity.EntityIds
-import be.zvz.kookie.network.mcpe.protocol.types.entity.EntityMetadataProperties
-import be.zvz.kookie.network.mcpe.protocol.types.entity.StringMetadataProperty
-import be.zvz.kookie.network.mcpe.protocol.types.inventory.ItemStackWrapper
 import be.zvz.kookie.player.Player
 import java.nio.charset.StandardCharsets
 import java.util.UUID
 import kotlin.math.min
 
-open class Human(var skin: Skin, location: Location) : Living(location) {
+open class Human @JvmOverloads constructor(
+    var skin: Skin,
+    location: Location,
+    nbt: CompoundTag? = null
+) : Living(location, nbt) {
 
     override val entityNetworkIdentifier = EntityIds.PLAYER
 
@@ -66,7 +65,7 @@ open class Human(var skin: Skin, location: Location) : Living(location) {
 
     var xpSeed: Int = 0
 
-    fun sendSkin(targets: List<Player>) {
+    open fun sendSkin(targets: List<Player>) {
         /* TODO: server.broadcastPackets
         server.broadcastPackets(
             targets.ifEmpty {
@@ -80,9 +79,9 @@ open class Human(var skin: Skin, location: Location) : Living(location) {
     override fun jump() {
         super.jump()
         if (isSprinting()) {
-            hungerManager.exhaust(0.8F, 10)
+            hungerManager.exhaust(0.8F, PlayerExhaustEvent.Type.SPRINT_JUMPING)
         } else {
-            hungerManager.exhaust(0.2F, 9)
+            hungerManager.exhaust(0.2F, PlayerExhaustEvent.Type.JUMPING)
         }
     }
 
@@ -105,7 +104,7 @@ open class Human(var skin: Skin, location: Location) : Living(location) {
         return min(100, 7 * xpManager.getXpLevel())
     }
 
-    fun initHumanData(nbt: CompoundTag) {
+    open fun initHumanData(nbt: CompoundTag) {
         val nameTag = nbt.getTag("NameTag")
         if (nameTag is StringTag) {
             this.nameTag = nameTag.value
@@ -217,7 +216,7 @@ open class Human(var skin: Skin, location: Location) : Living(location) {
         return hasUpdate
     }
 
-    override fun applyDamageModifiers(source: Any) {
+    override fun applyDamageModifiers(source: EntityDamageEvent) {
         super.applyDamageModifiers(source)
         // TODO
     }
@@ -307,20 +306,24 @@ open class Human(var skin: Skin, location: Location) : Living(location) {
 
     override fun sendSpawnPacket(player: Player) {
         if (this !is Player) {
+            val curSkin = skin
             player.networkSession.sendDataPacket(
-                PlayerListPacket.add(
+                com.nukkitx.protocol.bedrock.packet.PlayerListPacket().apply {
                     listOf(
-                        PlayerListEntry.createAdditionEntry(
-                            uuid,
-                            getId(),
-                            nameTag,
-                            SkinAdapterSingleton.adapter!!.toSkinData(skin)
-                        )
+                        com.nukkitx.protocol.bedrock.packet.PlayerListPacket.Entry(uuid).apply {
+                            val skinData = SkinAdapterSingleton.adapter!!.toSkinData(curSkin)
+                            skin = SkinAdapterSingleton.adapter!!.toSerializedSkinData(skinData)
+                            entityId = getId()
+                            name = nameTag
+                            xuid = ""
+                        }
                     )
-                )
+                }
             )
         }
         if (this !is Player) {
+            /*
+            TODO
             player.networkSession.sendDataPacket(
                 AddPlayerPacket().also {
                     it.uuid = uuid
@@ -342,6 +345,8 @@ open class Human(var skin: Skin, location: Location) : Living(location) {
                     // TODO: player.networkSession.onMobOffHandItemChange(this)
                 }
             )
+
+             */
         }
     }
 

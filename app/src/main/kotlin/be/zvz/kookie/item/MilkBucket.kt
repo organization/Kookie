@@ -8,7 +8,7 @@
  *
  * A server software for Minecraft: Bedrock Edition
  *
- * Copyright (C) 2021 organization Team
+ * Copyright (C) 2021 - 2022 organization Team
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -19,6 +19,7 @@ package be.zvz.kookie.item
 
 import be.zvz.kookie.entity.Living
 import be.zvz.kookie.entity.effect.EffectInstance
+import be.zvz.kookie.player.Player
 
 class MilkBucket(identifier: ItemIdentifier, name: String) : Item(identifier, name), ConsumableItem {
     override val maxStackSize: Int = 1
@@ -28,5 +29,9 @@ class MilkBucket(identifier: ItemIdentifier, name: String) : Item(identifier, na
 
     override fun onConsume(consumer: Living) {
         consumer.getEffects().clear()
+    }
+
+    override fun canStartUsingItem(player: Player): Boolean {
+        TODO("Not yet implemented")
     }
 }

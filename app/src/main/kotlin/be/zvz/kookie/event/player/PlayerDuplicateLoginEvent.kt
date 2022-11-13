@@ -8,7 +8,7 @@
  *
  * A server software for Minecraft: Bedrock Edition
  *
- * Copyright (C) 2021 organization Team
+ * Copyright (C) 2021 - 2022 organization Team
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -17,9 +17,14 @@
  */
 package be.zvz.kookie.event.player
 
+import be.zvz.kookie.event.Cancellable
 import be.zvz.kookie.event.Event
 import be.zvz.kookie.network.mcpe.NetworkSession
 
-class PlayerDuplicateLoginEvent(val connectingSession: NetworkSession, val existingSession: NetworkSession) : Event() {
+class PlayerDuplicateLoginEvent(
+    val connectingSession: NetworkSession,
+    val existingSession: NetworkSession
+) : Event(), Cancellable {
+    override var isCancelled = false
     var disconnectMessage: String = "Logged in from another location"
 }

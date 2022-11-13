@@ -8,7 +8,7 @@
  *
  * A server software for Minecraft: Bedrock Edition
  *
- * Copyright (C) 2021 organization Team
+ * Copyright (C) 2021 - 2022 organization Team
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -42,6 +42,10 @@ open class Location @JvmOverloads constructor(
         "Location (world=${world?.folderName ?: "null"}, x=$x, y=$y, z=$z, yaw=$yaw, pitch=$pitch)"
 
     fun asLocation(): Location = Location(x, y, z, yaw, pitch, world)
+
+    override fun clone(): Location {
+        return Location(x, y, z, yaw, pitch, world)
+    }
 
     companion object {
         @JvmStatic

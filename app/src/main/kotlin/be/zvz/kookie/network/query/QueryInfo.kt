@@ -8,7 +8,7 @@
  *
  * A server software for Minecraft: Bedrock Edition
  *
- * Copyright (C) 2021 organization Team
+ * Copyright (C) 2021 - 2022 organization Team
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -21,11 +21,7 @@ import be.zvz.kookie.Server
 
 class QueryInfo(private val server: Server) {
 
-    private var maxPlayers: Int = 0
-    private var players = mapOf<Any, Any>()
-    private var plugins = mapOf<Any, Any>()
-
-    fun getPlayerCount(): Int = players.size
-
-    fun getMaxPlayerCount(): Int = maxPlayers
+    var maxPlayers: Int = 0
+    var players: List<String> = mutableListOf()
+    var motd: String = server.motd
 }

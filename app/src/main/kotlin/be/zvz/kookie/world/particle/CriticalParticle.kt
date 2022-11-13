@@ -8,7 +8,7 @@
  *
  * A server software for Minecraft: Bedrock Edition
  *
- * Copyright (C) 2021 organization Team
+ * Copyright (C) 2021 - 2022 organization Team
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -17,4 +17,6 @@
  */
 package be.zvz.kookie.world.particle
 
-class CriticalParticle @JvmOverloads constructor(scale: Int = 2) : StandardParticle(Type.CRITICAL, scale)
+import com.nukkitx.protocol.bedrock.data.LevelEventType
+
+class CriticalParticle @JvmOverloads constructor(scale: Int = 2) : StandardParticle(LevelEventType.PARTICLE_CRITICAL, scale)

@@ -8,7 +8,7 @@
  *
  * A server software for Minecraft: Bedrock Edition
  *
- * Copyright (C) 2021 organization Team
+ * Copyright (C) 2021 - 2022 organization Team
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -18,12 +18,12 @@
 package be.zvz.kookie.network.mcpe.protocol.types.inventory
 
 import be.zvz.kookie.math.Vector3
-import be.zvz.kookie.network.mcpe.protocol.InventoryTransactionPacket
 import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
+import com.nukkitx.protocol.bedrock.data.inventory.TransactionType
 
 class ReleaseItemTransactionData : TransactionData() {
 
-    override val typeId = InventoryTransactionPacket.TYPE_RELEASE_ITEM
+    override val typeId = TransactionType.ITEM_RELEASE
 
     private var actionType: Int = -1
 

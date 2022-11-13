@@ -8,7 +8,7 @@
  *
  * A server software for Minecraft: Bedrock Edition
  *
- * Copyright (C) 2021 organization Team
+ * Copyright (C) 2021 - 2022 organization Team
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -36,6 +36,7 @@ enum class DeviceOS(val id: Int) {
 
     companion object {
         private val VALUES = values()
+
         @JvmStatic
         fun from(findValue: Int) = VALUES.first { it.id == findValue }
     }

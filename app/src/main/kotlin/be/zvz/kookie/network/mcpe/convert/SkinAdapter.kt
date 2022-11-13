@@ -8,7 +8,7 @@
  *
  * A server software for Minecraft: Bedrock Edition
  *
- * Copyright (C) 2021 organization Team
+ * Copyright (C) 2021 - 2022 organization Team
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -19,10 +19,13 @@ package be.zvz.kookie.network.mcpe.convert
 
 import be.zvz.kookie.entity.Skin
 import be.zvz.kookie.network.mcpe.protocol.types.skin.SkinData
+import com.nukkitx.protocol.bedrock.data.skin.SerializedSkin
 
 interface SkinAdapter {
 
     fun toSkinData(skin: Skin): SkinData
 
     fun fromSkinData(data: SkinData): Skin
+
+    fun toSerializedSkinData(skinData: SkinData): SerializedSkin
 }

@@ -8,7 +8,7 @@
  *
  * A server software for Minecraft: Bedrock Edition
  *
- * Copyright (C) 2021 organization Team
+ * Copyright (C) 2021 - 2022 organization Team
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -17,4 +17,7 @@
  */
 package be.zvz.kookie.world.particle
 
-class BlockForceFieldParticle @JvmOverloads constructor(data: Int = 0) : StandardParticle(Type.BLOCK_FORCE_FIELD, data)
+import com.nukkitx.protocol.bedrock.data.LevelEventType
+
+class BlockForceFieldParticle @JvmOverloads constructor(data: Int = 0) :
+    StandardParticle(LevelEventType.PARTICLE_BLOCK_FORCE_FIELD, data)

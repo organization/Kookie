@@ -8,7 +8,7 @@
  *
  * A server software for Minecraft: Bedrock Edition
  *
- * Copyright (C) 2021 organization Team
+ * Copyright (C) 2021 - 2022 organization Team
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -17,8 +17,8 @@
  */
 package be.zvz.kookie.network.mcpe
 
-import be.zvz.kookie.network.mcpe.protocol.ClientboundPacket
+import com.nukkitx.protocol.bedrock.BedrockPacket
 
 interface PacketBroadcaster {
-    fun broadcastPackets(recipients: List<NetworkSession>, packets: List<ClientboundPacket>)
+    fun broadcastPackets(recipients: List<NetworkSession>, packets: List<BedrockPacket>)
 }

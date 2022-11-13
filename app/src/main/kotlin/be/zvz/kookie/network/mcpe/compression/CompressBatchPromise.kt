@@ -8,7 +8,7 @@
  *
  * A server software for Minecraft: Bedrock Edition
  *
- * Copyright (C) 2021 organization Team
+ * Copyright (C) 2021 - 2022 organization Team
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -22,7 +22,7 @@ private typealias CallBack = (CompressBatchPromise) -> Unit
 class CompressBatchPromise {
     val callbacks: MutableList<CallBack> = mutableListOf()
 
-    var result: String? = null
+    var result: Any? = null
         get() {
             assertNotCancelled()
 
@@ -52,7 +52,7 @@ class CompressBatchPromise {
         }
     }
 
-    fun resolve(result: String) {
+    fun resolve(result: Any) {
         if (!isCancelled) {
             assertResultIsNull()
 

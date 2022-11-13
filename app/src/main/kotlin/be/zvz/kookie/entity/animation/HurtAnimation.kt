@@ -8,7 +8,7 @@
  *
  * A server software for Minecraft: Bedrock Edition
  *
- * Copyright (C) 2021 organization Team
+ * Copyright (C) 2021 - 2022 organization Team
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -18,14 +18,16 @@
 package be.zvz.kookie.entity.animation
 
 import be.zvz.kookie.entity.Living
-import be.zvz.kookie.network.mcpe.protocol.ActorEventPacket
-import be.zvz.kookie.network.mcpe.protocol.ClientboundPacket
+import com.nukkitx.protocol.bedrock.BedrockPacket
+import com.nukkitx.protocol.bedrock.data.entity.EntityEventType
+import com.nukkitx.protocol.bedrock.packet.EntityEventPacket
 
 class HurtAnimation(private val entity: Living) : Animation {
-    override fun encode(): List<ClientboundPacket> = listOf(
-        ActorEventPacket().apply {
-            entityRuntimeId = entity.getId()
-            eventId = ActorEventPacket.HURT_ANIMATION
+    override fun encode(): List<BedrockPacket> = listOf(
+        EntityEventPacket().apply {
+            runtimeEntityId = entity.getId()
+            type = EntityEventType.HURT
+            data = 0
         }
     )
 }

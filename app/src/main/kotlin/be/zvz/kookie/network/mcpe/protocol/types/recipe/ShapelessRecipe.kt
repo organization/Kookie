@@ -8,7 +8,7 @@
  *
  * A server software for Minecraft: Bedrock Edition
  *
- * Copyright (C) 2021 organization Team
+ * Copyright (C) 2021 - 2022 organization Team
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -17,13 +17,13 @@
  */
 package be.zvz.kookie.network.mcpe.protocol.types.recipe
 
-import be.zvz.kookie.network.mcpe.protocol.CraftingDataPacket
 import be.zvz.kookie.network.mcpe.protocol.serializer.PacketSerializer
 import be.zvz.kookie.network.mcpe.protocol.types.inventory.ItemStackWrapper
+import com.nukkitx.protocol.bedrock.data.inventory.CraftingDataType
 import java.util.UUID
 
 class ShapelessRecipe(
-    type: CraftingDataPacket.Entry,
+    type: CraftingDataType,
     recipeId: String,
     inputs: List<RecipeIngredient>,
     outputs: List<ItemStackWrapper>,
@@ -49,7 +49,7 @@ class ShapelessRecipe(
 
     companion object {
         @JvmStatic
-        fun decode(type: CraftingDataPacket.Entry, input: PacketSerializer): ShapelessRecipe =
+        fun decode(type: CraftingDataType, input: PacketSerializer): ShapelessRecipe =
             decodeWith(type, input, { decodeInputs(input) }, ::ShapelessRecipe)
 
         @JvmStatic
