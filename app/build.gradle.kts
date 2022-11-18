@@ -87,7 +87,7 @@ dependencies {
     implementation(group = "net.java.dev.jna", name = "jna", version = "5.12.1")
 
     // Logger
-    implementation(group = "org.slf4j", name = "slf4j-api", version = "2.0.3")
+    implementation(group = "org.slf4j", name = "slf4j-api", version = "2.0.4")
     implementation(group = "ch.qos.logback", name = "logback-classic", version = "1.4.4")
     implementation(group = "org.fusesource.jansi", name = "jansi", version = "2.4.0")
 
